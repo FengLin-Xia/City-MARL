@@ -1,0 +1,54 @@
+# MARL 项目依赖包列表
+# 基于实际测试验证的版本
+
+# 深度学习框架
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
+
+# 强化学习库
+pettingzoo==1.24.3
+stable-baselines3==2.3.2
+gymnasium==0.29.1
+
+# 图形和可视化
+pygame==2.6.1
+matplotlib==3.9.1
+numpy==1.26.4
+pillow==11.1.0
+
+# 科学计算
+scipy>=1.11.0
+pandas==2.3.1
+sympy==1.13.3
+
+# 工具库
+tqdm>=4.65.0
+tensorboard==2.20.0
+protobuf==4.25.3
+
+# 多智能体相关
+supersuit>=3.7.0  # PettingZoo的包装器
+
+# 网络和数据处理
+networkx==3.4.2
+requests==2.32.4
+PyYAML==6.0.2
+
+# 开发工具
+jupyter>=1.0.0  # 可选：用于交互式开发
+ipython>=8.0.0  # 可选：增强的Python shell
+
+# 测试工具
+pytest>=7.0.0  # 可选：用于单元测试
+
+# 实验跟踪
+wandb>=0.15.0  # 可选：用于实验跟踪
+
+# 其他工具
+seaborn>=0.12.0  # 可选：统计可视化
+plotly>=5.15.0  # 可选：交互式图表
+
+# 系统依赖
+setuptools==78.1.1
+wheel==0.45.1

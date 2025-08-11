@@ -1,0 +1,33 @@
+# MARL 项目核心依赖包
+# 基于实际测试验证的必需版本
+
+# 深度学习框架
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
+
+# 强化学习库
+pettingzoo==1.24.3
+stable-baselines3==2.3.2
+gymnasium==0.29.1
+
+# 图形和可视化
+pygame==2.6.1
+matplotlib==3.9.1
+numpy==1.26.4
+pillow==11.1.0
+
+# 科学计算
+pandas==2.3.1
+
+# 工具库
+tqdm>=4.65.0
+tensorboard==2.20.0
+
+# 多智能体相关
+supersuit>=3.7.0
+
+# 网络和数据处理
+networkx==3.4.2
+requests==2.32.4
+PyYAML==6.0.2

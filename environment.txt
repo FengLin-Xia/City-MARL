@@ -1,0 +1,120 @@
+# MARL 项目环境配置文档
+
+## 系统信息
+- **操作系统**: Windows 10.0.26100
+- **架构**: x64 (AMD64)
+- **NVIDIA驱动版本**: 580.88
+- **CUDA版本**: 13.0 (系统支持)
+- **GPU**: NVIDIA GeForce RTX 4070 Laptop GPU (8.0 GB)
+
+## Python环境
+- **Python版本**: 3.10.18 (Anaconda)
+- **Python路径**: C:\Users\Fenglin\.conda\envs\city-marl\python.exe
+- **环境管理器**: Conda
+- **环境名称**: city-marl
+
+## 深度学习框架
+
+### PyTorch
+- **版本**: 2.5.1
+- **CUDA支持**: ✅ 可用
+- **CUDA版本**: 12.1
+- **cuDNN版本**: 90100
+- **安装路径**: C:\Users\Fenglin\.conda\envs\city-marl\lib\site-packages\torch
+
+### CUDA配置
+- **GPU数量**: 1
+- **当前设备**: cuda:0
+- **GPU名称**: NVIDIA GeForce RTX 4070 Laptop GPU
+- **显存**: 8.0 GB
+- **CUDA张量运算**: ✅ 测试通过
+- **设备间数据传输**: ✅ 测试通过
+
+## 强化学习库
+
+### PettingZoo
+- **状态**: ✅ 正常工作
+- **测试环境**: simple_v3
+- **并行环境**: ✅ 支持
+- **多智能体**: ✅ 支持
+
+### Stable-Baselines3
+- **状态**: ✅ 正常工作
+- **测试环境**: CartPole-v1
+- **算法**: PPO
+- **训练**: ✅ 测试通过
+
+### Gymnasium
+- **状态**: ✅ 正常工作
+- **环境**: CartPole-v1
+
+## 图形库
+
+### Pygame
+- **版本**: 2.6.1 (SDL 2.28.4)
+- **状态**: ✅ 正常工作
+- **DLL问题**: 已解决 (从2.2.0升级到2.6.1)
+
+## 环境变量
+- **CUDA_HOME**: 未设置
+- **CUDA_PATH**: C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.0
+- **PATH**: 包含CUDA bin目录
+
+## 测试结果
+
+### 基础测试
+1. **Python导入**: ✅ 正常
+2. **PyTorch导入**: ✅ 正常
+3. **CUDA可用性**: ✅ 正常
+4. **GPU信息获取**: ✅ 正常
+
+### 功能测试
+1. **CPU张量运算**: ✅ 正常
+2. **CUDA张量运算**: ✅ 正常
+3. **设备间数据传输**: ✅ 正常
+4. **PettingZoo环境**: ✅ 正常
+5. **SB3训练**: ✅ 正常
+
+## 安装命令记录
+
+```bash
+# 激活conda环境
+conda activate city-marl
+
+# 升级pygame (解决DLL问题)
+pip install pygame --upgrade --force-reinstall
+
+# 验证CUDA
+python tests/check_cuda.py
+
+# 测试环境
+python tests/test_env.py
+```
+
+## 注意事项
+
+1. **环境激活**: 使用完整路径 `C:\Users\Fenglin\.conda\envs\city-marl\python.exe` 或激活conda环境
+2. **CUDA版本**: PyTorch使用CUDA 12.1，系统支持CUDA 13.0，兼容性良好
+3. **Pygame问题**: 已通过升级到2.6.1版本解决DLL加载问题
+4. **GPU显存**: 8GB足够进行大多数MARL实验
+
+## 推荐使用方式
+
+```bash
+# 方式1: 使用完整路径
+C:\Users\Fenglin\.conda\envs\city-marl\python.exe your_script.py
+
+# 方式2: 激活环境后使用
+conda activate city-marl
+python your_script.py
+```
+
+## 环境状态
+- **总体状态**: ✅ 完全正常
+- **CUDA加速**: ✅ 可用
+- **多智能体环境**: ✅ 支持
+- **训练框架**: ✅ 就绪
+
+---
+*最后更新: 2025年8月11日*
+*测试状态: 全部通过*
