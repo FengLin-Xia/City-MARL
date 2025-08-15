@@ -120,26 +120,17 @@ def demo_replay():
     print("🎮 地形道路寻路回放演示")
     print("=" * 50)
     
-    # 检查是否有已保存的episode
-    episode_files = [f for f in os.listdir('.') if f.startswith('episode_') and f.endswith('.json')]
+    # 直接加载现有的episode文件
+    episode_file = "episode_1755203784.json"
     
-    if episode_files:
-        print("📂 发现已保存的episode文件:")
-        for i, filename in enumerate(episode_files):
-            print(f"  {i+1}. {filename}")
-        
-        choice = input("请选择要回放的episode (输入序号，或按回车录制新的): ").strip()
-        
-        if choice.isdigit() and 1 <= int(choice) <= len(episode_files):
-            # 加载已保存的episode
-            filename = episode_files[int(choice) - 1]
-            env = TerrainRoadEnvironment()
-            env.load_episode(filename)
-        else:
-            # 录制新的episode
-            env = record_episode()
+    # 检查文件是否存在
+    if os.path.exists(episode_file):
+        print(f"📂 加载episode文件: {episode_file}")
+        env = TerrainRoadEnvironment()
+        env.load_episode(episode_file)
     else:
-        # 录制新的episode
+        print(f"❌ 找不到文件: {episode_file}")
+        print("🔄 尝试录制新的episode...")
         env = record_episode()
     
     # 询问是否保存
