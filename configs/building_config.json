@@ -1,0 +1,77 @@
+{
+  "building_types": {
+    "public": {
+      "capacity": 500,
+      "cost": 1000,
+      "service_radius": 50,
+      "color": "#22A6B3",
+      "symbol": "🏛️",
+      "description": "公共建筑"
+    },
+    "residential": {
+      "capacity": 200,
+      "cost": 500,
+      "revenue_per_person": 10,
+      "color": "#F6C344",
+      "symbol": "🏠",
+      "description": "住宅建筑"
+    },
+    "commercial": {
+      "capacity": 800,
+      "cost": 1000,
+      "revenue_per_person": 20,
+      "color": "#FD7E14",
+      "symbol": "🏪",
+      "description": "商业建筑"
+    }
+  },
+  "land_price_factors": {
+    "core_distance_weight": 0.5,
+    "transport_weight": 0.3,
+    "facility_weight": 0.2,
+    "decay_rate": 0.01,
+    "transport_decay_rate": 0.02
+  },
+  "trajectory_config": {
+    "commute_color": "#0066CC",
+    "commercial_color": "#CC3300",
+    "combined_color": "#660099",
+    "heatmap_alpha": 0.6,
+    "trajectory_width": 2
+  },
+  "building_growth": {
+    "target_total": 80,
+    "growth_function": "logistic",
+    "params": {
+      "K": 80,
+      "r": 0.4,
+      "t0": 12
+    },
+    "min_new_per_month": 2,
+    "max_new_per_month": 7,
+    "residential_ratio": 0.4,
+    "commercial_ratio": 0.4,
+    "public_ratio": 0.2,
+    "land_price_weight": 0.6,
+    "heatmap_weight": 0.3,
+    "facility_weight": 0.1,
+    "candidate_top_percent": 20,
+    "min_building_distance": {
+      "residential": 30,
+      "commercial": 40,
+      "public": 50
+    },
+    "batch_rendering": {
+      "enabled": true,
+      "batches_per_month": 3,
+      "interval_seconds": 1.5
+    }
+  },
+  "visualization": {
+    "background": "#FFFFFF",
+    "trunk_road": "#9AA4B2",
+    "core_point": "#0B5ED7",
+    "heat_map": "#FF00FF",
+    "residents": "#FFFFFF"
+  }
+}

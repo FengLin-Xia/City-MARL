@@ -1,0 +1,121 @@
+{
+  "simulation": {
+    "total_months": 24,
+    "months_per_year": 12,
+    "months_per_quarter": 3,
+    "months_per_month": 1
+  },
+  "city": {
+    "map_size": [110, 110],
+    "trunk_road": [[20, 55], [90, 55]],
+    "transport_hubs": [[20, 55], [90, 55]]
+  },
+  "gaussian_land_price_system": {
+    "meters_per_pixel": 2.0,
+    "hub_sigma_base_m": 40,
+    "road_sigma_base_m": 30,
+    "hub_peak_value": 1.0,
+    "road_peak_value": 0.6,
+    "min_threshold": 0.1,
+    "hub_growth_rate": 0.03,
+    "road_growth_rate": 0.02,
+    "max_hub_multiplier": 2.0,
+    "max_road_multiplier": 2.5,
+    "alpha_inertia": 0.25
+  },
+  "isocontour_layout": {
+    "commercial": {
+      "start_P": 0.70,
+      "depth_m": 20,
+      "gap_m": 8,
+      "arc_spacing_m": [15, 25],
+      "percentiles": [99, 98, 97, 96, 95, 94, 92, 91, 90, 88, 85, 80],
+      "fallback_percentiles": [99, 98, 97, 96, 95, 94, 92, 91, 90, 88, 85, 80]
+    },
+    "residential": {
+      "start_P": 0.50,
+      "depth_m": 14,
+      "gap_m": 20,
+      "arc_spacing_m": [25, 40],
+      "percentiles": [80, 77, 75, 73, 70, 67, 65, 62, 60],
+      "fallback_percentiles": [80, 77, 75, 73, 70, 67, 65, 62, 60]
+    },
+    "normal_offset_m": 1.0,
+    "jitter_m": 0.5
+  },
+  "progressive_growth": {
+    "enabled": true,
+    "strict_fill_required": true,
+    "allow_dead_slots_ratio": 0.05,
+    "carry_over_quota": true,
+    "freeze_contour_on_activation": true,
+    "min_segment_length_factor": 1.5,
+    "layer_activation_threshold": 0.90,
+    "max_quarters_per_layer": 3
+  },
+  "bands": {
+    "front_no_residential_m": [60, 120],
+    "residential_side_band_m": [120, 260],
+    "use_signed_normal": true
+  },
+  "landuse_hysteresis": {
+    "delta_bid": 0.10,
+    "L_quarters": 1,
+    "cooldown_quarters": 2,
+    "res_min_share": 0.20,
+    "economic_score_weights": {
+      "land_price": 0.4,
+      "accessibility": 0.3,
+      "demand": 0.3
+    }
+  },
+  "public_facility_system": {
+    "enabled": true,
+    "triggers": {
+      "school": {
+        "trigger_population": 500,
+        "service_radius": 500,
+        "symbol": "🏫"
+      },
+      "hospital": {
+        "trigger_distance_threshold": 800,
+        "service_radius": 800,
+        "symbol": "🏥"
+      },
+      "park": {
+        "trigger_building_density": 0.6,
+        "service_radius": 300,
+        "symbol": "🌳"
+      },
+      "plaza": {
+        "trigger_commercial_density": 0.5,
+        "service_radius": 400,
+        "symbol": "🏛️"
+      }
+    }
+  },
+  "agents": {
+    "government": {
+      "budget": 10000,
+      "monthly_income": 2000,
+      "public_facility_cost": 800,
+      "green_space_cost": 300
+    },
+    "business": {
+      "initial_capital": 5000,
+      "monthly_income": 1500,
+      "residential_cost": 400,
+      "commercial_cost": 600
+    },
+    "residents": {
+      "monthly_influx": 150,
+      "max_population": 5000,
+      "housing_demand_ratio": 0.8
+    }
+  },
+  "quarterly_building_growth": {
+    "residential": [10, 20],
+    "commercial": [5, 12],
+    "public": [1, 3]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "government_agent": {
+    "decision_frequency": 3,
+    "budget_limit": 10000,
+    "public_facility_threshold": 0.8,
+    "coverage_threshold": 0.6,
+    "avg_time_threshold": 10
+  },
+  "business_agent": {
+    "decision_frequency": 1,
+    "profit_threshold": 0.6,
+    "usage_ratio_threshold": 0.5,
+    "expansion_probability": 0.4
+  },
+  "resident_agent": {
+    "movement_speed": 4,
+    "preference_weight": {
+      "cost": 0.4,
+      "convenience": 0.3,
+      "quality": 0.3
+    },
+    "income_range": [3000, 8000],
+    "housing_cost_ratio": 0.4
+  }
+}

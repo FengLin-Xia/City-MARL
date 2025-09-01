@@ -1,0 +1,14 @@
+{
+  "city_name": "示例城市",
+  "map_size": [256, 256],
+  "core_point": [128, 128],
+  "trunk_road": [[40, 128], [216, 128]],
+  "initial_land_price": 100,
+  "simulation_months": 24,
+  "initial_population": 100,
+  "monthly_growth_rate": [0.08, 0.12],
+  "max_population_density": 0.8,
+  "trajectory_decay_rate": 0.8,
+  "movement_speed": 4,
+  "render_every_month": 1
+}

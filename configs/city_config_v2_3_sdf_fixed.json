@@ -1,0 +1,305 @@
+{
+  "simulation": {
+    "total_months": 24,
+    "months_per_year": 12,
+    "months_per_quarter": 3,
+    "months_per_month": 1
+  },
+  "city": {
+    "map_size": [
+      256,
+      256
+    ],
+    "trunk_road": [
+      [
+        40,
+        128
+      ],
+      [
+        216,
+        128
+      ]
+    ],
+    "transport_hubs": [
+      [
+        40,
+        128
+      ],
+      [
+        216,
+        128
+      ]
+    ]
+  },
+  "agents": {
+    "government": {
+      "budget": 10000,
+      "monthly_income": 2000,
+      "public_facility_cost": 800,
+      "green_space_cost": 300
+    },
+    "business": {
+      "initial_capital": 5000,
+      "monthly_income": 1500,
+      "residential_cost": 400,
+      "commercial_cost": 600
+    },
+    "residents": {
+      "monthly_influx": 150,
+      "max_population": 5000,
+      "housing_demand_ratio": 0.8
+    }
+  },
+  "sdf_system": {
+    "meters_per_pixel": 2.0,
+    "lambda_perp_m": 80,
+    "lambda_point_m": 240,
+    "lambda_tangential_m": 150,
+    "use_tangential_decay": true,
+    "alpha_inertia": 0.25,
+    "max_economic_influence": 0.3,
+    "economic_weights": {
+      "accessibility": 0.6,
+      "heatmap": 0.7,
+      "public_facilities": 0.4,
+      "unsuitability": -0.5
+    },
+    "lambda_perp_px": 40,
+    "lambda_point_px": 120,
+    "lambda_tangential_px": 75,
+    "evolution": {
+      "enabled": true,
+      "road_expansion_rate": 0.15,
+      "max_road_influence": 3.0,
+      "evolution_stages": {
+        "initial": {
+          "months": [
+            0,
+            6
+          ],
+          "road_multiplier": 1.0,
+          "description": "初始阶段：只有Hub点SDF，道路SDF最小"
+        },
+        "early_growth": {
+          "months": [
+            6,
+            12
+          ],
+          "road_multiplier": 1.5,
+          "description": "早期增长：道路SDF开始扩展，住宅区形成"
+        },
+        "mid_growth": {
+          "months": [
+            12,
+            18
+          ],
+          "road_multiplier": 2.0,
+          "description": "中期增长：道路SDF显著扩展，商业区扩张"
+        },
+        "mature": {
+          "months": [
+            18,
+            24
+          ],
+          "road_multiplier": 2.5,
+          "description": "成熟阶段：道路SDF最大扩展，城市完全发展"
+        }
+      }
+    }
+  },
+  "isocontour_layout": {
+    "commercial": {
+      "start_P": 0.85,
+      "depth_m": 20,
+      "gap_m": 10,
+      "arc_spacing_m": [
+        25,
+        35
+      ],
+      "depth_px": 10,
+      "gap_px": 5,
+      "arc_spacing_px": [
+        12,
+        17
+      ]
+    },
+    "residential": {
+      "start_P": 0.55,
+      "depth_m": 14,
+      "gap_m": 26,
+      "arc_spacing_m": [
+        35,
+        55
+      ],
+      "depth_px": 7,
+      "gap_px": 13,
+      "arc_spacing_px": [
+        17,
+        27
+      ]
+    },
+    "normal_offset_m": 2.0,
+    "jitter_m": 1.0,
+    "fallback_percentiles": {
+      "enabled": true,
+      "commercial": [
+        95,
+        90,
+        85
+      ],
+      "residential": [
+        80,
+        70,
+        60,
+        50
+      ]
+    },
+    "normal_offset_px": 1,
+    "jitter_px": 0
+  },
+  "bands": {
+    "front_no_residential_m": [
+      60,
+      120
+    ],
+    "residential_side_band_m": [
+      120,
+      260
+    ],
+    "use_signed_normal": true,
+    "front_no_residential_px": [
+      30,
+      60
+    ],
+    "residential_side_band_px": [
+      60,
+      130
+    ]
+  },
+  "growth_system": {
+    "logistic_growth": {
+      "enabled": true,
+      "max_buildings": 100,
+      "growth_rate": 0.15,
+      "carrying_capacity": 80
+    },
+    "batch_rendering": {
+      "enabled": true,
+      "batch_size": 5
+    }
+  },
+  "hysteresis_system": {
+    "enabled": true,
+    "conversion_threshold": 0.7,
+    "consecutive_quarters": 2,
+    "cooldown_period": 3,
+    "economic_score_weights": {
+      "land_price": 0.4,
+      "accessibility": 0.3,
+      "demand": 0.3
+    }
+  },
+  "public_facility_system": {
+    "enabled": true,
+    "triggers": {
+      "population_threshold": 1000,
+      "coverage_threshold": 0.6,
+      "accessibility_threshold": 0.4
+    },
+    "facility_types": {
+      "school": {
+        "capacity": 600,
+        "service_radius": 50,
+        "service_radius_px": 25
+      },
+      "clinic": {
+        "capacity": 300,
+        "service_radius": 40,
+        "service_radius_px": 20
+      },
+      "park": {
+        "capacity": 200,
+        "service_radius": 60,
+        "service_radius_px": 30
+      }
+    }
+  },
+  "trajectory_system": {
+    "enabled": true,
+    "decay_rate": 0.98,
+    "heatmap_weight": 0.7,
+    "commuting_patterns": {
+      "home_to_work": 0.4,
+      "work_to_shop": 0.3,
+      "shop_to_home": 0.3
+    }
+  },
+  "visualization": {
+    "save_frequency": 3,
+    "output_format": "png",
+    "include_heatmap": true,
+    "include_trajectories": true,
+    "include_isocontours": true,
+    "sdf_evolution_visualization": {
+      "enabled": true,
+      "save_sdf_frames": true,
+      "sdf_frames_interval": 3,
+      "color_maps": {
+        "hub_sdf": "Reds",
+        "road_sdf": "Blues",
+        "combined_sdf": "RdYlBu_r"
+      },
+      "include_contours": true,
+      "contour_levels": [
+        0.1,
+        0.3,
+        0.5,
+        0.7,
+        0.9
+      ]
+    }
+  },
+  "progressive_growth": {
+    "enabled": true,
+    "layer_activation_threshold": 0.8,
+    "layer_delay_threshold": 0.3,
+    "max_quarters_per_layer": 4,
+    "growth_animation": true
+  },
+  "time_system": {
+    "update_frequencies": {
+      "sdf": "yearly",
+      "buildings": "quarterly",
+      "population": "monthly"
+    },
+    "quarterly_building_growth": {
+      "residential": [
+        10,
+        20
+      ],
+      "commercial": [
+        5,
+        12
+      ],
+      "public": [
+        1,
+        3
+      ]
+    }
+  },
+  "simulation_config": {
+    "simulation_months": 24,
+    "initial_population": 100,
+    "monthly_growth_rate": [
+      0.08,
+      0.12
+    ],
+    "max_population_density": 0.8,
+    "render_every_month": 1
+  },
+  "unit_system": {
+    "meters_per_pixel": 2.0,
+    "description": "所有距离参数同时提供米和像素单位，确保兼容性",
+    "conversion_note": "像素参数 = 米参数 / meters_per_pixel"
+  }
+}
