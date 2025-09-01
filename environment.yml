@@ -1,0 +1,27 @@
+name: city-marl
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy=1.26.4
+  - pandas=2.3.1
+  - matplotlib=3.9.1
+  - pillow=11.1.0
+  - networkx=3.4.2
+  - requests=2.32.4
+  - pyyaml=6.0.2
+  - pip:
+    - torch==2.5.1
+    - torchvision==0.20.1
+    - torchaudio==2.5.1
+    - pettingzoo==1.24.3
+    - stable-baselines3==2.3.2
+    - gymnasium==0.29.1
+    - pygame==2.6.1
+    - tensorboard==2.20.0
+    - protobuf==4.25.3
+    - setuptools==78.1.1
+    - wheel==0.45.1

@@ -21,11 +21,10 @@ pillow==11.1.0
 pandas==2.3.1
 
 # 工具库
-tqdm>=4.65.0
 tensorboard==2.20.0
 
 # 多智能体相关
-supersuit>=3.7.0
+# supersuit>=3.7.0  # 可选：PettingZoo的包装器
 
 # 网络和数据处理
 networkx==3.4.2
