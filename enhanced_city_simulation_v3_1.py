@@ -414,6 +414,67 @@ class ProgressiveGrowthSystem:
                 print(f"     密度: {layer.density:.1%}")
                 print(f"     激活季度: {layer.activated_quarter if layer.activated_quarter >= 0 else '未激活'}")
 
+class BuildingStateTracker:
+    """建筑状态追踪器 - 支持增量导出"""
+    
+    def __init__(self):
+        self.current_buildings = {}  # {building_id: building_data}
+        self.building_id_counter = 1
+        self.state_cache = {}  # 缓存重建的状态
+        self.cache_max_size = 5
+    
+    def get_new_buildings_this_month(self, city_state: Dict) -> List[Dict]:
+        """获取这个月新增的建筑"""
+        new_buildings = []
+        
+        for building_type in ['residential', 'commercial', 'public', 'industrial']:
+            for building in city_state.get(building_type, []):
+                building_id = building['id']
+                if building_id not in self.current_buildings:
+                    # 新建筑
+                    new_buildings.append({
+                        'id': building['id'],
+                        'type': building['type'],
+                        'position': building['xy'],
+                        'land_price_value': building.get('land_price_value', 0.0),
+                        'slot_id': building.get('slot_id', '')
+                    })
+                    # 更新当前状态
+                    self.current_buildings[building_id] = building
+        
+        return new_buildings
+    
+    def get_full_state_at_month(self, target_month: int, output_dir: str = "enhanced_simulation_v3_1_output") -> Dict:
+        """从增量数据重建到指定月份的状态"""
+        # 检查缓存
+        if target_month in self.state_cache:
+            return self.state_cache[target_month]
+        
+        # 加载第1个月的完整状态
+        full_state = {'buildings': []}
+        month_01_file = f"{output_dir}/building_positions_month_01.json"
+        
+        if os.path.exists(month_01_file):
+            with open(month_01_file, 'r', encoding='utf-8') as f:
+                month_01_data = json.load(f)
+                full_state['buildings'] = month_01_data.get('buildings', [])
+        
+        # 累加后续月份的新增建筑
+        for month in range(2, target_month + 1):
+            delta_file = f"{output_dir}/building_delta_month_{month:02d}.json"
+            if os.path.exists(delta_file):
+                with open(delta_file, 'r', encoding='utf-8') as f:
+                    delta_data = json.load(f)
+                full_state['buildings'].extend(delta_data.get('new_buildings', []))
+        
+        # 缓存结果
+        if len(self.state_cache) >= self.cache_max_size:
+            oldest_month = min(self.state_cache.keys())
+            del self.state_cache[oldest_month]
+        self.state_cache[target_month] = full_state
+        
+        return full_state
+
 class EnhancedCitySimulationV3_1:
     """增强城市模拟系统 v3.1"""
     
@@ -439,6 +500,7 @@ class EnhancedCitySimulationV3_1:
         # 初始化其他系统
         self.output_system = OutputSystem('enhanced_simulation_v3_1_output')
         self.trajectory_system = TrajectorySystem([256, 256], self.building_config)
+        self.building_tracker = BuildingStateTracker()  # 新增：建筑状态追踪器
         
         # 模拟状态
         self.current_month = 0
@@ -447,7 +509,7 @@ class EnhancedCitySimulationV3_1:
         self.city_state = {}
         
         print(f"🏙️ 增强城市模拟系统 v3.1 初始化完成")
-        print(f"🎯 新特性：槽位化、冻结施工线、严格逐层满格机制")
+        print(f"🎯 新特性：槽位化、冻结施工线、严格逐层满格机制、增量式建筑导出")
     
     def _load_config(self, config_path: str) -> Dict:
         """加载配置文件"""
@@ -536,8 +598,14 @@ class EnhancedCitySimulationV3_1:
         if self.current_quarter == 0:
             self._activate_first_layers()
         
+        # 调试输出：检查季度更新
+        print(f"🔍 调试：季度更新 - 当前季度: {self.current_quarter}, 当前月份: {self.current_month}")
+        
         # 生成建筑（基于槽位系统）
         buildings_generated = self._generate_buildings_with_slots()
+        
+        # 调试输出：检查建筑生成结果
+        print(f"🔍 调试：建筑生成结果 - 是否生成: {buildings_generated}")
         
         # 滞后替代评估
         self._evaluate_hysteresis_conversion()
@@ -1028,9 +1096,15 @@ class EnhancedCitySimulationV3_1:
         available_residential_slots = len(self.progressive_growth_system.get_available_slots('residential', 100))
         available_commercial_slots = len(self.progressive_growth_system.get_available_slots('commercial', 100))
         
+        # 调试输出：检查可用槽位
+        print(f"🔍 调试：可用槽位数量 - 住宅: {available_residential_slots}, 商业: {available_commercial_slots}")
+        
         # 根据可用槽位确定目标（增加基础生成量）
         residential_target = min(random.randint(12, 20), available_residential_slots)
         commercial_target = min(random.randint(5, 12), available_commercial_slots)
+        
+        # 调试输出：检查建筑生成目标
+        print(f"🔍 调试：建筑生成目标 - 住宅: {residential_target}, 商业: {commercial_target}")
         
         # 如果是年度更新后的第一个季度，增加生成目标
         if self.current_month % 12 == 0:
@@ -1062,6 +1136,9 @@ class EnhancedCitySimulationV3_1:
         """基于槽位生成住宅建筑"""
         available_slots = self.progressive_growth_system.get_available_slots('residential', target_count)
         
+        # 调试输出：检查住宅建筑生成
+        print(f"🔍 调试：住宅建筑生成 - 目标: {target_count}, 可用槽位: {len(available_slots)}")
+        
         new_buildings = []
         for i, slot in enumerate(available_slots):
             building = {
@@ -1087,6 +1164,9 @@ class EnhancedCitySimulationV3_1:
     def _generate_commercial_with_slots(self, target_count: int) -> List[Dict]:
         """基于槽位生成商业建筑"""
         available_slots = self.progressive_growth_system.get_available_slots('commercial', target_count)
+        
+        # 调试输出：检查商业建筑生成
+        print(f"🔍 调试：商业建筑生成 - 目标: {target_count}, 可用槽位: {len(available_slots)}")
         
         new_buildings = []
         for i, slot in enumerate(available_slots):
@@ -1205,8 +1285,56 @@ class EnhancedCitySimulationV3_1:
     
     def _evaluate_public_facilities(self):
         """评估公共设施需求"""
-        # 简化实现
-        pass
+        print(f"🏛️ 第 {self.current_quarter} 季度：评估公共设施需求...")
+        
+        # 评估公共设施需求
+        facility_needs = self.public_facility_system.evaluate_facility_needs(self.city_state)
+        
+        # 生成新的公共设施
+        new_facilities = self.public_facility_system.generate_facilities(self.city_state, facility_needs)
+        
+        if new_facilities:
+            # 添加到城市状态
+            self.city_state['public'].extend(new_facilities)
+            
+            print(f"✅ 生成了 {len(new_facilities)} 个公共设施:")
+            for facility in new_facilities:
+                facility_type = facility.get('facility_type', 'unknown')
+                position = facility['xy']
+                print(f"  - {facility_type}: {facility['id']} at ({position[0]}, {position[1]})")
+        else:
+            print(f"📊 当前无需新增公共设施")
+        
+        # 打印需求评估结果
+        self._print_facility_needs(facility_needs)
+    
+    def _print_facility_needs(self, facility_needs: Dict):
+        """打印公共设施需求评估结果"""
+        print(f"📊 公共设施需求评估:")
+        
+        for facility_type, need_info in facility_needs.items():
+            status = "✅ 需要" if need_info['needed'] else "❌ 不需要"
+            reason = need_info.get('reason', 'unknown')
+            
+            if facility_type == 'school':
+                population = need_info.get('population', 0)
+                coverage = need_info.get('coverage_ratio', 0)
+                print(f"  🏫 学校: {status} (人口: {population}, 覆盖率: {coverage:.1%}, 原因: {reason})")
+                
+            elif facility_type == 'hospital':
+                accessibility = need_info.get('avg_accessibility', 0)
+                threshold = need_info.get('threshold', 0)
+                print(f"  🏥 医院: {status} (可达性: {accessibility:.1f}, 阈值: {threshold}, 原因: {reason})")
+                
+            elif facility_type == 'park':
+                density = need_info.get('building_density', 0)
+                threshold = need_info.get('threshold', 0)
+                print(f"  🌳 公园: {status} (建筑密度: {density:.1%}, 阈值: {threshold:.1%}, 原因: {reason})")
+                
+            elif facility_type == 'plaza':
+                density = need_info.get('commercial_density', 0)
+                threshold = need_info.get('threshold', 0)
+                print(f"  🏛️ 广场: {status} (商业密度: {density:.1%}, 阈值: {threshold:.1%}, 原因: {reason})")
     
     def _spawn_new_residents(self):
         """生成新居民"""
@@ -1218,26 +1346,38 @@ class EnhancedCitySimulationV3_1:
         # 保存地价场帧
         self.land_price_system.save_land_price_frame(month, 'enhanced_simulation_v3_1_output')
         
+        # 获取这个月的新建筑（只调用一次）
+        new_buildings = self.building_tracker.get_new_buildings_this_month(self.city_state)
+        
         # 保存建筑位置
-        self._save_building_positions(month)
+        self._save_building_positions(month, new_buildings)
         
         # 保存简化格式的建筑位置
-        self._save_simplified_building_positions(month)
+        self._save_simplified_building_positions(month, new_buildings)
         
         # 保存层状态
         self._save_layer_state(month)
         
         print(f"💾 第 {month} 个月输出已保存")
     
-    def _save_building_positions(self, month: int):
-        """保存建筑位置"""
+    def _save_building_positions(self, month: int, new_buildings: List[Dict]):
+        """保存建筑位置 - 增量式导出"""
+        if month == 1:
+            # 第1个月保存完整状态
+            self._save_full_building_state(month)
+        else:
+            # 后续月份只保存新增建筑
+            self._save_new_buildings_only(month, new_buildings)
+    
+    def _save_full_building_state(self, month: int):
+        """保存第1个月的完整建筑状态"""
         building_data = {
             'timestamp': f'month_{month:02d}',
             'buildings': []
         }
         
         # 添加所有建筑
-        for building_type in ['residential', 'commercial', 'public']:
+        for building_type in ['residential', 'commercial', 'public', 'industrial']:
             for building in self.city_state.get(building_type, []):
                 building_data['buildings'].append({
                     'id': building['id'],
@@ -1247,33 +1387,110 @@ class EnhancedCitySimulationV3_1:
                     'slot_id': building.get('slot_id', '')
                 })
         
+        # 后处理：Hub2 工业中心建筑类型转换
+        building_data['buildings'] = self._post_process_building_types(building_data['buildings'], month)
+        
         # 保存到文件
         output_file = f"enhanced_simulation_v3_1_output/building_positions_month_{month:02d}.json"
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(building_data, f, indent=2, ensure_ascii=False)
+        
+        print(f"📦 第 {month} 个月完整状态已保存：{len(building_data['buildings'])} 个建筑")
     
-    def _save_simplified_building_positions(self, month: int):
+    def _post_process_building_types(self, buildings: List[Dict], month: int) -> List[Dict]:
+        """后处理建筑类型，实现 Hub2 工业中心效果"""
+        # Hub2 工业中心配置
+        hub2_position = [90, 55]  # Hub2 位置
+        hub2_radius = 30  # 影响半径
+        
+        processed_buildings = []
+        for building in buildings:
+            # 创建建筑副本
+            processed_building = building.copy()
+            
+            # 检查是否在 Hub2 工业中心附近
+            if building['type'] == 'commercial':
+                x, y = building['position']
+                distance = ((x - hub2_position[0])**2 + (y - hub2_position[1])**2)**0.5
+                
+                if distance <= hub2_radius:
+                    # 转换为工业建筑类型
+                    processed_building['type'] = 'industrial'
+                    processed_building['original_type'] = 'commercial'
+                    processed_building['hub_influence'] = 'hub2_industrial_zone'
+                    processed_building['conversion_reason'] = f'Hub2工业中心影响 (距离: {distance:.1f})'
+            
+            processed_buildings.append(processed_building)
+        
+        return processed_buildings
+    
+    def _save_new_buildings_only(self, month: int, new_buildings: List[Dict]):
+        """保存新增建筑（增量文件）"""
+        
+        if new_buildings:  # 只有新增建筑时才保存文件
+            # 后处理：Hub2 工业中心建筑类型转换
+            processed_new_buildings = self._post_process_building_types(new_buildings, month)
+            
+            # 计算总建筑数
+            total_buildings = sum(len(self.city_state.get(building_type, [])) 
+                                for building_type in ['residential', 'commercial', 'public', 'industrial'])
+            
+            delta_data = {
+                'month': month,
+                'timestamp': f'month_{month:02d}',
+                'new_buildings': processed_new_buildings,
+                'metadata': {
+                    'total_buildings': total_buildings,
+                    'new_count': len(processed_new_buildings)
+                }
+            }
+            
+            # 保存增量文件
+            output_file = f"enhanced_simulation_v3_1_output/building_delta_month_{month:02d}.json"
+            os.makedirs(os.path.dirname(output_file), exist_ok=True)
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(delta_data, f, indent=2, ensure_ascii=False)
+            
+            print(f"📈 第 {month} 个月增量已保存：{len(processed_new_buildings)} 个新建筑")
+        else:
+            print(f"📊 第 {month} 个月无新建筑，跳过增量文件")
+    
+    def _save_simplified_building_positions(self, month: int, new_buildings: List[Dict]):
         """保存简化格式的建筑位置数据"""
         # 类型映射
-        type_map = {'residential': 0, 'commercial': 1, 'office': 2, 'public': 3}
+        type_map = {'residential': 0, 'commercial': 1, 'office': 2, 'public': 3, 'industrial': 2}
+        
+        # 收集所有建筑数据
+        all_buildings = []
+        for building_type in ['residential', 'commercial', 'public', 'industrial']:
+            for building in self.city_state.get(building_type, []):
+                all_buildings.append({
+                    'id': building['id'],
+                    'type': building['type'],
+                    'position': building['xy'],
+                    'land_price_value': building.get('land_price_value', 0.0),
+                    'slot_id': building.get('slot_id', '')
+                })
+        
+        # 应用后处理
+        processed_buildings = self._post_process_building_types(all_buildings, month)
         
         # 格式化建筑数据
         formatted = []
-        for building_type in ['residential', 'commercial', 'public']:
-            for building in self.city_state.get(building_type, []):
-                t = str(building.get('type', 'unknown')).lower()
-                mid = type_map.get(t, 4)
-                pos = building.get('xy', [0.0, 0.0])
-                x = float(pos[0]) if len(pos) > 0 else 0.0
-                y = float(pos[1]) if len(pos) > 1 else 0.0
-                z = 0.0  # 默认高度为0
-                formatted.append(f"{mid}({x:.3f}, {y:.3f}, {z:.0f})")
+        for building in processed_buildings:
+            t = str(building.get('type', 'unknown')).lower()
+            mid = type_map.get(t, 4)
+            pos = building.get('position', [0.0, 0.0])
+            x = float(pos[0]) if len(pos) > 0 else 0.0
+            y = float(pos[1]) if len(pos) > 1 else 0.0
+            z = 0.0  # 默认高度为0
+            formatted.append(f"{mid}({x:.3f}, {y:.3f}, {z:.0f})")
         
         # 生成简化格式的字符串
         simplified_line = ", ".join(formatted)
         
-        # 保存到JSON文件
+        # 保存到JSON文件（完整状态）
         simplified_data = {
             'month': month,
             'timestamp': f'month_{month:02d}',
@@ -1285,17 +1502,49 @@ class EnhancedCitySimulationV3_1:
         simplified_dir = "enhanced_simulation_v3_1_output/simplified"
         os.makedirs(simplified_dir, exist_ok=True)
         
-        # 保存JSON文件（带顺序编号）
+        # 保存JSON文件（完整状态）
         json_file = f"{simplified_dir}/simplified_buildings_{month:02d}.json"
         with open(json_file, 'w', encoding='utf-8') as f:
             json.dump(simplified_data, f, indent=2, ensure_ascii=False)
         
-        # 保存纯文本文件（带顺序编号）
-        txt_file = f"{simplified_dir}/simplified_buildings_{month:02d}.txt"
-        with open(txt_file, 'w', encoding='utf-8') as f:
-            f.write(simplified_line)
+        # 保存TXT文件（增量式）
+        if month == 0:
+            # 第0个月保存完整状态
+            txt_file = f"{simplified_dir}/simplified_buildings_{month:02d}.txt"
+            with open(txt_file, 'w', encoding='utf-8') as f:
+                f.write(simplified_line)
+        else:
+            # 后续月份只保存新增建筑
+            print(f"🔍 第 {month} 个月：检测到 {len(new_buildings)} 个新建筑")
+            
+            if new_buildings:
+                # 格式化新增建筑
+                new_formatted = []
+                for building in new_buildings:
+                    t = str(building.get('type', 'unknown')).lower()
+                    mid = type_map.get(t, 4)
+                    pos = building.get('position', [0.0, 0.0])  # 这里应该使用 'position' 字段
+                    x = float(pos[0]) if len(pos) > 0 else 0.0
+                    y = float(pos[1]) if len(pos) > 1 else 0.0
+                    z = 0.0  # 默认高度为0
+                    new_formatted.append(f"{mid}({x:.3f}, {y:.3f}, {z:.0f})")
+                
+                # 生成新增建筑的简化格式字符串
+                new_simplified_line = ", ".join(new_formatted)
+                
+                # 保存增量TXT文件
+                txt_file = f"{simplified_dir}/simplified_buildings_{month:02d}.txt"
+                with open(txt_file, 'w', encoding='utf-8') as f:
+                    f.write(new_simplified_line)
+                print(f"📝 第 {month} 个月：TXT文件已保存 {len(new_formatted)} 个新建筑")
+            else:
+                # 没有新建筑时，创建空的TXT文件
+                txt_file = f"{simplified_dir}/simplified_buildings_{month:02d}.txt"
+                with open(txt_file, 'w', encoding='utf-8') as f:
+                    f.write("")
+                print(f"📝 第 {month} 个月：无新建筑，创建空TXT文件")
         
-        print(f"📝 第 {month} 个月简化格式已保存：{len(formatted)} 个建筑")
+        print(f"📝 第 {month} 个月简化格式已保存：JSON完整状态({len(formatted)}个建筑)，TXT增量式")
     
     def _save_layer_state(self, month: int):
         """保存层状态"""
@@ -1330,6 +1579,10 @@ class EnhancedCitySimulationV3_1:
             json.dump(final_summary, f, indent=2, ensure_ascii=False)
         
         print("📊 所有v3.1输出文件已保存到 enhanced_simulation_v3_1_output/ 目录")
+    
+    def get_full_state_at_month(self, target_month: int) -> Dict:
+        """获取指定月份的完整建筑状态（从增量数据重建）"""
+        return self.building_tracker.get_full_state_at_month(target_month)
 
 def main():
     """主函数"""
@@ -1341,6 +1594,7 @@ def main():
     print("  • 死槽机制与容忍率")
     print("  • 高斯核地价潜力场")
     print("  • 逐层涟漪式生长感")
+    print("  • 增量式建筑位置导出（节省存储空间）")
     print("=" * 60)
     
     # 创建并运行模拟
