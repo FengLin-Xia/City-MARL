@@ -1,6 +1,6 @@
 {
   "simulation": {
-    "total_months": 24,
+    "total_months": 36,
     "months_per_year": 12,
     "months_per_quarter": 3,
     "months_per_month": 1
@@ -8,7 +8,7 @@
   "city": {
     "map_size": [110, 110],
     "trunk_road": [[20, 55], [90, 55]],
-    "transport_hubs": [[20, 55], [90, 55]]
+    "transport_hubs": [[20, 55], [90, 55], [67, 94]]
   },
   "gaussian_land_price_system": {
     "meters_per_pixel": 2.0,
@@ -22,6 +22,18 @@
     "max_hub_multiplier": 2.0,
     "max_road_multiplier": 2.5,
     "alpha_inertia": 0.25
+  },
+  "land_price_evolution": {
+    "enabled": true,
+    "road_activation_month": 0,
+    "road_peak_value": 0.7,
+    "hub_activation_month": 7,
+    "hub_growth_duration_months": 6,
+    "hub_initial_peak": 0.7,
+    "hub_final_peak": 1.0,
+    "hub3_keep_existing": true,
+    "growth_curve_type": "smooth",
+    "smooth_curve_steepness": 10.0
   },
   "isocontour_layout": {
     "commercial": {

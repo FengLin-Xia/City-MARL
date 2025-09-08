@@ -1,0 +1,45 @@
+{
+  "simulation_summary": {
+    "total_days": 24,
+    "final_population": 961,
+    "total_buildings": {
+      "public": 5,
+      "residential": 9,
+      "commercial": 3
+    },
+    "land_price_summary": {
+      "min_price": 50.019067043680586,
+      "max_price": 438.4016149302441,
+      "avg_price": 187.34428469632866,
+      "price_distribution": {
+        "50-100": 20056,
+        "100-150": 11983,
+        "150-200": 7694,
+        "200-250": 6121,
+        "250-300": 5550
+      }
+    },
+    "economic_summary": {
+      "total_construction_cost": 12500,
+      "total_revenue": 0,
+      "profit_margin": -1.0,
+      "average_land_price": 187.34428469632866
+    }
+  },
+  "development_patterns": {
+    "spatial_distribution": {
+      "public_avg_distance_to_core": 82.15024197171742,
+      "residential_avg_distance_to_core": 38.86077064925496,
+      "commercial_avg_distance_to_core": 74.51434377802279
+    },
+    "building_density": {
+      "public_density": 0.762939453125,
+      "residential_density": 1.373291015625,
+      "commercial_density": 0.457763671875
+    },
+    "development_stage": "快速发展阶段"
+  },
+  "recommendations": [
+    "地价差异较大，建议优化土地利用规划"
+  ]
+}

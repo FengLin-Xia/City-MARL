@@ -1,0 +1,381 @@
+{
+  "logistic_curve": [
+    {
+      "month": 0,
+      "target_total": 0,
+      "monthly_new": 2
+    },
+    {
+      "month": 1,
+      "target_total": 0,
+      "monthly_new": 2
+    },
+    {
+      "month": 2,
+      "target_total": 1,
+      "monthly_new": 2
+    },
+    {
+      "month": 3,
+      "target_total": 2,
+      "monthly_new": 2
+    },
+    {
+      "month": 4,
+      "target_total": 3,
+      "monthly_new": 2
+    },
+    {
+      "month": 5,
+      "target_total": 4,
+      "monthly_new": 2
+    },
+    {
+      "month": 6,
+      "target_total": 6,
+      "monthly_new": 2
+    },
+    {
+      "month": 7,
+      "target_total": 9,
+      "monthly_new": 3
+    },
+    {
+      "month": 8,
+      "target_total": 13,
+      "monthly_new": 4
+    },
+    {
+      "month": 9,
+      "target_total": 18,
+      "monthly_new": 5
+    },
+    {
+      "month": 10,
+      "target_total": 24,
+      "monthly_new": 6
+    },
+    {
+      "month": 11,
+      "target_total": 32,
+      "monthly_new": 7
+    },
+    {
+      "month": 12,
+      "target_total": 40,
+      "monthly_new": 7
+    },
+    {
+      "month": 13,
+      "target_total": 47,
+      "monthly_new": 7
+    },
+    {
+      "month": 14,
+      "target_total": 55,
+      "monthly_new": 7
+    },
+    {
+      "month": 15,
+      "target_total": 61,
+      "monthly_new": 6
+    },
+    {
+      "month": 16,
+      "target_total": 66,
+      "monthly_new": 5
+    },
+    {
+      "month": 17,
+      "target_total": 70,
+      "monthly_new": 4
+    },
+    {
+      "month": 18,
+      "target_total": 73,
+      "monthly_new": 3
+    },
+    {
+      "month": 19,
+      "target_total": 75,
+      "monthly_new": 2
+    },
+    {
+      "month": 20,
+      "target_total": 76,
+      "monthly_new": 2
+    },
+    {
+      "month": 21,
+      "target_total": 77,
+      "monthly_new": 2
+    },
+    {
+      "month": 22,
+      "target_total": 78,
+      "monthly_new": 2
+    },
+    {
+      "month": 23,
+      "target_total": 79,
+      "monthly_new": 2
+    },
+    {
+      "month": 24,
+      "target_total": 79,
+      "monthly_new": 2
+    }
+  ],
+  "actual_growth": [
+    {
+      "month": 0,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 1,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 2,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 3,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 4,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 5,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 6,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 7,
+      "target_new": 3,
+      "actual_new": 3,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 1
+      }
+    },
+    {
+      "month": 8,
+      "target_new": 4,
+      "actual_new": 4,
+      "distribution": {
+        "residential": 1,
+        "commercial": 3,
+        "public": 0
+      }
+    },
+    {
+      "month": 9,
+      "target_new": 5,
+      "actual_new": 5,
+      "distribution": {
+        "residential": 2,
+        "commercial": 2,
+        "public": 1
+      }
+    },
+    {
+      "month": 10,
+      "target_new": 6,
+      "actual_new": 6,
+      "distribution": {
+        "residential": 2,
+        "commercial": 3,
+        "public": 1
+      }
+    },
+    {
+      "month": 11,
+      "target_new": 7,
+      "actual_new": 7,
+      "distribution": {
+        "residential": 2,
+        "commercial": 4,
+        "public": 1
+      }
+    },
+    {
+      "month": 12,
+      "target_new": 7,
+      "actual_new": 7,
+      "distribution": {
+        "residential": 2,
+        "commercial": 4,
+        "public": 1
+      }
+    },
+    {
+      "month": 13,
+      "target_new": 7,
+      "actual_new": 7,
+      "distribution": {
+        "residential": 2,
+        "commercial": 4,
+        "public": 1
+      }
+    },
+    {
+      "month": 14,
+      "target_new": 7,
+      "actual_new": 7,
+      "distribution": {
+        "residential": 2,
+        "commercial": 4,
+        "public": 1
+      }
+    },
+    {
+      "month": 15,
+      "target_new": 6,
+      "actual_new": 6,
+      "distribution": {
+        "residential": 2,
+        "commercial": 3,
+        "public": 1
+      }
+    },
+    {
+      "month": 16,
+      "target_new": 5,
+      "actual_new": 5,
+      "distribution": {
+        "residential": 2,
+        "commercial": 2,
+        "public": 1
+      }
+    },
+    {
+      "month": 17,
+      "target_new": 4,
+      "actual_new": 4,
+      "distribution": {
+        "residential": 1,
+        "commercial": 3,
+        "public": 0
+      }
+    },
+    {
+      "month": 18,
+      "target_new": 3,
+      "actual_new": 3,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 1
+      }
+    },
+    {
+      "month": 19,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 20,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 21,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 22,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    },
+    {
+      "month": 23,
+      "target_new": 2,
+      "actual_new": 2,
+      "distribution": {
+        "residential": 1,
+        "commercial": 1,
+        "public": 0
+      }
+    }
+  ],
+  "growth_params": {
+    "K": 80,
+    "r": 0.4,
+    "t0": 12
+  },
+  "batch_config": {
+    "enabled": true,
+    "batches_per_month": 3,
+    "interval_seconds": 1.5
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "month": 6,
+  "timestamp": "month_06",
+  "new_buildings": [
+    {
+      "id": "residential_76",
+      "type": "residential",
+      "position": [
+        57,
+        32
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_57_32",
+      "features": {
+        "f_road": 0.5162056739454963,
+        "f_hub_com": 0.22012047983504798,
+        "f_hub_ind": 0.3521586589125572,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.20531342269012806,
+        "industrial": 0.22273868088828055,
+        "residential": 0.111254942168855
+      },
+      "winning_score": 0.111254942168855
+    },
+    {
+      "id": "residential_89",
+      "type": "residential",
+      "position": [
+        57,
+        29
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_57_29",
+      "features": {
+        "f_road": 0.42955735821073915,
+        "f_hub_com": 0.15877821676849332,
+        "f_hub_ind": 0.2770178126164509,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.15117840170324384,
+        "industrial": 0.1597491364917328,
+        "residential": 0.09147036385920325
+      },
+      "winning_score": 0.09147036385920325
+    },
+    {
+      "id": "residential_96",
+      "type": "residential",
+      "position": [
+        83,
+        34
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_83_34",
+      "features": {
+        "f_road": 0.5762290736718,
+        "f_hub_com": 0.140858420921045,
+        "f_hub_ind": 0.48282588659775844,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.169760867286987,
+        "industrial": 0.30961150604671717,
+        "residential": 0.1375189696620272
+      },
+      "winning_score": 0.1375189696620272
+    }
+  ],
+  "metadata": {
+    "total_buildings": 115,
+    "new_count": 3
+  }
+}

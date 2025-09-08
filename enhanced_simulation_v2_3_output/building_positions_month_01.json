@@ -1,0 +1,135 @@
+{
+  "timestamp": "month_01",
+  "buildings": [
+    {
+      "id": "res_1",
+      "type": "residential",
+      "position": [
+        69,
+        98
+      ],
+      "color": "#F6C344",
+      "land_price_value": 0.0
+    },
+    {
+      "id": "res_2",
+      "type": "residential",
+      "position": [
+        119,
+        105
+      ],
+      "color": "#F6C344",
+      "land_price_value": 0.0
+    },
+    {
+      "id": "res_3",
+      "type": "residential",
+      "position": [
+        112,
+        110
+      ],
+      "color": "#F6C344",
+      "land_price_value": 0.0
+    },
+    {
+      "id": "res_4",
+      "type": "residential",
+      "position": [
+        90,
+        99
+      ],
+      "color": "#F6C344",
+      "land_price_value": 0.0
+    },
+    {
+      "id": "res_5",
+      "type": "residential",
+      "position": [
+        112,
+        136
+      ],
+      "color": "#F6C344",
+      "land_price_value": 0.0
+    },
+    {
+      "id": "com_1",
+      "type": "commercial",
+      "position": [
+        35,
+        109
+      ],
+      "color": "#FD7E14",
+      "land_price_value": 0.6172383654143164
+    },
+    {
+      "id": "com_2",
+      "type": "commercial",
+      "position": [
+        34,
+        147
+      ],
+      "color": "#FD7E14",
+      "land_price_value": 0.6088094196910941
+    },
+    {
+      "id": "com_3",
+      "type": "commercial",
+      "position": [
+        210,
+        143
+      ],
+      "color": "#FD7E14",
+      "land_price_value": 0.7216247586893905
+    },
+    {
+      "id": "com_4",
+      "type": "commercial",
+      "position": [
+        221,
+        111
+      ],
+      "color": "#FD7E14",
+      "land_price_value": 0.6753663463525845
+    },
+    {
+      "id": "com_1",
+      "type": "commercial",
+      "position": [
+        32,
+        101
+      ],
+      "color": "#FD7E14",
+      "land_price_value": 0.37111251033163983
+    },
+    {
+      "id": "com_2",
+      "type": "commercial",
+      "position": [
+        27,
+        147
+      ],
+      "color": "#FD7E14",
+      "land_price_value": 0.5155608199707641
+    },
+    {
+      "id": "com_3",
+      "type": "commercial",
+      "position": [
+        201,
+        147
+      ],
+      "color": "#FD7E14",
+      "land_price_value": 0.4807057223263836
+    },
+    {
+      "id": "com_4",
+      "type": "commercial",
+      "position": [
+        236,
+        117
+      ],
+      "color": "#FD7E14",
+      "land_price_value": 0.5213936272184442
+    }
+  ]
+}

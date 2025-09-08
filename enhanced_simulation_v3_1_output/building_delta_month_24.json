@@ -1,0 +1,209 @@
+{
+  "month": 24,
+  "timestamp": "month_24",
+  "new_buildings": [
+    {
+      "id": "res_74",
+      "type": "residential",
+      "position": [
+        104,
+        53
+      ],
+      "land_price_value": 0.8325613130609888,
+      "slot_id": "residential_104_53"
+    },
+    {
+      "id": "res_75",
+      "type": "residential",
+      "position": [
+        104,
+        43
+      ],
+      "land_price_value": 0.7673887584243101,
+      "slot_id": "residential_104_43"
+    },
+    {
+      "id": "res_76",
+      "type": "residential",
+      "position": [
+        92,
+        33
+      ],
+      "land_price_value": 0.7041146568250805,
+      "slot_id": "residential_92_33"
+    },
+    {
+      "id": "res_77",
+      "type": "residential",
+      "position": [
+        86,
+        37
+      ],
+      "land_price_value": 0.7760468265092182,
+      "slot_id": "residential_86_37"
+    },
+    {
+      "id": "res_78",
+      "type": "residential",
+      "position": [
+        74,
+        43
+      ],
+      "land_price_value": 0.7623637440900219,
+      "slot_id": "residential_74_43"
+    },
+    {
+      "id": "res_79",
+      "type": "residential",
+      "position": [
+        69,
+        54
+      ],
+      "land_price_value": 0.7667234250762235,
+      "slot_id": "residential_69_54"
+    },
+    {
+      "id": "res_80",
+      "type": "residential",
+      "position": [
+        60,
+        49
+      ],
+      "land_price_value": 0.6430229278434207,
+      "slot_id": "residential_60_49"
+    },
+    {
+      "id": "res_81",
+      "type": "residential",
+      "position": [
+        44,
+        51
+      ],
+      "land_price_value": 0.7086428500810411,
+      "slot_id": "residential_44_51"
+    },
+    {
+      "id": "res_82",
+      "type": "residential",
+      "position": [
+        40,
+        44
+      ],
+      "land_price_value": 0.7146354752420936,
+      "slot_id": "residential_40_44"
+    },
+    {
+      "id": "res_83",
+      "type": "residential",
+      "position": [
+        34,
+        37
+      ],
+      "land_price_value": 0.6998041217596151,
+      "slot_id": "residential_34_37"
+    },
+    {
+      "id": "com_40",
+      "type": "industrial",
+      "position": [
+        90,
+        59
+      ],
+      "land_price_value": 0.9672515447146747,
+      "slot_id": "commercial_90_59",
+      "original_type": "commercial",
+      "hub_influence": "hub2_industrial_zone",
+      "conversion_reason": "Hub2工业中心影响 (距离: 4.0)"
+    },
+    {
+      "id": "com_41",
+      "type": "industrial",
+      "position": [
+        73,
+        45
+      ],
+      "land_price_value": 0.772359830383462,
+      "slot_id": "commercial_73_45",
+      "original_type": "commercial",
+      "hub_influence": "hub2_industrial_zone",
+      "conversion_reason": "Hub2工业中心影响 (距离: 19.7)"
+    },
+    {
+      "id": "com_42",
+      "type": "industrial",
+      "position": [
+        65,
+        45
+      ],
+      "land_price_value": 0.6401647031709772,
+      "slot_id": "commercial_65_45",
+      "original_type": "commercial",
+      "hub_influence": "hub2_industrial_zone",
+      "conversion_reason": "Hub2工业中心影响 (距离: 26.9)"
+    },
+    {
+      "id": "com_43",
+      "type": "commercial",
+      "position": [
+        49,
+        45
+      ],
+      "land_price_value": 0.5737710731896398,
+      "slot_id": "commercial_49_45"
+    },
+    {
+      "id": "com_44",
+      "type": "commercial",
+      "position": [
+        33,
+        45
+      ],
+      "land_price_value": 0.8263012879720472,
+      "slot_id": "commercial_33_45"
+    },
+    {
+      "id": "com_45",
+      "type": "commercial",
+      "position": [
+        25,
+        45
+      ],
+      "land_price_value": 0.8962983753092497,
+      "slot_id": "commercial_25_45"
+    },
+    {
+      "id": "com_46",
+      "type": "commercial",
+      "position": [
+        20,
+        58
+      ],
+      "land_price_value": 0.9724849793590584,
+      "slot_id": "commercial_20_58"
+    },
+    {
+      "id": "com_47",
+      "type": "commercial",
+      "position": [
+        30,
+        63
+      ],
+      "land_price_value": 0.8819806948038509,
+      "slot_id": "commercial_30_63"
+    },
+    {
+      "id": "pub_park_4",
+      "type": "public",
+      "position": [
+        69,
+        109
+      ],
+      "land_price_value": 0.0,
+      "slot_id": ""
+    }
+  ],
+  "metadata": {
+    "total_buildings": 134,
+    "new_count": 19
+  }
+}

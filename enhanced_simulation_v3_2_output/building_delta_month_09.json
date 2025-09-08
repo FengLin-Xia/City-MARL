@@ -1,0 +1,60 @@
+{
+  "month": 9,
+  "timestamp": "month_09",
+  "new_buildings": [
+    {
+      "id": "residential_116",
+      "type": "residential",
+      "position": [
+        65,
+        21
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_65_21",
+      "features": {
+        "f_road": 0.23574607655586352,
+        "f_hub_com": 0.046472762584033746,
+        "f_hub_ind": 0.1366062301874915,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.04503287286159295,
+        "industrial": 0.03406994574208619,
+        "residential": 0.03808755123300128
+      },
+      "winning_score": 0.03808755123300128
+    },
+    {
+      "id": "residential_119",
+      "type": "residential",
+      "position": [
+        100,
+        55
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_100_55",
+      "features": {
+        "f_road": 1.0,
+        "f_hub_com": 0.20592424643419874,
+        "f_hub_ind": 0.9836069275391278,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.5
+      },
+      "scores": {
+        "commercial": 0.28355454786051926,
+        "industrial": 0.6659838101465203,
+        "residential": 0.26127411158229114
+      },
+      "winning_score": 0.26127411158229114
+    }
+  ],
+  "metadata": {
+    "total_buildings": 137,
+    "new_count": 2
+  }
+}

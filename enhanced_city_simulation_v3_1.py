@@ -533,10 +533,11 @@ class EnhancedCitySimulationV3_1:
         
         # 初始化等值线系统
         land_price_field = self.land_price_system.get_land_price_field()
-        self.isocontour_system.initialize_system(land_price_field, transport_hubs, map_size)
+        self.isocontour_system.initialize_system(land_price_field, transport_hubs, map_size, 0, self.land_price_system)
         
-        # 初始化渐进式增长系统
-        self.progressive_growth_system.initialize_layers(self.isocontour_system, land_price_field)
+        # 延迟初始化渐进式增长系统（在第一个季度再初始化）
+        # self.progressive_growth_system.initialize_layers(self.isocontour_system, land_price_field)
+        print("⏳ 槽位系统延迟初始化：将在第一个季度（Month 3）初始化")
         
         # 初始化城市状态
         self.city_state = {
@@ -571,8 +572,8 @@ class EnhancedCitySimulationV3_1:
             if month % 3 == 0:
                 self._quarterly_update()
             
-            # 年度更新
-            if month % 12 == 0:
+            # 年度更新（跳过Month 0，从Month 12开始）
+            if month % 12 == 0 and month > 0:
                 self._yearly_update()
             
             # 保存输出
@@ -594,8 +595,9 @@ class EnhancedCitySimulationV3_1:
         """季度更新"""
         print(f"📅 第 {self.current_quarter} 季度更新...")
         
-        # 第一个季度：手动激活第一层
-        if self.current_quarter == 0:
+        # 第一个季度：延迟初始化槽位系统（只在Month 0执行一次）
+        if self.current_quarter == 0 and self.current_month == 0:
+            self._initialize_slots_for_current_land_price()
             self._activate_first_layers()
         
         # 调试输出：检查季度更新
@@ -620,15 +622,26 @@ class EnhancedCitySimulationV3_1:
         if not buildings_generated:
             self._create_new_isocontour_layers_when_no_growth()
         
-        # 更新层状态
-        self.city_state['layers'] = self.progressive_growth_system.get_layer_status()
+        # 更新层状态（如果槽位系统已初始化）
+        if hasattr(self.progressive_growth_system, 'layers') and len(self.progressive_growth_system.layers['commercial']) > 0:
+            self.city_state['layers'] = self.progressive_growth_system.get_layer_status()
+        else:
+            self.city_state['layers'] = {'commercial': [], 'residential': []}
     
     def _yearly_update(self):
         """年度更新"""
         print(f"📅 第 {self.current_year} 年更新...")
         
-        # 高斯核地价场演化
+        # 高斯核地价场演化（支持渐进式演化）
         self.land_price_system.update_land_price_field(self.current_month, self.city_state)
+        
+        # 获取当前演化阶段信息
+        evolution_stage = self.land_price_system._get_evolution_stage(self.current_month)
+        print(f"🔄 地价场演化阶段: {evolution_stage['description']} ({evolution_stage['name']})")
+        
+        # 打印组件强度信息
+        component_strengths = evolution_stage.get('component_strengths', {})
+        print(f"📊 组件强度: 道路={component_strengths.get('road', 0):.1f}, Hub1={component_strengths.get('hub1', 0):.1f}, Hub2={component_strengths.get('hub2', 0):.1f}, Hub3={component_strengths.get('hub3', 0):.1f}")
         
         # 更新城市状态中的地价场
         self.city_state['land_price_field'] = self.land_price_system.get_land_price_field()
@@ -638,14 +651,51 @@ class EnhancedCitySimulationV3_1:
         self.isocontour_system.initialize_system(
             self.city_state['land_price_field'], 
             self.city_state['transport_hubs'], 
-            [110, 110]  # 修正地图尺寸
+            [110, 110],  # 修正地图尺寸
+            self.current_month,
+            self.land_price_system
         )
         
-        # 动态调整槽位系统
-        self._update_slots_for_land_price_changes()
+        # 动态重建槽位系统
+        self._rebuild_slots_for_land_price_changes()
         
         # 尝试激活新的层
         self._try_activate_new_layers_after_update()
+    
+    def _initialize_slots_for_current_land_price(self):
+        """为当前地价场初始化槽位系统"""
+        print("🔧 延迟初始化槽位系统...")
+        
+        # 获取当前地价场
+        current_land_price_field = self.city_state['land_price_field']
+        
+        # 初始化槽位系统
+        self.progressive_growth_system.initialize_layers(self.isocontour_system, current_land_price_field)
+        
+        print("✅ 槽位系统延迟初始化完成")
+    
+    def _rebuild_slots_for_land_price_changes(self):
+        """根据地价场变化重建槽位系统"""
+        print("🔄 重建槽位系统...")
+        
+        # 获取新的等值线数据
+        contour_data = self.isocontour_system.get_contour_data_for_visualization()
+        
+        # 保存当前建筑信息
+        current_buildings = {
+            'residential': self.city_state['residential'].copy(),
+            'commercial': self.city_state['commercial'].copy()
+        }
+        
+        # 重新创建所有层
+        for building_type in ['commercial', 'residential']:
+            contours = contour_data.get(f'{building_type}_contours', [])
+            self._recreate_layers_for_type(building_type, contours)
+        
+        # 重新分配建筑到新的槽位
+        self._redistribute_buildings_to_new_slots(current_buildings)
+        
+        print("✅ 槽位系统重建完成")
     
     def _update_slots_for_land_price_changes(self):
         """根据地价场变化动态调整槽位"""
@@ -796,6 +846,11 @@ class EnhancedCitySimulationV3_1:
         """年度更新后尝试激活新的层"""
         print("🔄 尝试激活年度更新后的新层...")
         
+        # 检查槽位系统是否已初始化
+        if not hasattr(self.progressive_growth_system, 'layers') or len(self.progressive_growth_system.layers['commercial']) == 0:
+            print("⚠️ 槽位系统未初始化，跳过新层激活")
+            return
+        
         for building_type in ['commercial', 'residential']:
             layers = self.progressive_growth_system.layers[building_type]
             
@@ -810,6 +865,11 @@ class EnhancedCitySimulationV3_1:
     def _create_new_isocontour_layers_when_no_growth(self):
         """当没有新建筑生成时，创建新的等值层"""
         print("🆕 检测到无增长状态，创建新的等值层...")
+        
+        # 检查槽位系统是否已初始化
+        if not hasattr(self.progressive_growth_system, 'layers') or len(self.progressive_growth_system.layers['commercial']) == 0:
+            print("⚠️ 槽位系统未初始化，跳过新等值层创建")
+            return
         
         # 获取当前地价场
         current_land_price_field = self.city_state['land_price_field']
@@ -1092,6 +1152,11 @@ class EnhancedCitySimulationV3_1:
         """基于槽位系统生成建筑"""
         print(f"🏗️ 第 {self.current_quarter} 季度：基于槽位系统生成建筑...")
         
+        # 检查槽位系统是否已初始化（检查是否有实际的层数据）
+        if not hasattr(self.progressive_growth_system, 'layers') or len(self.progressive_growth_system.layers['commercial']) == 0:
+            print("⚠️ 槽位系统未初始化，跳过建筑生成")
+            return False
+        
         # 获取季度建筑增长目标（确保有足够的建筑生成）
         available_residential_slots = len(self.progressive_growth_system.get_available_slots('residential', 100))
         available_commercial_slots = len(self.progressive_growth_system.get_available_slots('commercial', 100))
@@ -1194,6 +1259,11 @@ class EnhancedCitySimulationV3_1:
         """激活前几层"""
         print("🎯 激活前几层...")
         
+        # 检查槽位系统是否已初始化
+        if not hasattr(self.progressive_growth_system, 'layers') or len(self.progressive_growth_system.layers['commercial']) == 0:
+            print("⚠️ 槽位系统未初始化，跳过层激活")
+            return
+        
         # 商业建筑：只激活第一层（99%等值线），实现逐层生长
         commercial_layers = self.progressive_growth_system.layers['commercial']
         if commercial_layers:
@@ -1209,6 +1279,10 @@ class EnhancedCitySimulationV3_1:
     
     def _try_activate_next_layers(self):
         """尝试激活下一层"""
+        # 检查槽位系统是否已初始化
+        if not hasattr(self.progressive_growth_system, 'layers') or len(self.progressive_growth_system.layers['commercial']) == 0:
+            return
+        
         for building_type in ['commercial', 'residential']:
             if self.progressive_growth_system.try_activate_next_layer(building_type, self.current_quarter):
                 print(f"🎯 {building_type}建筑：成功激活下一层")

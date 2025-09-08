@@ -1,0 +1,599 @@
+增强城市模拟系统 PRD v3.5
+1. 项目概述
+1.1 项目名称
+
+增强城市模拟系统 (Enhanced City Simulation System)
+
+1.2 项目目标
+
+构建一个基于多智能体的城市发展模拟系统，通过 高斯核地价潜力场、智能体决策、真实通勤轨迹和多时间尺度更新，模拟城市的动态演化，突出 逐层涟漪式生长感：建筑必须先填满最内层等值线后才能外扩；并在 v3.5 中确保地价演化对建筑生成的真实影响（含 Hub3）。
+
+1.3 核心特性（v3.5）
+
+多智能体决策系统（政府、企业、居民）
+
+高斯核驱动的地价演化与建筑分布（多Hub + 道路）
+
+三阶段渐进式地价演化（道路优先 → Hub1/Hub2 增长 → 完整多中心）
+
+槽位系统与地价演化同步（延迟初始化 + 年度重建 + 阶段门控）
+
+严格逐层“填满后外扩”的增长机制（冻结施工线 + 死槽容忍）
+
+Hub2 工业中心（数据后处理，简化TXT同步映射）
+
+增量式导出（完整 + 月度增量）
+
+可视化：建筑放置位置逐帧播放（对接 visualize_building_placement_v3_1.py）
+
+2. 系统架构
+2.1 整体架构
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   配置系统      │    │   逻辑系统      │    │   可视化系统    │
+│  - 城市配置     │    │  - 地价场系统   │    │  - 渲染引擎     │
+│  - 建筑配置     │    │  - 智能体系统   │    │  - 动画系统     │
+│  - 智能体配置   │    │  - 轨迹系统     │    │  - 热力图显示   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │   数据系统      │
+                    │  - 状态管理     │
+                    │  - 输出系统     │
+                    │  - 统计系统     │
+                    └─────────────────┘
+
+2.2 模块划分
+
+配置模块 (configs/)：系统参数配置
+
+逻辑模块 (logic/)：地价场、智能体、轨迹
+
+可视化模块 (viz/)：渲染、热力图、动画
+
+数据模块：状态管理与输出
+
+3. 数据模型
+3.1 城市状态 (City State)
+{
+  "simulation_info": {
+    "current_month": 0,
+    "total_residents": 100,
+    "total_buildings": 5,
+    "average_land_price": 100.0
+  },
+  "land_price_field": [[...]],
+  "buildings": {
+    "public": [...],
+    "residential": [...],
+    "commercial": [...],
+    "industrial": [...]
+  },
+  "residents": [...],
+  "trajectory_system": {
+    "commute_heatmap": [[...]],
+    "commercial_heatmap": [[...]],
+    "decay_rate": 0.8
+  },
+  "land_price_stats": {
+    "min_price": 50.0,
+    "max_price": 300.0,
+    "avg_price": 100.0,
+    "price_distribution": {...}
+  },
+  "public_facilities": [...],
+  "layers": [
+    {
+      "layer_id": "commercial_P0",
+      "status": "active",
+      "activated_quarter": 1,
+      "slots": [
+        { "pos": [120, 80], "used": false, "dead": false, "allowed_types": ["com"] }
+      ],
+      "capacity": 25,
+      "dead_slots": 1,
+      "capacity_effective": 24,
+      "placed": 20,
+      "density": 0.83
+    }
+  ]
+}
+
+3.2 轨迹系统
+{
+  "trajectory_types": {
+    "commute": { "color": "#0066CC", "intensity": 1.0 },
+    "commercial": { "color": "#CC3300", "intensity": 0.7 }
+  },
+  "heatmap_layers": {
+    "commute": [[...]],
+    "commercial": [[...]],
+    "combined": [[...]]
+  }
+}
+
+4. 功能模块
+4.1 时间系统
+
+地价场更新：年度/半年级别，σ 渐进增长
+
+建筑更新：季度批量新增（住宅 10–20，商业 5–12，公共 1–3）
+
+人口/热力更新：每月
+
+更新逻辑：
+
+每月：居民轨迹 → 热力更新 → 地价场小修正
+
+每季度：基于等值线分带 → 批量生成建筑
+
+每年：地价场范围外扩，σ 平滑增长
+
+4.1.1 长期模拟支持
+
+支持36个月长期模拟：
+
+配置参数：simulation.total_months = 36
+
+增量式数据导出：避免存储空间爆炸
+
+可视化脚本：支持跨月份数据重建和播放
+
+4.2 轨迹系统
+
+居民日程：住宅→工作→购物→住宅
+
+热力更新：每次移动累积，月度衰减 20%
+
+输出层：通勤热力、商业热力、综合热力
+
+4.3 智能体系统
+
+政府：每季度决策公共设施
+
+企业：按季度新增建筑，基于等值线选址
+
+居民：选住宅/工作 → 按日程活动，更新热力
+
+4.4 高斯核地价潜力场系统
+
+点核 (交通枢纽)：2D 高斯函数
+
+线核 (道路)：基于垂直距离的高斯衰减
+
+融合方式：max(P_hub, P_road)，阈值以下设为 0
+
+时间演化：σ_hub / σ_road 随时间增长，平滑过渡
+
+单位一致性：meters_per_pixel 参数
+
+4.4.1 渐进式地价场演化机制（v3.5 改进）
+
+分阶段激活策略：
+
+阶段1（Month 0-6）：道路高斯核优先发展
+- 道路峰值：0.7（稳定值）
+- Hub1/Hub2：未激活（强度 0.0）
+- Hub3：保持现有状态（峰值 1.0）
+
+阶段2（Month 7-12）：Hub1/Hub2 渐进增长
+- 道路峰值：0.7（保持稳定）
+- Hub1/Hub2：从 0.7 平滑增长到 1.0（S 型曲线，可配置陡峭度）
+- Hub3：保持现有状态（峰值 1.0）
+
+阶段3（Month 13+）：完整地价场
+- 所有组件：峰值 1.0
+- 完整的多中心地价场结构
+
+实现要点（v3.5 新增/强化）：
+- 组件强度按月计算并注入等值线/槽位系统
+- 早期阶段（道路阶段）对“非激活 Hub”的等值线过滤放宽（距离阈值 30px，阶段 0-6 直接放行）
+- Hub3 常量保持，避免被其他组件覆盖
+- 平滑曲线陡峭度 smooth_curve_steepness 可配置
+
+4.4.2 槽位系统与地价场演化同步（v3.5 定稿方案）
+
+核心问题：
+- 初始槽位若固定在 Month 0，将与后续地价演化脱节
+
+定稿策略（综合 A+B+C）：
+- 延迟/一次性初始化：Month 0 依据当前地价场初始化一次（或按配置延迟）
+- 年度重建：每年切换阶段节点（如 Month 12、24）重建槽位
+- 阶段门控：
+  - 道路阶段仅激活道路相关等值线与槽位
+  - Hub阶段逐步激活 Hub1/Hub2 槽位
+  - 完整阶段激活所有槽位（含 Hub3）
+- 层状态保持与迁移：重建后将既有建筑映射回新槽位层
+
+实现细节（已落地）：
+- 初始化空层判定修正：以 len(layers['commercial']) == 0 为准
+- 年度更新后触发 _rebuild_slots_for_land_price_changes()
+- 允许冻结施工线，保持已激活层的几何稳定
+
+4.5 建筑增长系统（逐层严格生长）
+
+冻结施工线：等值线一旦激活 → polyline 和 slots 固定。
+
+逐层严格填满机制：
+
+当前层所有 有效槽位 (capacity_effective) 被占满 → 才能激活外层。
+
+本季度剩余的配额 不跨层，直接结转。
+
+死槽机制：
+
+被边界/公共用地遮挡的槽位标记为 dead，不计入有效容量。
+
+死槽率不得超过配置阈值。
+
+4.5.1 多Hub等值线支持（v3.5 强化）
+
+优化点：
+- 多轮廓并存时：合并所有“包含激活Hub”的轮廓点
+- 小轮廓保留：短于长度阈值时，围绕激活 Hub 生成小轮廓（确保 Hub3 生成 99% 等值线）
+- 非激活 Hub 过滤：道路阶段放宽，后续阶段阈值 30px
+
+4.6 分带与等值线建筑生成
+
+分带规则：
+
+前排 (60–120m)：仅商业
+
+住宅带 (120–260m)：住宅为主
+
+外围 (>260m)：混合
+
+等值线提取：marching squares
+
+槽位化（slotting）：等弧长采样 → 每个点生成一个槽位
+
+等弧长采样：商业 25–35m，住宅 35–55m
+
+逐层激活流程：
+
+初始季度激活 P0 层并冻结槽位
+
+每季度配额全部先投放当前层
+
+层满格后，下季度才激活外层
+
+4.7 住宅 → 商业替代
+
+条件：连续 2 季度商业评分 > 住宅评分+0.15
+
+冷却期：4 季度
+
+保底：住宅占比 ≥ 35%
+
+4.8 公共用地机制
+
+触发条件：人口密度 / 可达性 / 建筑密度 / 商业密度
+
+效果：局部地价 +10–20%，迁入率上升，缓解拥挤
+
+公共用地插入不消耗住宅/商业配额，但会屏蔽槽位
+
+5. 可视化系统
+
+渲染顺序：网格 → 热力图 → 道路/枢纽 → 等值线 → 槽位 → 建筑 → 居民 → 统计
+
+公共用地符号：🏫 🏥 🌳 🏛️
+
+槽位显示：
+
+Free = 空心圆；Used = 实心圆；Dead = 灰色叉号
+
+层状态显示：Active 层 = 高亮粗线；Complete 层 = 绿色勾标识
+
+面板：显示每层的填充进度 placed / capacity_effective
+
+生长动画：新建筑从点状槽位在 0.6s 内长成 footprint
+
+5.1 建筑放置位置可视化（v3.5 对接）
+
+脚本：visualize_building_placement_v3_1.py
+
+功能：
+- 逐月展示建筑点位分布，标注 Hub1/Hub2/Hub3
+- 统计各类型建筑数量（住宅/商业/工业/公共）
+- 支持生成 GIF 与关键月份静态对比图
+
+使用：
+1) 运行完整模拟，生成 building_positions_month_*.json
+2) 执行脚本并选择模式（动画/静态/二者）
+
+6. 输出系统
+
+6.1 增量式建筑位置导出（v3.5）
+
+采用纯增量方案优化存储空间：
+
+第0个月：完整状态文件
+- building_positions_month_00.json（完整建筑列表）
+
+第1-N个月：增量文件
+- building_delta_month_*.json（仅新增建筑）
+
+6.1.1 简化格式导出
+
+简化文件：
+- simplified_buildings_*.json（完整状态，JSON格式）
+- simplified_buildings_*.txt（增量数据，文本格式）
+
+TXT 格式：
+```
+1(123.456, 789.012, 0), 2(234.567, 890.123, 0), 3(345.678, 901.234, 0)
+```
+其中：1=住宅，2=商业，3=工业，4=公共
+
+6.2 其他输出文件
+
+city_state_output.json
+
+trajectory_data.json
+
+land_price_evolution.json
+
+land_price_field_quarterly.json
+
+facility_events.json
+
+conversion_events.json（含住改商、工业转换说明）
+
+layer_state_quarterly.json（记录层状态和槽位使用）
+
+simplified_buildings_*.json（简化格式，用于API）
+
+渲染：month_*.png、city_evolution.gif
+
+6.3 状态重建功能
+
+提供重建任意月份完整状态的工具函数：
+- get_full_state_at_month(target_month)
+- 从第0个月开始累加所有增量文件
+- 支持缓存机制提升查询效率
+
+6.4 可视化脚本支持
+
+可视化脚本支持增量数据重建：
+- 自动检测增量文件并重建完整状态
+- 支持跨月份数据加载（如36个月模拟）
+- 提供逐帧播放和静态显示功能
+
+6.5 数据后处理：Hub2 工业中心（v3.5 新增）
+
+规则：
+- 对 Hub2（[90, 55]）附近 30px 内的商业建筑（type='commercial'）进行转换 → industrial
+- 输出字段增加 original_type 与 conversion_reason
+
+简化 TXT 同步：
+- type 映射包含工业：{'residential':1,'commercial':2,'industrial':3,'public':4}
+- 历史简化TXT修正脚本：implement_plan_a.py（避免覆盖，先解析后改写）
+
+验收：
+- Hub2 周边导出数据应以工业为主（JSON 与 TXT 一致）
+
+7. 配置系统（v3.5）
+"city": {
+  "map_size": [110, 110],
+  "trunk_road": [[20, 55], [90, 55]],
+  "transport_hubs": [[20, 55], [90, 55], [67, 94]]
+},
+"gaussian_land_price_system": {
+  "meters_per_pixel": 2.0,
+  "hub_sigma_base_m": 40,
+  "road_sigma_base_m": 20,
+  "hub_peak_value": 1.0,
+  "road_peak_value": 0.7,
+  "min_threshold": 0.1,
+  "hub_growth_rate": 0.03,
+  "road_growth_rate": 0.02,
+  "max_hub_multiplier": 2.0,
+  "max_road_multiplier": 2.5,
+  "alpha_inertia": 0.25
+},
+"land_price_evolution": {
+  "enabled": true,
+  "road_activation_month": 0,
+  "road_peak_value": 0.7,
+  "hub_activation_month": 7,
+  "hub_growth_duration_months": 6,
+  "hub_initial_peak": 0.7,
+  "hub_final_peak": 1.0,
+  "hub3_keep_existing": true,
+  "growth_curve_type": "smooth",
+  "smooth_curve_steepness": 10.0
+},
+"isocontour_layout": {
+  "commercial": { "start_P": 0.85, "depth_m": 20, "gap_m": 10, "arc_spacing_m": [25, 35] },
+  "residential": { "start_P": 0.55, "depth_m": 14, "gap_m": 26, "arc_spacing_m": [35, 55] },
+  "normal_offset_m": 1.0,
+  "jitter_m": 0.5,
+  "fallback_percentiles": { "commercial": [95, 90, 85], "residential": [80, 70, 60, 50] }
+},
+"bands": {
+  "front_no_residential_m": [60, 120],
+  "residential_side_band_m": [120, 260],
+  "use_signed_normal": true
+},
+"landuse_hysteresis": {
+  "delta_bid": 0.15,
+  "L_quarters": 2,
+  "cooldown_quarters": 4,
+  "res_min_share": 0.35
+},
+"public_facility_rules": {
+  "school": { "trigger_population": 500, "service_radius": 500, "symbol": "🏫" },
+  "hospital": { "trigger_distance_threshold": 800, "service_radius": 800, "symbol": "🏥" },
+  "park": { "trigger_building_density": 0.6, "service_radius": 300, "symbol": "🌳" },
+  "plaza": { "trigger_commercial_density": 0.5, "service_radius": 400, "symbol": "🏛️" }
+},
+"progressive_growth": {
+  "enabled": true,
+  "strict_fill_required": true,
+  "allow_dead_slots_ratio": 0.05,
+  "carry_over_quota": true,
+  "freeze_contour_on_activation": true,
+  "min_segment_length_factor": 3.0
+}
+
+8. 验收标准（v3.5）
+
+主标准
+
+建筑严格落在等值线上（误差 ≤0.5m）
+
+商业等值线平均间距 = 30m ±10%；住宅 = 40m ±10%
+
+等弧长采样符合配置区间占比 ≥90%
+
+分带正确：前排无住宅，住宅集中在带区
+
+地价场年度过渡平滑（σ 连续增长）
+
+建筑分布与地价场相关性 ≥0.7
+
+渐进式地价场演化验证：
+
+阶段1（Month 0-6）：道路峰值稳定在0.7，Hub1/Hub2强度为0.0，Hub3=1.0
+
+阶段2（Month 7-12）：Hub1/Hub2强度从0.7平滑增长到1.0
+
+阶段3（Month 13+）：所有组件峰值达到1.0
+
+Hub3 在整个演化过程中持续形成可用等值线与槽位
+
+槽位系统与地价场演化同步验证：
+
+年度节点需重建槽位并保持既有建筑位置合法
+
+道路阶段建筑沿道路分布；Hub阶段建筑向 Hub 聚集（含 Hub3）
+
+多Hub等值线：
+
+每个 Hub 至少有一圈可用等值线与可分配槽位
+
+Hub3 周围 12 个月内出现建筑并持续增长（按配额）
+
+工业后处理一致性：
+
+Hub2 周边导出的 JSON 与 TXT 类型一致（industrial）
+
+9. 开发计划
+
+阶段1：时间系统改造（1–2 天）
+
+阶段2：轨迹系统开发（2–3 天）
+
+阶段2.5：高斯核地价场系统实现（1–2 天）
+
+阶段3：增长系统优化（1–2 天）
+
+阶段3.5：等值线建筑生成与替代逻辑（2–3 天）
+
+✅ 槽位化与冻结等值线
+
+✅ 层状态机（locked/active/complete）
+
+✅ 严格满格后外扩逻辑
+
+✅ 死槽机制与统计
+
+阶段4：可视化增强（1–2 天）
+
+阶段4.5：公共用地机制实现（1 天）
+
+阶段5：测试与优化（1 天）
+
+10. 风险评估
+
+等值线抖动：σ 增长过快 → 使用 α=0.25 平滑 + 冻结施工线
+
+层卡住：若死槽过多导致无法满格 → 使用 allow_dead_slots_ratio 容忍度
+
+外层过晚激活：通过 max_quarters_per_layer 控制
+
+公共用地过密：加最小间距约束
+
+热力数据膨胀：numpy 优化 + 历史清理
+
+建筑重叠风险：加入占位/碰撞检测
+
+11. 版本历史
+
+v3.5（当前）
+
+- 强化渐进式地价演化：阶段门控 + 曲线陡峭度 + Hub3 恒定
+- 多Hub等值线改进：小轮廓保留、激活Hub合并、早期过滤放宽
+- 槽位系统同步：初始化判定修正、年度重建、阶段性激活
+- Hub2 工业中心：数据后处理落地；TXT 同步映射；历史修复脚本
+- 可视化对接：visualize_building_placement_v3_1.py 展示建筑点位演化
+
+v3.1
+
+引入 槽位化 + 冻结等值线
+
+严格逐层满格机制
+
+新增 dead 槽位机制与容忍率
+
+可视化强化：槽位三态 + 层进度面板
+
+网格尺寸优化：256×256 → 110×110（提升性能，保持比例）
+
+交通枢纽位置调整：适配新网格尺寸
+
+新增 Hub3 支持：位置 (67, 94)，独立高斯核影响
+
+增量式数据导出：优化存储空间，支持36个月长期模拟
+
+多Hub等值线系统：修复独立Hub被忽略的问题
+
+可视化脚本增强：支持增量数据重建和跨月份播放
+
+渐进式地价场演化：道路优先发展(0.7峰值) → Hub1/Hub2渐进增长(0.7→1.0) → 完整地价场
+
+槽位系统与地价场演化同步：延迟初始化、动态重建、原位替换、新增槽位机制
+
+v3.0
+
+全面替换 SDF → Gaussian Land Price Field
+
+更新输出/配置字段名
+
+验收标准、风险、可视化统一为地价场术语
+
+v2.3
+
+高斯核系统初步实现，仍含 SDF 残留
+
+新增时间分层、住宅/商业分带、住改商滞后逻辑
+
+v2.2
+
+Logistic 建筑增长曲线
+
+分批闪现机制
+
+核心点修复
+
+防重复机制
+
+v2.0
+
+月级时间系统
+
+真实通勤轨迹
+
+热力图系统
+
+v1.0
+
+基础多智能体系统
+
+日级时间系统
+
+基础可视化
+
+

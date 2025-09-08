@@ -1,0 +1,75 @@
+{
+  "simulation": {
+    "total_months": 48
+  },
+  "city": {
+    "map_size": [110, 110],
+    "trunk_road": [[20, 55], [90, 55]],
+    "transport_hubs": [[20, 55], [90, 55], [67, 94]]
+  },
+  "gaussian_land_price_system": {
+    "meters_per_pixel": 2.0,
+    "hub_sigma_base_m": 32,
+    "road_sigma_base_m": 20,
+    "hub_peak_value": 1.0,
+    "road_peak_value": 0.90,
+    "min_threshold": 0.04,
+    "hub_growth_rate": 0.03,
+    "road_growth_rate": 0.02,
+    "max_hub_multiplier": 2.0,
+    "max_road_multiplier": 2.5,
+    "alpha_inertia": 0.25
+  },
+  "land_price_evolution": {
+    "enabled": true,
+    "road_activation_month": 0,
+    "road_peak_value": 0.7,
+    "hub_activation_month": 7,
+    "hub_growth_duration_months": 6,
+    "hub_initial_peak": 0.7,
+    "hub_final_peak": 1.0,
+    "hub3_keep_existing": true,
+    "growth_curve_type": "smooth",
+    "smooth_curve_steepness": 10.0
+  },
+  "isocontour_layout": {
+    "threshold_mode": "relative",
+    "relative_levels": {
+      "commercial": [0.95, 0.90, 0.85],
+      "residential": [0.80, 0.75, 0.70, 0.65]
+    },
+    "commercial": { "start_P": 0.85, "depth_m": 12, "gap_m": 8, "arc_spacing_m": [16, 24] },
+    "residential": { "start_P": 0.65, "depth_m": 12, "gap_m": 18, "arc_spacing_m": [22, 32] },
+    "normal_offset_m": 1.0,
+    "jitter_m": 0.5,
+    "fallback_percentiles": { "commercial": [96, 93, 90], "residential": [85, 80, 75, 70] }
+  },
+  "bands": {
+    "front_no_residential_m": [60, 120],
+    "residential_side_band_m": [120, 260],
+    "use_signed_normal": true
+  },
+  "landuse_hysteresis": {
+    "delta_bid": 0.15,
+    "L_quarters": 2,
+    "cooldown_quarters": 4,
+    "res_min_share": 0.35
+  },
+  "public_facility_rules": {
+    "school": { "trigger_population": 40, "coverage_threshold": 0.80, "service_radius": 400, "symbol": "🏫" },
+    "hospital": { "trigger_distance_threshold": 80, "service_radius": 260, "symbol": "🏥" },
+    "park": { "trigger_building_density": 0.05, "service_radius": 220, "building_area_px": 30, "symbol": "🌳" },
+    "plaza": { "trigger_commercial_density": 0.04, "service_radius": 220, "commercial_area_px": 60, "symbol": "🏛️" }
+  },
+  "progressive_growth": {
+    "enabled": true,
+    "strict_fill_required": false,
+    "allow_dead_slots_ratio": 0.10,
+    "carry_over_quota": true,
+    "freeze_contour_on_activation": true,
+    "min_segment_length_factor": 3.0,
+    "annual_boost_factor": 0.10
+  }
+}
+
+

@@ -1,0 +1,807 @@
+# 增强城市模拟系统 PRD v2.0
+## Product Requirements Document
+
+### 1. 项目概述
+
+#### 1.1 项目名称
+增强城市模拟系统 (Enhanced City Simulation System)
+
+#### 1.2 项目目标
+构建一个基于多智能体的城市发展模拟系统，通过地价驱动、真实通勤轨迹和月级时间尺度，模拟城市的有机生长过程。
+
+#### 1.3 核心特性
+- 多智能体决策系统（政府、企业、居民）
+- 地价驱动的建筑布局
+- 真实通勤轨迹和热力图
+- 月级时间尺度的城市发展
+- 可视化城市演化过程
+
+### 2. 系统架构
+
+#### 2.1 整体架构
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   配置系统      │    │   逻辑系统      │    │   可视化系统    │
+│  - 城市配置     │    │  - 地价系统     │    │  - 渲染引擎     │
+│  - 建筑配置     │    │  - 智能体系统   │    │  - 动画系统     │
+│  - 智能体配置   │    │  - 轨迹系统     │    │  - 热力图显示   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │   数据系统      │
+                    │  - 状态管理     │
+                    │  - 输出系统     │
+                    │  - 统计系统     │
+                    └─────────────────┘
+```
+
+#### 2.2 模块划分
+- **配置模块** (`configs/`): 系统参数配置
+- **逻辑模块** (`logic/`): 核心业务逻辑
+- **可视化模块** (`viz/`): 渲染和动画
+- **数据模块**: 状态管理和输出
+
+### 3. 数据模型
+
+#### 3.1 城市状态 (City State)
+```json
+{
+  "simulation_info": {
+    "current_month": 0,
+    "total_residents": 100,
+    "total_buildings": 5,
+    "average_land_price": 100.0
+  },
+  "buildings": {
+    "public": [
+      {
+        "id": "pub_1",
+        "type": "public",
+        "xy": [x, y],
+        "capacity": 500,
+        "current_usage": 0,
+        "service_radius": 50,
+        "construction_cost": 1000,
+        "revenue": 0
+      }
+    ],
+    "residential": [
+      {
+        "id": "res_1",
+        "type": "residential",
+        "xy": [x, y],
+        "capacity": 200,
+        "current_usage": 0,
+        "construction_cost": 500,
+        "revenue_per_person": 10,
+        "revenue": 0
+      }
+    ],
+    "commercial": [
+      {
+        "id": "com_1",
+        "type": "commercial",
+        "xy": [x, y],
+        "capacity": 800,
+        "current_usage": 0,
+        "construction_cost": 1000,
+        "revenue_per_person": 20,
+        "revenue": 0
+      }
+    ]
+  },
+  "residents": [
+    {
+      "id": "agent_1",
+      "pos": [x, y],
+      "home": "res_1",
+      "workplace": "com_1",
+      "income": 5000,
+      "housing_cost": 0,
+      "transport_cost": 0,
+      "current_plan_index": 0,
+      "plan": [
+        {"type": "work", "target": "com_1", "duration": 8},
+        {"type": "shop", "target": "com_2", "duration": 2},
+        {"type": "home", "target": "res_1", "duration": 14}
+      ]
+    }
+  ],
+  "trajectory_system": {
+    "commute_heatmap": [[...]],  // 通勤热力图
+    "commercial_heatmap": [[...]],  // 商业活动热力图
+    "decay_rate": 0.8  // 每月衰减率
+  },
+  "land_price_stats": {
+    "min_price": 50.0,
+    "max_price": 300.0,
+    "avg_price": 100.0,
+    "price_distribution": {...}
+  }
+}
+```
+
+#### 3.2 轨迹系统 (Trajectory System)
+```json
+{
+  "trajectory_types": {
+    "commute": {
+      "color": "#0066CC",
+      "intensity": 1.0,
+      "description": "住宅到工作地点的通勤轨迹"
+    },
+    "commercial": {
+      "color": "#CC3300", 
+      "intensity": 0.7,
+      "description": "购物和娱乐活动轨迹"
+    }
+  },
+  "heatmap_layers": {
+    "commute": [[...]],  // 通勤热力图矩阵
+    "commercial": [[...]],  // 商业热力图矩阵
+    "combined": [[...]]  // 综合热力图矩阵
+  }
+}
+```
+
+### 4. 功能模块
+
+#### 4.1 时间系统 (Time System)
+**设计目标**: 以月为单位进行模拟，提高系统效率
+
+**核心参数**:
+- 模拟单位: 月
+- 总模拟时长: 24个月（2年）
+- 每月更新频率: 1次
+- 渲染频率: 每月1次
+
+**时间更新逻辑**:
+```
+每月更新流程:
+1. 居民通勤轨迹更新
+2. 热力图衰减 (20%)
+3. 地价系统更新
+4. 智能体决策
+5. 新居民生成
+6. 建筑使用统计
+7. 渲染输出
+```
+
+#### 4.2 轨迹系统 (Trajectory System)
+**设计目标**: 实现真实的通勤轨迹和热力图
+
+**居民日程**:
+```
+每日计划:
+- 早上 (6:00-14:00): 住宅 → 工作地点
+- 下午 (14:00-16:00): 工作地点 → 购物地点  
+- 晚上 (16:00-6:00): 购物地点 → 住宅
+```
+
+**轨迹生成**:
+```
+轨迹更新逻辑:
+1. 居民按日程移动
+2. 每次移动在对应热力图上累积
+3. 通勤轨迹: 住宅到工作地点的路径
+4. 商业轨迹: 购物和娱乐活动路径
+5. 每月衰减20%保持动态性
+```
+
+**热力图类型**:
+- **通勤热力图**: 蓝色系，显示住宅到工作地点的交通流量
+- **商业热力图**: 红色系，显示购物和娱乐活动
+- **综合热力图**: 两种轨迹的叠加效果
+
+#### 4.3 智能体系统 (Agent System)
+
+##### 4.3.1 政府智能体 (Government Agent)
+**决策频率**: 每3个月一次
+**决策逻辑**:
+```python
+def make_decisions(self, city_state, land_price_system):
+    # 评估公共服务覆盖
+    coverage = self.calculate_service_coverage(city_state)
+    avg_time = self.calculate_average_travel_time(city_state)
+    
+    if coverage < 0.8 or avg_time > 10:
+        # 建设新的公共设施
+        new_public = self.build_public_facility(city_state, land_price_system)
+        return new_public
+    return []
+```
+
+##### 4.3.2 企业智能体 (Business Agent)
+**决策频率**: 每月一次
+**决策逻辑**:
+```python
+def make_decisions(self, city_state, land_price_system):
+    # 分离建设逻辑和工作分配逻辑
+    # 1. 基于人口增长和地价决定建设
+    new_residential = self.build_residential_if_needed(city_state, land_price_system)
+    new_commercial = self.build_commercial_if_needed(city_state, land_price_system)
+    
+    # 2. 工作分配在居民系统中处理
+    return new_residential, new_commercial
+
+def build_residential_if_needed(self, city_state, land_price_system):
+    # 基于住宅使用率和人口增长需求
+    usage_ratio = self.calculate_residential_usage(city_state)
+    population_growth = self.calculate_population_growth_needs(city_state)
+    
+    if usage_ratio > 0.7 or population_growth > 0:
+        return self.construct_residential_building(city_state, land_price_system)
+    return None
+
+def build_commercial_if_needed(self, city_state, land_price_system):
+    # 基于人口基础和商业建筑密度
+    residents = city_state.get('residents', [])
+    commercial_buildings = city_state.get('commercial', [])
+    residential_buildings = city_state.get('residential', [])
+    
+    # 基础条件：有足够的人口和住宅
+    if len(residents) < 30 or len(residential_buildings) < 3:
+        return None
+    
+    # 商业建筑密度：每X个居民需要Y个商业建筑
+    target_commercial = len(residents) // 50  # 每50人一个商业建筑
+    current_commercial = len(commercial_buildings)
+    
+    if current_commercial < target_commercial:
+        return self.construct_commercial_building(city_state, land_price_system)
+    return None
+```
+
+##### 4.3.3 居民智能体 (Resident Agent)
+**行为模式**:
+- 选择住宅: 基于地价、距离、容量
+- 选择工作: 基于收入、距离、建筑类型
+- 日常通勤: 按日程计划移动
+
+#### 4.4 地价系统 (Land Price System)
+**地价计算因素**:
+1. 核心距离影响 (50%)
+2. 交通便利性 (30%)
+3. 设施密度 (20%)
+
+**地价更新**:
+- 每月更新一次
+- 考虑人口密度变化
+- 考虑新建筑影响
+
+#### 4.5 增长系统 (Growth System)
+
+##### 4.5.1 人口增长
+**增长参数**:
+- 初始人口: 100人
+- 每月增长率: 8-12%
+- 最大人口密度: 80%
+- 住宅容量限制: 考虑现有住宅容量
+
+**新居民生成**:
+```python
+def spawn_new_residents(self):
+    current_population = len(self.city_state['residents'])
+    growth_rate = random.uniform(0.08, 0.12)
+    new_residents_count = int(current_population * growth_rate)
+    
+    # 考虑住宅容量限制
+    total_capacity = self.calculate_total_housing_capacity()
+    max_population = int(total_capacity * 0.8)
+    
+    if len(self.city_state['residents']) + new_residents_count > max_population:
+        new_residents_count = max(0, max_population - len(self.city_state['residents']))
+    
+    return new_residents_count
+```
+
+##### 4.5.2 建筑增长（地价驱动 + Logistic增长曲线）
+
+**设计目标**:
+- 避免建筑"均匀随机增加"造成的生硬感
+- 通过S型增长曲线（前期慢、中期快、后期收敛）营造真实的城市生长感
+- 保持总量目标：24个月新增60–100栋建筑
+
+**增长函数公式**:
+采用Logistic函数来控制建筑数量随时间的增长：
+
+```
+N(t) = K / (1 + e^(-r(t-t0)))
+```
+
+其中：
+- `N(t)`：第t月累计建筑数量
+- `K`：最大建筑容量（目标总量，建议80）
+- `r`：增长速率参数（建议0.3–0.5）
+- `t0`：拐点位置（建议第12月，表示中期加速期）
+- 每月新增量 = N(t) - N(t-1)
+
+**增长阶段规划**:
+- **前6月**：每月约2–3栋（主要是住宅+少量商业）
+- **中间12月**：每月约5–7栋（住宅/商业/公共齐头并进，热力走廊清晰）
+- **最后6月**：每月约3–5栋（补充热点区域，逐渐饱和）
+
+**建筑类型分布**:
+- 公共建筑: 20%
+- 住宅建筑: 40%
+- 商业建筑: 40%
+
+**核心问题修复**:
+1. **核心点修正**: 地价系统的核心点应该是两个交通枢纽(40, 128)和(216, 128)，而不是地图中心(128, 128)
+2. **防重复机制**: 新增建筑位置检查，确保不与现有建筑重叠
+3. **空间分散**: 增加建筑间最小距离约束
+4. **自然增长**: 使用Logistic函数实现S型增长曲线
+5. **商业建筑双重属性**: 分离建设逻辑和工作分配逻辑，避免循环依赖
+
+**新增参数**:
+- `location_candidates`: 每月生成候选地块（基于地价矩阵筛选 top-N%）
+- `land_price_weight`: 建筑选址与地价的耦合强度（0–1）
+- `heatmap_weight`: 热力对商业建筑选址的影响（0–1）
+- `facility_weight`: 公共设施对住宅吸引力的影响（0–1）
+- `min_building_distance`: 建筑间最小距离（像素）
+- `target_total`: 目标建筑总量
+- `growth_function`: 增长函数类型（"logistic"）
+- `growth_params`: Logistic函数参数（K, r, t0）
+- `min_new_per_month`: 每月最小新增量
+- `max_new_per_month`: 每月最大新增量
+
+**分批闪现机制（视觉优化）**:
+- 新建筑不要一次性全部出现
+- 每月新增建筑分成2–3批次（每批间隔1–2秒渲染），模拟施工/开放的过程
+
+**逻辑更新**:
+```python
+def build_residential_if_needed(self, city_state, land_price_matrix):
+    usage_ratio = self.calculate_residential_usage(city_state)
+    if usage_ratio > 0.7:  # 高使用率触发扩建
+        # 生成候选点（排除已有建筑）
+        candidates = self.get_available_land_price_zones(
+            land_price_matrix, city_state, top_percent=20, min_distance=30
+        )
+        # 打分函数
+        scores = {
+          c: (land_price_matrix[c] * self.land_price_weight
+              + self.facility_proximity(c) * self.facility_weight)
+          for c in candidates
+        }
+        best_loc = max(scores, key=scores.get)
+        return self.construct_building("residential", best_loc)
+    return None
+
+def build_commercial_if_needed(self, city_state, land_price_matrix, heatmap):
+    usage_ratio = self.calculate_commercial_usage(city_state)
+    if usage_ratio > 0.6:
+        candidates = self.get_available_land_price_zones(
+            land_price_matrix, city_state, top_percent=30, min_distance=40
+        )
+        scores = {
+          c: (land_price_matrix[c] * self.land_price_weight
+              + heatmap[c] * self.heatmap_weight)
+          for c in candidates
+        }
+        best_loc = max(scores, key=scores.get)
+        return self.construct_building("commercial", best_loc)
+    return None
+
+def get_available_land_price_zones(self, land_price_matrix, city_state, top_percent=20, min_distance=30):
+    """获取可用的高地价区域，确保不与现有建筑重叠"""
+    # 计算地价阈值
+    flat_prices = land_price_matrix.flatten()
+    threshold = np.percentile(flat_prices, 100 - top_percent)
+    
+    candidates = []
+    for y in range(land_price_matrix.shape[0]):
+        for x in range(land_price_matrix.shape[1]):
+            if land_price_matrix[y, x] >= threshold:
+                position = [x, y]
+                # 检查是否与现有建筑保持最小距离
+                if self.is_position_available(position, city_state, min_distance):
+                    candidates.append((x, y))
+    
+    return candidates
+
+def is_position_available(self, position, city_state, min_distance=30):
+    """检查位置是否可用（与现有建筑保持最小距离）"""
+    all_buildings = []
+    all_buildings.extend(city_state.get('public', []))
+    all_buildings.extend(city_state.get('residential', []))
+    all_buildings.extend(city_state.get('commercial', []))
+    
+    for building in all_buildings:
+        distance = self.calculate_distance(position, building['xy'])
+        if distance < min_distance:
+            return False
+    
+    return True
+```
+
+**建筑分布规律**:
+- 公共建筑：由政府智能体按覆盖率和平均通勤时间决定
+- 住宅建筑：优先分布在中等地价区 + 靠近公共设施 + 距离现有建筑≥30像素
+- 商业建筑：优先分布在高地价区 + 热力走廊附近 + 距离现有建筑≥40像素
+
+**工作分配逻辑**:
+- 商业建筑建设后，立即为居民分配工作地点
+- 考虑通勤距离和地价因素
+- 平衡各商业建筑的使用率
+- 工作分配不影响商业建筑建设决策
+
+**地价系统修正**:
+```python
+def initialize_land_prices(self, map_size, transport_hubs):
+    """初始化地价矩阵，以交通枢纽为核心点"""
+    width, height = map_size
+    self.land_price_matrix = np.zeros((height, width))
+    self.transport_hubs = transport_hubs  # [(40, 128), (216, 128)]
+    
+    for y in range(height):
+        for x in range(width):
+            self.land_price_matrix[y, x] = self._calculate_land_price([x, y])
+
+def _calculate_land_price(self, position):
+    """计算地价，以最近的交通枢纽为核心"""
+    x, y = position
+    
+    # 计算到最近交通枢纽的距离
+    min_hub_distance = float('inf')
+    for hub in self.transport_hubs:
+        distance = self._calculate_distance(position, hub)
+        min_hub_distance = min(min_hub_distance, distance)
+    
+    # 地价随距离交通枢纽的距离衰减
+    core_factor = math.exp(-min_hub_distance * self.decay_rate)
+    
+    # 主干道便利性
+    trunk_center_y = 128
+    trunk_distance = abs(y - trunk_center_y)
+    trunk_factor = math.exp(-trunk_distance * self.transport_decay_rate * 0.5)
+    
+    # 综合计算
+    land_price = self.base_price * (
+        self.core_distance_weight * core_factor +
+        self.transport_weight * trunk_factor +
+        self.facility_weight * 1.0
+    )
+    
+    return max(land_price, 50)
+```
+
+#### 7.2 建筑配置 (`configs/building_config.json`)
+```json
+{
+  "building_types": {
+    "public": {
+      "capacity": 500,
+      "cost": 1000,
+      "service_radius": 50,
+      "color": "#22A6B3",
+      "symbol": "🏛️",
+      "description": "公共建筑"
+    },
+    "residential": {
+      "capacity": 200,
+      "cost": 500,
+      "revenue_per_person": 10,
+      "color": "#F6C344",
+      "symbol": "🏠",
+      "description": "住宅建筑"
+    },
+    "commercial": {
+      "capacity": 800,
+      "cost": 1000,
+      "revenue_per_person": 20,
+      "color": "#FD7E14",
+      "symbol": "🏪",
+      "description": "商业建筑"
+    }
+  },
+  "land_price_factors": {
+    "core_distance_weight": 0.5,
+    "transport_weight": 0.3,
+    "facility_weight": 0.2,
+    "decay_rate": 0.01,
+    "transport_decay_rate": 0.02
+  },
+  "trajectory_config": {
+    "commute_color": "#0066CC",
+    "commercial_color": "#CC3300",
+    "combined_color": "#660099",
+    "heatmap_alpha": 0.6,
+    "trajectory_width": 2
+  },
+  "building_growth": {
+    "target_total": 80,
+    "growth_function": "logistic",
+    "params": {
+      "K": 80,
+      "r": 0.4,
+      "t0": 12
+    },
+    "min_new_per_month": 2,
+    "max_new_per_month": 7,
+    "residential_ratio": 0.5,
+    "commercial_ratio": 0.3,
+    "public_ratio": 0.2,
+    "land_price_weight": 0.6,
+    "heatmap_weight": 0.3,
+    "facility_weight": 0.1,
+    "candidate_top_percent": 20,
+    "min_building_distance": {
+      "residential": 30,
+      "commercial": 40,
+      "public": 50
+    },
+    "batch_rendering": {
+      "enabled": true,
+      "batches_per_month": 3,
+      "interval_seconds": 1.5
+    }
+  },
+  "visualization": {
+    "background": "#FFFFFF",
+    "trunk_road": "#9AA4B2",
+    "core_point": "#0B5ED7",
+    "heat_map": "#FF00FF",
+    "residents": "#FFFFFF"
+  }
+}
+```
+
+#### 8.4 建筑分布验收标准
+- [ ] 新建住宅的分布与公共设施/中等地价区相关性 > 0.7
+- [ ] 新建商业的分布与高地价/热力热点相关性 > 0.7
+- [ ] 随机生成建筑比例 < 20%，其余由地价驱动
+- [ ] 模拟 24 个月后，建筑空间分布与地价分布呈显著耦合（可通过皮尔逊相关 > 0.6 验证）
+- [ ] 建筑间保持最小距离约束，无重叠现象
+- [ ] 地价最高点位于交通枢纽附近，而非地图中心
+- [ ] 24个月新增建筑总量在60–100栋之间
+- [ ] 增长曲线符合S型特征（前期慢、中期快、后期收敛）
+- [ ] 新建筑分布与地价/热力相关性保持 >0.6
+- [ ] 动画观感自然，无突兀"爆发式"增长
+
+### 5. 可视化系统
+
+#### 5.1 渲染层次
+```
+渲染顺序:
+1. 背景网格
+2. 热力图 (通勤 + 商业)
+3. 主干道
+4. 交通枢纽
+5. 建筑 (公共 → 住宅 → 商业)
+6. 居民 (可选显示)
+7. 统计信息
+```
+
+#### 5.2 热力图可视化
+**颜色方案**:
+- 通勤热力图: 蓝色渐变 (#0066CC → #FFFFFF)
+- 商业热力图: 红色渐变 (#CC3300 → #FFFFFF)
+- 综合热力图: 紫色渐变 (#660099 → #FFFFFF)
+
+**透明度设置**:
+- 热力图透明度: 0.6
+- 建筑透明度: 0.8
+- 居民透明度: 0.7
+
+#### 5.3 动画系统
+**帧率设置**:
+- 渲染频率: 每月1帧
+- 总帧数: 24帧 (24个月)
+- 播放速度: 1秒/帧
+
+**动画类型**:
+- 逐帧播放
+- GIF动画
+- 热力图演化动画
+
+### 6. 输出系统
+
+#### 6.1 数据输出
+**JSON文件**:
+- `city_state_output.json`: 最终城市状态
+- `daily_stats.json`: 每月统计数据
+- `trajectory_data.json`: 轨迹系统数据
+- `land_price_evolution.json`: 地价演化数据
+- `final_summary.json`: 模拟总结
+
+**统计数据**:
+- 人口增长曲线
+- 建筑数量变化
+- 地价分布变化
+- 热力图统计
+
+#### 6.2 可视化输出
+**图片文件**:
+- `final_city_layout.png`: 最终城市布局
+- `month_*.png`: 每月渲染帧 (24张)
+- `trajectory_heatmap.png`: 轨迹热力图
+- `growth_curves.png`: 增长曲线图
+
+**动画文件**:
+- `city_evolution.gif`: 城市演化动画
+- `trajectory_evolution.gif`: 轨迹演化动画
+
+### 7. 配置系统
+
+#### 7.1 城市配置 (`configs/city_config.json`)
+```json
+{
+  "city_name": "示例城市",
+  "map_size": [256, 256],
+  "core_point": [128, 128],
+  "trunk_road": [[40, 128], [216, 128]],
+  "simulation_months": 24,
+  "initial_population": 100,
+  "monthly_growth_rate": [0.08, 0.12],
+  "max_population_density": 0.8,
+  "trajectory_decay_rate": 0.8,
+  "render_every_month": 1
+}
+```
+
+#### 7.2 建筑配置 (`configs/building_config.json`)
+```json
+{
+  "building_types": {
+    "public": {
+      "capacity": 500,
+      "cost": 1000,
+      "service_radius": 50,
+      "color": "#22A6B3",
+      "symbol": "🏛️",
+      "description": "公共建筑"
+    },
+    "residential": {
+      "capacity": 200,
+      "cost": 500,
+      "revenue_per_person": 10,
+      "color": "#F6C344",
+      "symbol": "🏠",
+      "description": "住宅建筑"
+    },
+    "commercial": {
+      "capacity": 800,
+      "cost": 1000,
+      "revenue_per_person": 20,
+      "color": "#FD7E14",
+      "symbol": "🏪",
+      "description": "商业建筑"
+    }
+  },
+  "land_price_factors": {
+    "core_distance_weight": 0.5,
+    "transport_weight": 0.3,
+    "facility_weight": 0.2,
+    "decay_rate": 0.01,
+    "transport_decay_rate": 0.02
+  },
+  "trajectory_config": {
+    "commute_color": "#0066CC",
+    "commercial_color": "#CC3300",
+    "combined_color": "#660099",
+    "heatmap_alpha": 0.6,
+    "trajectory_width": 2
+  }
+}
+```
+
+#### 7.3 智能体配置 (`configs/agent_config.json`)
+```json
+{
+  "government_agent": {
+    "decision_frequency": 3,
+    "budget_limit": 10000,
+    "public_facility_threshold": 0.8,
+    "coverage_threshold": 0.6,
+    "avg_time_threshold": 10
+  },
+  "business_agent": {
+    "decision_frequency": 1,
+    "profit_threshold": 0.6,
+    "usage_ratio_threshold": 0.7,
+    "expansion_probability": 0.4
+  },
+  "resident_agent": {
+    "movement_speed": 4,
+    "preference_weight": {
+      "cost": 0.4,
+      "convenience": 0.3,
+      "quality": 0.3
+    },
+    "income_range": [3000, 8000],
+    "housing_cost_ratio": 0.4
+  }
+}
+```
+
+### 8. 验收标准
+
+#### 8.1 功能验收
+- [ ] 月级时间系统正常运行
+- [ ] 真实通勤轨迹生成
+- [ ] 热力图正确显示和衰减
+- [ ] 人口增长符合预期 (24个月后达到800-1200人)
+- [ ] 建筑增长符合预期 (24个月后达到60-100个建筑)
+- [ ] 地价系统正确计算和更新
+
+#### 8.2 可视化验收
+- [ ] 最终城市布局清晰显示
+- [ ] 24帧动画流畅播放
+- [ ] 热力图颜色和透明度正确
+- [ ] 轨迹类型可区分
+- [ ] 统计信息准确显示
+
+#### 8.3 性能验收
+- [ ] 24个月模拟在5分钟内完成
+- [ ] 内存使用不超过2GB
+- [ ] 输出文件大小合理
+- [ ] 动画播放流畅
+
+### 9. 开发计划
+
+#### 9.1 第一阶段: 时间系统改造 (1-2天)
+- 修改时间单位为月
+- 调整更新频率
+- 更新配置参数
+
+#### 9.2 第二阶段: 轨迹系统开发 (2-3天)
+- 实现真实通勤轨迹
+- 开发热力图系统
+- 添加轨迹衰减机制
+
+#### 9.3 第三阶段: 增长系统优化 (1-2天)
+- 调整人口增长参数
+- 优化建筑增长逻辑
+- 平衡系统参数
+
+#### 9.4 第四阶段: 可视化增强 (1-2天)
+- 改进热力图显示
+- 优化动画效果
+- 完善统计图表
+
+#### 9.5 第五阶段: 测试和优化 (1天)
+- 功能测试
+- 性能优化
+- 文档完善
+
+### 10. 风险评估
+
+#### 10.1 技术风险
+- **热力图性能**: 大量轨迹数据可能影响性能
+- **内存使用**: 24个月的数据可能占用较多内存
+- **动画流畅性**: 复杂热力图可能影响动画播放
+
+#### 10.2 缓解措施
+- 使用numpy优化热力图计算
+- 定期清理历史数据
+- 提供多种可视化选项
+
+### 11. 版本历史
+
+#### v2.2 (当前版本)
+- 新增Logistic增长函数，实现S型城市生长曲线
+- 新增分批闪现机制，优化视觉体验
+- 修复地价系统核心点位置（交通枢纽）
+- 新增建筑防重复放置机制
+- 新增建筑间最小距离约束
+- 优化建筑分布算法
+
+#### v2.0 (上一版本)
+- 新增月级时间系统
+- 新增真实通勤轨迹
+- 新增热力图系统
+- 优化增长参数
+
+#### v1.0 (原版本)
+- 基础多智能体系统
+- 日级时间系统
+- 基础可视化
+
+---
+
+**文档版本**: v2.2  
+**最后更新**: 2024年8月28日  
+**负责人**: 开发团队

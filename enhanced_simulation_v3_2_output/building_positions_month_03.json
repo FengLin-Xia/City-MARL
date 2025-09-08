@@ -1,0 +1,1755 @@
+{
+  "timestamp": "month_03",
+  "buildings": [
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        100,
+        47
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_100_47",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.17862455467586144,
+        "f_hub_ind": 0.8860173718295274,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.3596875762567151
+      },
+      "scores": {
+        "commercial": 0.2846042505577097,
+        "industrial": 0.7001042622900633,
+        "residential": 0.2929306564837165
+      },
+      "winning_score": 0.2929306564837165
+    },
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        100,
+        63
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_100_63",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.17862455467586144,
+        "f_hub_ind": 0.8860173718295274,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.3596875762567151
+      },
+      "scores": {
+        "commercial": 0.2846042505577097,
+        "industrial": 0.7001042622900633,
+        "residential": 0.2929306564837165
+      },
+      "winning_score": 0.2929306564837165
+    },
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        0,
+        47
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_0_47",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.785851328196707,
+        "f_hub_ind": 0.23613944705007425,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.6561340661953513,
+        "industrial": 0.3606557824741998,
+        "residential": 0.26896699049646533
+      },
+      "winning_score": 0.26896699049646533
+    },
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        0,
+        63
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_0_63",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.785851328196707,
+        "f_hub_ind": 0.23613944705007425,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.6561340661953513,
+        "industrial": 0.3606557824741998,
+        "residential": 0.26896699049646533
+      },
+      "winning_score": 0.26896699049646533
+    },
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        75,
+        47
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_75_47",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.41101079383062433,
+        "f_hub_ind": 0.8678990451099905,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.15000000000000002
+      },
+      "scores": {
+        "commercial": 0.42822974557570176,
+        "industrial": 0.7006235614071538,
+        "residential": 0.24917115766069445
+      },
+      "winning_score": 0.24917115766069445
+    },
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        75,
+        63
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_75_63",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.41101079383062433,
+        "f_hub_ind": 0.8678990451099905,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.15000000000000002
+      },
+      "scores": {
+        "commercial": 0.42822974557570176,
+        "industrial": 0.7006235614071538,
+        "residential": 0.24917115766069445
+      },
+      "winning_score": 0.24917115766069445
+    },
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        25,
+        47
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_25_47",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.8620904687077303,
+        "f_hub_ind": 0.4480560676665948,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.5283009433971698
+      },
+      "scores": {
+        "commercial": 0.6913115316340219,
+        "industrial": 0.4507948766434276,
+        "residential": 0.22193166930178257
+      },
+      "winning_score": 0.22193166930178257
+    },
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        25,
+        63
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_25_63",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.8620904687077303,
+        "f_hub_ind": 0.4480560676665948,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.5283009433971698
+      },
+      "scores": {
+        "commercial": 0.6913115316340219,
+        "industrial": 0.4507948766434276,
+        "residential": 0.22193166930178257
+      },
+      "winning_score": 0.22193166930178257
+    },
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        50,
+        47
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_50_47",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.6945824228329764,
+        "f_hub_ind": 0.6914581807563513,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.601372722977113,
+        "industrial": 0.6110810860126522,
+        "residential": 0.2189229615132699
+      },
+      "winning_score": 0.2189229615132699
+    },
+    {
+      "id": "residential_1",
+      "type": "residential",
+      "position": [
+        50,
+        63
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_50_63",
+      "features": {
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.6945824228329764,
+        "f_hub_ind": 0.6914581807563513,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.601372722977113,
+        "industrial": 0.6110810860126522,
+        "residential": 0.2189229615132699
+      },
+      "winning_score": 0.2189229615132699
+    },
+    {
+      "id": "residential_11",
+      "type": "residential",
+      "position": [
+        105,
+        45
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_105_45",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.13450245336075758,
+        "f_hub_ind": 0.818357997170638,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.2,
+        "junction_penalty": 0.09861218113400272
+      },
+      "scores": {
+        "commercial": 0.2492286089106936,
+        "industrial": 0.6457905150332995,
+        "residential": 0.28159426104455054
+      },
+      "winning_score": 0.28159426104455054
+    },
+    {
+      "id": "residential_11",
+      "type": "residential",
+      "position": [
+        105,
+        65
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_105_65",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.13450245336075758,
+        "f_hub_ind": 0.818357997170638,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.2,
+        "junction_penalty": 0.09861218113400272
+      },
+      "scores": {
+        "commercial": 0.2492286089106936,
+        "industrial": 0.6457905150332995,
+        "residential": 0.28159426104455054
+      },
+      "winning_score": 0.28159426104455054
+    },
+    {
+      "id": "residential_11",
+      "type": "residential",
+      "position": [
+        0,
+        45
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_0_45",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.7254322068880292,
+        "f_hub_ind": 0.2226602345395946,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.3,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.6027587046497366,
+        "industrial": 0.3130873546429259,
+        "residential": 0.2477629747337527
+      },
+      "winning_score": 0.2477629747337527
+    },
+    {
+      "id": "residential_11",
+      "type": "residential",
+      "position": [
+        0,
+        65
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_0_65",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.7254322068880292,
+        "f_hub_ind": 0.2226602345395946,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.3,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.6027587046497366,
+        "industrial": 0.3130873546429259,
+        "residential": 0.2477629747337527
+      },
+      "winning_score": 0.2477629747337527
+    },
+    {
+      "id": "residential_11",
+      "type": "residential",
+      "position": [
+        70,
+        45
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_70_45",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.4319237664592865,
+        "f_hub_ind": 0.7950255642131995,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.4,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.423653640392491,
+        "industrial": 0.6178882859634085,
+        "residential": 0.2156098633684605
+      },
+      "winning_score": 0.2156098633684605
+    },
+    {
+      "id": "residential_11",
+      "type": "residential",
+      "position": [
+        70,
+        65
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_70_65",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.4319237664592865,
+        "f_hub_ind": 0.7950255642131995,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.4,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.423653640392491,
+        "industrial": 0.6178882859634085,
+        "residential": 0.2156098633684605
+      },
+      "winning_score": 0.2156098633684605
+    },
+    {
+      "id": "residential_11",
+      "type": "residential",
+      "position": [
+        35,
+        45
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_35_45",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.7574651283969664,
+        "f_hub_ind": 0.5151664090605381,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.4,
+        "junction_penalty": 0.09861218113400272
+      },
+      "scores": {
+        "commercial": 0.617006213932419,
+        "industrial": 0.45903514157274466,
+        "residential": 0.19248046425382376
+      },
+      "winning_score": 0.19248046425382376
+    },
+    {
+      "id": "residential_11",
+      "type": "residential",
+      "position": [
+        35,
+        65
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_35_65",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.7574651283969664,
+        "f_hub_ind": 0.5151664090605381,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.4,
+        "junction_penalty": 0.09861218113400272
+      },
+      "scores": {
+        "commercial": 0.617006213932419,
+        "industrial": 0.45903514157274466,
+        "residential": 0.19248046425382376
+      },
+      "winning_score": 0.19248046425382376
+    },
+    {
+      "id": "residential_19",
+      "type": "residential",
+      "position": [
+        0,
+        41
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_0_41",
+      "features": {
+        "f_road": 0.7827045382418681,
+        "f_hub_com": 0.5860671018675382,
+        "f_hub_ind": 0.19035910293491884,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.5,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.4931811687688965,
+        "industrial": 0.2503736411746724,
+        "residential": 0.22058498330718862
+      },
+      "winning_score": 0.22058498330718862
+    },
+    {
+      "id": "residential_19",
+      "type": "residential",
+      "position": [
+        0,
+        69
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_0_69",
+      "features": {
+        "f_road": 0.7827045382418681,
+        "f_hub_com": 0.5860671018675382,
+        "f_hub_ind": 0.19035910293491884,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.5,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.4931811687688965,
+        "industrial": 0.2503736411746724,
+        "residential": 0.22058498330718862
+      },
+      "winning_score": 0.22058498330718862
+    },
+    {
+      "id": "residential_19",
+      "type": "residential",
+      "position": [
+        90,
+        41
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_90_41",
+      "features": {
+        "f_road": 0.7827045382418681,
+        "f_hub_com": 0.19292918031969505,
+        "f_hub_ind": 0.7261490370736909,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.7,
+        "junction_penalty": 0.30000000000000004
+      },
+      "scores": {
+        "commercial": 0.24529841584019063,
+        "industrial": 0.5100581049509971,
+        "residential": 0.20884407749594144
+      },
+      "winning_score": 0.20884407749594144
+    },
+    {
+      "id": "residential_19",
+      "type": "residential",
+      "position": [
+        90,
+        69
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_90_69",
+      "features": {
+        "f_road": 0.7827045382418681,
+        "f_hub_com": 0.19292918031969505,
+        "f_hub_ind": 0.7261490370736909,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.7,
+        "junction_penalty": 0.30000000000000004
+      },
+      "scores": {
+        "commercial": 0.24529841584019063,
+        "industrial": 0.5100581049509971,
+        "residential": 0.20884407749594144
+      },
+      "winning_score": 0.20884407749594144
+    },
+    {
+      "id": "residential_19",
+      "type": "residential",
+      "position": [
+        45,
+        41
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_45_41",
+      "features": {
+        "f_road": 0.7827045382418681,
+        "f_hub_com": 0.5543957244263437,
+        "f_hub_ind": 0.5195923361560666,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.7,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.4681783423041798,
+        "industrial": 0.4114519194463037,
+        "residential": 0.16753427381225536
+      },
+      "winning_score": 0.16753427381225536
+    },
+    {
+      "id": "residential_19",
+      "type": "residential",
+      "position": [
+        45,
+        69
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_45_69",
+      "features": {
+        "f_road": 0.7827045382418681,
+        "f_hub_com": 0.5543957244263437,
+        "f_hub_ind": 0.5195923361560666,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.7,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.4681783423041798,
+        "industrial": 0.4114519194463037,
+        "residential": 0.16753427381225536
+      },
+      "winning_score": 0.16753427381225536
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        70,
+        55
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_70_55",
+      "features": {
+        "f_road": 1.0,
+        "f_hub_com": 0.5394075072376266,
+        "f_hub_ind": 0.9360225578954148,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.4936445043425759,
+        "industrial": 0.6648124068424782,
+        "residential": 0.20171511486816246
+      },
+      "winning_score": 0.20171511486816246
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        68,
+        67
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_68_67",
+      "features": {
+        "f_road": 0.835270211411272,
+        "f_hub_com": 0.41111229050718745,
+        "f_hub_ind": 0.7297144098158518,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.8,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.38972141658656684,
+        "industrial": 0.5301604782515366,
+        "residential": 0.18595548613182075
+      },
+      "winning_score": 0.18595548613182075
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        68,
+        42
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_68_42",
+      "features": {
+        "f_road": 0.8095716486678869,
+        "f_hub_com": 0.3888955639892229,
+        "f_hub_ind": 0.7005298040076388,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.8,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.3712516681271111,
+        "industrial": 0.507684304371173,
+        "residential": 0.18192724093495302
+      },
+      "winning_score": 0.18192724093495302
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        63,
+        80
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_63_80",
+      "features": {
+        "f_road": 0.45783336177161427,
+        "f_hub_com": 0.1579570530938617,
+        "f_hub_ind": 0.3195300261455599,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.5,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.17134090421063985,
+        "industrial": 0.24019985482296152,
+        "residential": 0.1243957663452008
+      },
+      "winning_score": 0.1243957663452008
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        63,
+        29
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_63_29",
+      "features": {
+        "f_road": 0.42955735821073915,
+        "f_hub_com": 0.14103242759555906,
+        "f_hub_ind": 0.2940018153048133,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.5,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.15553092819948328,
+        "industrial": 0.21909033797033212,
+        "residential": 0.11747192129053577
+      },
+      "winning_score": 0.11747192129053577
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        55,
+        90
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_55_90",
+      "features": {
+        "f_road": 0.2162651668298873,
+        "f_hub_com": 0.048572810564927224,
+        "f_hub_ind": 0.11052878006681771,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.3,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.06339671970493381,
+        "industrial": 0.08485712074422158,
+        "residential": 0.06683870429193554
+      },
+      "winning_score": 0.06683870429193554
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        55,
+        19
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_55_19",
+      "features": {
+        "f_road": 0.19789869908361465,
+        "f_hub_com": 0.04148310115318418,
+        "f_hub_ind": 0.09843117498079601,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.2,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.058469600508633444,
+        "industrial": 0.08361182101034147,
+        "residential": 0.0658880530640511
+      },
+      "winning_score": 0.0658880530640511
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        45,
+        98
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_45_98",
+      "features": {
+        "f_road": 0.09913725251074738,
+        "f_hub_com": 0.014077044238352559,
+        "f_hub_ind": 0.03496225409031436,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.1,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.02527367704516101,
+        "industrial": 0.03401355287735974,
+        "residential": 0.03650887929415603
+      },
+      "winning_score": 0.03650887929415603
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        45,
+        11
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_45_11",
+      "features": {
+        "f_road": 0.08892161745938634,
+        "f_hub_com": 0.01160240111199368,
+        "f_hub_ind": 0.030332756726448085,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.1,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.021745764159073477,
+        "industrial": 0.028913420564393034,
+        "residential": 0.032590414998327225
+      },
+      "winning_score": 0.032590414998327225
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        7,
+        103
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_7_103",
+      "features": {
+        "f_road": 0.056134762834133725,
+        "f_hub_com": 0.005731784331564499,
+        "f_hub_ind": 0.0074442724642482735,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.014666023165765445,
+        "industrial": 0.018128040563869983,
+        "residential": 0.02580438368111672
+      },
+      "winning_score": 0.02580438368111672
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        32,
+        103
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_32_103",
+      "features": {
+        "f_road": 0.056134762834133725,
+        "f_hub_com": 0.005767275143174316,
+        "f_hub_ind": 0.013330965578577693,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.014687317652731334,
+        "industrial": 0.021365721776751164,
+        "residential": 0.024914281551645344
+      },
+      "winning_score": 0.024914281551645344
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        7,
+        6
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_7_6",
+      "features": {
+        "f_road": 0.0497248734123496,
+        "f_hub_com": 0.004620354013075617,
+        "f_hub_ind": 0.006353955885502813,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.012717187090315291,
+        "industrial": 0.015925894090113947,
+        "residential": 0.022985272520734255
+      },
+      "winning_score": 0.022985272520734255
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        32,
+        6
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_32_6",
+      "features": {
+        "f_road": 0.0497248734123496,
+        "f_hub_com": 0.004648962925128658,
+        "f_hub_ind": 0.011378461441898963,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.012734352437547116,
+        "industrial": 0.01868937214613183,
+        "residential": 0.022225874904864225
+      },
+      "winning_score": 0.022225874904864225
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        19,
+        5
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_19_5",
+      "features": {
+        "f_road": 0.04393693362340742,
+        "f_hub_com": 0.003864965709125978,
+        "f_hub_ind": 0.0073367758264756685,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.01110636615015707,
+        "industrial": 0.015019460110413472,
+        "residential": 0.020094957295907163
+      },
+      "winning_score": 0.020094957295907163
+    },
+    {
+      "id": "residential_25",
+      "type": "residential",
+      "position": [
+        20,
+        105
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_20_105",
+      "features": {
+        "f_road": 0.04393693362340742,
+        "f_hub_com": 0.0038659201394728076,
+        "f_hub_ind": 0.007509773237268588,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.011106938808365168,
+        "industrial": 0.01511460868634958,
+        "residential": 0.020068816798218862
+      },
+      "winning_score": 0.020068816798218862
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        40,
+        55
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_40_55",
+      "features": {
+        "f_road": 1.0,
+        "f_hub_com": 0.9059551911095096,
+        "f_hub_ind": 0.6615146556493746,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.9,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.7165731146657058,
+        "industrial": 0.5238330606071561,
+        "residential": 0.17458176343069184
+      },
+      "winning_score": 0.17458176343069184
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        41,
+        67
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_41_67",
+      "features": {
+        "f_road": 0.835270211411272,
+        "f_hub_com": 0.6512322843039294,
+        "f_hub_ind": 0.5315481221960816,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.527793412864612,
+        "industrial": 0.4011690200606629,
+        "residential": 0.15765643051543787
+      },
+      "winning_score": 0.15765643051543787
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        41,
+        42
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_41_42",
+      "features": {
+        "f_road": 0.8095716486678869,
+        "f_hub_com": 0.6160393457950848,
+        "f_hub_ind": 0.5102890896133164,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.5015379372106282,
+        "industrial": 0.38305191145429585,
+        "residential": 0.155034591732929
+      },
+      "winning_score": 0.155034591732929
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        46,
+        80
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_46_80",
+      "features": {
+        "f_road": 0.45783336177161427,
+        "f_hub_com": 0.21101997765981784,
+        "f_hub_ind": 0.261738814605649,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.18817865895021357,
+        "industrial": 0.15841468847601056,
+        "residential": 0.09745186316299619
+      },
+      "winning_score": 0.09745186316299619
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        46,
+        29
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_46_29",
+      "features": {
+        "f_road": 0.42955735821073915,
+        "f_hub_com": 0.18840981860329012,
+        "f_hub_ind": 0.24082771675027478,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.1689573628041219,
+        "industrial": 0.13984458376533593,
+        "residential": 0.09097255787217033
+      },
+      "winning_score": 0.09097255787217033
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        54,
+        90
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_54_90",
+      "features": {
+        "f_road": 0.2162651668298873,
+        "f_hub_com": 0.04940743692949052,
+        "f_hub_ind": 0.10923924693956781,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.8,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.04889749552367178,
+        "industrial": 0.03414787752423412,
+        "residential": 0.04186520898811037
+      },
+      "winning_score": 0.04186520898811037
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        54,
+        19
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_54_19",
+      "features": {
+        "f_road": 0.19789869908361465,
+        "f_hub_com": 0.04219590507586461,
+        "f_hub_ind": 0.09728278393897744,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.7,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.0438972828622417,
+        "industrial": 0.03298020593734126,
+        "residential": 0.04091775093578779
+      },
+      "winning_score": 0.04091775093578779
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        65,
+        98
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_65_98",
+      "features": {
+        "f_road": 0.09913725251074738,
+        "f_hub_com": 0.009962882029119605,
+        "f_hub_ind": 0.04406535988483972,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.3,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.01680517971962124,
+        "industrial": 0.019020261064348697,
+        "residential": 0.025966245866823813
+      },
+      "winning_score": 0.025966245866823813
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        102,
+        103
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_102_103",
+      "features": {
+        "f_road": 0.056134762834133725,
+        "f_hub_com": 0.001135994371250874,
+        "f_hub_ind": 0.02269900232380538,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.01190854918957727,
+        "industrial": 0.026518141986626394,
+        "residential": 0.02443533219424588
+      },
+      "winning_score": 0.02443533219424588
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        64,
+        11
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_64_11",
+      "features": {
+        "f_road": 0.08892161745938634,
+        "f_hub_com": 0.00839392613724216,
+        "f_hub_ind": 0.037909563496658576,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.3,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.013820679174222564,
+        "industrial": 0.013080664288008803,
+        "residential": 0.022095588977745953
+      },
+      "winning_score": 0.022095588977745953
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        102,
+        6
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_102_6",
+      "features": {
+        "f_road": 0.0497248734123496,
+        "f_hub_com": 0.000915717662846475,
+        "f_hub_ind": 0.01937441974391107,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.010494405280177806,
+        "industrial": 0.02308714921223849,
+        "residential": 0.021773130212018845
+      },
+      "winning_score": 0.021773130212018845
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        90,
+        105
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_90_105",
+      "features": {
+        "f_road": 0.04393693362340742,
+        "f_hub_com": 0.001152949198705228,
+        "f_hub_ind": 0.01687988414878991,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.009479156243904621,
+        "industrial": 0.020268169687686306,
+        "residential": 0.01920589434964418
+      },
+      "winning_score": 0.01920589434964418
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        89,
+        5
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_89_5",
+      "features": {
+        "f_road": 0.04393693362340742,
+        "f_hub_com": 0.001193206436391798,
+        "f_hub_ind": 0.016877094315865294,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.009503310586516564,
+        "industrial": 0.02026663527957777,
+        "residential": 0.019198261377045556
+      },
+      "winning_score": 0.019198261377045556
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        77,
+        103
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_77_103",
+      "features": {
+        "f_road": 0.056134762834133725,
+        "f_hub_com": 0.002679239690664896,
+        "f_hub_ind": 0.022605398323429993,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.2,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.006834496381225684,
+        "industrial": 0.006466659786419925,
+        "residential": 0.014140723730419382
+      },
+      "winning_score": 0.014140723730419382
+    },
+    {
+      "id": "residential_40",
+      "type": "residential",
+      "position": [
+        77,
+        6
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_77_6",
+      "features": {
+        "f_road": 0.0497248734123496,
+        "f_hub_com": 0.0021597176621919673,
+        "f_hub_ind": 0.019294525342954068,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.2,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.005240805279785101,
+        "industrial": 0.0030432072917121328,
+        "residential": 0.011536314372293296
+      },
+      "winning_score": 0.011536314372293296
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        95,
+        55
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_95_55",
+      "features": {
+        "f_road": 1.0,
+        "f_hub_com": 0.24935220877729622,
+        "f_hub_ind": 0.9958762945154984,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.75
+      },
+      "scores": {
+        "commercial": 0.3046113252663777,
+        "industrial": 0.6602319619835242,
+        "residential": 0.25074811406721603
+      },
+      "winning_score": 0.25074811406721603
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        93,
+        65
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_93_65",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.21480498878565574,
+        "f_hub_ind": 0.848103236513733,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.47798467455447247
+      },
+      "scores": {
+        "commercial": 0.2658226802972231,
+        "industrial": 0.5631817720009784,
+        "residential": 0.22107196805810664
+      },
+      "winning_score": 0.22107196805810664
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        93,
+        44
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_93_44",
+      "features": {
+        "f_road": 0.8596327636025423,
+        "f_hub_com": 0.2050110583711543,
+        "f_hub_ind": 0.8195182398835699,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.4299122874504311
+      },
+      "scores": {
+        "commercial": 0.25633494199419243,
+        "industrial": 0.5441476084640775,
+        "residential": 0.2158864341445048
+      },
+      "winning_score": 0.2158864341445048
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        15,
+        55
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_15_55",
+      "features": {
+        "f_road": 1.0,
+        "f_hub_com": 0.9938461733264412,
+        "f_hub_ind": 0.39465154573342703,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.75
+      },
+      "scores": {
+        "commercial": 0.7513077039958648,
+        "industrial": 0.32955835015338497,
+        "residential": 0.1920330334746977
+      },
+      "winning_score": 0.1920330334746977
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        16,
+        65
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_16_65",
+      "features": {
+        "f_road": 0.8824969025845955,
+        "f_hub_com": 0.7975802363775446,
+        "f_hub_ind": 0.3435614556735085,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.4614835192865496
+      },
+      "scores": {
+        "commercial": 0.6158178519577148,
+        "industrial": 0.28650885030225104,
+        "residential": 0.1801981856657625
+      },
+      "winning_score": 0.1801981856657625
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        16,
+        44
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_16_44",
+      "features": {
+        "f_road": 0.8596327636025423,
+        "f_hub_com": 0.7612149481259857,
+        "f_hub_ind": 0.3319818476377571,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.41476500446401876
+      },
+      "scores": {
+        "commercial": 0.5903602215068194,
+        "industrial": 0.27675995687820104,
+        "residential": 0.17777611503041046
+      },
+      "winning_score": 0.17777611503041046
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        89,
+        75
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_89_75",
+      "features": {
+        "f_road": 0.6065306597126334,
+        "f_hub_com": 0.12688876474821478,
+        "f_hub_ind": 0.5203641033164074,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.8,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.17343939079145557,
+        "industrial": 0.3578329217521824,
+        "residential": 0.15983296140921263
+      },
+      "winning_score": 0.15983296140921263
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        89,
+        34
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_89_34",
+      "features": {
+        "f_road": 0.5762290736718,
+        "f_hub_com": 0.1158388178344102,
+        "f_hub_ind": 0.48667180769043167,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.9,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.15774910543500612,
+        "industrial": 0.32172676264768746,
+        "residential": 0.1469460021154532
+      },
+      "winning_score": 0.1469460021154532
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        20,
+        75
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_20_75",
+      "features": {
+        "f_road": 0.6065306597126334,
+        "f_hub_com": 0.41111229050718745,
+        "f_hub_ind": 0.23154556960953174,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.3379735062468392,
+        "industrial": 0.1789827282134008,
+        "residential": 0.13631103631344949
+      },
+      "winning_score": 0.13631103631344949
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        20,
+        35
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_20_35",
+      "features": {
+        "f_road": 0.6065306597126334,
+        "f_hub_com": 0.41111229050718745,
+        "f_hub_ind": 0.23154556960953174,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.3379735062468392,
+        "industrial": 0.1789827282134008,
+        "residential": 0.13631103631344949
+      },
+      "winning_score": 0.13631103631344949
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        83,
+        83
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_83_83",
+      "features": {
+        "f_road": 0.37531109885139957,
+        "f_hub_com": 0.06572852861653047,
+        "f_hub_ind": 0.27579452268547966,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.0844993369401982,
+        "industrial": 0.1455147621898637,
+        "residential": 0.08314066529957174
+      },
+      "winning_score": 0.08314066529957174
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        26,
+        83
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_26_83",
+      "features": {
+        "f_road": 0.37531109885139957,
+        "f_hub_com": 0.17358096851920427,
+        "f_hub_ind": 0.1412781278741168,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.14921080088180247,
+        "industrial": 0.07153074504361415,
+        "residential": 0.0817476365407414
+      },
+      "winning_score": 0.0817476365407414
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        83,
+        26
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_83_26",
+      "features": {
+        "f_road": 0.3495006001997565,
+        "f_hub_com": 0.05790862806207634,
+        "f_hub_ind": 0.2512867911117312,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.0746452968771971,
+        "industrial": 0.1255828851613913,
+        "residential": 0.0754755558207033
+      },
+      "winning_score": 0.0754755558207033
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        26,
+        26
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_26_26",
+      "features": {
+        "f_road": 0.3495006001997565,
+        "f_hub_com": 0.1529295719257221,
+        "f_hub_ind": 0.12872383056078995,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.13165786319538456,
+        "industrial": 0.0581732568583736,
+        "residential": 0.07485581113061533
+      },
+      "winning_score": 0.07485581113061533
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        35,
+        89
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_35_89",
+      "features": {
+        "f_road": 0.23574607655586352,
+        "f_hub_com": 0.07248001252476026,
+        "f_hub_ind": 0.09187310580266611,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.06063722282602886,
+        "industrial": 0.009466727330432245,
+        "residential": 0.0395960699025798
+      },
+      "winning_score": 0.0395960699025798
+    },
+    {
+      "id": "residential_55",
+      "type": "residential",
+      "position": [
+        75,
+        89
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_75_89",
+      "features": {
+        "f_road": 0.23574607655586352,
+        "f_hub_com": 0.036304903320426504,
+        "f_hub_ind": 0.14594330984355933,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": 0.03893215730342861,
+        "industrial": 0.03920533955292352,
+        "residential": 0.03872056113731255
+      },
+      "winning_score": 0.03872056113731255
+    }
+  ]
+}

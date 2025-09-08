@@ -1,0 +1,150 @@
+{
+  "month": 3,
+  "quarter": 1,
+  "layers": {
+    "commercial": [
+      {
+        "layer_id": "commercial_P0",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 2,
+        "dead_slots": 0,
+        "capacity_effective": 2,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "commercial_P1",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 3,
+        "dead_slots": 0,
+        "capacity_effective": 3,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "commercial_P2",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 5,
+        "dead_slots": 0,
+        "capacity_effective": 5,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "commercial_P3",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 18,
+        "dead_slots": 0,
+        "capacity_effective": 18,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "commercial_P4",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 18,
+        "dead_slots": 0,
+        "capacity_effective": 18,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "commercial_P5",
+        "status": "active",
+        "activated_quarter": 0,
+        "capacity": 22,
+        "dead_slots": 0,
+        "capacity_effective": 22,
+        "placed": 19,
+        "density": 0.8636363636363636
+      }
+    ],
+    "residential": [
+      {
+        "layer_id": "residential_P0",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 6,
+        "dead_slots": 0,
+        "capacity_effective": 6,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P1",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 7,
+        "dead_slots": 0,
+        "capacity_effective": 7,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P2",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 20,
+        "dead_slots": 0,
+        "capacity_effective": 20,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P3",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 21,
+        "dead_slots": 0,
+        "capacity_effective": 21,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P4",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 20,
+        "dead_slots": 0,
+        "capacity_effective": 20,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P5",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 21,
+        "dead_slots": 0,
+        "capacity_effective": 21,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P6",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 26,
+        "dead_slots": 0,
+        "capacity_effective": 26,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P7",
+        "status": "active",
+        "activated_quarter": 0,
+        "capacity": 27,
+        "dead_slots": 0,
+        "capacity_effective": 27,
+        "placed": 27,
+        "density": 1.0
+      }
+    ]
+  }
+}

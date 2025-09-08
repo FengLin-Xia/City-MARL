@@ -1,0 +1,28 @@
+{
+  "color_scheme": {
+    "background": "#FFFFFF",
+    "trunk_road": "#9AA4B2",
+    "core_point": "#0B5ED7",
+    "heat_map": "#FF00FF",
+    "buildings": {
+      "public": "#22A6B3",
+      "residential": "#F6C344",
+      "commercial": "#FD7E14"
+    },
+    "residents": "#FFFFFF"
+  },
+  "symbols": {
+    "public": "🏛️",
+    "residential": "🏠",
+    "commercial": "🏪"
+  },
+  "rendering_settings": {
+    "image_size": [
+      800,
+      600
+    ],
+    "dpi": 300,
+    "frame_rate": 5,
+    "heat_map_alpha": 0.6
+  }
+}

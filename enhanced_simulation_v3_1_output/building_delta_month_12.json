@@ -1,0 +1,103 @@
+{
+  "month": 12,
+  "timestamp": "month_12",
+  "new_buildings": [
+    {
+      "id": "res_40",
+      "type": "residential",
+      "position": [
+        81,
+        51
+      ],
+      "land_price_value": 0.8525842622347276,
+      "slot_id": "residential_81_51"
+    },
+    {
+      "id": "res_41",
+      "type": "residential",
+      "position": [
+        85,
+        42
+      ],
+      "land_price_value": 0.718533766777061,
+      "slot_id": "residential_85_42"
+    },
+    {
+      "id": "com_14",
+      "type": "commercial",
+      "position": [
+        69,
+        109
+      ],
+      "land_price_value": 0.8212930315168278,
+      "slot_id": "commercial_69_109"
+    },
+    {
+      "id": "com_15",
+      "type": "commercial",
+      "position": [
+        68,
+        105
+      ],
+      "land_price_value": 0.9001464029534876,
+      "slot_id": "commercial_68_105"
+    },
+    {
+      "id": "com_16",
+      "type": "commercial",
+      "position": [
+        79,
+        102
+      ],
+      "land_price_value": 0.8361686541280369,
+      "slot_id": "commercial_79_102"
+    },
+    {
+      "id": "com_17",
+      "type": "commercial",
+      "position": [
+        85,
+        96
+      ],
+      "land_price_value": 0.7548586315076742,
+      "slot_id": "commercial_85_96"
+    },
+    {
+      "id": "com_18",
+      "type": "commercial",
+      "position": [
+        81,
+        89
+      ],
+      "land_price_value": 0.8269264712954092,
+      "slot_id": "commercial_81_89"
+    },
+    {
+      "id": "com_19",
+      "type": "commercial",
+      "position": [
+        78,
+        96
+      ],
+      "land_price_value": 0.8978290141376264,
+      "slot_id": "commercial_78_96"
+    },
+    {
+      "id": "com_20",
+      "type": "industrial",
+      "position": [
+        73,
+        73
+      ],
+      "land_price_value": 0.6654144272810866,
+      "slot_id": "commercial_73_73",
+      "original_type": "commercial",
+      "hub_influence": "hub2_industrial_zone",
+      "conversion_reason": "Hub2工业中心影响 (距离: 24.8)"
+    }
+  ],
+  "metadata": {
+    "total_buildings": 61,
+    "new_count": 9
+  }
+}

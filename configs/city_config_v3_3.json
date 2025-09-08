@@ -1,0 +1,139 @@
+{
+  "city": {
+    "map_size": [110, 110],
+    "meters_per_pixel": 2.0,
+    "trunk_road": [[20, 55], [90, 55]],
+    "transport_hubs": [[37, 55], [73, 55]]
+  },
+  "government_backbone": {
+    "road_corridor": {
+      "sigma_perp_m": 40,
+      "setback_m": {
+        "commercial": 8,
+        "residential": 10,
+        "industrial": 14
+      }
+    },
+    "hubs": {
+      "commercial": {
+        "sigma_perp_m": 30,
+        "sigma_parallel_m": 90
+      },
+      "industrial": {
+        "sigma_perp_m": 35,
+        "sigma_parallel_m": 110
+      }
+    },
+    "zoning": {
+      "hub_com_radius_m": 350,
+      "hub_ind_radius_m": 450,
+      "mid_corridor_residential": true
+    },
+    "quotas_per_quarter": {
+      "residential": [10, 20, 15, 25],
+      "commercial": [5, 12, 8, 15],
+      "industrial": [4, 10, 6, 12]
+    },
+    "strict_layering": true,
+    "dead_slots_ratio_max": 0.05
+  },
+  "gaussian_land_price_system": {
+    "w_r": 0.6,
+    "w_c": 0.5,
+    "w_i": 0.5,
+    "w_cor": 0.2,
+    "bias": 0.0,
+    "hub_sigma_base_m": 40,
+    "road_sigma_base_m": 20,
+    "hub_growth_rate": 0.03,
+    "road_growth_rate": 0.02,
+    "max_hub_multiplier": 2.0,
+    "max_road_multiplier": 2.5,
+    "normalize": true,
+    "smoothstep_tau": 0.0
+  },
+  "scoring_weights": {
+    "commercial": {
+      "f_price": 0.35,
+      "f_hub_com": 0.25,
+      "f_road": 0.20,
+      "f_heat": 0.15,
+      "f_access": 0.05,
+      "crowding": -0.03,
+      "junction_penalty": -0.02
+    },
+    "industrial": {
+      "f_price": -0.20,
+      "f_hub_ind": 0.45,
+      "f_road": 0.25,
+      "f_access": 0.05,
+      "crowding": -0.10,
+      "junction_penalty": -0.05
+    },
+    "residential": {
+      "f_price": 0.10,
+      "f_road": 0.45,
+      "f_access": 0.15,
+      "f_hub_com": -0.15,
+      "f_hub_ind": -0.10,
+      "crowding": -0.05
+    }
+  },
+  "isocontour_layout": {
+    "commercial": {
+      "levels": [0.85, 0.78, 0.71],
+      "arc_spacing_m": [25, 35]
+    },
+    "industrial": {
+      "levels": [0.60, 0.70, 0.80],
+      "arc_spacing_m": [35, 55]
+    },
+    "residential": {
+      "band": [0.45, 0.65],
+      "arc_spacing_m": [35, 55]
+    },
+    "normal_offset_m": 1.0,
+    "jitter_m": 0.5,
+    "fallback_percentiles": {
+      "enabled": true,
+      "commercial": [95, 90, 85],
+      "residential": [80, 70, 60, 50],
+      "industrial": [70, 60, 50]
+    }
+  },
+  "progressive_growth": {
+    "enabled": true,
+    "strict_fill_required": true,
+    "allow_dead_slots_ratio": 0.05,
+    "carry_over_quota": false,
+    "freeze_contour_on_activation": true
+  },
+  "landuse_hysteresis": {
+    "delta_bid": 0.15,
+    "L_quarters": 2,
+    "cooldown_quarters": 4,
+    "res_min_share": 0.35
+  },
+  "public_facility_rules": {
+    "school": {
+      "trigger_population": 500,
+      "service_radius": 500,
+      "symbol": "🏫"
+    },
+    "hospital": {
+      "trigger_distance_threshold": 800,
+      "service_radius": 800,
+      "symbol": "🏥"
+    },
+    "park": {
+      "trigger_building_density": 0.6,
+      "service_radius": 300,
+      "symbol": "🌳"
+    },
+    "plaza": {
+      "trigger_commercial_density": 0.5,
+      "service_radius": 400,
+      "symbol": "🏛️"
+    }
+  }
+}

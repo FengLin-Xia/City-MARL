@@ -49,14 +49,14 @@ class GaussianLandPriceSystem:
         self.road_peak_value = 0.7
         self.min_threshold = 0.1
         
-        print(f"🏗️ 高斯核地价场系统初始化完成")
+        print(f"[LandPrice] Gaussian system initialized")
         
     def initialize_system(self, transport_hubs: List[List[int]], map_size: List[int]):
         """初始化系统"""
         self.transport_hubs = transport_hubs
         self.map_size = map_size
         self.land_price_field = self._create_initial_land_price()
-        print(f"✅ 高斯核地价场系统初始化完成：{len(transport_hubs)} 个交通枢纽")
+        print(f"[LandPrice] Initialized with {len(transport_hubs)} hubs")
         
     def _create_initial_land_price(self) -> np.ndarray:
         """创建初始地价场"""
@@ -95,20 +95,35 @@ class GaussianLandPriceSystem:
         return line_gaussian
     
     def _create_land_price_field(self, month: int = 0) -> np.ndarray:
-        """创建地价场"""
+        """创建地价场 - 支持渐进式演化"""
         hub_sigma = self._calculate_hub_sigma(month)
         road_sigma = self._calculate_road_sigma(month)
         
         X, Y = np.meshgrid(np.arange(self.map_size[0]), np.arange(self.map_size[1]))
         land_price = np.zeros(self.map_size, dtype=float)
         
-        for hub in self.transport_hubs:
-            hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, self.hub_peak_value)
-            land_price = np.maximum(land_price, hub_gaussian)
+        # 获取组件强度
+        road_strength = self._get_component_strength('road', month)
+        hub1_strength = self._get_component_strength('hub1', month)
+        hub2_strength = self._get_component_strength('hub2', month)
+        hub3_strength = self._get_component_strength('hub3', month)
         
-        if len(self.transport_hubs) >= 2:
-            road_gaussian = self._line_gaussian(X, Y, self.transport_hubs[0], self.transport_hubs[1], road_sigma, self.road_peak_value)
+        # 添加道路高斯核（如果激活）
+        if road_strength > 0 and len(self.transport_hubs) >= 2:
+            road_gaussian = self._line_gaussian(X, Y, self.transport_hubs[0], self.transport_hubs[1], road_sigma, road_strength)
             land_price = np.maximum(land_price, road_gaussian)
+        
+        # 添加Hub高斯核（根据强度）
+        for i, hub in enumerate(self.transport_hubs):
+            if i == 0 and hub1_strength > 0:  # Hub1
+                hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, hub1_strength)
+                land_price = np.maximum(land_price, hub_gaussian)
+            elif i == 1 and hub2_strength > 0:  # Hub2
+                hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, hub2_strength)
+                land_price = np.maximum(land_price, hub_gaussian)
+            elif i == 2 and hub3_strength > 0:  # Hub3
+                hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, hub3_strength)
+                land_price = np.maximum(land_price, hub_gaussian)
         
         land_price[land_price < self.min_threshold] = 0
         return land_price
@@ -123,30 +138,123 @@ class GaussianLandPriceSystem:
         growth_factor = 1 + (self.max_road_multiplier - 1) * (1 - math.exp(-self.road_growth_rate * month))
         return self.road_sigma_base * min(growth_factor, self.max_road_multiplier)
     
+    def _get_component_strength(self, component_type: str, current_month: int) -> float:
+        """获取组件强度 - 支持渐进式演化"""
+        # 获取演化配置
+        evolution_config = self.config.get('land_price_evolution', {})
+        
+        if not evolution_config.get('enabled', False):
+            # 如果未启用演化，返回默认强度
+            if component_type == 'road':
+                return self.road_peak_value
+            else:
+                return self.hub_peak_value
+        
+        # 道路组件强度
+        if component_type == 'road':
+            road_activation_month = evolution_config.get('road_activation_month', 0)
+            road_peak_value = evolution_config.get('road_peak_value', 0.7)
+            return road_peak_value if current_month >= road_activation_month else 0.0
+        
+        # Hub1和Hub2组件强度
+        elif component_type in ['hub1', 'hub2']:
+            hub_activation_month = evolution_config.get('hub_activation_month', 7)
+            hub_growth_duration = evolution_config.get('hub_growth_duration_months', 6)
+            hub_initial_peak = evolution_config.get('hub_initial_peak', 0.7)
+            hub_final_peak = evolution_config.get('hub_final_peak', 1.0)
+            growth_curve_type = evolution_config.get('growth_curve_type', 'smooth')
+            
+            if current_month < hub_activation_month:
+                return 0.0
+            elif current_month < hub_activation_month + hub_growth_duration:
+                # 计算增长进度
+                progress = (current_month - hub_activation_month) / hub_growth_duration
+                progress = max(0.0, min(1.0, progress))  # 限制在[0,1]范围内
+                
+                # 应用增长曲线
+                if growth_curve_type == 'linear':
+                    curve_progress = progress
+                elif growth_curve_type == 'smooth':
+                    # S型增长曲线
+                    steepness = evolution_config.get('smooth_curve_steepness', 10.0)
+                    curve_progress = 1 / (1 + math.exp(-steepness * (progress - 0.5)))
+                elif growth_curve_type == 'exponential':
+                    curve_progress = progress ** 2
+                else:
+                    curve_progress = progress
+                
+                return hub_initial_peak + (hub_final_peak - hub_initial_peak) * curve_progress
+            else:
+                return hub_final_peak
+        
+        # Hub3组件强度（保持现有状态）
+        elif component_type == 'hub3':
+            hub3_keep_existing = evolution_config.get('hub3_keep_existing', True)
+            if hub3_keep_existing:
+                return self.hub_peak_value if current_month >= 0 else 0.0
+            else:
+                # 如果Hub3也参与演化，使用与Hub1/Hub2相同的逻辑
+                return self._get_component_strength('hub1', current_month)
+        
+        return 0.0
+    
     def _get_evolution_stage(self, month: int) -> Dict:
         """获取当前演化阶段配置"""
         hub_sigma = self._calculate_hub_sigma(month)
         road_sigma = self._calculate_road_sigma(month)
         
-        if month < 6:
-            stage_name = "initial"
-            description = "初始阶段"
-        elif month < 12:
-            stage_name = "early_growth"
-            description = "早期增长"
-        elif month < 18:
-            stage_name = "mid_growth"
-            description = "中期增长"
+        # 获取组件强度
+        road_strength = self._get_component_strength('road', month)
+        hub1_strength = self._get_component_strength('hub1', month)
+        hub2_strength = self._get_component_strength('hub2', month)
+        hub3_strength = self._get_component_strength('hub3', month)
+        
+        # 根据渐进式演化定义阶段
+        evolution_config = self.config.get('land_price_evolution', {})
+        if evolution_config.get('enabled', False):
+            road_activation_month = evolution_config.get('road_activation_month', 0)
+            hub_activation_month = evolution_config.get('hub_activation_month', 7)
+            hub_growth_duration = evolution_config.get('hub_growth_duration_months', 6)
+            
+            if month < road_activation_month:
+                stage_name = "pre_road"
+                description = "道路发展前"
+            elif month < hub_activation_month:
+                stage_name = "road_development"
+                description = "道路优先发展"
+            elif month < hub_activation_month + hub_growth_duration:
+                stage_name = "hub_development"
+                description = "Hub渐进增长"
+            else:
+                stage_name = "full_development"
+                description = "完整地价场"
         else:
-            stage_name = "mature"
-            description = "成熟阶段"
+            # 原有的阶段定义
+            if month < 6:
+                stage_name = "initial"
+                description = "初始阶段"
+            elif month < 12:
+                stage_name = "early_growth"
+                description = "早期增长"
+            elif month < 18:
+                stage_name = "mid_growth"
+                description = "中期增长"
+            else:
+                stage_name = "mature"
+                description = "成熟阶段"
         
         return {
             'name': stage_name,
             'hub_sigma': hub_sigma,
             'road_sigma': road_sigma,
             'description': description,
-            'month': month
+            'month': month,
+            'component_strengths': {
+                'road': road_strength,
+                'hub1': hub1_strength,
+                'hub2': hub2_strength,
+                'hub3': hub3_strength
+            }
         }
     
     def update_land_price_field(self, month: int, city_state: Dict = None):
@@ -173,7 +281,7 @@ class GaussianLandPriceSystem:
             }
         })
         
-        print(f"✅ 地价场更新完成 - 月份: {month}")
+        print(f"[LandPrice] field updated - month: {month}")
     
     def get_land_price_field(self) -> np.ndarray:
         """获取当前地价场"""
@@ -223,7 +331,7 @@ class GaussianLandPriceSystem:
         with open(frame_file, 'w', encoding='utf-8') as f:
             json.dump(frame_data, f, indent=2, ensure_ascii=False)
         
-        print(f"💾 地价场帧保存: {frame_file}")
+        print(f"[LandPrice] frame saved: {frame_file}")
     
     def get_land_price_components(self, month: int) -> Dict[str, np.ndarray]:
         """获取地价场的各个组成部分"""
@@ -251,3 +359,5 @@ class GaussianLandPriceSystem:
 
 # 为了保持兼容性，保留原来的类名作为别名
 EnhancedSDFSystem = GaussianLandPriceSystem
+
+

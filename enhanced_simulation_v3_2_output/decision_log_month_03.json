@@ -1,0 +1,2198 @@
+{
+  "month": 3,
+  "quarter": 1,
+  "active_layers": [
+    {
+      "layer_id": "commercial_radial_P0",
+      "total_slots": 30,
+      "free_slots": 13,
+      "used_slots": 17,
+      "dead_slots": 0,
+      "density": 0.5666666666666667,
+      "slot_details": [
+        {
+          "pos": [
+            67,
+            55
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 1.0,
+            "f_hub_com": 0.5795912885442627,
+            "f_hub_ind": 0.9162756638368766,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.5177547731265576,
+            "industrial": 0.6539516151102822,
+            "residential": 0.19664039271561595
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            66,
+            61
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9559974818331,
+            "f_hub_com": 0.5474582172096546,
+            "f_hub_ind": 0.8572873476511161,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.4926744266924127,
+            "industrial": 0.6205074116663889,
+            "residential": 0.19491399532695164
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            64,
+            67
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.835270211411272,
+            "f_hub_com": 0.4502174046864196,
+            "f_hub_ind": 0.7069201383118323,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.4101844850941061,
+            "industrial": 0.5076236289243258,
+            "residential": 0.17655360402157722
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            61,
+            72
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.6968047754960348,
+            "f_hub_com": 0.34739808046669973,
+            "f_hub_ind": 0.5428919319763845,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.32079980337922676,
+            "industrial": 0.3827917564610202,
+            "residential": 0.15248898185821977
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            57,
+            77
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.5460744266397094,
+            "f_hub_com": 0.24327075278655202,
+            "f_hub_ind": 0.3790056821118086,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.5,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.2401773369998731,
+            "industrial": 0.29497173182142206,
+            "residential": 0.14253221044577302
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            52,
+            80
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.45783336177161427,
+            "f_hub_com": 0.19364505771995455,
+            "f_hub_ind": 0.28391344760749815,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.5,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.19275370698629557,
+            "industrial": 0.22061073662702757,
+            "residential": 0.1226006522006915
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            46,
+            83
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.37531109885139957,
+            "f_hub_com": 0.14820841261184342,
+            "f_hub_ind": 0.20189651799465538,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.5,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.148987267337386,
+            "industrial": 0.15487085960991037,
+            "residential": 0.1027293892041328
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            40,
+            84
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.3495006001997565,
+            "f_hub_com": 0.13978436119641616,
+            "f_hub_ind": 0.16758168666957118,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.4,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.141770736757801,
+            "industrial": 0.13954507771820326,
+            "residential": 0.10165617486015933
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            33,
+            84
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.3495006001997565,
+            "f_hub_com": 0.14798900715584823,
+            "f_hub_ind": 0.14806764958261392,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.4,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.14669352433346022,
+            "industrial": 0.1288123573203768,
+            "residential": 0.10294235123131652
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            27,
+            83
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.37531109885139957,
+            "f_hub_com": 0.17302468831302656,
+            "f_hub_ind": 0.14427514723759882,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.3,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.16987703275809585,
+            "industrial": 0.14317910569352923,
+            "residential": 0.11640933967745466
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            22,
+            80
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.45783336177161427,
+            "f_hub_com": 0.24910605656750562,
+            "f_hub_ind": 0.1678464536404979,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.6,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.22303030629482623,
+            "industrial": 0.14677388994517743,
+            "residential": 0.12391850152623132
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            16,
+            77
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.5460744266397094,
+            "f_hub_com": 0.3397632685536781,
+            "f_hub_ind": 0.18353900944031556,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.5,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.29807284646014875,
+            "industrial": 0.18746506185210093,
+            "residential": 0.15255370819307176
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            12,
+            72
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.6968047754960348,
+            "f_hub_com": 0.5178732844002895,
+            "f_hub_ind": 0.228217405968312,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.8,
+            "junction_penalty": 0.060585288597203246
+          },
+          "scores": {
+            "commercial": 0.42487321996743654,
+            "industrial": 0.21669150272672014,
+            "residential": 0.1705951199727127
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            9,
+            67
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.835270211411272,
+            "f_hub_com": 0.704775093618809,
+            "f_hub_ind": 0.2672515709918645,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.18605897019501472
+          },
+          "scores": {
+            "commercial": 0.5591979190496396,
+            "industrial": 0.25650296838859277,
+            "residential": 0.19159235133309452
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            7,
+            61
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9559974818331,
+            "f_hub_com": 0.8853888118219339,
+            "f_hub_ind": 0.30196227212354393,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.2841089468361824
+          },
+          "scores": {
+            "commercial": 0.6897506045230567,
+            "industrial": 0.30087317278441505,
+            "residential": 0.21062663773363163
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            7,
+            55
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 1.0,
+            "f_hub_com": 0.9591302497107983,
+            "f_hub_ind": 0.32024220272954873,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.35
+          },
+          "scores": {
+            "commercial": 0.7384781498264789,
+            "industrial": 0.30863321150125184,
+            "residential": 0.210137619648408
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            7,
+            48
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9405880633643421,
+            "f_hub_com": 0.8601768391531645,
+            "f_hub_ind": 0.2956208121425093,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.26175884698832996
+          },
+          "scores": {
+            "commercial": 0.6719885392250005,
+            "industrial": 0.2946505201700491,
+            "residential": 0.20891554203016174
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            9,
+            42
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.8095716486678869,
+            "f_hub_com": 0.6666886732583645,
+            "f_hub_ind": 0.25656296234428205,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.1485306817036799
+          },
+          "scores": {
+            "commercial": 0.5319569200545224,
+            "industrial": 0.24607600737114285,
+            "residential": 0.1879636453306282
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            12,
+            37
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.6669768108584744,
+            "f_hub_com": 0.4791208249927082,
+            "f_hub_ind": 0.21554201428803976,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.7,
+            "junction_penalty": 0.01511421982038963
+          },
+          "scores": {
+            "commercial": 0.399565572770912,
+            "industrial": 0.214536599582021,
+            "residential": 0.1703329382874896
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            16,
+            32
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.5162056739454963,
+            "f_hub_com": 0.30743051866156845,
+            "f_hub_ind": 0.17053794830330038,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.5,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.27269944598604035,
+            "industrial": 0.17284729005318933,
+            "residential": 0.14603604099493941
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            21,
+            29
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.42955735821073915,
+            "f_hub_com": 0.22257990109312425,
+            "f_hub_ind": 0.15097883491034148,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.6,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.20145941229802242,
+            "industrial": 0.13042769875337262,
+            "residential": 0.11761587365019349
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            27,
+            26
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.3495006001997565,
+            "f_hub_com": 0.15243947387795082,
+            "f_hub_ind": 0.13145452793438497,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.3,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.15236380436672178,
+            "industrial": 0.12967514041385086,
+            "residential": 0.10954422613413033
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            33,
+            25
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.32465246735834974,
+            "f_hub_com": 0.12980416400541397,
+            "f_hub_ind": 0.13447021577825033,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.4,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.13081299187491832,
+            "industrial": 0.11512173551762511,
+            "residential": 0.09619486851135452
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            40,
+            25
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.32465246735834974,
+            "f_hub_com": 0.12260770238848506,
+            "f_hub_ind": 0.15219222855541567,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.4,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.12649511490476095,
+            "industrial": 0.12486884254506606,
+            "residential": 0.09497585891816551
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            46,
+            26
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.3495006001997565,
+            "f_hub_com": 0.13057565751519812,
+            "f_hub_ind": 0.18395553200078088,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.4,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.13624551454907016,
+            "industrial": 0.1485506926503686,
+            "residential": 0.10104183879672148
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            52,
+            29
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.42955735821073915,
+            "f_hub_com": 0.17289656933457084,
+            "f_hub_ind": 0.2612307519044477,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.5,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.17464941324289035,
+            "industrial": 0.2010662531001311,
+            "residential": 0.11601475245278825
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            57,
+            32
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.5162056739454963,
+            "f_hub_com": 0.22012047983504798,
+            "f_hub_ind": 0.3521586589125572,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.5,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.22031342269012805,
+            "industrial": 0.27273868088828057,
+            "residential": 0.136254942168855
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            61,
+            37
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.6669768108584744,
+            "f_hub_com": 0.321402281075064,
+            "f_hub_ind": 0.5127392455558938,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.29923673081673324,
+            "industrial": 0.3587507877703602,
+            "residential": 0.14729706238084028
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            64,
+            42
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.8095716486678869,
+            "f_hub_com": 0.42588741702974775,
+            "f_hub_ind": 0.6786471793336415,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.390446779951426,
+            "industrial": 0.4856488608004746,
+            "residential": 0.17281126402794766
+          },
+          "building_id": "residential_25"
+        },
+        {
+          "pos": [
+            66,
+            48
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9405880633643421,
+            "f_hub_com": 0.5318690190796482,
+            "f_hub_ind": 0.8392835971522704,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.48023902412065733,
+            "industrial": 0.6067529942748343,
+            "residential": 0.19302768829340083
+          },
+          "building_id": "residential_25"
+        }
+      ]
+    },
+    {
+      "layer_id": "industrial_radial_P0",
+      "total_slots": 24,
+      "free_slots": 7,
+      "used_slots": 17,
+      "dead_slots": 0,
+      "density": 0.7083333333333334,
+      "slot_details": [
+        {
+          "pos": [
+            103,
+            55
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 1.0,
+            "f_hub_com": 0.18250318495183632,
+            "f_hub_ind": 0.9724526590665414,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.8,
+            "junction_penalty": 0.35
+          },
+          "scores": {
+            "commercial": 0.2785019109711018,
+            "industrial": 0.6873489624865979,
+            "residential": 0.27763146414965145
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            101,
+            62
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9405880633643421,
+            "f_hub_com": 0.17748150212298575,
+            "f_hub_ind": 0.9048374180359595,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.7,
+            "junction_penalty": 0.34807975947973513
+          },
+          "scores": {
+            "commercial": 0.26664491875706514,
+            "industrial": 0.6454036077868766,
+            "residential": 0.26407211855218
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            98,
+            70
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.7548396019890073,
+            "f_hub_com": 0.1350348720765574,
+            "f_hub_ind": 0.6852815857006058,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.7,
+            "junction_penalty": 0.15000000000000002
+          },
+          "scores": {
+            "commercial": 0.20798884364373593,
+            "industrial": 0.48811477263258507,
+            "residential": 0.21262058872410133
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            94,
+            76
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.5762290736718,
+            "f_hub_com": 0.09709176027396661,
+            "f_hub_ind": 0.4854666779536672,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.6,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.15550087089873998,
+            "industrial": 0.35106394129246704,
+            "residential": 0.1658761830880566
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            88,
+            80
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.45783336177161427,
+            "f_hub_com": 0.07960986322464704,
+            "f_hub_ind": 0.36020955477397965,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.8,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.11533259028911111,
+            "industrial": 0.23257359556859236,
+            "residential": 0.1189632750247808
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            80,
+            83
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.37531109885139957,
+            "f_hub_com": 0.07199841953490445,
+            "f_hub_ind": 0.2734794148400396,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.8,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.0942612714912226,
+            "industrial": 0.16424145287487169,
+            "residential": 0.09223395329271297
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            73,
+            85
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.32465246735834974,
+            "f_hub_com": 0.06763834338398929,
+            "f_hub_ind": 0.21933471210682384,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.7,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.08451349950206352,
+            "industrial": 0.13179720849834053,
+            "residential": 0.08089835818635344
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            65,
+            83
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.37531109885139957,
+            "f_hub_com": 0.10622219259097802,
+            "f_hub_ind": 0.2507482615603197,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.10879553532486672,
+            "industrial": 0.13173931857102575,
+            "residential": 0.07879887167345621
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            58,
+            80
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.45783336177161427,
+            "f_hub_com": 0.17456954138426697,
+            "f_hub_ind": 0.3043233895389006,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.16630839718488305,
+            "industrial": 0.18183620468929892,
+            "residential": 0.09835426417811864
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            51,
+            76
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.5762290736718,
+            "f_hub_com": 0.2960331165684823,
+            "f_hub_ind": 0.37855081606198615,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.26286568467544935,
+            "industrial": 0.2522602172520424,
+            "residential": 0.12212529111290558
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            47,
+            70
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.7548396019890073,
+            "f_hub_com": 0.5066169923655897,
+            "f_hub_ind": 0.5101927040840921,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.42493811581715524,
+            "industrial": 0.36931588774350255,
+            "residential": 0.1495674969087719
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            44,
+            62
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9405880633643421,
+            "f_hub_com": 0.7779359294312135,
+            "f_hub_ind": 0.6506703979653855,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.6248791703315965,
+            "industrial": 0.4930157347220476,
+            "residential": 0.1671062861011205
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            43,
+            55
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 1.0,
+            "f_hub_com": 0.8775535639640376,
+            "f_hub_ind": 0.6941105987758378,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.6965321383784224,
+            "industrial": 0.5317608293267109,
+            "residential": 0.17037269739081684
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            44,
+            47
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9231163463866358,
+            "f_hub_com": 0.7524321560893033,
+            "f_hub_ind": 0.6349291494180599,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.6060825629309091,
+            "industrial": 0.4799901187765919,
+            "residential": 0.16583236956274827
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            47,
+            40
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.7548396019890073,
+            "f_hub_com": 0.5066169923655897,
+            "f_hub_ind": 0.5101927040840921,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.42493811581715524,
+            "industrial": 0.36931588774350255,
+            "residential": 0.1495674969087719
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            51,
+            33
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.5460744266397094,
+            "f_hub_com": 0.2690549873921396,
+            "f_hub_ind": 0.35288641643130453,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.24064787776322563,
+            "industrial": 0.23060613569714486,
+            "residential": 0.11629325337673109
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            57,
+            29
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.42955735821073915,
+            "f_hub_com": 0.15877821676849332,
+            "f_hub_ind": 0.2770178126164509,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.15417840170324384,
+            "industrial": 0.1697491364917328,
+            "residential": 0.09647036385920324
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            65,
+            26
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.3495006001997565,
+            "f_hub_com": 0.09358465147723063,
+            "f_hub_ind": 0.2284661979897079,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.09905091092628968,
+            "industrial": 0.12303155894427846,
+            "residential": 0.07676344010597591
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            73,
+            25
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.32465246735834974,
+            "f_hub_com": 0.06763834338398929,
+            "f_hub_ind": 0.21933471210682384,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.6,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.08751349950206351,
+            "industrial": 0.14179720849834054,
+            "residential": 0.08589835818635344
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            80,
+            26
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.3495006001997565,
+            "f_hub_com": 0.06343257312556884,
+            "f_hub_ind": 0.24917740904027627,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.7,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.08695966391529261,
+            "industrial": 0.1544227250220911,
+            "residential": 0.08968717411872304
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            88,
+            29
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.42955735821073915,
+            "f_hub_com": 0.07107990463997016,
+            "f_hub_ind": 0.33143133454833906,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.8,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.10455941442612995,
+            "industrial": 0.20967657355427127,
+            "residential": 0.11084799799512468
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            94,
+            33
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.5460744266397094,
+            "f_hub_com": 0.08824358112093043,
+            "f_hub_ind": 0.4525537629585449,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.5,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.14716103400050012,
+            "industrial": 0.3354231762871271,
+            "residential": 0.1625054326518869
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            98,
+            39
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.7261490370736909,
+            "f_hub_com": 0.12604565314453883,
+            "f_hub_ind": 0.6514610325705222,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.7,
+            "junction_penalty": 0.10557280900008403
+          },
+          "scores": {
+            "commercial": 0.19774574312145982,
+            "industrial": 0.46456218673220573,
+            "residential": 0.20514623302235935
+          },
+          "building_id": "residential_42"
+        },
+        {
+          "pos": [
+            101,
+            47
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9231163463866358,
+            "f_hub_com": 0.1716629663910831,
+            "f_hub_ind": 0.8829472709864511,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.7,
+            "junction_penalty": 0.31992647456322776
+          },
+          "scores": {
+            "commercial": 0.26022251962071247,
+            "industrial": 0.6304037619110457,
+            "residential": 0.2597834892671336
+          },
+          "building_id": "residential_42"
+        }
+      ]
+    },
+    {
+      "layer_id": "residential_radial_P0",
+      "total_slots": 40,
+      "free_slots": 23,
+      "used_slots": 17,
+      "dead_slots": 0,
+      "density": 0.425,
+      "slot_details": [
+        {
+          "pos": [
+            80,
+            55
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 1.0,
+            "f_hub_com": 0.41111229050718745,
+            "f_hub_ind": 0.9836069275391278,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.5
+          },
+          "scores": {
+            "commercial": 0.40666737430431243,
+            "industrial": 0.6659838101465203,
+            "residential": 0.2202365027676934
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            78,
+            62
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9405880633643421,
+            "f_hub_com": 0.39082078563138756,
+            "f_hub_ind": 0.9014040705810817,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.30537780052750985
+          },
+          "scores": {
+            "commercial": 0.38650252804115076,
+            "industrial": 0.615650364634305,
+            "residential": 0.20691926396873134
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            75,
+            69
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.7827045382418681,
+            "f_hub_com": 0.3065209615784927,
+            "f_hub_ind": 0.6996394957686868,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.3104534845954692,
+            "industrial": 0.48047785723324477,
+            "residential": 0.1751021524399325
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            69,
+            75
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.6065306597126334,
+            "f_hub_com": 0.22724458034820322,
+            "f_hub_ind": 0.48386284695992154,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.2276528801514486,
+            "industrial": 0.31775723075611517,
+            "residential": 0.13523698674268786
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            62,
+            78
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.5162056739454963,
+            "f_hub_com": 0.1996656400679019,
+            "f_hub_ind": 0.37036723214774886,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.1930405188298404,
+            "industrial": 0.232753396167636,
+            "residential": 0.11261462413700545
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            55,
+            80
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.45783336177161427,
+            "f_hub_com": 0.18426911199469231,
+            "f_hub_ind": 0.2943789187764553,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.17212813955113823,
+            "industrial": 0.176366745769954,
+            "residential": 0.09790602067040037
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            47,
+            78
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.5162056739454963,
+            "f_hub_com": 0.2578040301986631,
+            "f_hub_ind": 0.31058635383068744,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.22792355290829716,
+            "industrial": 0.19987391309325217,
+            "residential": 0.10995407785841242
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            40,
+            75
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.6065306597126334,
+            "f_hub_com": 0.3724493137139072,
+            "f_hub_ind": 0.3442853825896851,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.31477572017087097,
+            "industrial": 0.24098962535248517,
+            "residential": 0.12713265972508248
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            34,
+            69
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.7827045382418681,
+            "f_hub_com": 0.6163436378836364,
+            "f_hub_ind": 0.4324246845954317,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.01005050633883342
+          },
+          "scores": {
+            "commercial": 0.49614608025177875,
+            "industrial": 0.3330071857710128,
+            "residential": 0.15321983885489204
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            31,
+            62
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9405880633643421,
+            "f_hub_com": 0.8704321799632415,
+            "f_hub_ind": 0.5192489175723025,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.34807975947973513
+          },
+          "scores": {
+            "commercial": 0.6734153254612185,
+            "industrial": 0.40332993253186517,
+            "residential": 0.16832025805367734
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            30,
+            55
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 1.0,
+            "f_hub_com": 0.9756109800648459,
+            "f_hub_ind": 0.5515397744971643,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.5
+          },
+          "scores": {
+            "commercial": 0.7453665880389075,
+            "industrial": 0.42834687597344034,
+            "residential": 0.17214683781245615
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            31,
+            47
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9231163463866358,
+            "f_hub_com": 0.8418960188380981,
+            "f_hub_ind": 0.5066870639902217,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.31992647456322776
+          },
+          "scores": {
+            "commercial": 0.6533623510889215,
+            "industrial": 0.39346064806311953,
+            "residential": 0.16717590982716501
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            34,
+            40
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.7548396019890073,
+            "f_hub_com": 0.5778765226710516,
+            "f_hub_ind": 0.4124278299490628,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.4676938340004324,
+            "industrial": 0.3155452069692364,
+            "residential": 0.14998032196793393
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            40,
+            34
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.5762290736718,
+            "f_hub_com": 0.3400150382854397,
+            "f_hub_ind": 0.32199375098791694,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.2892548377056239,
+            "industrial": 0.22115383146130432,
+            "residential": 0.12181246653062451
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            47,
+            31
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.4867522559599717,
+            "f_hub_com": 0.23223627472975883,
+            "f_hub_ind": 0.28764505755294156,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.20669221602984963,
+            "industrial": 0.17989284564411076,
+            "residential": 0.10378211440109282
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            54,
+            30
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.45783336177161427,
+            "f_hub_com": 0.1874354072379922,
+            "f_hub_ind": 0.290944416310249,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.17402791669711817,
+            "industrial": 0.1744777694135405,
+            "residential": 0.09778793699167136
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            62,
+            31
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.4867522559599717,
+            "f_hub_com": 0.17986376863530842,
+            "f_hub_ind": 0.3430102530033848,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.1752687123731794,
+            "industrial": 0.21034370314185455,
+            "residential": 0.10595183630241643
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            69,
+            34
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.5762290736718,
+            "f_hub_com": 0.2074552746970678,
+            "f_hub_ind": 0.4525339178921776,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.2097189795526007,
+            "industrial": 0.2929509232586477,
+            "residential": 0.1287433942126598
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            75,
+            40
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.7548396019890073,
+            "f_hub_com": 0.2873904369500576,
+            "f_hub_ind": 0.6672856783291606,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.293402182567836,
+            "industrial": 0.45571702357829025,
+            "residential": 0.16984886185511805
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            78,
+            47
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.9231163463866358,
+            "f_hub_com": 0.37800815626570466,
+            "f_hub_ind": 0.8795969842883029,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.2788897449072022
+          },
+          "scores": {
+            "commercial": 0.37585036813860595,
+            "industrial": 0.6006129407098655,
+            "residential": 0.2040169942969315
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            90,
+            55
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 1.0,
+            "f_hub_com": 0.29823409618142155,
+            "f_hub_ind": 1.0,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 1.0
+          },
+          "scores": {
+            "commercial": 0.32894045770885294,
+            "industrial": 0.65,
+            "residential": 0.24035318076371565
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            88,
+            65
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.8824969025845955,
+            "f_hub_com": 0.25564880871779294,
+            "f_hub_ind": 0.8488044379922131,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.4900980486407216
+          },
+          "scores": {
+            "commercial": 0.29008670477478044,
+            "industrial": 0.56296176410983,
+            "residential": 0.21279802384990715
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            83,
+            75
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.6065306597126334,
+            "f_hub_com": 0.15429500550156833,
+            "f_hub_ind": 0.5162519290560739,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.1838831352434677,
+            "industrial": 0.335571225908999,
+            "residential": 0.14496853939759202
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            75,
+            83
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.37531109885139957,
+            "f_hub_com": 0.08298164813262227,
+            "f_hub_ind": 0.26788698567704466,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.09485120864985327,
+            "industrial": 0.14116561683522447,
+            "residential": 0.08087617194761863
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            65,
+            88
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.2563401514150736,
+            "f_hub_com": 0.05393368730035602,
+            "f_hub_ind": 0.15239720606607116,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.053628242663228326,
+            "industrial": 0.04790350119010753,
+            "residential": 0.04452375733755491
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            55,
+            90
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.2162651668298873,
+            "f_hub_com": 0.048572810564927224,
+            "f_hub_ind": 0.11052878006681771,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.04539671970493381,
+            "industrial": 0.02485712074422157,
+            "residential": 0.03683870429193554
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            44,
+            88
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.2563401514150736,
+            "f_hub_com": 0.07713314286579481,
+            "f_hub_ind": 0.11910959422867273,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.0675479160024916,
+            "industrial": 0.02959531467953841,
+            "residential": 0.04487700800007692
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            34,
+            83
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.37531109885139957,
+            "f_hub_com": 0.16685713963657658,
+            "f_hub_ind": 0.16557233545162242,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.14517650355222586,
+            "industrial": 0.08489255921124222,
+            "residential": 0.07944827118064111
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            26,
+            75
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.6065306597126334,
+            "f_hub_com": 0.40747415249308405,
+            "f_hub_ind": 0.26445451250538354,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.33579062343837707,
+            "industrial": 0.19708264680611928,
+            "residential": 0.13210232248189235
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            21,
+            65
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.8824969025845955,
+            "f_hub_com": 0.8005397143848122,
+            "f_hub_ind": 0.38666080046242784,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.4975062189439555
+          },
+          "scores": {
+            "commercial": 0.6168730847689272,
+            "industrial": 0.30841235495328645,
+            "residential": 0.1731413883459711
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            20,
+            55
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 1.0,
+            "f_hub_com": 1.0,
+            "f_hub_ind": 0.44489483287164316,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 1.0
+          },
+          "scores": {
+            "commercial": 0.75,
+            "industrial": 0.34469215807940373,
+            "residential": 0.1832657750692535
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            21,
+            44
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.8596327636025423,
+            "f_hub_com": 0.7640394901532731,
+            "f_hub_ind": 0.3736285454227365,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.44773194914063696
+          },
+          "scores": {
+            "commercial": 0.5913956078296595,
+            "industrial": 0.29801729342610883,
+            "residential": 0.17096420195720602
+          },
+          "building_id": "residential_59"
+        },
+        {
+          "pos": [
+            26,
+            34
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.5762290736718,
+            "f_hub_com": 0.3719897834653728,
+            "f_hub_ind": 0.24733173336253236,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.30843968481358364,
+            "industrial": 0.1800897217673428,
+            "residential": 0.12661682013844555
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            34,
+            26
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.3495006001997565,
+            "f_hub_com": 0.14700569512347753,
+            "f_hub_ind": 0.15085919933211148,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.1281035371140378,
+            "industrial": 0.07034770968260043,
+            "residential": 0.072720281175366
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            44,
+            21
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.23574607655586352,
+            "f_hub_com": 0.06646291798667318,
+            "f_hub_ind": 0.10676778837852514,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.8,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.06302696610317662,
+            "industrial": 0.03765880274715469,
+            "residential": 0.04856528642381834
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            54,
+            20
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.2162651668298873,
+            "f_hub_com": 0.04940743692949052,
+            "f_hub_ind": 0.10923924693956781,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.8,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.04889749552367178,
+            "industrial": 0.03414787752423412,
+            "residential": 0.04186520898811037
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            65,
+            21
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.23574607655586352,
+            "f_hub_com": 0.046472762584033746,
+            "f_hub_ind": 0.1366062301874915,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 0.9,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.048032872861592954,
+            "industrial": 0.04406994574208618,
+            "residential": 0.04308755123300128
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            75,
+            26
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.3495006001997565,
+            "f_hub_com": 0.07310909735596278,
+            "f_hub_ind": 0.24408193591338134,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.08376557845352897,
+            "industrial": 0.12162021480229887,
+            "residential": 0.07351619024167848
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            83,
+            34
+          ],
+          "used": false,
+          "dead": false,
+          "features": {
+            "f_road": 0.5762290736718,
+            "f_hub_com": 0.140858420921045,
+            "f_hub_ind": 0.48282588659775844,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.0
+          },
+          "scores": {
+            "commercial": 0.169760867286987,
+            "industrial": 0.30961150604671717,
+            "residential": 0.1375189696620272
+          },
+          "building_id": null
+        },
+        {
+          "pos": [
+            88,
+            44
+          ],
+          "used": true,
+          "dead": false,
+          "features": {
+            "f_road": 0.8596327636025423,
+            "f_hub_com": 0.24399262392764043,
+            "f_hub_ind": 0.8201958076332343,
+            "f_access": 0.0,
+            "f_heat": 0.0,
+            "crowding": 1.0,
+            "junction_penalty": 0.44098300562505255
+          },
+          "scores": {
+            "commercial": 0.27950246696459163,
+            "industrial": 0.5439667348176618,
+            "residential": 0.2079884858707579
+          },
+          "building_id": "residential_59"
+        }
+      ]
+    }
+  ]
+}

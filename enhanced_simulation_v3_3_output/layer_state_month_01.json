@@ -1,0 +1,46 @@
+{
+  "month": 1,
+  "quarter": 0,
+  "layers": {
+    "growth_phase": "road_corridor",
+    "road_layers_completed": false,
+    "total_layers": 3,
+    "active_layers": 3,
+    "completed_layers": 0,
+    "layers": [
+      {
+        "layer_id": "road_L0_commercial",
+        "status": "complete",
+        "layer_type": "road",
+        "activated_quarter": 0,
+        "capacity": 8,
+        "dead_slots": 0,
+        "capacity_effective": 8,
+        "placed": 8,
+        "density": 1.0
+      },
+      {
+        "layer_id": "road_L0_residential",
+        "status": "complete",
+        "layer_type": "road",
+        "activated_quarter": 0,
+        "capacity": 6,
+        "dead_slots": 0,
+        "capacity_effective": 6,
+        "placed": 6,
+        "density": 1.0
+      },
+      {
+        "layer_id": "road_L0_industrial",
+        "status": "complete",
+        "layer_type": "road",
+        "activated_quarter": 0,
+        "capacity": 4,
+        "dead_slots": 0,
+        "capacity_effective": 4,
+        "placed": 4,
+        "density": 1.0
+      }
+    ]
+  }
+}

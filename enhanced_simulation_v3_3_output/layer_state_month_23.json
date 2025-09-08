@@ -1,0 +1,277 @@
+{
+  "month": 23,
+  "quarter": 7,
+  "layers": {
+    "growth_phase": "radial_expansion",
+    "road_layers_completed": true,
+    "total_layers": 24,
+    "active_layers": 6,
+    "completed_layers": 18,
+    "layers": [
+      {
+        "layer_id": "road_L0_commercial",
+        "status": "complete",
+        "layer_type": "road",
+        "activated_quarter": 0,
+        "capacity": 8,
+        "dead_slots": 0,
+        "capacity_effective": 8,
+        "placed": 8,
+        "density": 1.0
+      },
+      {
+        "layer_id": "road_L0_residential",
+        "status": "complete",
+        "layer_type": "road",
+        "activated_quarter": 0,
+        "capacity": 6,
+        "dead_slots": 0,
+        "capacity_effective": 6,
+        "placed": 6,
+        "density": 1.0
+      },
+      {
+        "layer_id": "road_L0_industrial",
+        "status": "complete",
+        "layer_type": "road",
+        "activated_quarter": 0,
+        "capacity": 4,
+        "dead_slots": 0,
+        "capacity_effective": 4,
+        "placed": 4,
+        "density": 1.0
+      },
+      {
+        "layer_id": "commercial_radial_P0",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 1,
+        "capacity": 43,
+        "dead_slots": 0,
+        "capacity_effective": 43,
+        "placed": 43,
+        "density": 1.0
+      },
+      {
+        "layer_id": "industrial_radial_P0",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 1,
+        "capacity": 31,
+        "dead_slots": 0,
+        "capacity_effective": 31,
+        "placed": 31,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_radial_P0",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 1,
+        "capacity": 11,
+        "dead_slots": 0,
+        "capacity_effective": 11,
+        "placed": 11,
+        "density": 1.0
+      },
+      {
+        "layer_id": "commercial_radial_P1",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 2,
+        "capacity": 44,
+        "dead_slots": 0,
+        "capacity_effective": 44,
+        "placed": 44,
+        "density": 1.0
+      },
+      {
+        "layer_id": "industrial_radial_P1",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 2,
+        "capacity": 31,
+        "dead_slots": 0,
+        "capacity_effective": 31,
+        "placed": 31,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_radial_P1",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 2,
+        "capacity": 11,
+        "dead_slots": 0,
+        "capacity_effective": 11,
+        "placed": 11,
+        "density": 1.0
+      },
+      {
+        "layer_id": "commercial_radial_P2",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 3,
+        "capacity": 44,
+        "dead_slots": 0,
+        "capacity_effective": 44,
+        "placed": 44,
+        "density": 1.0
+      },
+      {
+        "layer_id": "industrial_radial_P2",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 3,
+        "capacity": 31,
+        "dead_slots": 0,
+        "capacity_effective": 31,
+        "placed": 31,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_radial_P2",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 3,
+        "capacity": 11,
+        "dead_slots": 0,
+        "capacity_effective": 11,
+        "placed": 11,
+        "density": 1.0
+      },
+      {
+        "layer_id": "commercial_radial_P3",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 4,
+        "capacity": 45,
+        "dead_slots": 0,
+        "capacity_effective": 45,
+        "placed": 45,
+        "density": 1.0
+      },
+      {
+        "layer_id": "industrial_radial_P3",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 4,
+        "capacity": 31,
+        "dead_slots": 0,
+        "capacity_effective": 31,
+        "placed": 31,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_radial_P3",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 4,
+        "capacity": 11,
+        "dead_slots": 0,
+        "capacity_effective": 11,
+        "placed": 11,
+        "density": 1.0
+      },
+      {
+        "layer_id": "commercial_radial_P4",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 5,
+        "capacity": 46,
+        "dead_slots": 0,
+        "capacity_effective": 46,
+        "placed": 46,
+        "density": 1.0
+      },
+      {
+        "layer_id": "industrial_radial_P4",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 5,
+        "capacity": 31,
+        "dead_slots": 0,
+        "capacity_effective": 31,
+        "placed": 31,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_radial_P4",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 5,
+        "capacity": 12,
+        "dead_slots": 0,
+        "capacity_effective": 12,
+        "placed": 12,
+        "density": 1.0
+      },
+      {
+        "layer_id": "commercial_radial_P5",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 6,
+        "capacity": 46,
+        "dead_slots": 0,
+        "capacity_effective": 46,
+        "placed": 46,
+        "density": 1.0
+      },
+      {
+        "layer_id": "industrial_radial_P5",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 6,
+        "capacity": 31,
+        "dead_slots": 0,
+        "capacity_effective": 31,
+        "placed": 31,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_radial_P5",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 6,
+        "capacity": 12,
+        "dead_slots": 0,
+        "capacity_effective": 12,
+        "placed": 12,
+        "density": 1.0
+      },
+      {
+        "layer_id": "commercial_radial_P6",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 7,
+        "capacity": 46,
+        "dead_slots": 0,
+        "capacity_effective": 46,
+        "placed": 46,
+        "density": 1.0
+      },
+      {
+        "layer_id": "industrial_radial_P6",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 7,
+        "capacity": 32,
+        "dead_slots": 0,
+        "capacity_effective": 32,
+        "placed": 32,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_radial_P6",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 7,
+        "capacity": 12,
+        "dead_slots": 0,
+        "capacity_effective": 12,
+        "placed": 12,
+        "density": 1.0
+      }
+    ]
+  }
+}

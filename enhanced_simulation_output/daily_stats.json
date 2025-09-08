@@ -1,0 +1,1010 @@
+[
+  {
+    "month": 0,
+    "population": 108,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 1,
+    "total_buildings": 6,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 126.36589548127421,
+      "avg_price": 75.61334926029998,
+      "price_distribution": {
+        "50-100": 53993,
+        "100-150": 11543,
+        "150-200": 0,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 0.0,
+        "avg": 0.0,
+        "total": 0.0
+      },
+      "commercial_intensity": {
+        "max": 0.0,
+        "avg": 0.0,
+        "total": 0.0
+      },
+      "combined_intensity": {
+        "max": 0.0,
+        "avg": 0.0,
+        "total": 0.0
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 0,
+      "actual_total": 6
+    }
+  },
+  {
+    "month": 1,
+    "population": 118,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 2,
+    "total_buildings": 7,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 129.24862989598304,
+      "avg_price": 77.32246070670004,
+      "price_distribution": {
+        "50-100": 51893,
+        "100-150": 13643,
+        "150-200": 0,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 86.4,
+        "avg": 0.09755859375,
+        "total": 6393.6
+      },
+      "commercial_intensity": {
+        "max": 60.480000000000125,
+        "avg": 0.0009228515625000019,
+        "total": 60.480000000000125
+      },
+      "combined_intensity": {
+        "max": 146.8800000000001,
+        "avg": 0.0984814453125,
+        "total": 6454.08
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 0,
+      "actual_total": 7
+    }
+  },
+  {
+    "month": 2,
+    "population": 129,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 8,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 138.44520438035255,
+      "avg_price": 79.37517842273589,
+      "price_distribution": {
+        "50-100": 49882,
+        "100-150": 15654,
+        "150-200": 0,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 163.52,
+        "avg": 0.18463867187500002,
+        "total": 12100.480000000001
+      },
+      "commercial_intensity": {
+        "max": 114.46400000000013,
+        "avg": 0.001746582031250002,
+        "total": 114.46400000000013
+      },
+      "combined_intensity": {
+        "max": 277.9840000000001,
+        "avg": 0.18638525390625002,
+        "total": 12214.944000000001
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 1,
+      "actual_total": 8
+    }
+  },
+  {
+    "month": 3,
+    "population": 143,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 8,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 146.4791455491235,
+      "avg_price": 81.68464530535594,
+      "price_distribution": {
+        "50-100": 47736,
+        "100-150": 17800,
+        "150-200": 0,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 234.016,
+        "avg": 0.25980810546875,
+        "total": 17026.784
+      },
+      "commercial_intensity": {
+        "max": 157.65119999999925,
+        "avg": 0.0024995605468749885,
+        "total": 163.81119999999925
+      },
+      "combined_intensity": {
+        "max": 382.86719999999923,
+        "avg": 0.262307666015625,
+        "total": 17190.5952
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 2,
+      "actual_total": 8
+    }
+  },
+  {
+    "month": 4,
+    "population": 158,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 8,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 150.82939033057633,
+      "avg_price": 83.60268736103849,
+      "price_distribution": {
+        "50-100": 46282,
+        "100-150": 19214,
+        "150-200": 40,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 301.6128,
+        "avg": 0.32695048828125,
+        "total": 21427.0272
+      },
+      "commercial_intensity": {
+        "max": 192.20095999999833,
+        "avg": 0.0032215722656249745,
+        "total": 211.12895999999833
+      },
+      "combined_intensity": {
+        "max": 466.77375999999833,
+        "avg": 0.330172060546875,
+        "total": 21638.15616
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 3,
+      "actual_total": 8
+    }
+  },
+  {
+    "month": 5,
+    "population": 175,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 8,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 155.1378795697687,
+      "avg_price": 85.62929289324407,
+      "price_distribution": {
+        "50-100": 44888,
+        "100-150": 20114,
+        "150-200": 534,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 367.69024,
+        "avg": 0.38817171875000006,
+        "total": 25439.221760000004
+      },
+      "commercial_intensity": {
+        "max": 219.84076799999764,
+        "avg": 0.003927355468749965,
+        "total": 257.3831679999977
+      },
+      "combined_intensity": {
+        "max": 533.8990079999976,
+        "avg": 0.39209907421875,
+        "total": 25696.604928
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 4,
+      "actual_total": 8
+    }
+  },
+  {
+    "month": 6,
+    "population": 195,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 8,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 162.37726009542587,
+      "avg_price": 87.89760396303349,
+      "price_distribution": {
+        "50-100": 43477,
+        "100-150": 20483,
+        "150-200": 1576,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 434.152192,
+        "avg": 0.44565700390625007,
+        "total": 29206.577408000005
+      },
+      "commercial_intensity": {
+        "max": 241.95261439999706,
+        "avg": 0.0046372457031249575,
+        "total": 303.9065343999972
+      },
+      "combined_intensity": {
+        "max": 587.5992063999971,
+        "avg": 0.45029424960937503,
+        "total": 29510.483942400002
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 6,
+      "actual_total": 8
+    }
+  },
+  {
+    "month": 7,
+    "population": 214,
+    "public_buildings": 1,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 9,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 172.84741471418818,
+      "avg_price": 90.70853074922027,
+      "price_distribution": {
+        "50-100": 41883,
+        "100-150": 19956,
+        "150-200": 3697,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 503.3217536,
+        "avg": 0.5016549976562501,
+        "total": 32876.46192640001
+      },
+      "commercial_intensity": {
+        "max": 259.6420915199966,
+        "avg": 0.005376056328124953,
+        "total": 352.32522751999693
+      },
+      "combined_intensity": {
+        "max": 630.5593651199966,
+        "avg": 0.507031053984375,
+        "total": 33228.78715392
+      }
+    },
+    "building_growth": {
+      "target_new": 3,
+      "target_total": 9,
+      "actual_total": 9
+    }
+  },
+  {
+    "month": 8,
+    "population": 232,
+    "public_buildings": 1,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 9,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 179.75503091204996,
+      "avg_price": 93.7218355779919,
+      "price_distribution": {
+        "50-100": 40056,
+        "100-150": 19266,
+        "150-200": 6214,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 573.85740288,
+        "avg": 0.5559626700000001,
+        "total": 36435.56954112001
+      },
+      "commercial_intensity": {
+        "max": 273.7936732159962,
+        "avg": 0.006129458343749941,
+        "total": 401.7001820159961
+      },
+      "combined_intensity": {
+        "max": 664.9274920959963,
+        "avg": 0.56209212834375,
+        "total": 36837.269723136
+      }
+    },
+    "building_growth": {
+      "target_new": 4,
+      "target_total": 13,
+      "actual_total": 9
+    }
+  },
+  {
+    "month": 9,
+    "population": 254,
+    "public_buildings": 2,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 10,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 189.57489659758244,
+      "avg_price": 96.31053557481493,
+      "price_distribution": {
+        "50-100": 39023,
+        "100-150": 17880,
+        "150-200": 8633,
+        "200-250": 0,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 644.6859223040001,
+        "avg": 0.6084175969375001,
+        "total": 39873.255632896005
+      },
+      "commercial_intensity": {
+        "max": 285.1149385727959,
+        "avg": 0.0068859885499999215,
+        "total": 451.28014561279485
+      },
+      "combined_intensity": {
+        "max": 692.4219936767959,
+        "avg": 0.6153035854875,
+        "total": 40324.5357785088
+      }
+    },
+    "building_growth": {
+      "target_new": 5,
+      "target_total": 18,
+      "actual_total": 10
+    }
+  },
+  {
+    "month": 10,
+    "population": 280,
+    "public_buildings": 3,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 11,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 201.64493481140886,
+      "avg_price": 99.82785053325165,
+      "price_distribution": {
+        "50-100": 37426,
+        "100-150": 17303,
+        "150-200": 10745,
+        "200-250": 62,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 718.9487378432001,
+        "avg": 0.6613922806750001,
+        "total": 43345.00450631681
+      },
+      "commercial_intensity": {
+        "max": 294.1719508582357,
+        "avg": 0.007679200996249903,
+        "total": 503.2641164902336
+      },
+      "combined_intensity": {
+        "max": 718.9487378432001,
+        "avg": 0.66907148167125,
+        "total": 43848.26862280704
+      }
+    },
+    "building_growth": {
+      "target_new": 6,
+      "target_total": 24,
+      "actual_total": 11
+    }
+  },
+  {
+    "month": 11,
+    "population": 309,
+    "public_buildings": 4,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 12,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 216.36711322209985,
+      "avg_price": 103.93898814215741,
+      "price_distribution": {
+        "50-100": 35713,
+        "100-150": 16740,
+        "150-200": 11865,
+        "200-250": 1218,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 799.1589902745601,
+        "avg": 0.7167847229775,
+        "total": 46975.20360505344
+      },
+      "commercial_intensity": {
+        "max": 301.4175606865875,
+        "avg": 0.008535938921999883,
+        "total": 559.4112931921843
+      },
+      "combined_intensity": {
+        "max": 799.1589902745601,
+        "avg": 0.7253206618995,
+        "total": 47534.61489824563
+      }
+    },
+    "building_growth": {
+      "target_new": 7,
+      "target_total": 32,
+      "actual_total": 12
+    }
+  },
+  {
+    "month": 12,
+    "population": 333,
+    "public_buildings": 5,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 13,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 226.86200518799149,
+      "avg_price": 108.42520825362826,
+      "price_distribution": {
+        "50-100": 34110,
+        "100-150": 16002,
+        "150-200": 13237,
+        "200-250": 2187,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 868.9271922196481,
+        "avg": 0.7761499463507501,
+        "total": 50865.76288404276
+      },
+      "commercial_intensity": {
+        "max": 313.3549860044758,
+        "avg": 0.009469131996974864,
+        "total": 620.5690345537447
+      },
+      "combined_intensity": {
+        "max": 868.9271922196481,
+        "avg": 0.7856190783477249,
+        "total": 51486.3319185965
+      }
+    },
+    "building_growth": {
+      "target_new": 7,
+      "target_total": 40,
+      "actual_total": 13
+    }
+  },
+  {
+    "month": 13,
+    "population": 365,
+    "public_buildings": 5,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 13,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 238.63200225951803,
+      "avg_price": 112.31328442084518,
+      "price_distribution": {
+        "50-100": 32945,
+        "100-150": 15388,
+        "150-200": 13123,
+        "200-250": 4080,
+        "250-300": 0
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 924.7417537757185,
+        "avg": 0.8368501328618502,
+        "total": 54843.81030723421
+      },
+      "commercial_intensity": {
+        "max": 365.48398880357877,
+        "avg": 0.010420764581954844,
+        "total": 682.9352276429927
+      },
+      "combined_intensity": {
+        "max": 924.7417537757185,
+        "avg": 0.847270897443805,
+        "total": 55526.745534877206
+      }
+    },
+    "building_growth": {
+      "target_new": 7,
+      "target_total": 47,
+      "actual_total": 13
+    }
+  },
+  {
+    "month": 14,
+    "population": 397,
+    "public_buildings": 5,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 13,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 253.72182367691184,
+      "avg_price": 116.9260189604783,
+      "price_distribution": {
+        "50-100": 31748,
+        "100-150": 14823,
+        "150-200": 11865,
+        "200-250": 6973,
+        "250-300": 127
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 969.3934030205749,
+        "avg": 0.9031837195707302,
+        "total": 59191.04824578737
+      },
+      "commercial_intensity": {
+        "max": 416.14719104286155,
+        "avg": 0.011455508149938835,
+        "total": 750.7481821143915
+      },
+      "combined_intensity": {
+        "max": 1010.6431782469576,
+        "avg": 0.914639227720669,
+        "total": 59941.79642790176
+      }
+    },
+    "building_growth": {
+      "target_new": 7,
+      "target_total": 55,
+      "actual_total": 13
+    }
+  },
+  {
+    "month": 15,
+    "population": 437,
+    "public_buildings": 5,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 13,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 265.9333849971105,
+      "avg_price": 121.37333849141024,
+      "price_distribution": {
+        "50-100": 30609,
+        "100-150": 14398,
+        "150-200": 11215,
+        "200-250": 8451,
+        "250-300": 863
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1005.1147224164599,
+        "avg": 0.9740240264378341,
+        "total": 63833.6385966299
+      },
+      "commercial_intensity": {
+        "max": 465.6377528342917,
+        "avg": 0.012556740504326083,
+        "total": 822.9185456915142
+      },
+      "combined_intensity": {
+        "max": 1130.8345425975685,
+        "avg": 0.9865807669421602,
+        "total": 64656.55714232141
+      }
+    },
+    "building_growth": {
+      "target_new": 6,
+      "target_total": 61,
+      "actual_total": 13
+    }
+  },
+  {
+    "month": 16,
+    "population": 485,
+    "public_buildings": 5,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 13,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 279.76067716849235,
+      "avg_price": 126.96978581215379,
+      "price_distribution": {
+        "50-100": 29204,
+        "100-150": 14030,
+        "150-200": 10547,
+        "200-250": 9885,
+        "250-300": 1870
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1033.691777933168,
+        "avg": 1.0529130688065174,
+        "total": 69003.71087730392
+      },
+      "commercial_intensity": {
+        "max": 516.4302022674397,
+        "avg": 0.013779523262835939,
+        "total": 903.0548365532161
+      },
+      "combined_intensity": {
+        "max": 1254.1876340780611,
+        "avg": 1.0666925920693533,
+        "total": 69906.76571385714
+      }
+    },
+    "building_growth": {
+      "target_new": 5,
+      "target_total": 66,
+      "actual_total": 13
+    }
+  },
+  {
+    "month": 17,
+    "population": 533,
+    "public_buildings": 5,
+    "residential_buildings": 5,
+    "commercial_buildings": 3,
+    "total_buildings": 13,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 298.6348558993999,
+      "avg_price": 133.77494075870968,
+      "price_distribution": {
+        "50-100": 27839,
+        "100-150": 13602,
+        "150-200": 9738,
+        "200-250": 9521,
+        "250-300": 4836
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1056.5534223465345,
+        "avg": 1.142684458951464,
+        "total": 74886.96870184314
+      },
+      "commercial_intensity": {
+        "max": 570.504161813962,
+        "avg": 0.015167905719643897,
+        "total": 994.0438692425824
+      },
+      "combined_intensity": {
+        "max": 1385.5101072624593,
+        "avg": 1.1578523646711079,
+        "total": 75881.01257108572
+      }
+    },
+    "building_growth": {
+      "target_new": 4,
+      "target_total": 70,
+      "actual_total": 13
+    }
+  },
+  {
+    "month": 18,
+    "population": 592,
+    "public_buildings": 5,
+    "residential_buildings": 6,
+    "commercial_buildings": 3,
+    "total_buildings": 14,
+    "land_price_stats": {
+      "min_price": 50.0,
+      "max_price": 318.32353252559324,
+      "avg_price": 140.5370310242693,
+      "price_distribution": {
+        "50-100": 26451,
+        "100-150": 13383,
+        "150-200": 9296,
+        "200-250": 8772,
+        "250-300": 6753
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1074.8427378772276,
+        "avg": 1.2411617273174211,
+        "total": 81340.77496147451
+      },
+      "commercial_intensity": {
+        "max": 627.2033294511807,
+        "avg": 0.016688767935090325,
+        "total": 1093.7150953940795
+      },
+      "combined_intensity": {
+        "max": 1523.2080858099785,
+        "avg": 1.2578504952525116,
+        "total": 82434.4900568686
+      }
+    },
+    "building_growth": {
+      "target_new": 3,
+      "target_total": 73,
+      "actual_total": 14
+    }
+  },
+  {
+    "month": 19,
+    "population": 647,
+    "public_buildings": 5,
+    "residential_buildings": 6,
+    "commercial_buildings": 3,
+    "total_buildings": 14,
+    "land_price_stats": {
+      "min_price": 50.001172562451345,
+      "max_price": 339.8440195083758,
+      "avg_price": 148.83050045225446,
+      "price_distribution": {
+        "50-100": 25157,
+        "100-150": 13109,
+        "150-200": 8689,
+        "200-250": 7725,
+        "250-300": 7867
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1089.474190301782,
+        "avg": 1.361398620135187,
+        "total": 89220.61996917962
+      },
+      "commercial_intensity": {
+        "max": 681.5226635609563,
+        "avg": 0.018409608098072534,
+        "total": 1206.4920763152816
+      },
+      "combined_intensity": {
+        "max": 1655.1264686479947,
+        "avg": 1.3798082282332595,
+        "total": 90427.1120454949
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 75,
+      "actual_total": 14
+    }
+  },
+  {
+    "month": 20,
+    "population": 723,
+    "public_buildings": 5,
+    "residential_buildings": 7,
+    "commercial_buildings": 3,
+    "total_buildings": 15,
+    "land_price_stats": {
+      "min_price": 50.001172562451345,
+      "max_price": 363.6816545071168,
+      "avg_price": 156.80649920169208,
+      "price_distribution": {
+        "50-100": 24063,
+        "100-150": 12774,
+        "150-200": 8300,
+        "200-250": 7128,
+        "250-300": 7152
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1101.1793522414257,
+        "avg": 1.5052565914206497,
+        "total": 98648.4959753437
+      },
+      "commercial_intensity": {
+        "max": 724.9781308487768,
+        "avg": 0.020256250931583338,
+        "total": 1327.5136610522457
+      },
+      "combined_intensity": {
+        "max": 1760.6611749184076,
+        "avg": 1.5255128423522328,
+        "total": 99976.00963639593
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 76,
+      "actual_total": 15
+    }
+  },
+  {
+    "month": 21,
+    "population": 795,
+    "public_buildings": 5,
+    "residential_buildings": 8,
+    "commercial_buildings": 3,
+    "total_buildings": 16,
+    "land_price_stats": {
+      "min_price": 50.001172562451345,
+      "max_price": 393.34461726900327,
+      "avg_price": 167.47993131854545,
+      "price_distribution": {
+        "50-100": 22614,
+        "100-150": 12494,
+        "150-200": 7978,
+        "200-250": 6643,
+        "250-300": 6317
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1110.5434817931407,
+        "avg": 1.6862121090740199,
+        "total": 110507.59678027497
+      },
+      "commercial_intensity": {
+        "max": 759.7425046790331,
+        "avg": 0.02238297926089198,
+        "total": 1466.8909288418167
+      },
+      "combined_intensity": {
+        "max": 1845.0889399347377,
+        "avg": 1.7085950883349117,
+        "total": 111974.48770911677
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 77,
+      "actual_total": 16
+    }
+  },
+  {
+    "month": 22,
+    "population": 865,
+    "public_buildings": 5,
+    "residential_buildings": 8,
+    "commercial_buildings": 3,
+    "total_buildings": 16,
+    "land_price_stats": {
+      "min_price": 50.019067043680586,
+      "max_price": 415.3262913086571,
+      "avg_price": 177.50988686758845,
+      "price_distribution": {
+        "50-100": 21264,
+        "100-150": 12235,
+        "150-200": 7786,
+        "200-250": 6361,
+        "250-300": 5893
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1130.6771482045638,
+        "avg": 1.8924389255404659,
+        "total": 124022.87742421997
+      },
+      "commercial_intensity": {
+        "max": 791.4740037432384,
+        "avg": 0.02469959629933887,
+        "total": 1618.7127430734722
+      },
+      "combined_intensity": {
+        "max": 1922.1511519478024,
+        "avg": 1.917138521839805,
+        "total": 125641.59016729346
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 78,
+      "actual_total": 16
+    }
+  },
+  {
+    "month": 23,
+    "population": 961,
+    "public_buildings": 5,
+    "residential_buildings": 9,
+    "commercial_buildings": 3,
+    "total_buildings": 17,
+    "land_price_stats": {
+      "min_price": 50.019067043680586,
+      "max_price": 438.4016149302441,
+      "avg_price": 187.34428469632866,
+      "price_distribution": {
+        "50-100": 20056,
+        "100-150": 11983,
+        "150-200": 7694,
+        "200-250": 6121,
+        "250-300": 5550
+      }
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1198.941718563651,
+        "avg": 2.110411101369873,
+        "total": 138307.901939376
+      },
+      "commercial_intensity": {
+        "max": 839.2592029946042,
+        "avg": 0.027151034461346403,
+        "total": 1779.3701944587979
+      },
+      "combined_intensity": {
+        "max": 2038.2009215582552,
+        "avg": 2.137562135831219,
+        "total": 140087.27213383478
+      }
+    },
+    "building_growth": {
+      "target_new": 2,
+      "target_total": 79,
+      "actual_total": 17
+    }
+  }
+]

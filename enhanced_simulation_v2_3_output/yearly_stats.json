@@ -1,0 +1,52 @@
+[
+  {
+    "year": 0,
+    "land_price_evolution": {
+      "month": 0,
+      "evolution_stage": {
+        "name": "initial",
+        "hub_sigma": 20.0,
+        "road_sigma": 10.0,
+        "description": "初始阶段",
+        "month": 0
+      },
+      "land_price_stats": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.09685698605109856,
+        "std": 0.21081738072973302
+      }
+    },
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    }
+  },
+  {
+    "year": 1,
+    "land_price_evolution": {
+      "month": 12,
+      "evolution_stage": {
+        "name": "mid_growth",
+        "hub_sigma": 26.04647347857938,
+        "road_sigma": 13.200582084001697,
+        "description": "中期增长",
+        "month": 12
+      },
+      "land_price_stats": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.13171063772420283,
+        "std": 0.23648222444014286
+      }
+    },
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    }
+  }
+]

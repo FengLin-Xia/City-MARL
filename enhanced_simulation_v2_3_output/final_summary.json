@@ -1,0 +1,40 @@
+{
+  "simulation_summary": {
+    "total_days": 24,
+    "final_population": 800,
+    "total_buildings": {
+      "public": 1,
+      "residential": 5,
+      "commercial": 62
+    },
+    "land_price_summary": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "economic_summary": {
+      "total_construction_cost": 66500,
+      "total_revenue": 0,
+      "profit_margin": -1.0,
+      "average_land_price": 100
+    }
+  },
+  "development_patterns": {
+    "spatial_distribution": {
+      "public_avg_distance_to_core": 25.079872407968907,
+      "residential_avg_distance_to_core": 36.13214152648,
+      "commercial_avg_distance_to_core": 95.91902687465249
+    },
+    "building_density": {
+      "public_density": 0.152587890625,
+      "residential_density": 0.762939453125,
+      "commercial_density": 9.46044921875
+    },
+    "development_stage": "高度发展阶段"
+  },
+  "recommendations": [
+    "建议增加住宅建筑以满足居住需求",
+    "建议增加公共设施以提高服务质量"
+  ]
+}
