@@ -1,0 +1,277 @@
+{
+  "month": 0,
+  "timestamp": "month_00",
+  "new_buildings": [
+    {
+      "id": "res_1",
+      "type": "residential",
+      "position": [
+        90,
+        55
+      ],
+      "land_price_value": 0.7
+    },
+    {
+      "id": "res_2",
+      "type": "residential",
+      "position": [
+        66,
+        98
+      ],
+      "land_price_value": 0.4106227523947137
+    },
+    {
+      "id": "res_3",
+      "type": "residential",
+      "position": [
+        67,
+        98
+      ],
+      "land_price_value": 0.4147746635318555
+    },
+    {
+      "id": "res_4",
+      "type": "residential",
+      "position": [
+        68,
+        98
+      ],
+      "land_price_value": 0.41882008932219306
+    },
+    {
+      "id": "res_5",
+      "type": "residential",
+      "position": [
+        64,
+        97
+      ],
+      "land_price_value": 0.4218906278344927
+    },
+    {
+      "id": "res_6",
+      "type": "residential",
+      "position": [
+        65,
+        97
+      ],
+      "land_price_value": 0.4267346734371111
+    },
+    {
+      "id": "res_7",
+      "type": "residential",
+      "position": [
+        63,
+        96
+      ],
+      "land_price_value": 0.43804558578231306
+    },
+    {
+      "id": "res_8",
+      "type": "residential",
+      "position": [
+        64,
+        96
+      ],
+      "land_price_value": 0.4428129131844871
+    },
+    {
+      "id": "res_9",
+      "type": "residential",
+      "position": [
+        69,
+        97
+      ],
+      "land_price_value": 0.4447146063758731
+    },
+    {
+      "id": "res_10",
+      "type": "residential",
+      "position": [
+        70,
+        97
+      ],
+      "land_price_value": 0.44922412821432955
+    },
+    {
+      "id": "res_11",
+      "type": "residential",
+      "position": [
+        63,
+        95
+      ],
+      "land_price_value": 0.459669719608715
+    },
+    {
+      "id": "res_12",
+      "type": "residential",
+      "position": [
+        70,
+        96
+      ],
+      "land_price_value": 0.4715579743323984
+    },
+    {
+      "id": "res_13",
+      "type": "residential",
+      "position": [
+        63,
+        94
+      ],
+      "land_price_value": 0.4826453978315719
+    },
+    {
+      "id": "res_14",
+      "type": "residential",
+      "position": [
+        63,
+        93
+      ],
+      "land_price_value": 0.5069552415097841
+    },
+    {
+      "id": "res_15",
+      "type": "residential",
+      "position": [
+        63,
+        92
+      ],
+      "land_price_value": 0.5323780907852812
+    },
+    {
+      "id": "res_16",
+      "type": "residential",
+      "position": [
+        71,
+        96
+      ],
+      "land_price_value": 0.6336890545077429
+    },
+    {
+      "id": "res_17",
+      "type": "residential",
+      "position": [
+        64,
+        91
+      ],
+      "land_price_value": 0.6433570431818555
+    },
+    {
+      "id": "res_18",
+      "type": "residential",
+      "position": [
+        71,
+        95
+      ],
+      "land_price_value": 0.6473787740852495
+    },
+    {
+      "id": "res_19",
+      "type": "residential",
+      "position": [
+        64,
+        92
+      ],
+      "land_price_value": 0.6560768267395405
+    },
+    {
+      "id": "res_20",
+      "type": "residential",
+      "position": [
+        71,
+        94
+      ],
+      "land_price_value": 0.6596597933372877
+    },
+    {
+      "id": "res_21",
+      "type": "residential",
+      "position": [
+        65,
+        91
+      ],
+      "land_price_value": 0.6640619590826573
+    },
+    {
+      "id": "com_1",
+      "type": "commercial",
+      "position": [
+        67,
+        94
+      ],
+      "land_price_value": 0.7
+    },
+    {
+      "id": "com_2",
+      "type": "commercial",
+      "position": [
+        69,
+        91
+      ],
+      "land_price_value": 0.6998617209767923
+    },
+    {
+      "id": "com_3",
+      "type": "commercial",
+      "position": [
+        70,
+        91
+      ],
+      "land_price_value": 0.6960773734100805
+    },
+    {
+      "id": "com_4",
+      "type": "commercial",
+      "position": [
+        68,
+        90
+      ],
+      "land_price_value": 0.6952205376097901
+    },
+    {
+      "id": "com_5",
+      "type": "commercial",
+      "position": [
+        70,
+        92
+      ],
+      "land_price_value": 0.6914461079644143
+    },
+    {
+      "id": "com_6",
+      "type": "commercial",
+      "position": [
+        67,
+        90
+      ],
+      "land_price_value": 0.6856974069028551
+    },
+    {
+      "id": "com_7",
+      "type": "commercial",
+      "position": [
+        71,
+        92
+      ],
+      "land_price_value": 0.6796433259650536
+    },
+    {
+      "id": "com_8",
+      "type": "commercial",
+      "position": [
+        66,
+        90
+      ],
+      "land_price_value": 0.6713054419408311
+    },
+    {
+      "id": "com_9",
+      "type": "commercial",
+      "position": [
+        71,
+        93
+      ],
+      "land_price_value": 0.6704414879395291
+    }
+  ],
+  "reclassified": []
+}

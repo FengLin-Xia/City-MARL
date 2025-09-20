@@ -1,0 +1,43 @@
+{
+  "month": 33,
+  "timestamp": "month_33",
+  "new_buildings": [
+    {
+      "id": "res_24",
+      "type": "residential",
+      "position": [
+        55,
+        43
+      ],
+      "land_price_value": 0.3630992965760258
+    },
+    {
+      "id": "res_25",
+      "type": "residential",
+      "position": [
+        62,
+        31
+      ],
+      "land_price_value": 0.36552554163488815
+    },
+    {
+      "id": "res_26",
+      "type": "residential",
+      "position": [
+        97,
+        19
+      ],
+      "land_price_value": 0.36960536745531997
+    },
+    {
+      "id": "com_119",
+      "type": "commercial",
+      "position": [
+        83,
+        19
+      ],
+      "land_price_value": 0.36960536745531997
+    }
+  ],
+  "reclassified": []
+}

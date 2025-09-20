@@ -3,28 +3,28 @@
   "timestamp": "month_42",
   "new_buildings": [
     {
-      "id": "pub_park_28",
+      "id": "pub_park_27",
       "type": "public",
       "position": [
-        48,
-        98
+        30,
+        60
       ],
       "land_price_value": 0.0,
       "slot_id": ""
     },
     {
-      "id": "pub_plaza_28",
+      "id": "pub_plaza_27",
       "type": "public",
       "position": [
-        72,
-        75
+        48,
+        54
       ],
       "land_price_value": 0.0,
       "slot_id": ""
     }
   ],
   "metadata": {
-    "total_buildings": 236,
+    "total_buildings": 130,
     "new_count": 2
   }
 }

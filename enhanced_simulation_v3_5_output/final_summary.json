@@ -3,180 +3,40 @@
   "final_layers": {
     "commercial": [
       {
-        "layer_id": "commercial_P0",
+        "layer_id": "residential_G0",
         "status": "active",
         "activated_quarter": 12,
-        "capacity": 23,
+        "capacity": 361,
         "dead_slots": 0,
-        "capacity_effective": 23,
-        "placed": 23,
-        "density": 1.0
-      },
-      {
-        "layer_id": "commercial_P1",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 26,
-        "dead_slots": 0,
-        "capacity_effective": 26,
-        "placed": 17,
-        "density": 0.6538461538461539
-      },
-      {
-        "layer_id": "commercial_P2",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 28,
-        "dead_slots": 0,
-        "capacity_effective": 28,
-        "placed": 13,
-        "density": 0.4642857142857143
-      },
-      {
-        "layer_id": "commercial_P3",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 41,
-        "dead_slots": 0,
-        "capacity_effective": 41,
-        "placed": 12,
-        "density": 0.2926829268292683
-      },
-      {
-        "layer_id": "commercial_P4",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 34,
-        "dead_slots": 0,
-        "capacity_effective": 34,
-        "placed": 3,
-        "density": 0.08823529411764706
-      },
-      {
-        "layer_id": "commercial_P5",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 38,
-        "dead_slots": 0,
-        "capacity_effective": 38,
-        "placed": 5,
-        "density": 0.13157894736842105
-      },
-      {
-        "layer_id": "commercial_P6_new",
-        "status": "active",
-        "activated_quarter": 14,
-        "capacity": 10,
-        "dead_slots": 0,
-        "capacity_effective": 10,
-        "placed": 5,
-        "density": 0.5
+        "capacity_effective": 361,
+        "placed": 0,
+        "density": 0.0
       }
     ],
     "residential": [
       {
-        "layer_id": "residential_P0",
+        "layer_id": "residential_G0",
         "status": "active",
         "activated_quarter": 12,
-        "capacity": 42,
+        "capacity": 361,
         "dead_slots": 0,
-        "capacity_effective": 42,
-        "placed": 42,
-        "density": 1.0
-      },
-      {
-        "layer_id": "residential_P1",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 38,
-        "dead_slots": 0,
-        "capacity_effective": 38,
-        "placed": 26,
-        "density": 0.6842105263157895
-      },
-      {
-        "layer_id": "residential_P2",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 34,
-        "dead_slots": 0,
-        "capacity_effective": 34,
-        "placed": 21,
-        "density": 0.6176470588235294
-      },
-      {
-        "layer_id": "residential_P3",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 41,
-        "dead_slots": 0,
-        "capacity_effective": 41,
-        "placed": 18,
-        "density": 0.43902439024390244
-      },
-      {
-        "layer_id": "residential_P4",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 39,
-        "dead_slots": 0,
-        "capacity_effective": 39,
-        "placed": 10,
-        "density": 0.2564102564102564
-      },
-      {
-        "layer_id": "residential_P5",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 37,
-        "dead_slots": 0,
-        "capacity_effective": 37,
-        "placed": 7,
-        "density": 0.1891891891891892
-      },
-      {
-        "layer_id": "residential_P6",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 38,
-        "dead_slots": 0,
-        "capacity_effective": 38,
-        "placed": 7,
-        "density": 0.18421052631578946
-      },
-      {
-        "layer_id": "residential_P7",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 40,
-        "dead_slots": 0,
-        "capacity_effective": 40,
-        "placed": 3,
-        "density": 0.075
-      },
-      {
-        "layer_id": "residential_P8_new",
-        "status": "active",
-        "activated_quarter": 14,
-        "capacity": 13,
-        "dead_slots": 0,
-        "capacity_effective": 13,
-        "placed": 13,
-        "density": 1.0
+        "capacity_effective": 361,
+        "placed": 0,
+        "density": 0.0
       }
     ]
   },
   "final_buildings": {
-    "public": 31,
-    "residential": 147,
-    "commercial": 78
+    "public": 0,
+    "residential": 0,
+    "commercial": 0
   },
   "land_price_evolution": [
     {
       "month": 12,
       "evolution_stage": {
         "name": "hub_development",
-        "hub_sigma": 26.04647347857938,
+        "hub_sigma": 20.837178782863504,
         "road_sigma": 13.200582084001697,
         "description": "Hub渐进增长",
         "month": 12,
@@ -190,15 +50,15 @@
       "land_price_stats": {
         "min": 0.0,
         "max": 1.0,
-        "mean": 0.47656771482011756,
-        "std": 0.25144389130731426
+        "mean": 0.3908403139763895,
+        "std": 0.2673588562693985
       }
     },
     {
       "month": 24,
       "evolution_stage": {
         "name": "full_development",
-        "hub_sigma": 30.264954880800566,
+        "hub_sigma": 24.211963904640452,
         "road_sigma": 15.718249122907888,
         "description": "完整地价场",
         "month": 24,
@@ -212,15 +72,15 @@
       "land_price_stats": {
         "min": 0.0,
         "max": 1.0,
-        "mean": 0.5964984026589775,
-        "std": 0.240505625890779
+        "mean": 0.49642753373732024,
+        "std": 0.27254453598585343
       }
     },
     {
       "month": 36,
       "evolution_stage": {
         "name": "full_development",
-        "hub_sigma": 33.20808948710122,
+        "hub_sigma": 26.566471589680972,
         "road_sigma": 17.698716160600423,
         "description": "完整地价场",
         "month": 36,
@@ -232,10 +92,10 @@
         }
       },
       "land_price_stats": {
-        "min": 0.10919333960104227,
+        "min": 0.036936821598764505,
         "max": 1.0,
-        "mean": 0.6579071817178459,
-        "std": 0.22485990983130902
+        "mean": 0.5563324895029,
+        "std": 0.26472938866601364
       }
     }
   ]

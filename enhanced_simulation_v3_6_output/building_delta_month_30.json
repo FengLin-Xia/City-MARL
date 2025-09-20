@@ -1,0 +1,25 @@
+{
+  "month": 30,
+  "timestamp": "month_30",
+  "new_buildings": [
+    {
+      "id": "res_15",
+      "type": "residential",
+      "position": [
+        107,
+        25
+      ],
+      "land_price_value": 0.3987318868902985
+    },
+    {
+      "id": "com_116",
+      "type": "commercial",
+      "position": [
+        73,
+        25
+      ],
+      "land_price_value": 0.3987318868902985
+    }
+  ],
+  "reclassified": []
+}

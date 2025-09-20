@@ -1,169 +1,33 @@
 {
   "month": 46,
   "quarter": 15,
+  "R_prev": 225.0,
+  "R_curr": 230.0,
+  "candidate_count": 0,
+  "thresholds": null,
   "layers": {
     "commercial": [
       {
-        "layer_id": "commercial_P0",
+        "layer_id": "residential_G0",
         "status": "active",
         "activated_quarter": 12,
-        "capacity": 23,
+        "capacity": 361,
         "dead_slots": 0,
-        "capacity_effective": 23,
-        "placed": 23,
-        "density": 1.0
-      },
-      {
-        "layer_id": "commercial_P1",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 26,
-        "dead_slots": 0,
-        "capacity_effective": 26,
-        "placed": 17,
-        "density": 0.6538461538461539
-      },
-      {
-        "layer_id": "commercial_P2",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 28,
-        "dead_slots": 0,
-        "capacity_effective": 28,
-        "placed": 13,
-        "density": 0.4642857142857143
-      },
-      {
-        "layer_id": "commercial_P3",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 41,
-        "dead_slots": 0,
-        "capacity_effective": 41,
-        "placed": 12,
-        "density": 0.2926829268292683
-      },
-      {
-        "layer_id": "commercial_P4",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 34,
-        "dead_slots": 0,
-        "capacity_effective": 34,
-        "placed": 3,
-        "density": 0.08823529411764706
-      },
-      {
-        "layer_id": "commercial_P5",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 38,
-        "dead_slots": 0,
-        "capacity_effective": 38,
-        "placed": 5,
-        "density": 0.13157894736842105
-      },
-      {
-        "layer_id": "commercial_P6_new",
-        "status": "active",
-        "activated_quarter": 14,
-        "capacity": 10,
-        "dead_slots": 0,
-        "capacity_effective": 10,
-        "placed": 5,
-        "density": 0.5
+        "capacity_effective": 361,
+        "placed": 0,
+        "density": 0.0
       }
     ],
     "residential": [
       {
-        "layer_id": "residential_P0",
+        "layer_id": "residential_G0",
         "status": "active",
         "activated_quarter": 12,
-        "capacity": 42,
+        "capacity": 361,
         "dead_slots": 0,
-        "capacity_effective": 42,
-        "placed": 42,
-        "density": 1.0
-      },
-      {
-        "layer_id": "residential_P1",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 38,
-        "dead_slots": 0,
-        "capacity_effective": 38,
-        "placed": 26,
-        "density": 0.6842105263157895
-      },
-      {
-        "layer_id": "residential_P2",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 34,
-        "dead_slots": 0,
-        "capacity_effective": 34,
-        "placed": 21,
-        "density": 0.6176470588235294
-      },
-      {
-        "layer_id": "residential_P3",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 41,
-        "dead_slots": 0,
-        "capacity_effective": 41,
-        "placed": 18,
-        "density": 0.43902439024390244
-      },
-      {
-        "layer_id": "residential_P4",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 39,
-        "dead_slots": 0,
-        "capacity_effective": 39,
-        "placed": 10,
-        "density": 0.2564102564102564
-      },
-      {
-        "layer_id": "residential_P5",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 37,
-        "dead_slots": 0,
-        "capacity_effective": 37,
-        "placed": 7,
-        "density": 0.1891891891891892
-      },
-      {
-        "layer_id": "residential_P6",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 38,
-        "dead_slots": 0,
-        "capacity_effective": 38,
-        "placed": 7,
-        "density": 0.18421052631578946
-      },
-      {
-        "layer_id": "residential_P7",
-        "status": "locked",
-        "activated_quarter": -1,
-        "capacity": 40,
-        "dead_slots": 0,
-        "capacity_effective": 40,
-        "placed": 3,
-        "density": 0.075
-      },
-      {
-        "layer_id": "residential_P8_new",
-        "status": "active",
-        "activated_quarter": 14,
-        "capacity": 13,
-        "dead_slots": 0,
-        "capacity_effective": 13,
-        "placed": 13,
-        "density": 1.0
+        "capacity_effective": 361,
+        "placed": 0,
+        "density": 0.0
       }
     ]
   }

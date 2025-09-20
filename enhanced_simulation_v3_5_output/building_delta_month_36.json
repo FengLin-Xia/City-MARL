@@ -3,88 +3,28 @@
   "timestamp": "month_36",
   "new_buildings": [
     {
-      "id": "res_123",
-      "type": "residential",
-      "position": [
-        109,
-        73
-      ],
-      "land_price_value": 0.7067735037813598,
-      "slot_id": "residential_109_73"
-    },
-    {
-      "id": "res_124",
-      "type": "residential",
-      "position": [
-        109,
-        67
-      ],
-      "land_price_value": 0.7708145093814517,
-      "slot_id": "residential_109_67"
-    },
-    {
-      "id": "res_125",
-      "type": "residential",
-      "position": [
-        109,
-        60
-      ],
-      "land_price_value": 0.816366409487763,
-      "slot_id": "residential_109_60"
-    },
-    {
-      "id": "res_126",
-      "type": "residential",
-      "position": [
-        109,
-        48
-      ],
-      "land_price_value": 0.8069639291783793,
-      "slot_id": "residential_109_48"
-    },
-    {
-      "id": "res_127",
-      "type": "residential",
-      "position": [
-        104,
-        36
-      ],
-      "land_price_value": 0.7517297242776986,
-      "slot_id": "residential_104_36"
-    },
-    {
-      "id": "res_128",
-      "type": "residential",
-      "position": [
-        100,
-        37
-      ],
-      "land_price_value": 0.8015301253283815,
-      "slot_id": "residential_100_37"
-    },
-    {
-      "id": "pub_park_24",
+      "id": "pub_park_23",
       "type": "public",
       "position": [
-        48,
-        98
+        30,
+        60
       ],
       "land_price_value": 0.0,
       "slot_id": ""
     },
     {
-      "id": "pub_plaza_24",
+      "id": "pub_plaza_23",
       "type": "public",
       "position": [
-        70,
-        76
+        48,
+        54
       ],
       "land_price_value": 0.0,
       "slot_id": ""
     }
   ],
   "metadata": {
-    "total_buildings": 222,
-    "new_count": 8
+    "total_buildings": 126,
+    "new_count": 2
   }
 }

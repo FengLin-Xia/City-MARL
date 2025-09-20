@@ -1,0 +1,283 @@
+{
+  "month": 8,
+  "timestamp": "month_08",
+  "new_buildings": [
+    {
+      "id": "res_31",
+      "type": "residential",
+      "position": [
+        90,
+        43
+      ],
+      "land_price_value": 0.5480041128614156
+    },
+    {
+      "id": "res_32",
+      "type": "residential",
+      "position": [
+        100,
+        49
+      ],
+      "land_price_value": 0.5538980674298021
+    },
+    {
+      "id": "res_33",
+      "type": "residential",
+      "position": [
+        80,
+        49
+      ],
+      "land_price_value": 0.5538980674298021
+    },
+    {
+      "id": "res_34",
+      "type": "residential",
+      "position": [
+        80,
+        61
+      ],
+      "land_price_value": 0.6300312742489598
+    },
+    {
+      "id": "res_35",
+      "type": "residential",
+      "position": [
+        77,
+        101
+      ],
+      "land_price_value": 0.5443522902866946
+    },
+    {
+      "id": "res_36",
+      "type": "residential",
+      "position": [
+        57,
+        101
+      ],
+      "land_price_value": 0.5443522902866946
+    },
+    {
+      "id": "res_37",
+      "type": "residential",
+      "position": [
+        55,
+        96
+      ],
+      "land_price_value": 0.545080702272328
+    },
+    {
+      "id": "res_38",
+      "type": "residential",
+      "position": [
+        55,
+        92
+      ],
+      "land_price_value": 0.545080702272328
+    },
+    {
+      "id": "res_39",
+      "type": "residential",
+      "position": [
+        56,
+        99
+      ],
+      "land_price_value": 0.5465404524243415
+    },
+    {
+      "id": "res_40",
+      "type": "residential",
+      "position": [
+        75,
+        103
+      ],
+      "land_price_value": 0.5472717932030662
+    },
+    {
+      "id": "res_41",
+      "type": "residential",
+      "position": [
+        68,
+        106
+      ],
+      "land_price_value": 0.5472717932030662
+    },
+    {
+      "id": "res_42",
+      "type": "residential",
+      "position": [
+        66,
+        106
+      ],
+      "land_price_value": 0.5472717932030662
+    },
+    {
+      "id": "res_43",
+      "type": "residential",
+      "position": [
+        59,
+        103
+      ],
+      "land_price_value": 0.5472717932030662
+    },
+    {
+      "id": "res_44",
+      "type": "residential",
+      "position": [
+        55,
+        94
+      ],
+      "land_price_value": 0.5480041128614156
+    },
+    {
+      "id": "res_45",
+      "type": "residential",
+      "position": [
+        71,
+        105
+      ],
+      "land_price_value": 0.5531578694069486
+    },
+    {
+      "id": "res_46",
+      "type": "residential",
+      "position": [
+        63,
+        105
+      ],
+      "land_price_value": 0.5531578694069486
+    },
+    {
+      "id": "res_47",
+      "type": "residential",
+      "position": [
+        73,
+        104
+      ],
+      "land_price_value": 0.5538980674298021
+    },
+    {
+      "id": "res_48",
+      "type": "residential",
+      "position": [
+        61,
+        104
+      ],
+      "land_price_value": 0.5538980674298021
+    },
+    {
+      "id": "res_49",
+      "type": "residential",
+      "position": [
+        56,
+        89
+      ],
+      "land_price_value": 0.5663214273243264
+    },
+    {
+      "id": "res_50",
+      "type": "residential",
+      "position": [
+        78,
+        99
+      ],
+      "land_price_value": 0.5721349850925466
+    },
+    {
+      "id": "res_51",
+      "type": "residential",
+      "position": [
+        79,
+        96
+      ],
+      "land_price_value": 0.5721896436270246
+    },
+    {
+      "id": "com_34",
+      "type": "industrial",
+      "position": [
+        90,
+        67
+      ],
+      "land_price_value": 0.7310506328144162,
+      "original_type": "commercial",
+      "hub_influence": "hub2_industrial_zone",
+      "conversion_reason": "Hub2工业中心影响 (距离: 12.0)"
+    },
+    {
+      "id": "com_35",
+      "type": "industrial",
+      "position": [
+        100,
+        61
+      ],
+      "land_price_value": 0.6742370328118521,
+      "original_type": "commercial",
+      "hub_influence": "hub2_industrial_zone",
+      "conversion_reason": "Hub2工业中心影响 (距离: 11.7)"
+    },
+    {
+      "id": "com_36",
+      "type": "commercial",
+      "position": [
+        77,
+        87
+      ],
+      "land_price_value": 0.7763913068413867
+    },
+    {
+      "id": "com_37",
+      "type": "commercial",
+      "position": [
+        61,
+        84
+      ],
+      "land_price_value": 0.7647659462467447
+    },
+    {
+      "id": "com_38",
+      "type": "commercial",
+      "position": [
+        78,
+        89
+      ],
+      "land_price_value": 0.7156465489414057
+    },
+    {
+      "id": "com_39",
+      "type": "commercial",
+      "position": [
+        59,
+        85
+      ],
+      "land_price_value": 0.7139053799040919
+    },
+    {
+      "id": "com_40",
+      "type": "commercial",
+      "position": [
+        57,
+        87
+      ],
+      "land_price_value": 0.6323637048657177
+    },
+    {
+      "id": "com_41",
+      "type": "commercial",
+      "position": [
+        79,
+        92
+      ],
+      "land_price_value": 0.6224383513200952
+    },
+    {
+      "id": "com_42",
+      "type": "commercial",
+      "position": [
+        79,
+        94
+      ],
+      "land_price_value": 0.5774243109711021
+    }
+  ],
+  "reclassified": []
+}

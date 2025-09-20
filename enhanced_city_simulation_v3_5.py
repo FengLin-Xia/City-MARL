@@ -76,12 +76,21 @@ class ProgressiveGrowthSystem:
     """渐进式增长系统 v3.5（沿用v3.1实现，修正空层判定与动态重建接口）"""
 
     def __init__(self, config: Dict):
+        # 保存根配置与本模块配置
+        self.root_config = config
         self.config = config.get('progressive_growth', {})
+        self.iso_root_cfg = config.get('isocontour_layout', {})
+        self.slot_gen_cfg = self.iso_root_cfg.get('slot_generator', {})
         self.strict_fill_required = self.config.get('strict_fill_required', True)
         self.allow_dead_slots_ratio = self.config.get('allow_dead_slots_ratio', 0.05)
         self.carry_over_quota = self.config.get('carry_over_quota', True)
         self.freeze_contour_on_activation = self.config.get('freeze_contour_on_activation', True)
         self.min_segment_length_factor = self.config.get('min_segment_length_factor', 3.0)
+
+        # 激活密度阈值（配置化）
+        act_cfg = self.config.get('activation_density', {})
+        self.activation_density_strict = float(act_cfg.get('strict', 0.95))
+        self.activation_density_relaxed = float(act_cfg.get('relaxed', 0.80))
 
         self.layers = {'commercial': [], 'residential': []}
         self.active_layers = {'commercial': 0, 'residential': 0}
@@ -99,13 +108,66 @@ class ProgressiveGrowthSystem:
         self._print_layer_status()
 
     def _create_layers_for_type(self, building_type: str, isocontour_system, land_price_field):
-        contour_data = isocontour_system.get_contour_data_for_visualization()
-        contours = contour_data.get(f'{building_type}_contours', [])
-        layers = []
-        for i, contour in enumerate(contours):
-            slots = self._create_slots_from_contour(contour, building_type)
+        mode = str(self.slot_gen_cfg.get('mode', 'contour')).lower()
+        if mode == 'square_grid':
+            # 若开启 mixed_pool，仅在第一次创建时生成一套共享G层
+            mixed = bool(self.slot_gen_cfg.get('mixed_pool', False))
+            if mixed:
+                if not self.layers['commercial'] and not self.layers['residential']:
+                    layers = self._create_layers_from_square_grid('mixed', land_price_field)
+                    # 同步到两类以复用同一物理槽位池
+                    self.layers['commercial'] = layers
+                    self.layers['residential'] = layers
+                print(f"[Progressive] mixed grid layers ready ({len(self.layers['commercial'])})")
+                return
+            layers = self._create_layers_from_square_grid(building_type, land_price_field)
+            self.layers[building_type] = layers
+            print(f"[Progressive] {building_type}: created {len(layers)} grid layers (square), all locked")
+        else:
+            contour_data = isocontour_system.get_contour_data_for_visualization()
+            contours = contour_data.get(f'{building_type}_contours', [])
+            layers = []
+            for i, contour in enumerate(contours):
+                slots = self._create_slots_from_contour(contour, building_type)
+                layer = Layer(
+                    layer_id=f"{building_type}_P{i}",
+                    status="locked",
+                    activated_quarter=-1,
+                    slots=slots,
+                    capacity=len(slots),
+                    dead_slots=0,
+                    capacity_effective=len(slots),
+                    placed=0,
+                    density=0.0
+                )
+                layers.append(layer)
+            self.layers[building_type] = layers
+            print(f"[Progressive] {building_type}: created {len(layers)} layers, all locked")
+
+    def _create_layers_from_square_grid(self, building_type: str, land_price_field) -> List[Layer]:
+        import numpy as np
+        grid_cfg = self.slot_gen_cfg.get('grid', {})
+        cell = int(grid_cfg.get('cell_size_px', 10))
+        origin = grid_cfg.get('origin', [0, 0])
+        ox = int(origin[0]) if isinstance(origin, list) and len(origin) > 0 else 0
+        oy = int(origin[1]) if isinstance(origin, list) and len(origin) > 1 else 0
+        map_w, map_h = self.root_config.get('city', {}).get('map_size', [256, 256])
+
+        use_mask = bool(self.slot_gen_cfg.get('use_landprice_mask', False))
+
+        layers: List[Layer] = []
+        if not use_mask:
+            # 不使用地价掩膜：单层全图网格
+            slots: List[Slot] = []
+            y = oy
+            while y < map_h:
+                x = ox
+                while x < map_w:
+                    slots.append(Slot(pos=[x, y], allowed_types=[building_type]))
+                    x += cell
+                y += cell
             layer = Layer(
-                layer_id=f"{building_type}_P{i}",
+                layer_id=f"{building_type}_G0",
                 status="locked",
                 activated_quarter=-1,
                 slots=slots,
@@ -116,13 +178,47 @@ class ProgressiveGrowthSystem:
                 density=0.0
             )
             layers.append(layer)
-        self.layers[building_type] = layers
-        print(f"[Progressive] {building_type}: created {len(layers)} layers, all locked")
+            return layers
+        else:
+            # 使用地价掩膜：多层阈值
+            thresholds = []
+            mode = str(self.iso_root_cfg.get('threshold_mode', 'percentile')).lower()
+            if mode == 'relative':
+                ratios = self.iso_root_cfg.get('relative_levels', {}).get(building_type, [0.95, 0.90, 0.85])
+                peak = float(np.max(land_price_field))
+                thresholds = [peak * float(r) for r in ratios]
+            else:
+                percentiles = self.iso_root_cfg.get(building_type, {}).get('percentiles', [95, 90, 85])
+                thresholds = list(np.percentile(land_price_field, percentiles))
+
+            for i, thr in enumerate(thresholds):
+                slots: List[Slot] = []
+                y = oy
+                while y < map_h:
+                    x = ox
+                    while x < map_w:
+                        if land_price_field[y, x] >= thr:
+                            slots.append(Slot(pos=[x, y], allowed_types=[building_type]))
+                        x += cell
+                    y += cell
+                layer = Layer(
+                    layer_id=f"{building_type}_G{i}",
+                    status="locked",
+                    activated_quarter=-1,
+                    slots=slots,
+                    capacity=len(slots),
+                    dead_slots=0,
+                    capacity_effective=len(slots),
+                    placed=0,
+                    density=0.0
+                )
+                layers.append(layer)
+            return layers
 
     def _create_slots_from_contour(self, contour: List[List[int]], building_type: str) -> List[Slot]:
         slots = []
         # 从配置获取按米定义的弧长采样范围，并换算为像素
-        meters_per_pixel = self.config.get('gaussian_land_price_system', {}).get('meters_per_pixel', 2.0)
+        meters_per_pixel = self.root_config.get('gaussian_land_price_system', {}).get('meters_per_pixel', 2.0)
         iso_cfg = self.config.get('isocontour_layout', {}).get(building_type, {})
         spacing_range_m = iso_cfg.get('arc_spacing_m', [10, 20])
         spacing_min_px = max(3, int(spacing_range_m[0] / meters_per_pixel))
@@ -133,7 +229,8 @@ class ProgressiveGrowthSystem:
         while current_distance < total_length:
             t = current_distance / total_length
             pos = self._interpolate_contour_position(contour, t)
-            if 0 <= pos[0] < 110 and 0 <= pos[1] < 110:
+            map_w, map_h = self.root_config.get('city', {}).get('map_size', [256, 256])
+            if 0 <= pos[0] < map_w and 0 <= pos[1] < map_h:
                 too_close = False
                 pg_cfg = self.config.get('progressive_growth', {})
                 min_distance_large = float(pg_cfg.get('min_slot_distance_px', 8))
@@ -192,15 +289,26 @@ class ProgressiveGrowthSystem:
         return True
 
     def can_activate_next_layer(self, building_type: str) -> bool:
+        layers = self.layers.get(building_type, [])
+        if not layers:
+            return False
         current_layer_idx = self.active_layers[building_type]
-        current_layer = self.layers[building_type][current_layer_idx]
+        if current_layer_idx < 0 or current_layer_idx >= len(layers):
+            return False
+        current_layer = layers[current_layer_idx]
         if self.strict_fill_required:
-            return current_layer.density >= 0.95
+            return current_layer.density >= self.activation_density_strict
         else:
-            return current_layer.density >= 0.8
+            return current_layer.density >= self.activation_density_relaxed
 
     def try_activate_next_layer(self, building_type: str, quarter: int) -> bool:
+        layers = self.layers.get(building_type, [])
+        if not layers:
+            return False
         current_layer_idx = self.active_layers[building_type]
+        if current_layer_idx < 0 or current_layer_idx >= len(layers):
+            current_layer_idx = 0
+            self.active_layers[building_type] = 0
         if self.can_activate_next_layer(building_type):
             next_layer_idx = current_layer_idx + 1
             if next_layer_idx < len(self.layers[building_type]):
@@ -326,6 +434,8 @@ class EnhancedCitySimulationV3_5:
         self.hysteresis_system = HysteresisSystem(self.city_config)
         self.public_facility_system = PublicFacilitySystem(self.city_config)
         self.progressive_growth_system = ProgressiveGrowthSystem(self.city_config)
+        # 槽位调度配置（按Hub扩圈等）
+        self.slot_scheduler_cfg = self.city_config.get('slot_scheduler', {})
 
         self.government_agent = GovernmentAgent(self.agent_config.get('government_agent', {}))
         self.business_agent = BusinessAgent(self.agent_config.get('business_agent', {}))
@@ -375,7 +485,7 @@ class EnhancedCitySimulationV3_5:
 
     def run_simulation(self):
         simulation_months = self.city_config.get('simulation', {}).get('total_months', 36)
-        print(f"🚀 开始运行 {simulation_months} 个月模拟 (v3.5)...")
+        print(f"[Simulation] start {simulation_months} months (v3.5)...")
         for month in range(simulation_months):
             self.current_month = month
             self.current_quarter = month // 3
@@ -392,6 +502,8 @@ class EnhancedCitySimulationV3_5:
     def _monthly_update(self):
         self._spawn_new_residents()
         self.trajectory_system.update_trajectories(self.city_state['residents'], self.city_state)
+        # 月度：按 PRD 4.9 进行锁定期后的类型重判（分位阈值 + 可选滞后）
+        self._evaluate_hysteresis_conversion()
 
     def _quarterly_update(self):
         print(f"[Quarter] update q={self.current_quarter}...")
@@ -405,7 +517,10 @@ class EnhancedCitySimulationV3_5:
         self._evaluate_public_facilities()
         self._try_activate_next_layers()
         if not buildings_generated:
-            self._create_new_isocontour_layers_when_no_growth()
+            # grid 模式下禁用“无增长等值线层”
+            mode_gen = str(self.progressive_growth_system.slot_gen_cfg.get('mode', 'contour')).lower()
+            if mode_gen != 'square_grid':
+                self._create_new_isocontour_layers_when_no_growth()
         if hasattr(self.progressive_growth_system, 'layers') and len(self.progressive_growth_system.layers['commercial']) > 0:
             self.city_state['layers'] = self.progressive_growth_system.get_layer_status()
         else:
@@ -423,7 +538,7 @@ class EnhancedCitySimulationV3_5:
         self.isocontour_system.initialize_system(
             self.city_state['land_price_field'],
             self.city_state['transport_hubs'],
-            [110, 110],
+            self.city_config.get('city', {}).get('map_size', [256, 256]),
             self.current_month,
             self.land_price_system
         )
@@ -451,24 +566,32 @@ class EnhancedCitySimulationV3_5:
 
     def _recreate_layers_for_type(self, building_type: str, contours: List):
         """重新创建指定建筑类型的层（与v3.1一致的实现）"""
+        mode = str(self.progressive_growth_system.slot_gen_cfg.get('mode', 'contour')).lower()
         existing_layers = self.progressive_growth_system.layers[building_type]
         existing_layers.clear()
-        for i, contour in enumerate(contours):
-            if len(contour) < 20:  # 过滤太短的等值线
-                continue
-            slots = self.progressive_growth_system._create_slots_from_contour(contour, building_type)
-            layer = Layer(
-                layer_id=f"{building_type}_P{i}",
-                status="locked",
-                activated_quarter=-1,
-                slots=slots,
-                capacity=len(slots),
-                dead_slots=0,
-                capacity_effective=len(slots),
-                placed=0,
-                density=0.0
-            )
-            existing_layers.append(layer)
+        if mode == 'square_grid':
+            # 使用当前地价场重建网格层
+            land_price_field = self.city_state['land_price_field'] if hasattr(self, 'city_state') else None
+            if land_price_field is not None:
+                new_layers = self.progressive_growth_system._create_layers_from_square_grid(building_type, land_price_field)
+                existing_layers.extend(new_layers)
+        else:
+            for i, contour in enumerate(contours):
+                if len(contour) < 20:  # 过滤太短的等值线
+                    continue
+                slots = self.progressive_growth_system._create_slots_from_contour(contour, building_type)
+                layer = Layer(
+                    layer_id=f"{building_type}_P{i}",
+                    status="locked",
+                    activated_quarter=-1,
+                    slots=slots,
+                    capacity=len(slots),
+                    dead_slots=0,
+                    capacity_effective=len(slots),
+                    placed=0,
+                    density=0.0
+                )
+                existing_layers.append(layer)
         print(f"  [Slots] {building_type}: recreated {len(existing_layers)} layers")
 
     def _perform_in_place_replacement(self, contour_data: Dict):
@@ -583,9 +706,14 @@ class EnhancedCitySimulationV3_5:
         print(f"  [Slots] create new layers for {building_type}...")
         config = self.city_config.get('isocontour_layout', {}).get(building_type, {})
         percentiles = config.get('percentiles', [95, 90, 85])
+        # 配置化无增长百分位下调策略
+        ng_cfg = self.city_config.get('progressive_growth', {}).get('no_growth_percentile_shift', {})
+        base_shift = int(ng_cfg.get('base', 20))
+        step_shift = int(ng_cfg.get('step', 8))
+        min_p = int(ng_cfg.get('min_percentile', 5))
         new_percentiles = []
         for i, p in enumerate(percentiles):
-            new_p = max(5, p - 20 - i * 8)
+            new_p = max(min_p, p - base_shift - i * step_shift)
             new_percentiles.append(new_p)
         print(f"    [Slots] new percentiles: {new_percentiles}")
         for i, percentile in enumerate(new_percentiles):
@@ -703,7 +831,7 @@ class EnhancedCitySimulationV3_5:
                 current_layer.slots.extend(new_slots)
                 current_layer.capacity += len(new_slots)
                 current_layer.capacity_effective += len(new_slots)
-                print(f"  📍 {building_type}建筑：为等值线 {i+1} 添加了 {len(new_slots)} 个新槽位")
+                print(f"  [Slots] {building_type}: added {len(new_slots)} new slots for contour {i+1}")
 
     def _is_slot_on_contour(self, slot, contour: List) -> bool:
         slot_pos = slot.pos
@@ -723,16 +851,98 @@ class EnhancedCitySimulationV3_5:
         available_residential_slots = len(self.progressive_growth_system.get_available_slots('residential', 100))
         available_commercial_slots = len(self.progressive_growth_system.get_available_slots('commercial', 100))
         print(f"[Generate] available slots - res: {available_residential_slots}, com: {available_commercial_slots}")
-        residential_target = min(random.randint(12, 20), available_residential_slots)
-        commercial_target = min(random.randint(5, 12), available_commercial_slots)
+        # 季度配额（配置化）
+        qcfg = self.city_config.get('progressive_growth', {}).get('quarterly_quota', {})
+        res_range = qcfg.get('residential_range', [12, 20])
+        com_range = qcfg.get('commercial_range', [5, 12])
+        try:
+            res_low, res_high = int(res_range[0]), int(res_range[1])
+            com_low, com_high = int(com_range[0]), int(com_range[1])
+        except Exception:
+            res_low, res_high = 12, 20
+            com_low, com_high = 5, 12
+        residential_target = min(random.randint(res_low, res_high), available_residential_slots)
+        commercial_target = min(random.randint(com_low, com_high), available_commercial_slots)
         # 去掉硬编码年度加量；改为与可用槽位比例挂钩（温和提升）
         utilization_boost = float(self.city_config.get('progressive_growth', {}).get('annual_boost_factor', 0.0))
         if self.current_month % 12 == 0 and utilization_boost > 0:
             residential_target = min(int(residential_target * (1.0 + utilization_boost)), available_residential_slots)
             commercial_target = min(int(commercial_target * (1.0 + utilization_boost)), available_commercial_slots)
             print(f"  [Generate] yearly utilization boost x{1.0 + utilization_boost:.2f}")
-        new_residential = self._generate_residential_with_slots(residential_target)
-        new_commercial = self._generate_commercial_with_slots(commercial_target)
+        # 单池：若启用 mixed_pool + hub_radius，则先统一选点再按比例拆分
+        mode_gen = str(self.progressive_growth_system.slot_gen_cfg.get('mode', 'contour')).lower()
+        mixed = bool(self.progressive_growth_system.slot_gen_cfg.get('mixed_pool', False))
+        mode_sch = str(self.slot_scheduler_cfg.get('mode', '')).lower()
+        if mode_gen == 'square_grid' and mixed and mode_sch == 'hub_radius':
+            total_target = residential_target + commercial_target
+            candidates = self._select_slots_via_scheduler('commercial', total_target)
+            # 在候选中计算LP分位阈值
+            lp_vals = []
+            for s in candidates:
+                try:
+                    lp_vals.append(float(self.land_price_system.get_land_price(s.pos)))
+                except Exception:
+                    lp_vals.append(0.0)
+            if lp_vals:
+                import numpy as _np
+                pct_cfg = self.slot_scheduler_cfg.get('classify_percentiles', { 'high': 70, 'low': 30 })
+                p_high = float(pct_cfg.get('high', 70))
+                p_low = float(pct_cfg.get('low', 30))
+                thr_high = _np.percentile(_np.array(lp_vals), p_high)
+                thr_low = _np.percentile(_np.array(lp_vals), p_low)
+            else:
+                thr_high, thr_low = 0.0, 0.0
+            # 分类候选
+            high_slots = []
+            low_slots = []
+            mid_slots = []
+            for s in candidates:
+                lp = float(self.land_price_system.get_land_price(s.pos)) if self.land_price_system else 0.0
+                if lp >= thr_high:
+                    high_slots.append((lp, s))
+                elif lp <= thr_low:
+                    low_slots.append((lp, s))
+                else:
+                    mid_slots.append((lp, s))
+            # 按需求量截取
+            high_slots.sort(key=lambda t: -t[0])
+            low_slots.sort(key=lambda t: t[0])
+            com_needed = commercial_target
+            res_needed = residential_target
+            com_slots = [s for _, s in high_slots[:com_needed]]
+            res_slots = [s for _, s in low_slots[:res_needed]]
+            # 中间带补齐（可选，默认不补，符合“先不放，边长边填”）
+            if bool(self.slot_scheduler_cfg.get('fill_mid_band', False)):
+                if len(com_slots) < com_needed:
+                    mid_slots.sort(key=lambda t: -t[0])
+                    com_slots.extend([s for _, s in mid_slots[:(com_needed - len(com_slots))]])
+                    mid_slots = mid_slots[(com_needed - len(com_slots)):] if (com_needed - len(com_slots)) > 0 else mid_slots
+                if len(res_slots) < res_needed:
+                    mid_slots.sort(key=lambda t: t[0])
+                    res_slots.extend([s for _, s in mid_slots[:(res_needed - len(res_slots))]])
+            # 调试输出与JSON记录
+            print(f"[Classify] m={self.current_month:02d} candidates={len(candidates)} thr_low={thr_low:.4f} thr_high={thr_high:.4f} com={len(com_slots)}/{commercial_target} res={len(res_slots)}/{residential_target}")
+            try:
+                debug_obj = {
+                    'month': int(self.current_month),
+                    'candidates': int(len(candidates)),
+                    'thr_low': float(thr_low),
+                    'thr_high': float(thr_high),
+                    'commercial_assigned': int(len(com_slots)),
+                    'residential_assigned': int(len(res_slots))
+                }
+                os.makedirs(self.output_dir, exist_ok=True)
+                with open(os.path.join(self.output_dir, f"debug_classify_month_{self.current_month:02d}.json"), 'w', encoding='utf-8') as _f:
+                    json.dump(debug_obj, _f, ensure_ascii=False, indent=2)
+            except Exception as _e:
+                print(f"[Classify] debug write failed: {str(_e)}")
+            # 放置
+            self._place_slots_as_buildings('commercial', com_slots)
+            self._place_slots_as_buildings('residential', res_slots)
+            return len(com_slots) > 0 or len(res_slots) > 0
+        else:
+            new_residential = self._generate_residential_with_slots(residential_target)
+            new_commercial = self._generate_commercial_with_slots(commercial_target)
         self.city_state['residential'].extend(new_residential)
         self.city_state['commercial'].extend(new_commercial)
         buildings_generated = len(new_residential) > 0 or len(new_commercial) > 0
@@ -743,11 +953,30 @@ class EnhancedCitySimulationV3_5:
             print(f"[Generate] no new buildings - all layers complete")
         return buildings_generated
 
+    def _place_slots_as_buildings(self, building_type: str, slots: List[Slot]):
+        for i, slot in enumerate(slots):
+            building = {
+                'id': f'{building_type[:3]}_{len(self.city_state[building_type]) + i + 1}',
+                'type': building_type,
+                'xy': slot.pos,
+                'capacity': 800 if building_type == 'commercial' else 200,
+                'current_usage': 0,
+                'construction_cost': 1000 if building_type == 'commercial' else 500,
+                'revenue_per_person': 20 if building_type == 'commercial' else 10,
+                'revenue': 0,
+                'land_price_value': float(self.city_state['land_price_field'][slot.pos[1], slot.pos[0]]),
+                'slot_id': f"{building_type}_{slot.pos[0]}_{slot.pos[1]}",
+                'last_changed_month': self.current_month
+            }
+            self.city_state[building_type].append(building)
+            self.progressive_growth_system.place_building_in_slot(building_type, building['id'], slot)
+
     def _generate_residential_with_slots(self, target_count: int) -> List[Dict]:
-        available_slots = self.progressive_growth_system.get_available_slots('residential', target_count)
-        print(f"[Generate] residential - target {target_count}, available {len(available_slots)}")
+        # mixed_pool: 从商业池选，再按比例分流，这里作为补充保护
+        selected_slots = self._select_slots_via_scheduler('residential', target_count)
+        print(f"[Generate] residential - target {target_count}, selected {len(selected_slots)}")
         new_buildings = []
-        for i, slot in enumerate(available_slots):
+        for i, slot in enumerate(selected_slots):
             building = {
                 'id': f'res_{len(self.city_state["residential"]) + i + 1}',
                 'type': 'residential',
@@ -765,10 +994,10 @@ class EnhancedCitySimulationV3_5:
         return new_buildings
 
     def _generate_commercial_with_slots(self, target_count: int) -> List[Dict]:
-        available_slots = self.progressive_growth_system.get_available_slots('commercial', target_count)
-        print(f"[Generate] commercial - target {target_count}, available {len(available_slots)}")
+        selected_slots = self._select_slots_via_scheduler('commercial', target_count)
+        print(f"[Generate] commercial - target {target_count}, selected {len(selected_slots)}")
         new_buildings = []
-        for i, slot in enumerate(available_slots):
+        for i, slot in enumerate(selected_slots):
             building = {
                 'id': f'com_{len(self.city_state["commercial"]) + i + 1}',
                 'type': 'commercial',
@@ -785,14 +1014,123 @@ class EnhancedCitySimulationV3_5:
             self.progressive_growth_system.place_building_in_slot('commercial', building['id'], slot)
         return new_buildings
 
+    def _select_slots_via_scheduler(self, building_type: str, target_count: int) -> List[Slot]:
+        # 默认：沿用现有可用槽位（活动层）
+        def fallback():
+            return self.progressive_growth_system.get_available_slots(building_type, target_count)
+
+        # 仅在square_grid + hub_radius模式下使用“从Hub向外扩圈”
+        mode_gen = str(self.progressive_growth_system.slot_gen_cfg.get('mode', 'contour')).lower()
+        mode_sch = str(self.slot_scheduler_cfg.get('mode', '')).lower()
+        if mode_gen != 'square_grid' or mode_sch != 'hub_radius':
+            return fallback()
+
+        # 聚合当前活动层中的未用槽位
+        available: List[Slot] = []
+        for layer in self.progressive_growth_system.layers.get(building_type, []):
+            if layer.status == 'active':
+                for s in layer.slots:
+                    if (not s.used) and (not s.dead) and (building_type in s.allowed_types):
+                        available.append(s)
+        if not available:
+            return []
+
+        # 扩圈参数
+        start_r = float(self.slot_scheduler_cfg.get('start_radius_px', 0.0))
+        delta_r = float(self.slot_scheduler_cfg.get('delta_per_month_px', 4.0))
+        prev_r = max(0.0, start_r + delta_r * (self.current_month - 1))
+        curr_r = max(0.0, start_r + delta_r * self.current_month)
+
+        hubs = self.city_state.get('transport_hubs', [])
+        def min_dist_to_hub(pos):
+            if not hubs:
+                return 1e9
+            x, y = pos[0], pos[1]
+            md = 1e9
+            for hx, hy in hubs:
+                d = ((x - hx)**2 + (y - hy)**2) ** 0.5
+                if d < md:
+                    md = d
+            return md
+
+        # 单池：先在环带内取 TopK 槽位，再由 type_ratio 拆分类型
+        strict = bool(self.slot_scheduler_cfg.get('strict', True))
+        weights = self.slot_scheduler_cfg.get('per_hub_weights', [])
+        num_hubs = len(hubs)
+        if not weights or len(weights) != num_hubs:
+            weights = [1.0 / max(1, num_hubs)] * num_hubs
+        # 计算每个 Hub 的份额（向下取整，剩余按最高权重依次分配）
+        shares = [int(target_count * w) for w in weights]
+        rem = target_count - sum(shares)
+        if rem > 0:
+            order = sorted(range(num_hubs), key=lambda i: weights[i], reverse=True)
+            for i in order:
+                if rem <= 0:
+                    break
+                shares[i] += 1
+                rem -= 1
+
+        # 将可用槽位按“最近 Hub 索引”分组
+        def nearest_hub_idx(pos):
+            x, y = pos[0], pos[1]
+            best_i, best_d = 0, 1e9
+            for i, (hx, hy) in enumerate(hubs):
+                d = ((x - hx)**2 + (y - hy)**2) ** 0.5
+                if d < best_d:
+                    best_d = d
+                    best_i = i
+            return best_i, best_d
+
+        by_hub = {i: [] for i in range(num_hubs)}
+        for s in available:
+            i, d = nearest_hub_idx(s.pos)
+            by_hub[i].append((d, s))
+
+        picked: List[Slot] = []
+        # 汇总环带内所有槽位并按地价排序
+        ring_all = []
+        for i in range(num_hubs):
+            ring = [(d, s) for (d, s) in by_hub[i] if prev_r < d <= curr_r]
+            for d, s in ring:
+                lp = float(self.land_price_system.get_land_price(s.pos)) if self.land_price_system else 0.0
+                ring_all.append((lp, d, s))
+        ring_all.sort(key=lambda t: (-t[0], t[1]))
+        picked_all = [s for _, _, s in ring_all[:target_count]]
+
+        if strict:
+            # 返回单池候选，由调用方根据 type_ratio 决定商/住归属
+            return picked_all
+
+        # 非严格模式：如不足，则从各 Hub 最近的外圈补足
+        deficit = target_count - len(picked_all)
+        if deficit > 0:
+            outer_all = []
+            for i in range(num_hubs):
+                outer = [(d, s) for (d, s) in by_hub[i] if d > curr_r]
+                # 同样优先高地价
+                scored = []
+                for d, s in outer:
+                    try:
+                        lp = float(self.land_price_system.get_land_price(s.pos))
+                    except Exception:
+                        lp = 0.0
+                    scored.append((lp, d, s))
+                scored.sort(key=lambda t: (-t[0], t[1]))
+                outer_all.extend([(t[1], t[2]) for t in scored])
+            picked_all.extend(s for _, s in outer_all[:deficit])
+        return picked_all[:target_count]
+
     def _activate_first_layers(self):
         print("[Progressive] activate initial layers...")
-        if not hasattr(self.progressive_growth_system, 'layers') or len(self.progressive_growth_system.layers['commercial']) == 0:
+        if not hasattr(self.progressive_growth_system, 'layers'):
+            print("[Progressive] slots not initialized, skip activation")
+            return
+        if len(self.progressive_growth_system.layers.get('commercial', [])) == 0 and len(self.progressive_growth_system.layers.get('residential', [])) == 0:
             print("[Progressive] slots not initialized, skip activation")
             return
         # 阶段门控：道路阶段优先激活“靠近道路或活跃Hub”的层
         def pick_first_layer(building_type: str) -> int:
-            layers = self.progressive_growth_system.layers[building_type]
+            layers = self.progressive_growth_system.layers.get(building_type, [])
             if not layers:
                 return -1
             # Month 0：优先激活包含活跃Hub（此时只有Hub3）的层；否则退化为0
@@ -818,18 +1156,50 @@ class EnhancedCitySimulationV3_5:
                 print(f"[Progressive] {building_type}: activated next layer")
 
     def _evaluate_hysteresis_conversion(self):
-        self.hysteresis_system.update_quarter(self.current_quarter)
-        conversion_result = self.hysteresis_system.evaluate_conversion_conditions(
-            self.city_state, self.land_price_system
-        )
-        if conversion_result['should_convert'] and conversion_result['candidates']:
-            best_candidate = conversion_result['candidates'][0]
-            conversion_result = self.hysteresis_system.convert_building(
-                best_candidate['building_id'], self.city_state
-            )
-            if conversion_result['success']:
-                print(f"[Hysteresis] quarter {self.current_quarter}: residential {best_candidate['building_id']} -> commercial")
-                self._update_slot_after_conversion(best_candidate['building_id'])
+        # 替换为基于锁定期与范围内LP门槛的重分类
+        lock_period = int(self.slot_scheduler_cfg.get('lock_period_months', 3))
+        pct_cfg = self.slot_scheduler_cfg.get('classify_percentiles', { 'high': 70, 'low': 30 })
+        high_p = float(pct_cfg.get('high', 70))
+        low_p = float(pct_cfg.get('low', 30))
+        # 收集当前月范围内已建点的LP用于门槛计算
+        all_positions = []
+        for bt in ['commercial', 'residential']:
+            for b in self.city_state.get(bt, []):
+                all_positions.append(b['xy'])
+        if not all_positions:
+            return
+        import numpy as _np
+        lps = _np.array([float(self.land_price_system.get_land_price(pos)) for pos in all_positions])
+        thr_high = _np.percentile(lps, high_p)
+        thr_low = _np.percentile(lps, low_p)
+        # 简单滞后：增加一个微小边界，避免抖动
+        margin = float(self.slot_scheduler_cfg.get('hysteresis_margin', 0.0))
+        # 重分类
+        for bt in ['commercial', 'residential']:
+            new_list = []
+            for b in self.city_state.get(bt, []):
+                last = int(b.get('last_changed_month', max(0, self.current_month - lock_period)))
+                if (self.current_month - last) < lock_period:
+                    new_list.append(b)
+                    continue
+                lp = float(self.land_price_system.get_land_price(b['xy']))
+                if bt == 'commercial' and lp < (thr_low - margin):
+                    b['type'] = 'residential'
+                    b['last_changed_month'] = self.current_month
+                elif bt == 'residential' and lp > (thr_high + margin):
+                    b['type'] = 'commercial'
+                    b['last_changed_month'] = self.current_month
+                new_list.append(b)
+            self.city_state[bt] = [b for b in new_list if b['type'] == bt]
+        # 把转化后的对象移动到对应列表
+        moved_to_com = [b for b in self.city_state['residential'] if b['type'] == 'commercial']
+        moved_to_res = [b for b in self.city_state['commercial'] if b['type'] == 'residential']
+        if moved_to_com:
+            self.city_state['commercial'].extend(moved_to_com)
+            self.city_state['residential'] = [b for b in self.city_state['residential'] if b['type'] == 'residential']
+        if moved_to_res:
+            self.city_state['residential'].extend(moved_to_res)
+            self.city_state['commercial'] = [b for b in self.city_state['commercial'] if b['type'] == 'commercial']
 
     def _update_slot_after_conversion(self, building_id: str):
         converted_building = None
@@ -919,8 +1289,13 @@ class EnhancedCitySimulationV3_5:
         processed_buildings = []
         for building in buildings:
             processed_building = building.copy()
+            # 兼容内部结构（xy）与导出结构（position）
+            if 'position' not in processed_buildings and 'xy' in processed_building:
+                processed_building['position'] = processed_building.get('xy')
             if building['type'] == 'commercial':
-                x, y = building['position']
+                pos = building.get('position', building.get('xy', [0, 0]))
+                x = pos[0] if len(pos) > 0 else 0
+                y = pos[1] if len(pos) > 1 else 0
                 distance = ((x - hub2_position[0])**2 + (y - hub2_position[1])**2)**0.5
                 if distance <= hub2_radius:
                     processed_building['type'] = 'industrial'
@@ -1001,7 +1376,38 @@ class EnhancedCitySimulationV3_5:
         print(f"[Output] month {month} simplified saved: JSON {len(formatted)} buildings, TXT delta style")
 
     def _save_layer_state(self, month: int):
-        layer_data = {'month': month, 'quarter': self.current_quarter, 'layers': self.city_state['layers']}
+        # 记录 R(m)、候选 C(m) 规模、当月阈值（若有）
+        mode_gen = str(self.progressive_growth_system.slot_gen_cfg.get('mode', 'contour')).lower()
+        mode_sch = str(self.slot_scheduler_cfg.get('mode', '')).lower()
+        start_r = float(self.slot_scheduler_cfg.get('start_radius_px', 0.0))
+        delta_r = float(self.slot_scheduler_cfg.get('delta_per_month_px', 4.0))
+        prev_r = max(0.0, start_r + delta_r * (self.current_month - 1))
+        curr_r = max(0.0, start_r + delta_r * self.current_month)
+        candidate_count = None
+        thresholds = None
+        if mode_gen == 'square_grid' and mode_sch == 'hub_radius':
+            # 用选槽函数估算候选规模（不落地，仅计数）
+            cand = self._select_slots_via_scheduler('commercial', 999999)  # 大数获取环带内按LP排序的全集
+            candidate_count = len(cand)
+            if candidate_count > 0:
+                import numpy as _np
+                lp_vals = _np.array([float(self.land_price_system.get_land_price(s.pos)) for s in cand])
+                pct_cfg = self.slot_scheduler_cfg.get('classify_percentiles', { 'high': 70, 'low': 30 })
+                p_high = float(pct_cfg.get('high', 70))
+                p_low = float(pct_cfg.get('low', 30))
+                thresholds = {
+                    'low': float(_np.percentile(lp_vals, p_low)),
+                    'high': float(_np.percentile(lp_vals, p_high))
+                }
+        layer_data = {
+            'month': month,
+            'quarter': self.current_quarter,
+            'R_prev': prev_r,
+            'R_curr': curr_r,
+            'candidate_count': candidate_count,
+            'thresholds': thresholds,
+            'layers': self.city_state['layers']
+        }
         output_file = f"{self.output_dir}/layer_state_month_{month:02d}.json"
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         with open(output_file, 'w', encoding='utf-8') as f:
@@ -1040,8 +1446,8 @@ def main():
     simulation = EnhancedCitySimulationV3_5()
     simulation.initialize_simulation()
     simulation.run_simulation()
-    print("\n🎉 v3.5模拟完成！")
-    print(f"📁 输出文件保存在 {simulation.output_dir}/ 目录")
+    print("\n[Simulation] v3.5 done!")
+    print(f"[Output] files at {simulation.output_dir}/")
 
 
 if __name__ == "__main__":

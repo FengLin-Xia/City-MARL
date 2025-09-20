@@ -53,6 +53,13 @@ class IsocontourBuildingSystem:
             'commercial': [0.95, 0.90, 0.85],
             'residential': [0.80, 0.75, 0.70, 0.65]
         })
+
+        # 过滤与合并参数（可配置）
+        self.filter_cfg = self.isocontour_config.get('filters', {})
+        self.inactive_hub_bypass_until_month = int(self.filter_cfg.get('inactive_hub_bypass_until_month', 7))
+        self.inactive_hub_distance_px = float(self.filter_cfg.get('inactive_hub_distance_px', 30))
+        self.merge_near_hub_distance_px = float(self.filter_cfg.get('merge_near_hub_distance_px', 20))
+        self.road_stage_until_month = int(self.filter_cfg.get('road_stage_until_month', 7))
         
         # 分带配置
         self.front_zone_distance = 120  # 前排区域距离（米）
@@ -105,9 +112,9 @@ class IsocontourBuildingSystem:
         if not self.land_price_system:
             return False
         
-        # 在道路发展阶段（Month 0-6），允许所有等值线通过
+        # 在道路发展阶段（可配置），允许所有等值线通过
         # 因为此时道路影响是主要的，不应该过滤掉
-        if self.current_month < 7:
+        if self.current_month < self.inactive_hub_bypass_until_month:
             return False
         
         active_hubs = self._get_active_hubs()
@@ -133,7 +140,7 @@ class IsocontourBuildingSystem:
             for point in contour:
                 x, y = point[0], point[1]
                 distance = np.sqrt((x - hub_x)**2 + (y - hub_y)**2)
-                if distance < 30:  # 减少到30像素，更宽松的过滤
+                if distance < self.inactive_hub_distance_px:
                     return True
         
         return False
@@ -318,9 +325,9 @@ class IsocontourBuildingSystem:
         if len(contours) == 1:
             largest_contour = contours[0]
         else:
-            # 多个轮廓时，在道路阶段（前7个月）保留所有轮廓，以保证线核被保留
+            # 多个轮廓时，在道路阶段（可配置）保留所有轮廓，以保证线核被保留
             all_contour_points = []
-            if hasattr(self, 'current_month') and self.current_month < 7:
+            if hasattr(self, 'current_month') and self.current_month < self.road_stage_until_month:
                 for contour in contours:
                     for point in contour:
                         x, y = point[0][0], point[0][1]
@@ -338,13 +345,13 @@ class IsocontourBuildingSystem:
                         contains_active_hub = True
                         break
                     else:
-                        # 检查是否在轮廓附近（20像素内）
+                        # 检查是否在轮廓附近（可配置像素内）
                         min_dist = float('inf')
                         for point in contour:
                             x, y = point[0][0], point[0][1]
                             dist = np.sqrt((x - hub_x)**2 + (y - hub_y)**2)
                             min_dist = min(min_dist, dist)
-                        if min_dist < 20:
+                        if min_dist < self.merge_near_hub_distance_px:
                             contains_active_hub = True
                             break
                 

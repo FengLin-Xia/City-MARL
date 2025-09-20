@@ -1,0 +1,28 @@
+{
+  "execute_month": 6,
+  "scheduled_tasks": 1,
+  "P_low_eff": 0.4467252683690961,
+  "P_high_eff": 0.6704171158945667,
+  "changes": [
+    {
+      "id": "res_1",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        90,
+        55
+      ],
+      "land_price_value": 0.7
+    },
+    {
+      "id": "res_21",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        65,
+        91
+      ],
+      "land_price_value": 0.6731197172402068
+    }
+  ]
+}

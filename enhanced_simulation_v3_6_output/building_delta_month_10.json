@@ -1,0 +1,58 @@
+{
+  "month": 10,
+  "timestamp": "month_10",
+  "new_buildings": [
+    {
+      "id": "res_43",
+      "type": "residential",
+      "position": [
+        104,
+        55
+      ],
+      "land_price_value": 0.641844438800387
+    },
+    {
+      "id": "res_44",
+      "type": "residential",
+      "position": [
+        76,
+        55
+      ],
+      "land_price_value": 0.6434377939218363
+    },
+    {
+      "id": "res_45",
+      "type": "residential",
+      "position": [
+        97,
+        43
+      ],
+      "land_price_value": 0.6442458159963406
+    },
+    {
+      "id": "com_46",
+      "type": "industrial",
+      "position": [
+        83,
+        67
+      ],
+      "land_price_value": 0.744648904691736,
+      "original_type": "commercial",
+      "hub_influence": "hub2_industrial_zone",
+      "conversion_reason": "Hub2工业中心影响 (距离: 13.9)"
+    },
+    {
+      "id": "com_47",
+      "type": "industrial",
+      "position": [
+        83,
+        43
+      ],
+      "land_price_value": 0.6442458159963406,
+      "original_type": "commercial",
+      "hub_influence": "hub2_industrial_zone",
+      "conversion_reason": "Hub2工业中心影响 (距离: 13.9)"
+    }
+  ],
+  "reclassified": []
+}

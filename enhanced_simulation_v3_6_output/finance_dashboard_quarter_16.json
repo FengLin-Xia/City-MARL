@@ -1,0 +1,58 @@
+{
+  "quarter": 16,
+  "summary": {
+    "total_revenue": 818836.205629966,
+    "total_cost": 415440.0,
+    "net_profit": 403396.20562996605,
+    "roi_avg": 0.00787575567415006
+  },
+  "government": {
+    "tax_property": 0.0,
+    "tax_sales": 345.59999999999997,
+    "tax_payroll": 16128.0,
+    "opex_public": 1200.0,
+    "capex_public": 0.0,
+    "cashflow": 15273.599999999999
+  },
+  "business": {
+    "revenue": {
+      "residential": 916.2056299660477,
+      "commercial": 11520.0,
+      "industrial": 806400.0,
+      "public": 0.0
+    },
+    "opex": {
+      "residential": 240.0,
+      "commercial": 12000.0,
+      "industrial": 403200.0,
+      "public": 0.0
+    },
+    "profit": {
+      "residential": 676.2056299660477,
+      "commercial": -480.0,
+      "industrial": 403200.0,
+      "public": 0.0
+    },
+    "payback_median_months": 0,
+    "top_roi_projects": [
+      "com_116",
+      "com_119",
+      "com_125",
+      "com_127",
+      "res_21",
+      "res_22",
+      "res_19",
+      "com_10",
+      "com_11",
+      "res_20"
+    ]
+  },
+  "residents": {
+    "wage_total": 268800.0,
+    "rent_total": 305.40187665534927,
+    "commute_cost": 26880.0,
+    "disp_income": 241614.59812334462,
+    "housing_burden_pct": 0.11361676958904361,
+    "commute_burden_pct": 10.0
+  }
+}
