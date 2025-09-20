@@ -34,20 +34,22 @@ class GaussianLandPriceSystem:
         # 获取配置参数
         self.meters_per_pixel = self.sdf_config.get('meters_per_pixel', 2.0)
         
-        # 高斯核参数（像素单位）
-        self.hub_sigma_base = int(40 / self.meters_per_pixel)
-        self.road_sigma_base = int(20 / self.meters_per_pixel)
+        # 高斯核参数（像素单位）- 从配置读取米值并换算
+        hub_sigma_base_m = float(self.sdf_config.get('hub_sigma_base_m', 40))
+        road_sigma_base_m = float(self.sdf_config.get('road_sigma_base_m', 20))
+        self.hub_sigma_base = int(hub_sigma_base_m / self.meters_per_pixel)
+        self.road_sigma_base = int(road_sigma_base_m / self.meters_per_pixel)
         
         # 演化参数
-        self.hub_growth_rate = 0.03
-        self.road_growth_rate = 0.02
-        self.max_hub_multiplier = 2.0
-        self.max_road_multiplier = 2.5
+        self.hub_growth_rate = float(self.sdf_config.get('hub_growth_rate', 0.03))
+        self.road_growth_rate = float(self.sdf_config.get('road_growth_rate', 0.02))
+        self.max_hub_multiplier = float(self.sdf_config.get('max_hub_multiplier', 2.0))
+        self.max_road_multiplier = float(self.sdf_config.get('max_road_multiplier', 2.5))
         
         # 地价值参数
-        self.hub_peak_value = 1.0
-        self.road_peak_value = 0.7
-        self.min_threshold = 0.1
+        self.hub_peak_value = float(self.sdf_config.get('hub_peak_value', 1.0))
+        self.road_peak_value = float(self.sdf_config.get('road_peak_value', 0.7))
+        self.min_threshold = float(self.sdf_config.get('min_threshold', 0.1))
         
         print(f"[LandPrice] Gaussian system initialized")
         
@@ -334,23 +336,38 @@ class GaussianLandPriceSystem:
         print(f"[LandPrice] frame saved: {frame_file}")
     
     def get_land_price_components(self, month: int) -> Dict[str, np.ndarray]:
-        """获取地价场的各个组成部分"""
+        """获取地价场的各个组成部分（与演化强度一致）"""
         X, Y = np.meshgrid(np.arange(self.map_size[0]), np.arange(self.map_size[1]))
         hub_sigma = self._calculate_hub_sigma(month)
         road_sigma = self._calculate_road_sigma(month)
-        
+
+        # 组件强度与 _create_land_price_field 保持一致
+        road_strength = self._get_component_strength('road', month)
+        hub1_strength = self._get_component_strength('hub1', month)
+        hub2_strength = self._get_component_strength('hub2', month)
+        hub3_strength = self._get_component_strength('hub3', month)
+
         hub_land_price = np.zeros(self.map_size, dtype=float)
-        for hub in self.transport_hubs:
-            hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, self.hub_peak_value)
-            hub_land_price = np.maximum(hub_land_price, hub_gaussian)
-        
+        for i, hub in enumerate(self.transport_hubs):
+            if i == 0 and hub1_strength > 0:
+                s = hub1_strength
+            elif i == 1 and hub2_strength > 0:
+                s = hub2_strength
+            elif i == 2 and hub3_strength > 0:
+                s = hub3_strength
+            else:
+                s = 0.0
+            if s > 0:
+                hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, s)
+                hub_land_price = np.maximum(hub_land_price, hub_gaussian)
+
         road_land_price = np.zeros(self.map_size, dtype=float)
-        if len(self.transport_hubs) >= 2:
-            road_land_price = self._line_gaussian(X, Y, self.transport_hubs[0], self.transport_hubs[1], road_sigma, self.road_peak_value)
-        
+        if len(self.transport_hubs) >= 2 and road_strength > 0:
+            road_land_price = self._line_gaussian(X, Y, self.transport_hubs[0], self.transport_hubs[1], road_sigma, road_strength)
+
         combined_land_price = np.maximum(hub_land_price, road_land_price)
         combined_land_price[combined_land_price < self.min_threshold] = 0
-        
+
         return {
             'hub_land_price': hub_land_price,
             'road_land_price': road_land_price,

@@ -4,8 +4,8 @@
   },
   "city": {
     "map_size": [110, 110],
-    "trunk_road": [],
-    "transport_hubs": [[90, 55], [67, 94]]
+    "trunk_road": [[20, 55], [90, 55]],
+    "transport_hubs": [[20, 55], [90, 55], [67, 94]]
   },
   "gaussian_land_price_system": {
     "meters_per_pixel": 2.0,
@@ -51,10 +51,11 @@
       "grid": { "cell_size_px": 6, "origin": [0, 0] },
       "per_hub_grid": { "enabled": true, "disjoint": true, "limit_radius_px": 40 },
       "hex_grid": { "enabled": false, "size_px": 4, "orientation": "pointy" },
-      "radial": { "enabled": false, "delta_radius_px": 4, "angle_step_deg": 12 },
+      "radial": { "enabled": false, "delta_radius_px": 6, "angle_step_deg": 15 },
       "per_hub": [
+        { "pattern": "grid" },
         { "pattern": "hex", "size_px": 4, "orientation": "pointy" },
-        { "pattern": "radial", "delta_radius_px": 4, "angle_step_deg": 12 }
+        { "pattern": "radial", "delta_radius_px": 6, "angle_step_deg": 15 }
       ]
     },
     "commercial": { "start_P": 0.85, "depth_m": 12, "gap_m": 8, "arc_spacing_m": [16, 24] },
