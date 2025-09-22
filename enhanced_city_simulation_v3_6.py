@@ -8,6 +8,7 @@ import json
 import os
 import csv
 import math
+import re
 import numpy as np
 from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
@@ -57,8 +58,39 @@ class V36Config:
         self.map_size = root.get('city', {}).get('map_size', [110, 110])
         self.hubs: List[List[int]] = root.get('city', {}).get('transport_hubs', [[90, 55], [67, 94]])
         self.output_dir = 'enhanced_simulation_v3_6_output'
-        # 河流配置
-        self.rivers = root.get('terrain_features', {}).get('rivers', [])
+        # 河流配置：支持从文件加载（terrain_features.rivers_file 或默认 river.txt）
+        terrain_cfg = root.get('terrain_features', {})
+        self.rivers = terrain_cfg.get('rivers', [])
+        rivers_file = terrain_cfg.get('rivers_file', None)
+        if not rivers_file and os.path.exists('river.txt'):
+            rivers_file = 'river.txt'
+        if isinstance(rivers_file, str) and len(rivers_file.strip()) > 0 and os.path.exists(rivers_file):
+            coords = []
+            try:
+                with open(rivers_file, 'r', encoding='utf-8') as rf:
+                    for line in rf:
+                        s = line.strip()
+                        if not s or s.startswith('#'):
+                            continue
+                        nums = re.findall(r"-?\d+(?:\.\d+)?", s)
+                        if len(nums) < 2:
+                            continue
+                        try:
+                            x = float(nums[0]); y = float(nums[1])
+                            coords.append([x, y])
+                        except Exception:
+                            continue
+                if coords:
+                    self.rivers = [{
+                        'name': 'main_river_from_file',
+                        'coordinates': coords,
+                        'type': 'obstacle',
+                        'buffer_distance_px': 2,
+                        'description': f'Loaded from {rivers_file}'
+                    }]
+                    print(f"[Rivers] 已从文件加载河流坐标: {rivers_file}, 点数={len(coords)}")
+            except Exception as e:
+                print(f"[Rivers] 加载河流文件失败: {e}")
         # 单位换算
         self.meters_per_pixel = float(root.get('gaussian_land_price_system', {}).get('meters_per_pixel', 2.0))
         # growth
@@ -108,12 +140,16 @@ class V36Config:
         # 以“当月新建数”的比例限制可转换数量（例如 0.2 表示至多等于本月新增的 20%）
         self.max_reclass_of_new_ratio = float(locking.get('max_reclass_of_new_ratio', 0.5))
         self.reclassify_enabled = bool(locking.get('reclassify_enabled', True))
-        grid_cfg = root.get('isocontour_layout', {}).get('slot_generator', {}).get('grid', {})
+        slot_gen_cfg = root.get('isocontour_layout', {}).get('slot_generator', {})
+        grid_cfg = slot_gen_cfg.get('grid', {})
         self.grid_cell = int(grid_cfg.get('cell_size_px', 6))
         self.grid_origin = grid_cfg.get('origin', [0, 0])
         # 环带容差（像素）与空候选回退
         self.ring_tolerance_px = float(max(1.0, 0.75 * self.grid_cell))
         self.strict_ring_only = bool(g.get('strict_ring_only', False))
+        # 自定义点集作为槽位（可选）
+        self.use_points_file = bool(slot_gen_cfg.get('use_points_file', True))
+        self.points_file = str(slot_gen_cfg.get('points_file', 'slotpoints.txt'))
 
 
 class CityV36:
@@ -140,7 +176,15 @@ class CityV36:
 
     def initialize(self):
         self.land.initialize_system(self.cfg.hubs, self.cfg.map_size)
-        self._build_grid_slots()
+        # 优先：从自定义点文件构建槽位（配置开关）
+        try:
+            if getattr(self.cfg, 'use_points_file', False):
+                self._build_slots_from_points_file()
+            else:
+                #self._build_grid_slots()
+                pass
+        except Exception as e:
+            print(f"构建槽位失败: {e}")
         self._save_range_state(self.current_month)  # month 0
         # 初始化财务系统
         self.finance.initialize_building_finance(self.state)
@@ -183,176 +227,176 @@ class CityV36:
         
         return hub_side == slot_side
 
-    def _build_grid_slots(self):
-        w, h = int(self.cfg.map_size[0]), int(self.cfg.map_size[1])
-        cell = max(1, int(self.cfg.grid_cell))
-        self.slots.clear()
-        # 读取 per-hub grid 配置
-        slot_gen = self.cfg.root.get('isocontour_layout', {}).get('slot_generator', {}) if hasattr(self.cfg, 'root') else {}
-        ph_cfg = slot_gen.get('per_hub_grid', {}) if isinstance(slot_gen, dict) else {}
-        per_hub_enabled = bool(ph_cfg.get('enabled', True))
-        limit_r = ph_cfg.get('limit_radius_px', None)
-        disjoint = bool(ph_cfg.get('disjoint', True))
-        hex_cfg = slot_gen.get('hex_grid', {}) if isinstance(slot_gen, dict) else {}
-        hex_enabled = bool(hex_cfg.get('enabled', False))
-        hex_size = float(hex_cfg.get('size_px', cell))
-        hex_pointy = str(hex_cfg.get('orientation', 'pointy')).lower() == 'pointy'
-        radial_cfg = slot_gen.get('radial', {}) if isinstance(slot_gen, dict) else {}
-        radial_enabled = bool(radial_cfg.get('enabled', False))
-        radial_dr = float(radial_cfg.get('delta_radius_px', cell))
-        radial_dtheta = math.radians(float(radial_cfg.get('angle_step_deg', 15.0)))
-        # per-hub pattern选择（可为每个Hub单独设定pattern与参数）
-        per_hub_patterns = slot_gen.get('per_hub', []) if isinstance(slot_gen, dict) else []
-        # 构建集合去重
-        seen = set()
-        def nearest_hub_idx(x: int, y: int) -> int:
-            best_i, best_d = 0, 1e9
-            for i, (hx, hy) in enumerate(self.cfg.hubs):
-                d = ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5
-                if d < best_d:
-                    best_d = d
-                    best_i = i
-            return best_i
-        def add_slot_for_hub(gen_idx: int, x: int, y: int):
-            if 0 <= x < w and 0 <= y < h:
-                # 检查是否在河流区域内
-                if self._is_in_river_area(x, y):
-                    return
-                if disjoint:
-                    nh = nearest_hub_idx(x, y)
-                    if nh != gen_idx:
-                        return
-                key = (x, y)
-                if key not in seen:
-                    seen.add(key)
-                    self.slots.append(Slot(pos=[x, y]))
-        if per_hub_enabled or hex_enabled or radial_enabled or per_hub_patterns:
-            # 逐 Hub 生成使 Hub 恰好落在交点的格点：从 (hx,hy) 出发按 cell 扩展
-            for idx, (hx, hy) in enumerate(self.cfg.hubs):
-                # 半径限制（可选）
-                max_r = float(limit_r) if isinstance(limit_r, (int, float)) and float(limit_r) > 0 else None
-                # 选择本Hub的pattern
-                patt_cfg = None
-                if isinstance(per_hub_patterns, list) and idx < len(per_hub_patterns):
-                    patt_cfg = per_hub_patterns[idx]
-                pattern = None
-                if isinstance(patt_cfg, dict) and 'pattern' in patt_cfg:
-                    pattern = str(patt_cfg.get('pattern', 'grid')).lower()
-                else:
-                    # 回退：按全局开关决定
-                    if per_hub_enabled:
-                        pattern = 'grid'
-                    elif hex_enabled:
-                        pattern = 'hex'
-                    elif radial_enabled:
-                        pattern = 'radial'
-                    else:
-                        pattern = 'grid'
-                if pattern == 'grid':
-                    # 矩形格从hub对齐生长
-                    y = int(hy)
-                    while y >= 0 and (max_r is None or abs(y - hy) <= max_r):
-                        x = int(hx)
-                        while x < w and (max_r is None or ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5 <= max_r):
-                            add_slot_for_hub(idx, x, y)
-                            x += cell
-                        x = int(hx) - cell
-                        while x >= 0 and (max_r is None or ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5 <= max_r):
-                            add_slot_for_hub(idx, x, y)
-                            x -= cell
-                        y -= cell
-                    y = int(hy) + cell
-                    while y < h and (max_r is None or abs(y - hy) <= max_r):
-                        x = int(hx)
-                        while x < w and (max_r is None or ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5 <= max_r):
-                            add_slot_for_hub(idx, x, y)
-                            x += cell
-                        x = int(hx) - cell
-                        while x >= 0 and (max_r is None or ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5 <= max_r):
-                            add_slot_for_hub(idx, x, y)
-                            x -= cell
-                        y += cell
-                elif pattern == 'hex':
-                    # 六边形网（axial坐标）：pointy 与 flat 的步进不同
-                    size = max(1.0, float((patt_cfg or {}).get('size_px', hex_size)))
-                    hub_pointy = str((patt_cfg or {}).get('orientation', 'pointy')).lower() == 'pointy'
-                    if hub_pointy:
-                        # pointy-top axial to pixel
-                        # 邻接步长
-                        dq = [1, 1, 0, -1, -1, 0]
-                        dr = [0, -1, -1, 0, 1, 1]
-                        # 以hub为中心的环形展开
-                        max_steps = int((max_r / size)) if max_r else max(w, h)
-                        q0, r0 = 0, 0
-                        def axial_to_pixel(q, r):
-                            x = size * (math.sqrt(3) * q + math.sqrt(3)/2 * r)
-                            y = size * (3/2 * r)
-                            return int(round(hx + x)), int(round(hy + y))
-                        add_slot_for_hub(idx, int(hx), int(hy))
-                        step = 1
-                        while step <= max_steps:
-                            q, r = q0 + (-step), r0 + (step)
-                            for dir_idx in range(6):
-                                for _ in range(step):
-                                    px, py = axial_to_pixel(q, r)
-                                    if max_r is None or ((px - hx)**2 + (py - hy)**2) ** 0.5 <= max_r:
-                                        add_slot_for_hub(idx, px, py)
-                                    q += dq[dir_idx]
-                                    r += dr[dir_idx]
-                            step += 1
-                    else:
-                        # flat-top axial
-                        dq = [1, 0, -1, -1, 0, 1]
-                        dr = [0, -1, -1, 0, 1, 1]
-                        max_steps = int((max_r / size)) if max_r else max(w, h)
-                        q0, r0 = 0, 0
-                        def axial_to_pixel(q, r):
-                            x = size * (3/2 * q)
-                            y = size * (math.sqrt(3)/2 * q + math.sqrt(3) * r)
-                            return int(round(hx + x)), int(round(hy + y))
-                        add_slot_for_hub(idx, int(hx), int(hy))
-                        step = 1
-                        while step <= max_steps:
-                            q, r = q0 + (-step), r0 + (step)
-                            for dir_idx in range(6):
-                                for _ in range(step):
-                                    px, py = axial_to_pixel(q, r)
-                                    if max_r is None or ((px - hx)**2 + (py - hy)**2) ** 0.5 <= max_r:
-                                        add_slot_for_hub(idx, px, py)
-                                    q += dq[dir_idx]
-                                    r += dr[dir_idx]
-                            step += 1
-                elif pattern == 'radial':
-                    # 同心环+等角射线
-                    Rmax = max_r if max_r else max(w, h)
-                    dr_local = float((patt_cfg or {}).get('delta_radius_px', radial_dr))
-                    dtheta_local = math.radians(float((patt_cfg or {}).get('angle_step_deg', math.degrees(radial_dtheta))))
-                    r = 0.0
-                    while r <= Rmax:
-                        theta = 0.0
-                        while theta < 2 * math.pi:
-                            px = int(round(hx + r * math.cos(theta)))
-                            py = int(round(hy + r * math.sin(theta)))
-                            add_slot_for_hub(idx, px, py)
-                            theta += dtheta_local
-                        r += dr_local
-        else:
-            # 旧的全局 origin 栅格（回退）
-            ox, oy = 0, 0
-            if hasattr(self.cfg, 'grid_origin'):
-                ox, oy = int(self.cfg.grid_origin[0]), int(self.cfg.grid_origin[1])
-            y = oy
-            while y < h:
-                x = ox
-                while x < w:
-                    # 回退模式下使用最近hub过滤可关（此处不过滤）
-                    if 0 <= x < w and 0 <= y < h:
-                        key = (x, y)
-                        if key not in seen:
-                            seen.add(key)
-                            self.slots.append(Slot(pos=[x, y]))
-                    x += cell
-                y += cell
+    # def _build_grid_slots(self):
+    #     w, h = int(self.cfg.map_size[0]), int(self.cfg.map_size[1])
+    #     cell = max(1, int(self.cfg.grid_cell))
+    #     self.slots.clear()
+    #     # 读取 per-hub grid 配置
+    #     slot_gen = self.cfg.root.get('isocontour_layout', {}).get('slot_generator', {}) if hasattr(self.cfg, 'root') else {}
+    #     ph_cfg = slot_gen.get('per_hub_grid', {}) if isinstance(slot_gen, dict) else {}
+    #     per_hub_enabled = bool(ph_cfg.get('enabled', True))
+    #     limit_r = ph_cfg.get('limit_radius_px', None)
+    #     disjoint = bool(ph_cfg.get('disjoint', True))
+    #     hex_cfg = slot_gen.get('hex_grid', {}) if isinstance(slot_gen, dict) else {}
+    #     hex_enabled = bool(hex_cfg.get('enabled', False))
+    #     hex_size = float(hex_cfg.get('size_px', cell))
+    #     hex_pointy = str(hex_cfg.get('orientation', 'pointy')).lower() == 'pointy'
+    #     radial_cfg = slot_gen.get('radial', {}) if isinstance(slot_gen, dict) else {}
+    #     radial_enabled = bool(radial_cfg.get('enabled', False))
+    #     radial_dr = float(radial_cfg.get('delta_radius_px', cell))
+    #     radial_dtheta = math.radians(float(radial_cfg.get('angle_step_deg', 15.0)))
+    #     # per-hub pattern选择（可为每个Hub单独设定pattern与参数）
+    #     per_hub_patterns = slot_gen.get('per_hub', []) if isinstance(slot_gen, dict) else []
+    #     # 构建集合去重
+    #     seen = set()
+    #     def nearest_hub_idx(x: int, y: int) -> int:
+    #         best_i, best_d = 0, 1e9
+    #         for i, (hx, hy) in enumerate(self.cfg.hubs):
+    #             d = ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5
+    #             if d < best_d:
+    #                 best_d = d
+    #                 best_i = i
+    #         return best_i
+    #     def add_slot_for_hub(gen_idx: int, x: int, y: int):
+    #         if 0 <= x < w and 0 <= y < h:
+    #             # 检查是否在河流区域内
+    #             if self._is_in_river_area(x, y):
+    #                 return
+    #             if disjoint:
+    #                 nh = nearest_hub_idx(x, y)
+    #                 if nh != gen_idx:
+    #                     return
+    #             key = (x, y)
+    #             if key not in seen:
+    #                 seen.add(key)
+    #                 self.slots.append(Slot(pos=[x, y]))
+    #     if per_hub_enabled or hex_enabled or radial_enabled or per_hub_patterns:
+    #         # 逐 Hub 生成使 Hub 恰好落在交点的格点：从 (hx,hy) 出发按 cell 扩展
+    #         for idx, (hx, hy) in enumerate(self.cfg.hubs):
+    #             # 半径限制（可选）
+    #             max_r = float(limit_r) if isinstance(limit_r, (int, float)) and float(limit_r) > 0 else None
+    #             # 选择本Hub的pattern
+    #             patt_cfg = None
+    #             if isinstance(per_hub_patterns, list) and idx < len(per_hub_patterns):
+    #                 patt_cfg = per_hub_patterns[idx]
+    #             pattern = None
+    #             if isinstance(patt_cfg, dict) and 'pattern' in patt_cfg:
+    #                 pattern = str(patt_cfg.get('pattern', 'grid')).lower()
+    #             else:
+    #                 # 回退：按全局开关决定
+    #                 if per_hub_enabled:
+    #                     pattern = 'grid'
+    #                 elif hex_enabled:
+    #                     pattern = 'hex'
+    #                 elif radial_enabled:
+    #                     pattern = 'radial'
+    #                 else:
+    #                     pattern = 'grid'
+    #             if pattern == 'grid':
+    #                 # 矩形格从hub对齐生长
+    #                 y = int(hy)
+    #                 while y >= 0 and (max_r is None or abs(y - hy) <= max_r):
+    #                     x = int(hx)
+    #                     while x < w and (max_r is None or ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5 <= max_r):
+    #                         add_slot_for_hub(idx, x, y)
+    #                         x += cell
+    #                     x = int(hx) - cell
+    #                     while x >= 0 and (max_r is None or ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5 <= max_r):
+    #                         add_slot_for_hub(idx, x, y)
+    #                         x -= cell
+    #                     y -= cell
+    #                 y = int(hy) + cell
+    #                 while y < h and (max_r is None or abs(y - hy) <= max_r):
+    #                     x = int(hx)
+    #                     while x < w and (max_r is None or ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5 <= max_r):
+    #                         add_slot_for_hub(idx, x, y)
+    #                         x += cell
+    #                     x = int(hx) - cell
+    #                     while x >= 0 and (max_r is None or ((x - hx) ** 2 + (y - hy) ** 2) ** 0.5 <= max_r):
+    #                         add_slot_for_hub(idx, x, y)
+    #                         x -= cell
+    #                     y += cell
+    #             elif pattern == 'hex':
+    #                 # 六边形网（axial坐标）：pointy 与 flat 的步进不同
+    #                 size = max(1.0, float((patt_cfg or {}).get('size_px', hex_size)))
+    #                 hub_pointy = str((patt_cfg or {}).get('orientation', 'pointy')).lower() == 'pointy'
+    #                 if hub_pointy:
+    #                     # pointy-top axial to pixel
+    #                     # 邻接步长
+    #                     dq = [1, 1, 0, -1, -1, 0]
+    #                     dr = [0, -1, -1, 0, 1, 1]
+    #                     # 以hub为中心的环形展开
+    #                     max_steps = int((max_r / size)) if max_r else max(w, h)
+    #                     q0, r0 = 0, 0
+    #                     def axial_to_pixel(q, r):
+    #                         x = size * (math.sqrt(3) * q + math.sqrt(3)/2 * r)
+    #                         y = size * (3/2 * r)
+    #                         return int(round(hx + x)), int(round(hy + y))
+    #                     add_slot_for_hub(idx, int(hx), int(hy))
+    #                     step = 1
+    #                     while step <= max_steps:
+    #                         q, r = q0 + (-step), r0 + (step)
+    #                         for dir_idx in range(6):
+    #                             for _ in range(step):
+    #                                 px, py = axial_to_pixel(q, r)
+    #                                 if max_r is None or ((px - hx)**2 + (py - hy)**2) ** 0.5 <= max_r:
+    #                                     add_slot_for_hub(idx, px, py)
+    #                                 q += dq[dir_idx]
+    #                                 r += dr[dir_idx]
+    #                         step += 1
+    #                 else:
+    #                     # flat-top axial
+    #                     dq = [1, 0, -1, -1, 0, 1]
+    #                     dr = [0, -1, -1, 0, 1, 1]
+    #                     max_steps = int((max_r / size)) if max_r else max(w, h)
+    #                     q0, r0 = 0, 0
+    #                     def axial_to_pixel(q, r):
+    #                         x = size * (3/2 * q)
+    #                         y = size * (math.sqrt(3)/2 * q + math.sqrt(3) * r)
+    #                         return int(round(hx + x)), int(round(hy + y))
+    #                     add_slot_for_hub(idx, int(hx), int(hy))
+    #                     step = 1
+    #                     while step <= max_steps:
+    #                         q, r = q0 + (-step), r0 + (step)
+    #                         for dir_idx in range(6):
+    #                             for _ in range(step):
+    #                                 px, py = axial_to_pixel(q, r)
+    #                                 if max_r is None or ((px - hx)**2 + (py - hy)**2) ** 0.5 <= max_r:
+    #                                     add_slot_for_hub(idx, px, py)
+    #                                 q += dq[dir_idx]
+    #                                 r += dr[dir_idx]
+    #                         step += 1
+    #             elif pattern == 'radial':
+    #                 # 同心环+等角射线
+    #                 Rmax = max_r if max_r else max(w, h)
+    #                 dr_local = float((patt_cfg or {}).get('delta_radius_px', radial_dr))
+    #                 dtheta_local = math.radians(float((patt_cfg or {}).get('angle_step_deg', math.degrees(radial_dtheta))))
+    #                 r = 0.0
+    #                 while r <= Rmax:
+    #                     theta = 0.0
+    #                     while theta < 2 * math.pi:
+    #                         px = int(round(hx + r * math.cos(theta)))
+    #                         py = int(round(hy + r * math.sin(theta)))
+    #                         add_slot_for_hub(idx, px, py)
+    #                         theta += dtheta_local
+    #                     r += dr_local
+    #     else:
+    #         # 旧的全局 origin 栅格（回退）
+    #         ox, oy = 0, 0
+    #         if hasattr(self.cfg, 'grid_origin'):
+    #             ox, oy = int(self.cfg.grid_origin[0]), int(self.cfg.grid_origin[1])
+    #         y = oy
+    #         while y < h:
+    #             x = ox
+    #             while x < w:
+    #                 # 回退模式下使用最近hub过滤可关（此处不过滤）
+    #                 if 0 <= x < w and 0 <= y < h:
+    #                     key = (x, y)
+    #                     if key not in seen:
+    #                         seen.add(key)
+    #                         self.slots.append(Slot(pos=[x, y]))
+    #                 x += cell
+    #             y += cell
 
     def _R_for_hub(self, hub_key: str, month: int) -> float:
         # Pixel 模式：直接像素增量（1px/月默认）
@@ -690,6 +734,50 @@ class CityV36:
         # 清理到期任务
         self.pending_reclassifications = [t for t in self.pending_reclassifications if int(t['execute_month']) != int(month)]
         
+    def _build_slots_from_points_file(self):
+        """从配置的 points_file 读取点位，作为槽位集合。支持多种常见格式：
+        - 逗号或空格分隔: "x,y" 或 "x y"
+        - 包裹的坐标: "(x, y)" 或 "[x, y]"
+        - 含类型/前缀: "0(x, y)" → 提取前两个数
+        仅保留落在画布内的点，去重，并过滤河流障碍区域。
+        """
+        path = getattr(self.cfg, 'points_file', 'slotpoints.txt')
+        if not isinstance(path, str) or len(path.strip()) == 0:
+            raise ValueError("points_file 未配置或无效")
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"points_file 不存在: {path}")
+        w, h = int(self.cfg.map_size[0]), int(self.cfg.map_size[1])
+        self.slots.clear()
+        seen = set()
+        num_total = 0
+        num_added = 0
+        with open(path, 'r', encoding='utf-8') as f:
+            for line in f:
+                s = line.strip()
+                if not s or s.startswith('#'):
+                    continue
+                # 提取一行中的数字，前两个作为 x,y
+                nums = re.findall(r"-?\d+(?:\.\d+)?", s)
+                if len(nums) < 2:
+                    continue
+                try:
+                    x = float(nums[0])
+                    y = float(nums[1])
+                except Exception:
+                    continue
+                num_total += 1
+                if not (0 <= x < w and 0 <= y < h):
+                    continue
+                if self._is_in_river_area(x, y):
+                    continue
+                key = (x, y)
+                if key in seen:
+                    continue
+                seen.add(key)
+                self.slots.append(Slot(pos=[x, y]))
+                num_added += 1
+        print(f"[Slots] 从文件加载槽位: 读取 {num_total} 行，加入 {num_added} 个有效点位 (文件: {path})")
+
     # ----- Simplified TXT export -----
     def _save_simplified_txt(self, month: int):
         simp_dir = os.path.join(self.cfg.output_dir, 'simplified')
