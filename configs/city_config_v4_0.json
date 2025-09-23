@@ -1,0 +1,72 @@
+{
+  "simulation": {
+    "total_months": 12
+  },
+  "city": {
+    "map_size": [200, 200],
+    "trunk_road": [],
+    "transport_hubs": [[125, 75], [121, 112]]
+  },
+  "gaussian_land_price_system": {
+    "meters_per_pixel": 2.0,
+    "hub_sigma_base_m": 32,
+    "road_sigma_base_m": 20,
+    "hub_peak_value": 1.0,
+    "road_peak_value": 0.90,
+    "min_threshold": 0.04,
+    "alpha_inertia": 0.25,
+    "hub_growth_rate": 0.03,
+    "road_growth_rate": 0.02,
+    "max_hub_multiplier": 2.0,
+    "max_road_multiplier": 2.5
+  },
+  "land_price_evolution": {
+    "enabled": true,
+    "road_activation_month": 0,
+    "road_peak_value": 0.7,
+    "hub_activation_month": 7,
+    "hub_growth_duration_months": 6,
+    "hub_initial_peak": 0.7,
+    "hub_final_peak": 1.0,
+    "hub3_keep_existing": true,
+    "growth_curve_type": "smooth",
+    "smooth_curve_steepness": 10.0
+  },
+  "growth_v4_0": {
+    "hubs": {
+      "mode": "explicit",
+      "list": [
+        {"id": "hub1", "x": 125, "y": 75, "R0": 0, "dR": 1.0, "weight": 0.5},
+        {"id": "hub2", "x": 121, "y": 112, "R0": 0, "dR": 1.0, "weight": 0.5}
+      ]
+    },
+    "slots": {
+      "source": "file",
+      "path": "slotpoints.txt",
+      "adjacency": "4-neighbor",
+      "filters": {"respect_terrain": true, "respect_roads": true}
+    },
+    "enumeration": {
+      "length_max": 5,
+      "use_skip": true,
+      "search_mode": "exhaustive",
+      "beam_width": 50,
+      "max_expansions":10000,
+      "caps": {
+        "top_slots_per_agent_size": {"EDU": {"S": 300}, "IND": {"L": 120}},
+        "max_actions_per_agent_size": {"EDU": {"S": 800}, "IND": {"L": 200}}
+      },
+      "objective": {
+        "EDU": {"w_r": 0.3, "w_p": 0.6, "w_c": 0.1},
+        "IND": {"w_r": 0.6, "w_p": 0.2, "w_c": 0.2},
+        "normalize": "per-month-pool-minmax"
+      }
+    },
+    "locking": {
+      "lock_period": 3,
+      "hysteresis_delta": 0.04
+    }
+  }
+}
+
+
