@@ -97,7 +97,7 @@
 * reward (k£/mo)
 * prestige (—)
 
-### 5.3 公式
+### 5.3 公式（标准版）
 
 * EDU: cost = (Base_EDU[size]+Add_EDU[size])×LP_norm + ZoneAdd[zone]
   reward = (α×Capacity[size])×m_zone×m_adj − OPEX_EDU[size]
@@ -105,6 +105,37 @@
 * IND: cost = (Base_IND[size]+Add_IND[size])×LP_norm + ZoneAdd[zone]
   reward = ((p_market×u×Capacity[size])/1000)×m_zone×m_adj − c_opex×GFA_k[size] + s_zone[zone]
   prestige = PrestigeBase[size] + I(zone==near)+I(adj) − 0.2×Pollution[size]
+
+### 5.3.1 公式（INT 版：地价货币化 + 河流溢价）
+
+- 输入扩展：LP_idx∈[10,100]（由 LP_norm 线性映射）；river_dist_m（到河近似最小距离，米）
+- 参数（kGBP，整数化约定按 nearest）：
+  - LandPriceBase（每个 LP_idx 点对应货币化地价）
+  - BaseCost_IND/EDU[size]，ZC[zone]（区位建造附加）
+  - RevBase_IND/EDU[size]，ZR[zone]（区位收益附加）
+  - OPEX_IND/EDU[size]，Rent[size]，Adj_bonus（相邻奖励，默认 0）
+  - RiverPmax_pct{IND,EDU}（河流溢价最高占比%），RiverD_half_m（半衰距离，m），RiverPremiumCap_kGBP（封顶），RoundMode（nearest）
+
+- 地价货币化：
+  - LP_value = LP_idx × LandPriceBase（kGBP）
+  - EDU receives land：LP_value（一次性正项）；IND pays land：LP_value（一次性负项）。在 cost 中计入。
+
+- 河流溢价（按月，计入收入侧）：
+  - d_eff = max(0, river_dist_m)
+  - decay = 2^(− d_eff / RiverD_half_m)
+  - BaseForPremium(type,size,zone) = RevBase_type[size] + ZR[zone]
+  - RawRiverPrem(type) = BaseForPremium × (RiverPmax_pct[type]/100) × decay
+  - RiverPremium(type) = clamp(round_nearest(RawRiverPrem), 0, RiverPremiumCap_kGBP)
+
+- 成本（一次性）：
+  - cost_IND = BaseCost_IND[size] + ZC[zone] + LP_value
+  - cost_EDU = BaseCost_EDU[size] + ZC[zone] + LP_value
+
+- 收入（按月）：
+  - IND：rev_IND = RevBase_IND[size] + ZR[zone] + Adj_bonus·adj − OPEX_IND[size] − Rent[size] + RiverPremium(IND)
+  - EDU：rev_EDU = (RevBase_EDU[size] + ZR[zone] + Adj_bonus·adj − OPEX_EDU[size] + RiverPremium(EDU)) + Rent[size]
+
+- 备注：LP_idx 映射与 LandPriceBase 可通过配置 `growth_v4_0.evaluation` 调整；river_dist_m 由主流程提供（对 footprint 取近点）。
 
 ### 5.4 RL 接口
 
@@ -145,6 +176,24 @@
   "locking": {
     "lock_period": 3,
     "hysteresis_delta": 0.04
+  },
+  "evaluation": {
+    "LP_idx_min": 10, "LP_idx_max": 100,
+    "LandPriceBase": 11,
+    "ZC": {"near":200, "mid":100, "far":0},
+    "ZR": {"near":80, "mid":40, "far":0},
+    "BaseCost_IND": {"S":900, "M":1500, "L":2400},
+    "BaseCost_EDU": {"S":700, "M":1200, "L":1900},
+    "RevBase_IND": {"S":180, "M":320, "L":520},
+    "RevBase_EDU": {"S":140, "M":260, "L":420},
+    "OPEX_IND": {"S":100, "M":180, "L":300},
+    "OPEX_EDU": {"S":70, "M":120, "L":190},
+    "Rent": {"S":25, "M":45, "L":70},
+    "Adj_bonus": 0,
+    "RiverPmax_pct": {"IND":20, "EDU":15},
+    "RiverD_half_m": 120,
+    "RiverPremiumCap_kGBP": 10000,
+    "RoundMode": "nearest"
   }
 }
 ```

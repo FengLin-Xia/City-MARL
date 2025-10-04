@@ -1,0 +1,4627 @@
+{
+  "month": 255,
+  "count": 385,
+  "actions": [
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_254"
+      ],
+      "lp_norm": 0.21377335512953358,
+      "cost": 1319.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.207397075798384
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_270"
+      ],
+      "lp_norm": 0.21032652816403774,
+      "cost": 1319.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.2041362062331666
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_737"
+      ],
+      "lp_norm": 0.340957028796731,
+      "cost": 1451.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21562139284340132
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_313"
+      ],
+      "lp_norm": 0.26126059900923754,
+      "cost": 1374.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.21435648326279338
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_325"
+      ],
+      "lp_norm": 0.09460515350542312,
+      "cost": 1209.0,
+      "reward": 126.0,
+      "prestige": 0.2,
+      "score": 0.2
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_452"
+      ],
+      "lp_norm": 0.39792863906337794,
+      "cost": 1506.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.2258416698730281
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_472"
+      ],
+      "lp_norm": 0.3208668245842444,
+      "cost": 1429.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.23109849942285496
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_157"
+      ],
+      "lp_norm": 0.7334768273973178,
+      "cost": 1836.0,
+      "reward": 156.0,
+      "prestige": 0.2,
+      "score": 0.22846767987687572
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_598"
+      ],
+      "lp_norm": 0.5212789497479092,
+      "cost": 1627.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22223932281646788
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_730"
+      ],
+      "lp_norm": 0.3996867851633277,
+      "cost": 1506.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.2193199307425933
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_763"
+      ],
+      "lp_norm": 0.333486950079331,
+      "cost": 1440.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.22335994613312812
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_290"
+      ],
+      "lp_norm": 0.26619026514401956,
+      "cost": 1374.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.2176173528280108
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_77"
+      ],
+      "lp_norm": 0.3653383451066853,
+      "cost": 1473.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21318776452481725
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_485"
+      ],
+      "lp_norm": 0.3583584120728367,
+      "cost": 1462.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.23070892651019623
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_339"
+      ],
+      "lp_norm": 0.1364697977912202,
+      "cost": 1242.0,
+      "reward": 130.0,
+      "prestige": 0.2,
+      "score": 0.20939303578299348
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_134"
+      ],
+      "lp_norm": 0.5498690908682659,
+      "cost": 1649.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.22306656406310119
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_565"
+      ],
+      "lp_norm": 0.350283566492644,
+      "cost": 1462.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21766544824932668
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_93"
+      ],
+      "lp_norm": 0.3325837098241793,
+      "cost": 1440.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22009907656791075
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_483"
+      ],
+      "lp_norm": 0.3743318865452884,
+      "cost": 1484.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.22827529819161216
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_297"
+      ],
+      "lp_norm": 0.35762370137732796,
+      "cost": 1462.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21114370911889188
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_743"
+      ],
+      "lp_norm": 0.468314795778908,
+      "cost": 1572.0,
+      "reward": 145.0,
+      "prestige": 0.2,
+      "score": 0.22180165448249325
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_575"
+      ],
+      "lp_norm": 0.21777153512556746,
+      "cost": 1330.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.21596287033474415
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_468"
+      ],
+      "lp_norm": 0.39567628794460563,
+      "cost": 1506.0,
+      "reward": 145.0,
+      "prestige": 0.2,
+      "score": 0.22910253943824546
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_790"
+      ],
+      "lp_norm": 0.728943744589424,
+      "cost": 1836.0,
+      "reward": 156.0,
+      "prestige": 0.2,
+      "score": 0.22846767987687572
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_289"
+      ],
+      "lp_norm": 0.29905122225144,
+      "cost": 1407.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.21070604078491728
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_275"
+      ],
+      "lp_norm": 0.2767647270902285,
+      "cost": 1385.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.20987879953828398
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_127"
+      ],
+      "lp_norm": 0.523494235852243,
+      "cost": 1627.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22876106194690268
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_105"
+      ],
+      "lp_norm": 0.33908753408087644,
+      "cost": 1451.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.2221431319738361
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_434"
+      ],
+      "lp_norm": 0.12940125977100214,
+      "cost": 1242.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.22243651404386303
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_280"
+      ],
+      "lp_norm": 0.23780513788336194,
+      "cost": 1341.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.21474605617545212
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_750"
+      ],
+      "lp_norm": 0.3209681693259343,
+      "cost": 1429.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21805502116198539
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_106"
+      ],
+      "lp_norm": 0.3662983912271588,
+      "cost": 1473.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.2229703732204694
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_417"
+      ],
+      "lp_norm": 0.18563395389142084,
+      "cost": 1297.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21309157368218548
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_733"
+      ],
+      "lp_norm": 0.41064062119637307,
+      "cost": 1517.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.22136398614851868
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_407"
+      ],
+      "lp_norm": 0.1753169176275795,
+      "cost": 1286.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.21104751827626012
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_766"
+      ],
+      "lp_norm": 0.42121144048203873,
+      "cost": 1528.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.22340804155444402
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_253"
+      ],
+      "lp_norm": 0.2162103999494395,
+      "cost": 1319.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.2041362062331666
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_84"
+      ],
+      "lp_norm": 0.5008629517783252,
+      "cost": 1605.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22467295113505195
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_773"
+      ],
+      "lp_norm": 0.7995394476661757,
+      "cost": 1902.0,
+      "reward": 158.0,
+      "prestige": 0.2,
+      "score": 0.2276885340515583
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_121"
+      ],
+      "lp_norm": 0.4018295065009029,
+      "cost": 1506.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.2193199307425933
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_450"
+      ],
+      "lp_norm": 0.4127903271412498,
+      "cost": 1517.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.22136398614851868
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_274"
+      ],
+      "lp_norm": 0.3137208896321149,
+      "cost": 1418.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.20622835706040785
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_408"
+      ],
+      "lp_norm": 0.1510453189417822,
+      "cost": 1264.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.21348114659484418
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_568"
+      ],
+      "lp_norm": 0.32302566570474833,
+      "cost": 1429.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22131589072720279
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_103"
+      ],
+      "lp_norm": 0.4810902006034133,
+      "cost": 1583.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22710657945363602
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_303"
+      ],
+      "lp_norm": 0.29446801194919875,
+      "cost": 1407.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21722777991535205
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_447"
+      ],
+      "lp_norm": 0.28440177680585005,
+      "cost": 1396.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.2217054636398615
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_477"
+      ],
+      "lp_norm": 0.44961674124674156,
+      "cost": 1550.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.23075702193151212
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_82"
+      ],
+      "lp_norm": 0.3799571033582638,
+      "cost": 1484.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.2087100808003078
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_286"
+      ],
+      "lp_norm": 0.3221132519405191,
+      "cost": 1429.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.2082724124663332
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_256"
+      ],
+      "lp_norm": 0.23896113985430817,
+      "cost": 1352.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.2037466333205079
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_281"
+      ],
+      "lp_norm": 0.25576922170816363,
+      "cost": 1363.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.20905155829165065
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_349"
+      ],
+      "lp_norm": 0.09948100112720254,
+      "cost": 1209.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20978260869565218
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_131"
+      ],
+      "lp_norm": 0.5081932157615885,
+      "cost": 1616.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.2267170065409773
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_460"
+      ],
+      "lp_norm": 0.2877982356292039,
+      "cost": 1396.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22496633320507892
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_113"
+      ],
+      "lp_norm": 0.5064461093291628,
+      "cost": 1616.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22997787610619472
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_156"
+      ],
+      "lp_norm": 0.71532799454054,
+      "cost": 1814.0,
+      "reward": 156.0,
+      "prestige": 0.2,
+      "score": 0.2309013081954598
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_610"
+      ],
+      "lp_norm": 0.5678250166988352,
+      "cost": 1671.0,
+      "reward": 151.0,
+      "prestige": 0.2,
+      "score": 0.2304155444401693
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_215"
+      ],
+      "lp_norm": 0.32311206334240117,
+      "cost": 1429.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.2050115429011158
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_767"
+      ],
+      "lp_norm": 0.6018464425801515,
+      "cost": 1704.0,
+      "reward": 150.0,
+      "prestige": 0.2,
+      "score": 0.22350423239707579
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_206"
+      ],
+      "lp_norm": 0.2753367207513144,
+      "cost": 1385.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.20335706040784918
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_119"
+      ],
+      "lp_norm": 0.37735784167918074,
+      "cost": 1484.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.22175355906117736
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_225"
+      ],
+      "lp_norm": 0.30776806069184415,
+      "cost": 1418.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.20948922662562525
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_273"
+      ],
+      "lp_norm": 0.3255465706431133,
+      "cost": 1429.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.2050115429011158
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_216"
+      ],
+      "lp_norm": 0.3354991063280583,
+      "cost": 1440.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.20379472874182378
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_599"
+      ],
+      "lp_norm": 0.4522207662600286,
+      "cost": 1561.0,
+      "reward": 145.0,
+      "prestige": 0.2,
+      "score": 0.2230184686417853
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_283"
+      ],
+      "lp_norm": 0.19963155184651155,
+      "cost": 1308.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.20535302039245865
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_146"
+      ],
+      "lp_norm": 0.7239167497622002,
+      "cost": 1825.0,
+      "reward": 155.0,
+      "prestige": 0.2,
+      "score": 0.22642362447095038
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_432"
+      ],
+      "lp_norm": 0.15808219208194818,
+      "cost": 1264.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.22000288572527896
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_449"
+      ],
+      "lp_norm": 0.3131042951041116,
+      "cost": 1418.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.22905444401692956
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_789"
+      ],
+      "lp_norm": 0.5663377329026789,
+      "cost": 1671.0,
+      "reward": 151.0,
+      "prestige": 0.2,
+      "score": 0.2304155444401693
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_244"
+      ],
+      "lp_norm": 0.40861460633860325,
+      "cost": 1517.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21484224701808388
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_319"
+      ],
+      "lp_norm": 0.10908105034476964,
+      "cost": 1220.0,
+      "reward": 127.0,
+      "prestige": 0.2,
+      "score": 0.20204405540592538
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_227"
+      ],
+      "lp_norm": 0.3340959573228787,
+      "cost": 1440.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21031646787225858
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_461"
+      ],
+      "lp_norm": 0.3024822938921797,
+      "cost": 1407.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.22701038861100423
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_229"
+      ],
+      "lp_norm": 0.35211371834157695,
+      "cost": 1462.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.2078828395536745
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_574"
+      ],
+      "lp_norm": 0.2465201787104924,
+      "cost": 1352.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.21679011158137748
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_728"
+      ],
+      "lp_norm": 0.3993730585124078,
+      "cost": 1506.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21605906117737592
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_751"
+      ],
+      "lp_norm": 0.31984461377939766,
+      "cost": 1429.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21805502116198539
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_159"
+      ],
+      "lp_norm": 0.7554279902369854,
+      "cost": 1858.0,
+      "reward": 157.0,
+      "prestige": 0.2,
+      "score": 0.22929492112350902
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_107"
+      ],
+      "lp_norm": 0.373697483875652,
+      "cost": 1484.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21849268949595999
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_792"
+      ],
+      "lp_norm": 0.7934679655576344,
+      "cost": 1891.0,
+      "reward": 157.0,
+      "prestige": 0.2,
+      "score": 0.22564447864563292
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_805"
+      ],
+      "lp_norm": 0.797267680029796,
+      "cost": 1902.0,
+      "reward": 158.0,
+      "prestige": 0.2,
+      "score": 0.2276885340515583
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_600"
+      ],
+      "lp_norm": 0.25010984226296884,
+      "cost": 1363.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21883416698730285
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_760"
+      ],
+      "lp_norm": 0.5643572950244782,
+      "cost": 1671.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22389380530973454
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_752"
+      ],
+      "lp_norm": 0.3282489153650206,
+      "cost": 1440.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22009907656791075
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_2"
+      ],
+      "lp_norm": 0.40314843159046637,
+      "cost": 1506.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21279819161215854
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_426"
+      ],
+      "lp_norm": 0.22990024880937796,
+      "cost": 1341.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.21800692574066952
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_135"
+      ],
+      "lp_norm": 0.7576097191815911,
+      "cost": 1858.0,
+      "reward": 155.0,
+      "prestige": 0.2,
+      "score": 0.22277318199307428
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_793"
+      ],
+      "lp_norm": 0.809979965700988,
+      "cost": 1913.0,
+      "reward": 159.0,
+      "prestige": 0.2,
+      "score": 0.22973258945748365
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_72"
+      ],
+      "lp_norm": 0.19826860036552868,
+      "cost": 1308.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21187475952289345
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_747"
+      ],
+      "lp_norm": 0.5193707526521331,
+      "cost": 1627.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22223932281646788
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_727"
+      ],
+      "lp_norm": 0.40922835782553285,
+      "cost": 1517.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.2115813774528665
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_787"
+      ],
+      "lp_norm": 0.7904089473978566,
+      "cost": 1891.0,
+      "reward": 158.0,
+      "prestige": 0.2,
+      "score": 0.22890534821085035
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_405"
+      ],
+      "lp_norm": 0.17974935078222104,
+      "cost": 1286.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.21104751827626012
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_221"
+      ],
+      "lp_norm": 0.38256017805432363,
+      "cost": 1484.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.2119709503655252
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_457"
+      ],
+      "lp_norm": 0.31850497776066816,
+      "cost": 1429.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.22457676029242016
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_609"
+      ],
+      "lp_norm": 0.6094968128604232,
+      "cost": 1715.0,
+      "reward": 152.0,
+      "prestige": 0.2,
+      "score": 0.22880915736821855
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_160"
+      ],
+      "lp_norm": 0.7778995465165712,
+      "cost": 1880.0,
+      "reward": 158.0,
+      "prestige": 0.2,
+      "score": 0.23012216237014238
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_583"
+      ],
+      "lp_norm": 0.4510396339427798,
+      "cost": 1561.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.22627933820700272
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_591"
+      ],
+      "lp_norm": 0.5043815224629152,
+      "cost": 1605.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.22793382070026932
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_613"
+      ],
+      "lp_norm": 0.43770129920697487,
+      "cost": 1539.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.22219122739515199
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_567"
+      ],
+      "lp_norm": 0.32712346256340297,
+      "cost": 1429.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22131589072720279
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_143"
+      ],
+      "lp_norm": 0.6873239122551561,
+      "cost": 1792.0,
+      "reward": 155.0,
+      "prestige": 0.2,
+      "score": 0.23007406694882648
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_424"
+      ],
+      "lp_norm": 0.21424110898328927,
+      "cost": 1319.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.22044055405925359
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_638"
+      ],
+      "lp_norm": 0.5464908038201397,
+      "cost": 1649.0,
+      "reward": 150.0,
+      "prestige": 0.2,
+      "score": 0.229588303193536
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_220"
+      ],
+      "lp_norm": 0.34975977642239664,
+      "cost": 1451.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21236052327818392
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_238"
+      ],
+      "lp_norm": 0.33344860690063105,
+      "cost": 1440.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21683820700269335
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_345"
+      ],
+      "lp_norm": 0.1398618188173987,
+      "cost": 1253.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20491535205848405
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_228"
+      ],
+      "lp_norm": 0.33830331623977505,
+      "cost": 1440.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21031646787225858
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_258"
+      ],
+      "lp_norm": 0.22450042397832115,
+      "cost": 1330.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.20291939207387458
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_95"
+      ],
+      "lp_norm": 0.36871366883521856,
+      "cost": 1473.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21970950365525202
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_308"
+      ],
+      "lp_norm": 0.32128131904284596,
+      "cost": 1429.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.2115332820315506
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_223"
+      ],
+      "lp_norm": 0.3566079562396919,
+      "cost": 1462.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21114370911889188
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_210"
+      ],
+      "lp_norm": 0.3163884538087167,
+      "cost": 1418.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.20948922662562525
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_463"
+      ],
+      "lp_norm": 0.4377094883232916,
+      "cost": 1539.0,
+      "reward": 145.0,
+      "prestige": 0.2,
+      "score": 0.22545209696036936
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_116"
+      ],
+      "lp_norm": 0.4884075769703065,
+      "cost": 1594.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22588976529434399
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_304"
+      ],
+      "lp_norm": 0.29140420542731904,
+      "cost": 1396.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21844459407464412
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_604"
+      ],
+      "lp_norm": 0.5434055646489708,
+      "cost": 1649.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22632743362831861
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_302"
+      ],
+      "lp_norm": 0.2856609671776099,
+      "cost": 1396.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21844459407464412
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_331"
+      ],
+      "lp_norm": 0.09232843374514246,
+      "cost": 1209.0,
+      "reward": 128.0,
+      "prestige": 0.2,
+      "score": 0.20652173913043478
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_411"
+      ],
+      "lp_norm": 0.10644307573052526,
+      "cost": 1220.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.21834840323201232
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_301"
+      ],
+      "lp_norm": 0.32471311337589637,
+      "cost": 1429.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21805502116198539
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_207"
+      ],
+      "lp_norm": 0.27602465600879755,
+      "cost": 1385.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.20335706040784918
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_729"
+      ],
+      "lp_norm": 0.37352005829102075,
+      "cost": 1484.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.2152318199307426
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_754"
+      ],
+      "lp_norm": 0.4001786898928995,
+      "cost": 1506.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.2193199307425933
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_772"
+      ],
+      "lp_norm": 0.8070255257875214,
+      "cost": 1913.0,
+      "reward": 159.0,
+      "prestige": 0.2,
+      "score": 0.22973258945748365
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_78"
+      ],
+      "lp_norm": 0.38796152297913755,
+      "cost": 1495.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21075413620623318
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_734"
+      ],
+      "lp_norm": 0.3561441119189614,
+      "cost": 1462.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21766544824932668
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_334"
+      ],
+      "lp_norm": 0.1621743145675738,
+      "cost": 1275.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.20900346287033475
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_420"
+      ],
+      "lp_norm": 0.14695683939268778,
+      "cost": 1253.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21795883031935362
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_259"
+      ],
+      "lp_norm": 0.16845188237311115,
+      "cost": 1275.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20248172373989998
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_255"
+      ],
+      "lp_norm": 0.22490386009699115,
+      "cost": 1330.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.20618026163909198
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_4"
+      ],
+      "lp_norm": 0.35533426200368123,
+      "cost": 1462.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21114370911889188
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_261"
+      ],
+      "lp_norm": 0.2851127652498383,
+      "cost": 1396.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.20214024624855714
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_142"
+      ],
+      "lp_norm": 0.6911671149735372,
+      "cost": 1792.0,
+      "reward": 155.0,
+      "prestige": 0.2,
+      "score": 0.23007406694882648
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_739"
+      ],
+      "lp_norm": 0.3303923719764767,
+      "cost": 1440.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21683820700269335
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_88"
+      ],
+      "lp_norm": 0.3864382093076166,
+      "cost": 1495.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21401500577145058
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_291"
+      ],
+      "lp_norm": 0.24394203884285445,
+      "cost": 1352.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.21679011158137748
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_626"
+      ],
+      "lp_norm": 0.48721987394260824,
+      "cost": 1594.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22588976529434399
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_267"
+      ],
+      "lp_norm": 0.24279391459171393,
+      "cost": 1352.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.21026837245094268
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_276"
+      ],
+      "lp_norm": 0.2785186730784935,
+      "cost": 1385.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.20987879953828398
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_285"
+      ],
+      "lp_norm": 0.35128294061408455,
+      "cost": 1462.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.2078828395536745
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_214"
+      ],
+      "lp_norm": 0.32290992411680797,
+      "cost": 1429.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.2050115429011158
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_348"
+      ],
+      "lp_norm": 0.11600731154699148,
+      "cost": 1220.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20856579453636015
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_310"
+      ],
+      "lp_norm": 0.32514802385964336,
+      "cost": 1429.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21479415159676798
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_422"
+      ],
+      "lp_norm": 0.12376037101767476,
+      "cost": 1231.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.22365332820315506
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_344"
+      ],
+      "lp_norm": 0.15184730810992425,
+      "cost": 1264.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.21022027702962678
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_118"
+      ],
+      "lp_norm": 0.4990773331570052,
+      "cost": 1605.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.22141208156983458
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_271"
+      ],
+      "lp_norm": 0.16495813291521755,
+      "cost": 1275.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20248172373989998
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_327"
+      ],
+      "lp_norm": 0.13149606351059445,
+      "cost": 1242.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20613216621777608
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_744"
+      ],
+      "lp_norm": 0.6223317577061521,
+      "cost": 1726.0,
+      "reward": 150.0,
+      "prestige": 0.2,
+      "score": 0.22107060407849172
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_109"
+      ],
+      "lp_norm": 0.40378035180675087,
+      "cost": 1506.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.2193199307425933
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_624"
+      ],
+      "lp_norm": 0.5550150375444981,
+      "cost": 1660.0,
+      "reward": 150.0,
+      "prestige": 0.2,
+      "score": 0.22837148903424392
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_305"
+      ],
+      "lp_norm": 0.27684164784450294,
+      "cost": 1385.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21640053866871878
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_219"
+      ],
+      "lp_norm": 0.34904401290674836,
+      "cost": 1451.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.20909965371296654
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_418"
+      ],
+      "lp_norm": 0.15857989130939812,
+      "cost": 1264.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21674201616006158
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_343"
+      ],
+      "lp_norm": 0.18314962292731116,
+      "cost": 1286.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.21104751827626012
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_596"
+      ],
+      "lp_norm": 0.559190346814498,
+      "cost": 1660.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22511061946902655
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_294"
+      ],
+      "lp_norm": 0.22624149204428878,
+      "cost": 1330.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.20944113120430938
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_232"
+      ],
+      "lp_norm": 0.3879331933796855,
+      "cost": 1495.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21401500577145058
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_764"
+      ],
+      "lp_norm": 0.34292640236181204,
+      "cost": 1451.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.2221431319738361
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_570"
+      ],
+      "lp_norm": 0.30335283950315545,
+      "cost": 1407.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22374951904578685
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_249"
+      ],
+      "lp_norm": 0.31622408035756844,
+      "cost": 1418.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21275009619084265
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_326"
+      ],
+      "lp_norm": 0.1656533372558177,
+      "cost": 1275.0,
+      "reward": 130.0,
+      "prestige": 0.2,
+      "score": 0.20574259330511738
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_605"
+      ],
+      "lp_norm": 0.6692676222038859,
+      "cost": 1770.0,
+      "reward": 154.0,
+      "prestige": 0.2,
+      "score": 0.22924682570219312
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_585"
+      ],
+      "lp_norm": 0.28147991169611214,
+      "cost": 1385.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.22292227779915352
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_569"
+      ],
+      "lp_norm": 0.4557431040881325,
+      "cost": 1561.0,
+      "reward": 145.0,
+      "prestige": 0.2,
+      "score": 0.2230184686417853
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_579"
+      ],
+      "lp_norm": 0.4745359112641501,
+      "cost": 1583.0,
+      "reward": 145.0,
+      "prestige": 0.2,
+      "score": 0.22058484032320122
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_438"
+      ],
+      "lp_norm": 0.2403717184426703,
+      "cost": 1352.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.22331185071181225
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_233"
+      ],
+      "lp_norm": 0.3868675811811342,
+      "cost": 1495.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21401500577145058
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_252"
+      ],
+      "lp_norm": 0.3619465618437404,
+      "cost": 1473.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.20992689495959985
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_318"
+      ],
+      "lp_norm": 0.13055299816723934,
+      "cost": 1242.0,
+      "reward": 128.0,
+      "prestige": 0.2,
+      "score": 0.20287129665255868
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_117"
+      ],
+      "lp_norm": 0.48760083384583863,
+      "cost": 1594.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22588976529434399
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_458"
+      ],
+      "lp_norm": 0.2824121799236242,
+      "cost": 1385.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22618314736437095
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_788"
+      ],
+      "lp_norm": 0.758883856161982,
+      "cost": 1858.0,
+      "reward": 157.0,
+      "prestige": 0.2,
+      "score": 0.22929492112350902
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_136"
+      ],
+      "lp_norm": 0.7686387894347126,
+      "cost": 1869.0,
+      "reward": 156.0,
+      "prestige": 0.2,
+      "score": 0.22481723739899961
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_431"
+      ],
+      "lp_norm": 0.19288542272591497,
+      "cost": 1297.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.21961331281262025
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_250"
+      ],
+      "lp_norm": 0.328052245640766,
+      "cost": 1440.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21031646787225858
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_132"
+      ],
+      "lp_norm": 0.5370623672898673,
+      "cost": 1638.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22102250865717585
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_564"
+      ],
+      "lp_norm": 0.34797706483467067,
+      "cost": 1451.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21562139284340132
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_73"
+      ],
+      "lp_norm": 0.3341364058090981,
+      "cost": 1440.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21031646787225858
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_99"
+      ],
+      "lp_norm": 0.40164941577811364,
+      "cost": 1506.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21605906117737592
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_209"
+      ],
+      "lp_norm": 0.32522307637593995,
+      "cost": 1429.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.2082724124663332
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_341"
+      ],
+      "lp_norm": 0.0897933864638271,
+      "cost": 1209.0,
+      "reward": 130.0,
+      "prestige": 0.2,
+      "score": 0.21304347826086958
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_577"
+      ],
+      "lp_norm": 0.3342477824807189,
+      "cost": 1440.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22009907656791075
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_444"
+      ],
+      "lp_norm": 0.32024777124708736,
+      "cost": 1429.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22131589072720279
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_242"
+      ],
+      "lp_norm": 0.374066787959376,
+      "cost": 1484.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.2119709503655252
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_338"
+      ],
+      "lp_norm": 0.15487761170464054,
+      "cost": 1264.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.21022027702962678
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_615"
+      ],
+      "lp_norm": 0.26440426670159023,
+      "cost": 1374.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.22413909195844556
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_130"
+      ],
+      "lp_norm": 0.5199467769114379,
+      "cost": 1627.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.22550019238168525
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_641"
+      ],
+      "lp_norm": 0.45160891426720573,
+      "cost": 1561.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.22627933820700272
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_761"
+      ],
+      "lp_norm": 0.5236948131336104,
+      "cost": 1627.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22223932281646788
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_594"
+      ],
+      "lp_norm": 0.6240280257262968,
+      "cost": 1726.0,
+      "reward": 153.0,
+      "prestige": 0.2,
+      "score": 0.2308532127741439
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_295"
+      ],
+      "lp_norm": 0.2232606421225098,
+      "cost": 1330.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.20618026163909198
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_321"
+      ],
+      "lp_norm": 0.1422869649345377,
+      "cost": 1253.0,
+      "reward": 128.0,
+      "prestige": 0.2,
+      "score": 0.20165448249326665
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_264"
+      ],
+      "lp_norm": 0.24131904885483416,
+      "cost": 1352.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.21026837245094268
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_803"
+      ],
+      "lp_norm": 0.7595425504613773,
+      "cost": 1858.0,
+      "reward": 157.0,
+      "prestige": 0.2,
+      "score": 0.22929492112350902
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_590"
+      ],
+      "lp_norm": 0.5042083380725015,
+      "cost": 1605.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.22141208156983458
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_71"
+      ],
+      "lp_norm": 0.21696127463637654,
+      "cost": 1330.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.21270200076952675
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_573"
+      ],
+      "lp_norm": 0.24976197227411728,
+      "cost": 1352.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.22005098114659488
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_640"
+      ],
+      "lp_norm": 0.4737492197083658,
+      "cost": 1583.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22710657945363602
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_612"
+      ],
+      "lp_norm": 0.4871066954163222,
+      "cost": 1594.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.2226288957291266
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_346"
+      ],
+      "lp_norm": 0.13743509103685086,
+      "cost": 1242.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20613216621777608
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_317"
+      ],
+      "lp_norm": 0.1957591375891653,
+      "cost": 1308.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.20861388995767605
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_414"
+      ],
+      "lp_norm": 0.1965140791267902,
+      "cost": 1308.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21187475952289345
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_439"
+      ],
+      "lp_norm": 0.23249080391891852,
+      "cost": 1341.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.2245286648711043
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_347"
+      ],
+      "lp_norm": 0.12551086060226904,
+      "cost": 1231.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20734898037706812
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_332"
+      ],
+      "lp_norm": 0.08571406716540311,
+      "cost": 1209.0,
+      "reward": 127.0,
+      "prestige": 0.2,
+      "score": 0.2032608695652174
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_245"
+      ],
+      "lp_norm": 0.42325496733471074,
+      "cost": 1528.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.21688630242400922
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_162"
+      ],
+      "lp_norm": 0.8033807157722839,
+      "cost": 1902.0,
+      "reward": 159.0,
+      "prestige": 0.2,
+      "score": 0.23094940361677568
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_70"
+      ],
+      "lp_norm": 0.2506765077040274,
+      "cost": 1363.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.21557329742208545
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_774"
+      ],
+      "lp_norm": 0.5669021676384323,
+      "cost": 1671.0,
+      "reward": 150.0,
+      "prestige": 0.2,
+      "score": 0.22715467487495192
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_248"
+      ],
+      "lp_norm": 0.32851894053121944,
+      "cost": 1440.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21031646787225858
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_277"
+      ],
+      "lp_norm": 0.2742524404709105,
+      "cost": 1385.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.21313966910350135
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_582"
+      ],
+      "lp_norm": 0.4881816698394802,
+      "cost": 1594.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22588976529434399
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_778"
+      ],
+      "lp_norm": 0.5382248539815586,
+      "cost": 1638.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22754424778761065
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_628"
+      ],
+      "lp_norm": 0.4148318706849311,
+      "cost": 1517.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.22136398614851868
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_222"
+      ],
+      "lp_norm": 0.37252406729579013,
+      "cost": 1484.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.2119709503655252
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_755"
+      ],
+      "lp_norm": 0.619528995481266,
+      "cost": 1726.0,
+      "reward": 150.0,
+      "prestige": 0.2,
+      "score": 0.22107060407849172
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_410"
+      ],
+      "lp_norm": 0.11027396925859721,
+      "cost": 1220.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.21834840323201232
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_759"
+      ],
+      "lp_norm": 0.5848602526081051,
+      "cost": 1693.0,
+      "reward": 150.0,
+      "prestige": 0.2,
+      "score": 0.22472104655636782
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_108"
+      ],
+      "lp_norm": 0.3880585154114698,
+      "cost": 1495.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.22053674490188532
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_104"
+      ],
+      "lp_norm": 0.4568817219276995,
+      "cost": 1561.0,
+      "reward": 145.0,
+      "prestige": 0.2,
+      "score": 0.2230184686417853
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_350"
+      ],
+      "lp_norm": 0.0732662139372372,
+      "cost": 1209.0,
+      "reward": 130.0,
+      "prestige": 0.2,
+      "score": 0.21304347826086958
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_312"
+      ],
+      "lp_norm": 0.26806714073112403,
+      "cost": 1374.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.2176173528280108
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_257"
+      ],
+      "lp_norm": 0.24634909243789116,
+      "cost": 1352.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.2037466333205079
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_265"
+      ],
+      "lp_norm": 0.22387770804994908,
+      "cost": 1330.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.20944113120430938
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_465"
+      ],
+      "lp_norm": 0.4189909987086243,
+      "cost": 1528.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.22992978068487882
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_606"
+      ],
+      "lp_norm": 0.6673285303793828,
+      "cost": 1770.0,
+      "reward": 154.0,
+      "prestige": 0.2,
+      "score": 0.22924682570219312
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_476"
+      ],
+      "lp_norm": 0.45839860006944666,
+      "cost": 1561.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.2295402077722201
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_158"
+      ],
+      "lp_norm": 0.7520186695052662,
+      "cost": 1858.0,
+      "reward": 157.0,
+      "prestige": 0.2,
+      "score": 0.22929492112350902
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_149"
+      ],
+      "lp_norm": 0.7909718821425604,
+      "cost": 1891.0,
+      "reward": 158.0,
+      "prestige": 0.2,
+      "score": 0.22890534821085035
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_340"
+      ],
+      "lp_norm": 0.11906364959456778,
+      "cost": 1231.0,
+      "reward": 130.0,
+      "prestige": 0.2,
+      "score": 0.21060984994228552
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_617"
+      ],
+      "lp_norm": 0.7050050398258314,
+      "cost": 1803.0,
+      "reward": 155.0,
+      "prestige": 0.2,
+      "score": 0.22885725278953445
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_578"
+      ],
+      "lp_norm": 0.32515762434651907,
+      "cost": 1429.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.22457676029242016
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_419"
+      ],
+      "lp_norm": 0.16107356508080795,
+      "cost": 1264.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21674201616006158
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_471"
+      ],
+      "lp_norm": 0.32918418716983633,
+      "cost": 1440.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.22988168526356292
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_92"
+      ],
+      "lp_norm": 0.4793742509557305,
+      "cost": 1583.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.22384570988841865
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_740"
+      ],
+      "lp_norm": 0.411335210375328,
+      "cost": 1517.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21484224701808388
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_446"
+      ],
+      "lp_norm": 0.2571352747161617,
+      "cost": 1363.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.22209503655252022
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_652"
+      ],
+      "lp_norm": 0.5123763315330345,
+      "cost": 1616.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22997787610619472
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_441"
+      ],
+      "lp_norm": 0.21610098455269997,
+      "cost": 1319.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.22370142362447099
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_246"
+      ],
+      "lp_norm": 0.40226502382020174,
+      "cost": 1506.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21605906117737592
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_741"
+      ],
+      "lp_norm": 0.39710443607119383,
+      "cost": 1506.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21605906117737592
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_323"
+      ],
+      "lp_norm": 0.10316302752322032,
+      "cost": 1209.0,
+      "reward": 127.0,
+      "prestige": 0.2,
+      "score": 0.2032608695652174
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_236"
+      ],
+      "lp_norm": 0.40251253719859,
+      "cost": 1506.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.2193199307425933
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_794"
+      ],
+      "lp_norm": 0.8281813337456949,
+      "cost": 1935.0,
+      "reward": 159.0,
+      "prestige": 0.2,
+      "score": 0.22729896113889958
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_403"
+      ],
+      "lp_norm": 0.18295625458771364,
+      "cost": 1286.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21430838784147752
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_98"
+      ],
+      "lp_norm": 0.391730609484175,
+      "cost": 1495.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21727587533666795
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_86"
+      ],
+      "lp_norm": 0.36708509339187534,
+      "cost": 1473.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21644863409003465
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_593"
+      ],
+      "lp_norm": 0.6379769437137452,
+      "cost": 1737.0,
+      "reward": 152.0,
+      "prestige": 0.2,
+      "score": 0.22637552904963448
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_147"
+      ],
+      "lp_norm": 0.7656006632773501,
+      "cost": 1869.0,
+      "reward": 156.0,
+      "prestige": 0.2,
+      "score": 0.22481723739899961
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_133"
+      ],
+      "lp_norm": 0.5555695684925595,
+      "cost": 1660.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.22184974990380912
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_328"
+      ],
+      "lp_norm": 0.11608432786454675,
+      "cost": 1220.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20856579453636015
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_80"
+      ],
+      "lp_norm": 0.3638141346395533,
+      "cost": 1473.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.20666602539438247
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_735"
+      ],
+      "lp_norm": 0.33145938834388294,
+      "cost": 1440.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.22009907656791075
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_94"
+      ],
+      "lp_norm": 0.34149053914045757,
+      "cost": 1451.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21888226240861872
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_428"
+      ],
+      "lp_norm": 0.17286106318575956,
+      "cost": 1286.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.2175692574066949
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_588"
+      ],
+      "lp_norm": 0.22338816004825007,
+      "cost": 1330.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.21596287033474415
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_251"
+      ],
+      "lp_norm": 0.3391015285384198,
+      "cost": 1451.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21236052327818392
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_240"
+      ],
+      "lp_norm": 0.39046036619895463,
+      "cost": 1495.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.20749326664101578
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_475"
+      ],
+      "lp_norm": 0.3272071044896757,
+      "cost": 1429.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.23109849942285496
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_292"
+      ],
+      "lp_norm": 0.22885990580196963,
+      "cost": 1341.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.21148518661023472
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_456"
+      ],
+      "lp_norm": 0.36432292841680824,
+      "cost": 1473.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.22623124278568682
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_448"
+      ],
+      "lp_norm": 0.3157710949041317,
+      "cost": 1418.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.2257935744517122
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_335"
+      ],
+      "lp_norm": 0.1674738034480197,
+      "cost": 1275.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.20900346287033475
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_309"
+      ],
+      "lp_norm": 0.3378625218603894,
+      "cost": 1440.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21357733743747595
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_268"
+      ],
+      "lp_norm": 0.26147763749911235,
+      "cost": 1374.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.20783474413235858
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_627"
+      ],
+      "lp_norm": 0.4160254615666788,
+      "cost": 1517.0,
+      "reward": 145.0,
+      "prestige": 0.2,
+      "score": 0.22788572527895343
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_746"
+      ],
+      "lp_norm": 0.5534238163758871,
+      "cost": 1660.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.22184974990380912
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_115"
+      ],
+      "lp_norm": 0.4845933303326483,
+      "cost": 1594.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22588976529434399
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_404"
+      ],
+      "lp_norm": 0.1931487825950996,
+      "cost": 1297.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21309157368218548
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_443"
+      ],
+      "lp_norm": 0.34476437097658574,
+      "cost": 1451.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.2221431319738361
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_777"
+      ],
+      "lp_norm": 0.5166368596712425,
+      "cost": 1616.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.2267170065409773
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_473"
+      ],
+      "lp_norm": 0.3405206297242418,
+      "cost": 1451.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.2286648711042709
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_83"
+      ],
+      "lp_norm": 0.40234780068981146,
+      "cost": 1506.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.20953732204694114
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_459"
+      ],
+      "lp_norm": 0.2947914248363265,
+      "cost": 1407.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.22701038861100423
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_337"
+      ],
+      "lp_norm": 0.1547994943034206,
+      "cost": 1264.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.21022027702962678
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_586"
+      ],
+      "lp_norm": 0.25495234400820693,
+      "cost": 1363.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21883416698730285
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_122"
+      ],
+      "lp_norm": 0.3936560096903263,
+      "cost": 1495.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.22379761446710275
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_451"
+      ],
+      "lp_norm": 0.4079139125648017,
+      "cost": 1517.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.22462485571373605
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_421"
+      ],
+      "lp_norm": 0.11477527686331283,
+      "cost": 1220.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.22160927279722972
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_144"
+      ],
+      "lp_norm": 0.6938597408027749,
+      "cost": 1792.0,
+      "reward": 154.0,
+      "prestige": 0.2,
+      "score": 0.22681319738360906
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_333"
+      ],
+      "lp_norm": 0.17663261199878924,
+      "cost": 1286.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.21104751827626012
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_336"
+      ],
+      "lp_norm": 0.1490013626452408,
+      "cost": 1253.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.21143709118891882
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_293"
+      ],
+      "lp_norm": 0.21528794004502783,
+      "cost": 1319.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.21391881492881878
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_213"
+      ],
+      "lp_norm": 0.30004848530299233,
+      "cost": 1407.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.20418430165448248
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_484"
+      ],
+      "lp_norm": 0.3731824771512163,
+      "cost": 1484.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.22827529819161216
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_776"
+      ],
+      "lp_norm": 0.5182374383679232,
+      "cost": 1627.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.22550019238168525
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_324"
+      ],
+      "lp_norm": 0.09223261804280639,
+      "cost": 1209.0,
+      "reward": 127.0,
+      "prestige": 0.2,
+      "score": 0.2032608695652174
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_469"
+      ],
+      "lp_norm": 0.37294352531367525,
+      "cost": 1484.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.22827529819161216
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_584"
+      ],
+      "lp_norm": 0.4464461778402815,
+      "cost": 1550.0,
+      "reward": 145.0,
+      "prestige": 0.2,
+      "score": 0.22423528280107732
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_625"
+      ],
+      "lp_norm": 0.518307656138661,
+      "cost": 1627.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.22550019238168525
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_260"
+      ],
+      "lp_norm": 0.29455846157901866,
+      "cost": 1407.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.2009234320892651
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_406"
+      ],
+      "lp_norm": 0.18783829801480412,
+      "cost": 1297.0,
+      "reward": 132.0,
+      "prestige": 0.2,
+      "score": 0.20983070411696808
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_614"
+      ],
+      "lp_norm": 0.4066318087642334,
+      "cost": 1517.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.22136398614851868
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_595"
+      ],
+      "lp_norm": 0.5964863974504497,
+      "cost": 1704.0,
+      "reward": 152.0,
+      "prestige": 0.2,
+      "score": 0.2300259715275106
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_129"
+      ],
+      "lp_norm": 0.5296575836476614,
+      "cost": 1638.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22754424778761065
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_749"
+      ],
+      "lp_norm": 0.31878475906060744,
+      "cost": 1429.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21805502116198539
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_330"
+      ],
+      "lp_norm": 0.10057669545215209,
+      "cost": 1209.0,
+      "reward": 127.0,
+      "prestige": 0.2,
+      "score": 0.2032608695652174
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_580"
+      ],
+      "lp_norm": 0.50335744613787,
+      "cost": 1605.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.22141208156983458
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_224"
+      ],
+      "lp_norm": 0.325386355683025,
+      "cost": 1429.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.2115332820315506
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_415"
+      ],
+      "lp_norm": 0.19513563141624266,
+      "cost": 1308.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.21513562908811082
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_74"
+      ],
+      "lp_norm": 0.388534288749122,
+      "cost": 1495.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.2042323970757984
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_91"
+      ],
+      "lp_norm": 0.3968435693819865,
+      "cost": 1506.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21605906117737592
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_731"
+      ],
+      "lp_norm": 0.4228494253019317,
+      "cost": 1528.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.22014717198922665
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_282"
+      ],
+      "lp_norm": 0.25532953620915994,
+      "cost": 1363.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.20579068872643327
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_601"
+      ],
+      "lp_norm": 0.22340943457297818,
+      "cost": 1330.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.21922373989996155
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_262"
+      ],
+      "lp_norm": 0.27351410602178317,
+      "cost": 1385.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.20661792997306655
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_123"
+      ],
+      "lp_norm": 0.5650373574296133,
+      "cost": 1671.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.22063293574451712
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_278"
+      ],
+      "lp_norm": 0.2534770842500521,
+      "cost": 1363.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.21231242785686805
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_409"
+      ],
+      "lp_norm": 0.1322583014056577,
+      "cost": 1242.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.21265390534821085
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_234"
+      ],
+      "lp_norm": 0.41697914922458496,
+      "cost": 1528.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.21688630242400922
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_597"
+      ],
+      "lp_norm": 0.5503650387199486,
+      "cost": 1660.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22511061946902655
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_423"
+      ],
+      "lp_norm": 0.28868577856721966,
+      "cost": 1396.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.2217054636398615
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_81"
+      ],
+      "lp_norm": 0.3725247809005135,
+      "cost": 1484.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.2087100808003078
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_241"
+      ],
+      "lp_norm": 0.3921636271465203,
+      "cost": 1495.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.20749326664101578
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_90"
+      ],
+      "lp_norm": 0.3992696376466615,
+      "cost": 1506.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21605906117737592
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_745"
+      ],
+      "lp_norm": 0.593857935861953,
+      "cost": 1693.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22146017699115045
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_592"
+      ],
+      "lp_norm": 0.5019419250608563,
+      "cost": 1605.0,
+      "reward": 147.0,
+      "prestige": 0.2,
+      "score": 0.22467295113505195
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_566"
+      ],
+      "lp_norm": 0.3423507252412503,
+      "cost": 1451.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21888226240861872
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_329"
+      ],
+      "lp_norm": 0.11512622929894112,
+      "cost": 1220.0,
+      "reward": 129.0,
+      "prestige": 0.2,
+      "score": 0.20856579453636015
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_427"
+      ],
+      "lp_norm": 0.21081549342744446,
+      "cost": 1319.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.22044055405925359
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_736"
+      ],
+      "lp_norm": 0.32797507318275054,
+      "cost": 1440.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21357733743747595
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_762"
+      ],
+      "lp_norm": 0.4931759591923143,
+      "cost": 1594.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.2226288957291266
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_226"
+      ],
+      "lp_norm": 0.3165706999443406,
+      "cost": 1418.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.20948922662562525
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_208"
+      ],
+      "lp_norm": 0.28496169347667866,
+      "cost": 1396.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.20214024624855714
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_442"
+      ],
+      "lp_norm": 0.19980297670983638,
+      "cost": 1308.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.22165736821854562
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_85"
+      ],
+      "lp_norm": 0.35735439532899577,
+      "cost": 1462.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.22092631781454405
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_753"
+      ],
+      "lp_norm": 0.40542189174200327,
+      "cost": 1506.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.2193199307425933
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_298"
+      ],
+      "lp_norm": 0.34506950201448316,
+      "cost": 1451.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21562139284340132
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_470"
+      ],
+      "lp_norm": 0.3436559804656435,
+      "cost": 1451.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.2286648711042709
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_97"
+      ],
+      "lp_norm": 0.3883270651763752,
+      "cost": 1495.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21401500577145058
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_211"
+      ],
+      "lp_norm": 0.30085566532021335,
+      "cost": 1407.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.20744517121969988
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_748"
+      ],
+      "lp_norm": 0.3351729801560672,
+      "cost": 1440.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.22335994613312812
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_454"
+      ],
+      "lp_norm": 0.39390395447803583,
+      "cost": 1495.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.22705848403232012
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_110"
+      ],
+      "lp_norm": 0.4165785034827008,
+      "cost": 1517.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.21810311658330125
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_218"
+      ],
+      "lp_norm": 0.3498169768605121,
+      "cost": 1451.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.20583878414774914
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_75"
+      ],
+      "lp_norm": 0.3795894467054911,
+      "cost": 1484.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.20544921123509044
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_316"
+      ],
+      "lp_norm": 0.2003035509214048,
+      "cost": 1308.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21187475952289345
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_315"
+      ],
+      "lp_norm": 0.22433831636269488,
+      "cost": 1330.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.21270200076952675
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_732"
+      ],
+      "lp_norm": 0.42613117786875365,
+      "cost": 1528.0,
+      "reward": 144.0,
+      "prestige": 0.2,
+      "score": 0.22340804155444402
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_287"
+      ],
+      "lp_norm": 0.30614022252084017,
+      "cost": 1418.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.20948922662562525
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_433"
+      ],
+      "lp_norm": 0.1183153985477427,
+      "cost": 1231.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.2203924586379377
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_3"
+      ],
+      "lp_norm": 0.3334980992808523,
+      "cost": 1440.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21683820700269335
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_320"
+      ],
+      "lp_norm": 0.12614497934504343,
+      "cost": 1231.0,
+      "reward": 127.0,
+      "prestige": 0.2,
+      "score": 0.20082724124663334
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_576"
+      ],
+      "lp_norm": 0.20150084317183578,
+      "cost": 1308.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21187475952289345
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_288"
+      ],
+      "lp_norm": 0.3155511292892884,
+      "cost": 1418.0,
+      "reward": 137.0,
+      "prestige": 0.2,
+      "score": 0.21275009619084265
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_474"
+      ],
+      "lp_norm": 0.3348209311216487,
+      "cost": 1440.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.22988168526356292
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_243"
+      ],
+      "lp_norm": 0.38005231135250833,
+      "cost": 1484.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.2152318199307426
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_775"
+      ],
+      "lp_norm": 0.538364017972587,
+      "cost": 1638.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22754424778761065
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_765"
+      ],
+      "lp_norm": 0.3562073205048449,
+      "cost": 1462.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.22418718737976143
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_738"
+      ],
+      "lp_norm": 0.34865463872922287,
+      "cost": 1451.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21562139284340132
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_589"
+      ],
+      "lp_norm": 0.22310718337058735,
+      "cost": 1330.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.21596287033474415
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_654"
+      ],
+      "lp_norm": 0.4876844648342128,
+      "cost": 1594.0,
+      "reward": 148.0,
+      "prestige": 0.2,
+      "score": 0.22915063485956136
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_342"
+      ],
+      "lp_norm": 0.07255459990613851,
+      "cost": 1209.0,
+      "reward": 131.0,
+      "prestige": 0.2,
+      "score": 0.21630434782608696
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_263"
+      ],
+      "lp_norm": 0.24808365732352483,
+      "cost": 1352.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.2070075028857253
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_436"
+      ],
+      "lp_norm": 0.30394467988106455,
+      "cost": 1407.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.2302712581762216
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_266"
+      ],
+      "lp_norm": 0.2325949146637924,
+      "cost": 1341.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.20822431704501734
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_314"
+      ],
+      "lp_norm": 0.26213106509281625,
+      "cost": 1374.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.21435648326279338
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_402"
+      ],
+      "lp_norm": 0.20042857704421,
+      "cost": 1308.0,
+      "reward": 133.0,
+      "prestige": 0.2,
+      "score": 0.21187475952289345
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_296"
+      ],
+      "lp_norm": 0.36280532699943946,
+      "cost": 1473.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21318776452481725
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_111"
+      ],
+      "lp_norm": 0.41173877296863504,
+      "cost": 1517.0,
+      "reward": 142.0,
+      "prestige": 0.2,
+      "score": 0.21810311658330125
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_445"
+      ],
+      "lp_norm": 0.1335139066775377,
+      "cost": 1242.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.22243651404386303
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_212"
+      ],
+      "lp_norm": 0.29874238579542384,
+      "cost": 1407.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.20418430165448248
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_279"
+      ],
+      "lp_norm": 0.22729848623125937,
+      "cost": 1330.0,
+      "reward": 134.0,
+      "prestige": 0.2,
+      "score": 0.21270200076952675
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_145"
+      ],
+      "lp_norm": 0.71399410218949,
+      "cost": 1814.0,
+      "reward": 154.0,
+      "prestige": 0.2,
+      "score": 0.224379569065025
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_128"
+      ],
+      "lp_norm": 0.526142443744093,
+      "cost": 1627.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.22876106194690268
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_467"
+      ],
+      "lp_norm": 0.4125751103760838,
+      "cost": 1517.0,
+      "reward": 146.0,
+      "prestige": 0.2,
+      "score": 0.23114659484417086
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_742"
+      ],
+      "lp_norm": 0.3850776109371393,
+      "cost": 1495.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21727587533666795
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_462"
+      ],
+      "lp_norm": 0.32062822055275586,
+      "cost": 1429.0,
+      "reward": 143.0,
+      "prestige": 0.2,
+      "score": 0.23109849942285496
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_114"
+      ],
+      "lp_norm": 0.5014271630335837,
+      "cost": 1605.0,
+      "reward": 149.0,
+      "prestige": 0.2,
+      "score": 0.23119469026548675
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_247"
+      ],
+      "lp_norm": 0.36226148971442446,
+      "cost": 1473.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.21644863409003465
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_602"
+      ],
+      "lp_norm": 0.21051295466207437,
+      "cost": 1319.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.22044055405925359
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_429"
+      ],
+      "lp_norm": 0.20746781530392072,
+      "cost": 1319.0,
+      "reward": 136.0,
+      "prestige": 0.2,
+      "score": 0.22044055405925359
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_791"
+      ],
+      "lp_norm": 0.7316100289852366,
+      "cost": 1836.0,
+      "reward": 156.0,
+      "prestige": 0.2,
+      "score": 0.22846767987687572
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_307"
+      ],
+      "lp_norm": 0.35629422749854067,
+      "cost": 1462.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21114370911889188
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_231"
+      ],
+      "lp_norm": 0.41129928654427717,
+      "cost": 1517.0,
+      "reward": 140.0,
+      "prestige": 0.2,
+      "score": 0.2115813774528665
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_311"
+      ],
+      "lp_norm": 0.30381095983515227,
+      "cost": 1407.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21722777991535205
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_76"
+      ],
+      "lp_norm": 0.34860583674061885,
+      "cost": 1451.0,
+      "reward": 139.0,
+      "prestige": 0.2,
+      "score": 0.21562139284340132
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_237"
+      ],
+      "lp_norm": 0.377979689191139,
+      "cost": 1484.0,
+      "reward": 141.0,
+      "prestige": 0.2,
+      "score": 0.21849268949595999
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_413"
+      ],
+      "lp_norm": 0.20347599393723806,
+      "cost": 1308.0,
+      "reward": 135.0,
+      "prestige": 0.2,
+      "score": 0.21839649865332822
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_322"
+      ],
+      "lp_norm": 0.11430346508395722,
+      "cost": 1220.0,
+      "reward": 128.0,
+      "prestige": 0.2,
+      "score": 0.20530492497114275
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_239"
+      ],
+      "lp_norm": 0.32431101432994347,
+      "cost": 1429.0,
+      "reward": 138.0,
+      "prestige": 0.2,
+      "score": 0.21479415159676798
+    }
+  ],
+  "active_agent": "IND"
+}

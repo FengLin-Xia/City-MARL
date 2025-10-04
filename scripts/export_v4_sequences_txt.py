@@ -42,11 +42,18 @@ def load_config(path: str) -> Dict:
         return {}
 
 
-def load_slots_xy(slotpoints_path: str) -> Dict[str, Tuple[float, float]]:
-    """逐行读取 slotpoints.txt，sid=s_{递增}，坐标取 round 后的像素（与 v4 脚本一致）。"""
+def load_slots_info(slotpoints_path: str, map_size: List[int] = [200, 200]) -> Dict[str, Tuple[float, float, float]]:
+    """使用与主程序相同的加载逻辑读取槽位文件。
+    - 返回 sid → (x, y, angle_deg)
+    - 应用相同的过滤条件：画布范围判断和去重
+    """
     if not os.path.exists(slotpoints_path):
         raise FileNotFoundError(f'slotpoints not found: {slotpoints_path}')
-    sid2xy: Dict[str, Tuple[float, float]] = {}
+    
+    W, H = int(map_size[0]), int(map_size[1])
+    sid2info: Dict[str, Tuple[float, float, float]] = {}
+    seen: set = set()
+    
     with open(slotpoints_path, 'r', encoding='utf-8') as f:
         for line in f:
             s = line.strip()
@@ -55,19 +62,29 @@ def load_slots_xy(slotpoints_path: str) -> Dict[str, Tuple[float, float]]:
             nums = re.findall(r"-?\d+(?:\.\d+)?", s)
             if len(nums) < 2:
                 continue
-            xf = float(nums[0]); yf = float(nums[1])
-            xi = round(xf); yi = round(yf)
-            sid = f's_{len(sid2xy)}'
-            sid2xy[sid] = (xi, yi)
-    return sid2xy
+            try:
+                xf = float(nums[0]); yf = float(nums[1])
+            except Exception:
+                continue
+            # 画布范围判断（保留浮点）
+            if xf < 0.0 or yf < 0.0 or xf >= float(W) or yf >= float(H):
+                continue
+            key = (xf, yf)
+            if key in seen:
+                continue
+            seen.add(key)
+            ang = float(nums[2]) if len(nums) >= 3 else 0.0
+            sid = f's_{len(sid2info)}'
+            sid2info[sid] = (xf, yf, ang)
+    return sid2info
 
 
-def fmt_entry(agent: str, size: str, x: float, y: float) -> str:
+def fmt_entry(agent: str, size: str, x: float, y: float, angle_deg: float) -> str:
     code = AGENT_SIZE_CODE.get((agent, size), 0)
-    return f"{code}({x:.3f}, {y:.3f}, 0)"
+    return f"{code}({x:.3f}, {y:.3f}, 0){angle_deg:.2f}"
 
 
-def export_sequence_txt(seq: Dict, sid2xy: Dict[str, Tuple[float, float]]) -> str:
+def export_sequence_txt(seq: Dict, sid2info: Dict[str, Tuple[float, float, float]]) -> str:
     parts: List[str] = []
     for a in seq.get('actions', []) or []:
         agent = str(a.get('agent', 'EDU')).upper()
@@ -77,17 +94,17 @@ def export_sequence_txt(seq: Dict, sid2xy: Dict[str, Tuple[float, float]]) -> st
             # 特殊：用 {} 包住多个点
             sub = []
             for sid in fp:
-                xy = sid2xy.get(sid)
-                if xy is None:
+                info = sid2info.get(sid)
+                if info is None:
                     continue
-                sub.append(fmt_entry(agent, size, xy[0], xy[1]))
+                sub.append(fmt_entry(agent, size, info[0], info[1], info[2]))
             parts.append('{'+', '.join(sub)+'}') if sub else None
         else:
             # 单点动作（EDU/IND S/M/L 都允许单点表示；IND M/L 会落在上面的分支）
             sid = fp[0] if fp else None
-            xy = sid2xy.get(sid) if sid else None
-            if xy is not None:
-                parts.append(fmt_entry(agent, size, xy[0], xy[1]))
+            info = sid2info.get(sid) if sid else None
+            if info is not None:
+                parts.append(fmt_entry(agent, size, info[0], info[1], info[2]))
     return ', '.join(parts)
 
 
@@ -102,7 +119,8 @@ def main():
 
     cfg = load_config(args.config)
     slots_path = cfg.get('growth_v4_0', {}).get('slots', {}).get('path', 'slotpoints.txt')
-    sid2xy = load_slots_xy(slots_path)
+    map_size = cfg.get('city', {}).get('map_size', [200, 200])
+    sid2info = load_slots_info(slots_path, map_size)
 
     v4_debug = os.path.join(args.output_dir, 'v4_debug')
     txt_dir = os.path.join(args.output_dir, 'v4_txt')
@@ -133,7 +151,7 @@ def main():
                 data = json.load(open(pool_path, 'r', encoding='utf-8'))
                 seqs = data.get('sequences', [])
                 for i, seq in enumerate(seqs):
-                    line = export_sequence_txt(seq, sid2xy)
+                    line = export_sequence_txt(seq, sid2info)
                     out = os.path.join(txt_dir, f'sequences_month_{m:02d}_seq_{i:02d}.txt')
                     with open(out, 'w', encoding='utf-8') as f:
                         f.write(line)
@@ -143,7 +161,7 @@ def main():
             if os.path.exists(chosen_path):
                 data = json.load(open(chosen_path, 'r', encoding='utf-8'))
                 seq = { 'actions': data.get('actions', []) }
-                line = export_sequence_txt(seq, sid2xy)
+                line = export_sequence_txt(seq, sid2info)
                 out = os.path.join(txt_dir, f'chosen_month_{m:02d}.txt')
                 with open(out, 'w', encoding='utf-8') as f:
                     f.write(line)

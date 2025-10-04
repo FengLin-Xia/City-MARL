@@ -10,6 +10,7 @@ import os
 import json
 import math
 from typing import Dict, List, Tuple, Set
+from collections import deque
 
 from logic.enhanced_sdf_system import GaussianLandPriceSystem
 from logic.v4_enumeration import V4Planner, SlotNode, _auto_fill_neighbors_4n
@@ -56,7 +57,7 @@ def load_slots_from_points_file(points_file: str, map_size: List[int]) -> Dict[s
                 continue
             seen.add(key)
             sid = f"s_{len(nodes)}"
-            nodes[sid] = SlotNode(slot_id=sid, x=int(round(xf)), y=int(round(yf)))
+            nodes[sid] = SlotNode(slot_id=sid, x=int(round(xf)), y=int(round(yf)), fx=xf, fy=yf)
     # 自动补邻接（基于像素坐标的 4-neighbor）
     _auto_fill_neighbors_4n(nodes)
     return nodes
@@ -124,31 +125,174 @@ def compute_R(month: int, hubs_cfg: Dict, use_pixel: bool = True) -> Tuple[float
 
 
 def ring_candidates(nodes: Dict[str, SlotNode], hubs: List[List[float]], month: int, hubs_cfg: Dict, tol: float = 1.0) -> Set[str]:
+    """返回当月候选槽位集合。
+
+    支持两种模式（通过 hubs_cfg['candidate_mode'] 配置）：
+    - 'ring'：严格环带 (R_prev, R_curr]，若为空回退至 <= R_curr
+    - 'cumulative'（默认）：累计模式，直接使用 <= R_curr
+    """
+    mode = str(hubs_cfg.get('candidate_mode', 'cumulative')).lower()
     R_prev, R_curr = compute_R(month, hubs_cfg, True)
     cand: Set[str] = set()
-    for sid, n in nodes.items():
-        d = min_dist_to_hubs(n.x, n.y, hubs)
-        if d <= (R_curr + tol) and d > (R_prev - tol):
-            cand.add(sid)
-    # 回退：若严格环带为空，允许 <= R_curr
-    if not cand:
+    if mode == 'ring':
         for sid, n in nodes.items():
-            d = min_dist_to_hubs(n.x, n.y, hubs)
-            if d <= R_curr:
+            # 使用浮点坐标 fx, fy 而不是整数坐标 x, y
+            x = float(getattr(n, 'fx', n.x))
+            y = float(getattr(n, 'fy', n.y))
+            d = min_dist_to_hubs(x, y, hubs)
+            if d <= (R_curr + tol) and d > (R_prev - tol):
                 cand.add(sid)
+        # 回退：若严格环带为空，允许 <= R_curr
+        if not cand:
+            for sid, n in nodes.items():
+                x = float(getattr(n, 'fx', n.x))
+                y = float(getattr(n, 'fy', n.y))
+                d = min_dist_to_hubs(x, y, hubs)
+                if d <= (R_curr + tol):
+                    cand.add(sid)
+        return cand
+    # 累计模式：<= R_curr
+    for sid, n in nodes.items():
+        x = float(getattr(n, 'fx', n.x))
+        y = float(getattr(n, 'fy', n.y))
+        d = min_dist_to_hubs(x, y, hubs)
+        if d <= (R_curr + tol):
+            cand.add(sid)
     return cand
 
 
-def build_sequences_pool(scored_actions: List, length_max: int = 5, beam_width: int = 50, max_expansions: int = 2000) -> Tuple[List[Dict], Dict]:
-    """基于已打分动作池生成序列池（与 SequenceSelector 类似），返回若干高分序列。
-    同时返回调试信息：各层非冲突候选统计、beam大小与扩展计数。
+# --- River-based region split helpers ---
+def _dist_point_to_segment(px: float, py: float, ax: float, ay: float, bx: float, by: float) -> float:
+    abx, aby = (bx - ax), (by - ay)
+    apx, apy = (px - ax), (py - ay)
+    ab2 = abx * abx + aby * aby
+    if ab2 <= 1e-12:
+        return math.hypot(px - ax, py - ay)
+    t = (apx * abx + apy * aby) / ab2
+    if t < 0.0:
+        qx, qy = ax, ay
+    elif t > 1.0:
+        qx, qy = bx, by
+    else:
+        qx, qy = ax + t * abx, ay + t * aby
+    return math.hypot(px - qx, py - qy)
+
+
+def _dist_point_to_polyline(px: float, py: float, coords: List[Tuple[float, float]]) -> float:
+    best = 1e9
+    for i in range(len(coords) - 1):
+        ax, ay = coords[i]
+        bx, by = coords[i + 1]
+        d = _dist_point_to_segment(px, py, ax, ay, bx, by)
+        if d < best:
+            best = d
+    return best
+
+
+def _get_river_buffer_px(cfg: Dict, default_px: float = 2.0) -> float:
+    try:
+        tf = cfg.get('terrain_features', {})
+        rivers = tf.get('rivers', [])
+        for r in rivers:
+            val = r.get('buffer_distance_px')
+            if val is not None:
+                return float(val)
+    except Exception:
+        pass
+    return float(default_px)
+
+
+def build_river_components(map_size: List[int], river_coords: List[Tuple[float, float]], buffer_px: float) -> List[List[int]]:
+    """将画布分成两个区域：把距离河流折线<=buffer_px 的格点视为障碍，
+    对其余格点做 4-邻接连通分量标记。返回 comp[y][x]（-1=河流；>=0 为连通域 id）。"""
+    W, H = int(map_size[0]), int(map_size[1])
+    comp: List[List[int]] = [[-2 for _ in range(W)] for _ in range(H)]  # -2=未访问, -1=河流
+    if not river_coords:
+        # 无河流：全域同一分量0
+        for y in range(H):
+            for x in range(W):
+                comp[y][x] = 0
+        return comp
+    # 标记河流缓冲
+    b = float(max(0.0, buffer_px))
+    for y in range(H):
+        py = float(y)
+        for x in range(W):
+            px = float(x)
+            if _dist_point_to_polyline(px, py, river_coords) <= b:
+                comp[y][x] = -1  # 在河内
+    # BFS 连通域
+    cid = 0
+    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    for y in range(H):
+        for x in range(W):
+            if comp[y][x] != -2:
+                continue
+            # 新分量
+            q: deque = deque()
+            q.append((x, y))
+            comp[y][x] = cid
+            while q:
+                cx, cy = q.popleft()
+                for dx, dy in dirs:
+                    nx, ny = cx + dx, cy + dy
+                    if 0 <= nx < W and 0 <= ny < H and comp[ny][nx] == -2:
+                        comp[ny][nx] = cid
+                        q.append((nx, ny))
+            cid += 1
+    # 若只有一个或0个非河域，保持即可
+    return comp
+
+
+# --- Optional: side by TXT lists (north/south) ---
+def _load_side_points_from_txt(north_path: str, south_path: str) -> Tuple[Set[Tuple[float, float]], Set[Tuple[float, float]]]:
+    import re
+    def load(path: str) -> Set[Tuple[float, float]]:
+        pts: Set[Tuple[float, float]] = set()
+        if not os.path.exists(path):
+            return pts
+        with open(path, 'r', encoding='utf-8') as f:
+            for line in f:
+                s = line.strip()
+                if not s:
+                    continue
+                nums = re.findall(r"-?\d+(?:\.\d+)?", s)
+                if len(nums) >= 2:
+                    x = round(float(nums[0]), 3)
+                    y = round(float(nums[1]), 3)
+                    pts.add((x, y))
+        return pts
+    return load(north_path), load(south_path)
+
+
+def build_sequences_pool(
+    scored_actions: List,
+    length_max: int = 5,
+    beam_width: int = 50,
+    max_expansions: int = 2000,
+    stratified: bool = True,
+    per_depth_count: int = 10,
+) -> Tuple[List[Dict], Dict]:
+    """基于已打分动作池生成序列池（与 SequenceSelector 类似）。
+    - 默认启用分层采样：按长度1..L分别取前 per_depth_count 条并去重，合并为最终序列池（最多 L*per_depth_count）。
+    - 返回调试信息：各层非冲突候选统计、beam大小、扩展计数与各层采样数。
     """
     acts = list(scored_actions)
     acts.sort(key=lambda a: a.score, reverse=True)
     BeamState = Tuple[List, Set[str], float]  # actions, used, score_sum
     beam: List[BeamState] = [([], set(), 0.0)]
     expansions = 0
-    debug = { 'layers': [], 'stopped': '' }
+    debug = { 'layers': [], 'stopped': '', 'stratified': {'enabled': bool(stratified), 'per_depth': int(per_depth_count), 'counts': {}} }
+    # 收集各层候选（截断后beam中的序列）
+    collected_by_depth: Dict[int, List[BeamState]] = {}
+    # 序列集合键（忽略顺序）
+    def _seq_key_from_actions_list(actions_list: List) -> Tuple:
+        keys = []
+        for a in actions_list:
+            fp_key = tuple(sorted(a.footprint_slots))
+            keys.append((a.agent, a.size, fp_key))
+        return tuple(sorted(keys))
+
     for _ in range(int(max(1, length_max))):
         new_beam: List[BeamState] = []
         non_conflict_counts: List[int] = []
@@ -171,8 +315,18 @@ def build_sequences_pool(scored_actions: List, length_max: int = 5, beam_width: 
         if not new_beam:
             debug['stopped'] = debug.get('stopped') or 'no_new_beam'
             break
-        new_beam.sort(key=lambda st: st[2], reverse=True)
-        beam = new_beam[: int(max(1, beam_width))]
+        # unique-before-trim：对 new_beam 以“动作集合”去重，仅保留分数最高的代表
+        uniq: Dict[Tuple, BeamState] = {}
+        for st in new_beam:
+            k = _seq_key_from_actions_list(st[0])
+            if (k not in uniq) or (st[2] > uniq[k][2]):
+                uniq[k] = st
+        uniq_list: List[BeamState] = list(uniq.values())
+        uniq_list.sort(key=lambda st: st[2], reverse=True)
+        beam = uniq_list[: int(max(1, beam_width))]
+        # 收集当前深度的序列样本
+        collected_by_depth.setdefault(len(beam[0][0]) if beam and beam[0][0] else _ + 1, [])  # 深度≈动作数
+        collected_by_depth[len(beam[0][0]) if beam and beam[0][0] else (_ + 1)] = list(beam)
         # 记录层调试信息
         if non_conflict_counts:
             layer_info = {
@@ -196,30 +350,73 @@ def build_sequences_pool(scored_actions: List, length_max: int = 5, beam_width: 
         if expansions >= max_expansions:
             debug['stopped'] = 'max_expansions'
             break
-    # 转换为可序列化
-    out = []
-    for seq, used, s_sum in beam:
-        out.append({
-            'score': float(s_sum),
-            'actions': [
-                {
-                    'agent': a.agent,
-                    'size': a.size,
-                    'footprint_slots': a.footprint_slots,
-                    'score': float(a.score)
-                } for a in seq
-            ]
-        })
+    # 转换为可序列化 + 分层采样 + 去重（同集合不同顺序视为同一序列）
+    def seq_key(actions_list: List) -> Tuple:
+        # 以动作集合的有序键作为唯一标识，避免 {1,2} 与 {2,1} 重复
+        keys = []
+        for a in actions_list:
+            fp_key = tuple(sorted(a.footprint_slots))
+            keys.append((a.agent, a.size, fp_key))
+        return tuple(sorted(keys))
+
+    out: List[Dict] = []
+    seen: Set[Tuple] = set()
+
+    if stratified:
+        for depth in range(1, int(max(1, length_max)) + 1):
+            layer = collected_by_depth.get(depth, [])
+            # 已按分数排序（beam截断后），取前 per_depth_count
+            kept = 0
+            for seq, used, s_sum in layer:
+                if kept >= int(max(0, per_depth_count)):
+                    break
+                k = seq_key(seq)
+                if k in seen:
+                    continue
+                seen.add(k)
+                out.append({
+                    'score': float(s_sum),
+                    'actions': [
+                        {
+                            'agent': a.agent,
+                            'size': a.size,
+                            'footprint_slots': a.footprint_slots,
+                            'score': float(a.score)
+                        } for a in seq
+                    ]
+                })
+                kept += 1
+            debug['stratified']['counts'][str(depth)] = kept
+        # 若不足 beam_width，总量保持不超过 beam_width
+        if len(out) > int(beam_width):
+            out = out[: int(beam_width)]
+    else:
+        for seq, used, s_sum in beam:
+            k = seq_key(seq)
+            if k in seen:
+                continue
+            seen.add(k)
+            out.append({
+                'score': float(s_sum),
+                'actions': [
+                    {
+                        'agent': a.agent,
+                        'size': a.size,
+                        'footprint_slots': a.footprint_slots,
+                        'score': float(a.score)
+                    } for a in seq
+                ]
+            })
     return out, debug
 
 
 def main():
     cfg = read_config('configs/city_config_v4_0.json')
     sim_cfg = cfg.get('simulation', {})
-    total_months = int(sim_cfg.get('total_months', 12))
+    total_months = int(sim_cfg.get('total_months', 15))
     city = cfg.get('city', {})
     map_size = city.get('map_size', [200, 200])
-    hubs = city.get('transport_hubs', [[125, 75], [121, 112]])
+    hubs = city.get('transport_hubs', [[125, 75], [112, 121]])
 
     v4 = cfg.get('growth_v4_0', {})
     if not v4:
@@ -248,10 +445,22 @@ def main():
     # 读取河流并计算中心线，用于“同侧过滤”
     river_coords = load_river_coords(cfg)
     river_center_y = river_center_y_from_coords(river_coords)
-    hub1_y = float(hubs[0][1]) if len(hubs) >= 1 else 0.0
-    hub2_y = float(hubs[1][1]) if len(hubs) >= 2 else hub1_y
-    hub1_side = 'north' if hub1_y > river_center_y else 'south'
-    hub2_side = 'north' if hub2_y > river_center_y else 'south'
+    # 基于河流缓冲的区域分割
+    buffer_px = _get_river_buffer_px(cfg, default_px=2.0)
+    comp_grid = build_river_components(map_size, river_coords, buffer_px)
+    def comp_of_xy(x: float, y: float) -> int:
+        xi, yi = int(round(x)), int(round(y))
+        if yi < 0 or yi >= int(map_size[1]) or xi < 0 or xi >= int(map_size[0]):
+            return -1
+        return int(comp_grid[yi][xi])
+    hub1_comp = comp_of_xy(hubs[0][0], hubs[0][1]) if len(hubs) >= 1 else 0
+    hub2_comp = comp_of_xy(hubs[1][0], hubs[1][1]) if len(hubs) >= 2 else hub1_comp
+
+    # 可选：通过 demo_slots_{north,south}.txt 直接限定侧别（优先级高于连通域）
+    north_txt = os.path.join(dbg_dir, 'demo_slots_north.txt')
+    south_txt = os.path.join(dbg_dir, 'demo_slots_south.txt')
+    north_pts, south_pts = _load_side_points_from_txt(north_txt, south_txt)
+    use_txt_side = (len(north_pts) + len(south_pts)) > 0
 
     # 状态（仅为占用记录与类型统计）
     buildings: Dict[str, List[Dict]] = {'public': [], 'industrial': []}
@@ -284,6 +493,17 @@ def main():
             # 归一化假设 land_price 已在 0..1 内（若需要可再 clip）
             return max(0.0, min(1.0, v))
 
+        # 河距提供器（米）：对 footprint 中每个槽位点取到河折线的垂足距离（像素）后× meters_per_pixel
+        mpp = float(cfg.get('gaussian_land_price_system', {}).get('meters_per_pixel', 2.0))
+        def river_distance_provider(slot_id: str) -> float:
+            n = slots.get(slot_id)
+            if n is None or not river_coords:
+                return 0.0
+            # 用原始浮点坐标计算到折线的最近距离（像素）
+            px = float(getattr(n, 'fx', n.x)); py = float(getattr(n, 'fy', n.y))
+            d_px = _dist_point_to_polyline(px, py, river_coords)
+            return float(d_px) * mpp
+
         # 计划（严格轮换默认开启）
         if turn_based:
             # 确定当月 agent：偶数/奇数月以 first_agent 为起点轮换
@@ -298,6 +518,7 @@ def main():
                 candidates=cand_ids,
                 occupied=occupied,
                 lp_provider=lp_provider,
+                river_distance_provider=river_distance_provider,
                 agent_types=[active_agent],
                 sizes=active_sizes,
             )
@@ -307,38 +528,66 @@ def main():
                 candidates=cand_ids,
                 occupied=occupied,
                 lp_provider=lp_provider,
+                river_distance_provider=river_distance_provider,
                 agent_types=['EDU', 'IND'],
                 sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L']},
             )
 
         # 同侧过滤：IND 仅在 hub1 一侧；EDU 仅在 hub2 一侧
-        def node_side(n: SlotNode) -> str:
-            return 'north' if float(n.y) > river_center_y else 'south'
+        def node_comp(n: SlotNode) -> int:
+            # 使用 fx/fy 若有，否则用整数像素坐标
+            xx = float(getattr(n, 'fx', n.x))
+            yy = float(getattr(n, 'fy', n.y))
+            return comp_of_xy(xx, yy)
 
         def action_allowed(a) -> bool:
-            if a.agent == 'IND':
-                target_side = hub1_side
-            elif a.agent == 'EDU':
-                target_side = hub2_side
-            else:
+            # TXT优先：若提供了 north/south 列表，则 EDU 只能在 north 列表、IND 只能在 south 列表
+            if use_txt_side:
+                for sid in a.footprint_slots:
+                    n = slots.get(sid)
+                    if n is None:
+                        return False
+                    fx = float(getattr(n, 'fx', n.x)); fy = float(getattr(n, 'fy', n.y))
+                    key = (round(fx, 3), round(fy, 3))
+                    if a.agent == 'EDU':
+                        if key not in north_pts:
+                            return False
+                    elif a.agent == 'IND':
+                        if key not in south_pts:
+                            return False
+                return True
+            # 否则用连通域：IND 在 hub1_comp；EDU 在 hub2_comp
+            target_comp = hub1_comp if a.agent == 'IND' else (hub2_comp if a.agent == 'EDU' else None)
+            if target_comp is None:
                 return True
             for sid in a.footprint_slots:
                 n = slots.get(sid)
                 if n is None:
                     return False
-                if node_side(n) != target_side:
+                if node_comp(n) != target_comp:
                     return False
             return True
 
-        filtered_actions = [a for a in actions if action_allowed(a)]
+        # 仅保留在侧别允许且完整落在当月候选集合内的动作
+        filtered_actions = [
+            a for a in actions
+            if action_allowed(a) and all((sid in cand_ids) for sid in (a.footprint_slots or []))
+        ]
 
         # 若原始最优序列不满足侧边约束，基于过滤后的动作池重新挑选
         if best_seq and getattr(best_seq, 'actions', None):
-            ok = all(action_allowed(a) for a in best_seq.actions)
+            ok = all(
+                action_allowed(a) and all((sid in cand_ids) for sid in (a.footprint_slots or []))
+                for a in best_seq.actions
+            )
         else:
             ok = False
         if not ok:
-            best_seq = planner.selector.choose_best_sequence(filtered_actions)
+            if filtered_actions:
+                best_seq = planner.selector.choose_best_sequence(filtered_actions)
+            else:
+                # 如果过滤后为空，则当月无动作
+                best_seq = None
 
         # 导出动作池（过滤后），并记录原始数量
         pool = []
@@ -388,7 +637,9 @@ def main():
                 n = slots.get(rep_sid)
                 if n is None:
                     continue
-                pos = [int(n.x), int(n.y)]
+                # 输出仍使用原始浮点坐标（若存在），不影响基于整数像素的邻接
+                pos = [float(n.fx) if getattr(n, 'fx', None) is not None else int(n.x),
+                       float(n.fy) if getattr(n, 'fy', None) is not None else int(n.y)]
                 b = {'id': f"{target_type[:3]}_{len(buildings[target_type])+1}", 'type': target_type, 'xy': pos}
                 buildings[target_type].append(b)
 

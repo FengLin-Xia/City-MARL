@@ -1,7 +1,38 @@
 {
   "execute_month": 32,
   "scheduled_tasks": 1,
-  "P_low_eff": 0.6074163062727334,
-  "P_high_eff": 0.7125127732975056,
-  "changes": []
+  "P_low_eff": 0.6320168945442035,
+  "P_high_eff": 0.713682753012347,
+  "changes": [
+    {
+      "id": "com_174",
+      "from_type": "commercial",
+      "to_type": "residential",
+      "position": [
+        99.23441937,
+        132.0202564
+      ],
+      "land_price_value": 0.5186923792228826
+    },
+    {
+      "id": "com_157",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        100.24622286,
+        114.15083646
+      ],
+      "land_price_value": 0.7211545297188178
+    },
+    {
+      "id": "com_158",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        102.49105515,
+        121.673928
+      ],
+      "land_price_value": 0.7206474341349316
+    }
+  ]
 }

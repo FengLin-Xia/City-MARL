@@ -1,7 +1,88 @@
 {
   "execute_month": 15,
   "scheduled_tasks": 1,
-  "P_low_eff": 0.4279550925258976,
-  "P_high_eff": 0.4853982572499919,
-  "changes": []
+  "P_low_eff": 0.6978805875523726,
+  "P_high_eff": 0.7662497289520485,
+  "changes": [
+    {
+      "id": "res_81",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        117.96605679,
+        124.2340126
+      ],
+      "land_price_value": 0.8441422585712987
+    },
+    {
+      "id": "res_80",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        124.73131046,
+        124.06341999
+      ],
+      "land_price_value": 0.8435574446355559
+    },
+    {
+      "id": "res_74",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        135.45616357,
+        82.11819103
+      ],
+      "land_price_value": 0.843019835588821
+    },
+    {
+      "id": "res_79",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        119.88609753,
+        124.80173503
+      ],
+      "land_price_value": 0.8385065477391392
+    },
+    {
+      "id": "res_78",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        111.84475715,
+        121.12075926
+      ],
+      "land_price_value": 0.8368444416318122
+    },
+    {
+      "id": "res_77",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        108.73918127,
+        117.13620417
+      ],
+      "land_price_value": 0.8282199981512022
+    },
+    {
+      "id": "res_76",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        107.71710194,
+        112.39824353
+      ],
+      "land_price_value": 0.8282105901990423
+    },
+    {
+      "id": "res_75",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        121.91768597,
+        125.39558884
+      ],
+      "land_price_value": 0.8250939014568731
+    }
+  ]
 }

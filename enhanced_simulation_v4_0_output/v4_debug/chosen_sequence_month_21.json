@@ -1,0 +1,42 @@
+{
+  "month": 21,
+  "score": 1.2553553765719938,
+  "actions": [
+    {
+      "agent": "IND",
+      "size": "M",
+      "footprint_slots": [
+        "s_842",
+        "s_843"
+      ],
+      "score": 0.3565847110357496
+    },
+    {
+      "agent": "IND",
+      "size": "M",
+      "footprint_slots": [
+        "s_603",
+        "s_604"
+      ],
+      "score": 0.28446375582874095
+    },
+    {
+      "agent": "IND",
+      "size": "M",
+      "footprint_slots": [
+        "s_179",
+        "s_188"
+      ],
+      "score": 0.3330436625688851
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_848"
+      ],
+      "score": 0.28126324713861806
+    }
+  ],
+  "active_agent": "IND"
+}

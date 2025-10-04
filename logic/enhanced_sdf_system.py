@@ -50,7 +50,102 @@ class GaussianLandPriceSystem:
         self.hub_peak_value = float(self.sdf_config.get('hub_peak_value', 1.0))
         self.road_peak_value = float(self.sdf_config.get('road_peak_value', 0.7))
         self.min_threshold = float(self.sdf_config.get('min_threshold', 0.1))
+
+        # 额外的“静态 Hub 点核”（始终叠加，不受演化启停影响）
+        self.extra_hub_point_peak = float(self.sdf_config.get('extra_hub_point_peak', 0.0))
+        # 以像素为单位的 sigma；若 <=0 则回退到 hub_sigma_base
+        self.extra_hub_point_sigma_px = float(self.sdf_config.get('extra_hub_point_sigma_px', 0.0))
+
+        # 河流配置（可选）：从 terrain_features.rivers 读取；若无则回退 river.txt
+        self.rivers: List[Dict] = []
+        tf = self.config.get('terrain_features', {}) if isinstance(self.config, dict) else {}
+        rivers_cfg = tf.get('rivers', []) if isinstance(tf, dict) else []
+        for r in rivers_cfg:
+            coords = r.get('coordinates', []) or []
+            # 若未给坐标，尝试用 river.txt
+            if (not coords) and os.path.exists('river.txt'):
+                try:
+                    tmp: List[Tuple[float, float]] = []
+                    import re
+                    with open('river.txt', 'r', encoding='utf-8') as f:
+                        for line in f:
+                            s = line.strip()
+                            if not s or s.startswith('#'):
+                                continue
+                            nums = re.findall(r"-?\d+(?:\.\d+)?", s)
+                            if len(nums) >= 2:
+                                tmp.append((float(nums[0]), float(nums[1])))
+                    coords = tmp
+                except Exception:
+                    coords = []
+            if not coords:
+                continue
+            lp = r.get('land_price', {}) or {}
+            self.rivers.append({
+                'coords': [(float(x), float(y)) for x, y in coords if isinstance(x, (int, float)) or isinstance(y, (int, float))],
+                'enabled': bool(lp.get('enabled', True)),
+                'peak_value': float(lp.get('peak_value', 0.8)),
+                'decay_rate': float(lp.get('decay_rate', 0.05)),  # for exponential mode
+                'max_influence_distance': float(lp.get('max_influence_distance', 20.0)),
+                'decay_mode': str(lp.get('decay_mode', 'exponential')),  # 'exponential' | 'gaussian' | 'lorentzian'
+                'sigma_px': float(lp.get('sigma_px', 6.0)),       # for gaussian mode
+                'gamma_px': float(lp.get('gamma_px', 6.0)),       # for lorentzian mode
+            })
+
+        # 若未配置，尝试从 river.txt 加载一条河流（默认开启）
+        if not self.rivers and os.path.exists('river.txt'):
+            try:
+                coords: List[Tuple[float, float]] = []
+                import re
+                with open('river.txt', 'r', encoding='utf-8') as f:
+                    for line in f:
+                        s = line.strip()
+                        if not s or s.startswith('#'):
+                            continue
+                        nums = re.findall(r"-?\d+(?:\.\d+)?", s)
+                        if len(nums) >= 2:
+                            coords.append((float(nums[0]), float(nums[1])))
+                if len(coords) >= 2:
+                    self.rivers.append({
+                        'coords': coords,
+                        'enabled': True,
+                        'peak_value': 0.8,
+                        'decay_rate': 0.05,
+                        'max_influence_distance': 20.0,
+                        'decay_mode': 'exponential',
+                        'sigma_px': 6.0,
+                        'gamma_px': 6.0,
+                    })
+            except Exception:
+                pass
         
+        # --- 融合模式配置 ---
+        # fusion_mode: 'max' | 'weighted_sum'
+        self.fusion_mode = str(self.sdf_config.get('fusion_mode', 'max')).lower()
+        # fusion_weights: {hub, road, river, build}
+        fw = self.sdf_config.get('fusion_weights', {}) or {}
+        self.fusion_weights = {
+            'hub': float(fw.get('hub', 1.0)),
+            'road': float(fw.get('road', 1.0)),
+            'river': float(fw.get('river', 1.0)),
+            'build': float(fw.get('build', 1.0)),
+        }
+        # 组件先归一化到[0,1]再加权
+        self.component_normalize = bool(self.sdf_config.get('component_normalize', True))
+        # 融合结果归一化：'none' | 'minmax' | 'clip01'
+        self.fusion_normalize = str(self.sdf_config.get('fusion_normalize', 'minmax')).lower()
+
+        # --- 建筑点核（可选） ---
+        bk = self.sdf_config.get('building_kernel', {}) or {}
+        self.building_kernel_enabled = bool(bk.get('enabled', False))
+        self.building_kernel_peak = float(bk.get('peak_value', 0.1))
+        self.building_kernel_sigma_px = float(bk.get('sigma_px', 3.0))
+        # 对于 max 融合，作为乘权后再与其他场取 max；对于 weighted_sum，作为一个独立分量参与加权
+        self.building_kernel_weight = float(bk.get('weight', 1.0))
+        # 生效建筑类型列表：如 ['public','industrial']
+        types = bk.get('types', ['public', 'industrial'])
+        self.building_kernel_types = [str(t) for t in types] if isinstance(types, list) else ['public', 'industrial']
+
         print(f"[LandPrice] Gaussian system initialized")
         
     def initialize_system(self, transport_hubs: List[List[int]], map_size: List[int]):
@@ -62,7 +157,7 @@ class GaussianLandPriceSystem:
         
     def _create_initial_land_price(self) -> np.ndarray:
         """创建初始地价场"""
-        return self._create_land_price_field(month=0)
+        return self._create_land_price_field(month=0, city_state=None)
         
     def _gaussian_2d(self, x: np.ndarray, y: np.ndarray, center_x: float, center_y: float, sigma: float, peak_value: float) -> np.ndarray:
         """创建2D高斯核"""
@@ -96,13 +191,18 @@ class GaussianLandPriceSystem:
         
         return line_gaussian
     
-    def _create_land_price_field(self, month: int = 0) -> np.ndarray:
+    def _create_land_price_field(self, month: int = 0, city_state: Dict = None) -> np.ndarray:
         """创建地价场 - 支持渐进式演化"""
         hub_sigma = self._calculate_hub_sigma(month)
         road_sigma = self._calculate_road_sigma(month)
         
         X, Y = np.meshgrid(np.arange(self.map_size[0]), np.arange(self.map_size[1]))
+        # 分量初始化
         land_price = np.zeros(self.map_size, dtype=float)
+        hub_land_price = np.zeros(self.map_size, dtype=float)
+        road_land_price = np.zeros(self.map_size, dtype=float)
+        river_land_price = np.zeros(self.map_size, dtype=float)
+        build_land_price = np.zeros(self.map_size, dtype=float)
         
         # 获取组件强度
         road_strength = self._get_component_strength('road', month)
@@ -112,20 +212,43 @@ class GaussianLandPriceSystem:
         
         # 添加道路高斯核（如果激活）
         if road_strength > 0 and len(self.transport_hubs) >= 2:
-            road_gaussian = self._line_gaussian(X, Y, self.transport_hubs[0], self.transport_hubs[1], road_sigma, road_strength)
-            land_price = np.maximum(land_price, road_gaussian)
+            road_land_price = self._line_gaussian(X, Y, self.transport_hubs[0], self.transport_hubs[1], road_sigma, road_strength)
         
         # 添加Hub高斯核（根据强度）
         for i, hub in enumerate(self.transport_hubs):
             if i == 0 and hub1_strength > 0:  # Hub1
                 hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, hub1_strength)
-                land_price = np.maximum(land_price, hub_gaussian)
+                hub_land_price = np.maximum(hub_land_price, hub_gaussian)
             elif i == 1 and hub2_strength > 0:  # Hub2
                 hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, hub2_strength)
-                land_price = np.maximum(land_price, hub_gaussian)
+                hub_land_price = np.maximum(hub_land_price, hub_gaussian)
             elif i == 2 and hub3_strength > 0:  # Hub3
                 hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, hub3_strength)
-                land_price = np.maximum(land_price, hub_gaussian)
+                hub_land_price = np.maximum(hub_land_price, hub_gaussian)
+
+            # 叠加静态 Hub 点核（可选）
+            if self.extra_hub_point_peak > 0.0:
+                stat_sigma = self.extra_hub_point_sigma_px if self.extra_hub_point_sigma_px > 0 else self.hub_sigma_base
+                stat_gauss = self._gaussian_2d(X, Y, hub[0], hub[1], stat_sigma, self.extra_hub_point_peak)
+                hub_land_price = np.maximum(hub_land_price, stat_gauss)
+
+        # 添加河流边界核（若配置了）
+        if self.rivers:
+            river_lp = self._river_land_price_field()
+            if river_lp is not None:
+                river_land_price = river_lp
+
+        # 建筑点核（可选）
+        if self.building_kernel_enabled:
+            build_land_price = self._building_kernel_field(city_state, X, Y)
+
+        # 融合
+        land_price = self._fuse_components(
+            hub_land_price=hub_land_price,
+            road_land_price=road_land_price,
+            river_land_price=river_land_price,
+            build_land_price=build_land_price,
+        )
         
         land_price[land_price < self.min_threshold] = 0
         return land_price
@@ -199,6 +322,147 @@ class GaussianLandPriceSystem:
                 return self._get_component_strength('hub1', current_month)
         
         return 0.0
+
+    # ----------------------
+    # 河流边界地价核
+    # ----------------------
+    def _dist_point_to_segment(self, px: float, py: float, ax: float, ay: float, bx: float, by: float) -> float:
+        abx, aby = (bx - ax), (by - ay)
+        apx, apy = (px - ax), (py - ay)
+        ab2 = abx * abx + aby * aby
+        if ab2 <= 1e-12:
+            return math.hypot(px - ax, py - ay)
+        t = (apx * abx + apy * aby) / ab2
+        if t < 0.0:
+            qx, qy = ax, ay
+        elif t > 1.0:
+            qx, qy = bx, by
+        else:
+            qx, qy = ax + t * abx, ay + t * aby
+        return math.hypot(px - qx, py - qy)
+
+    def _min_dist_to_polylines(self, px: float, py: float) -> float:
+        best = 1e9
+        for r in self.rivers:
+            coords = r.get('coords', [])
+            for i in range(len(coords) - 1):
+                ax, ay = coords[i]
+                bx, by = coords[i + 1]
+                d = self._dist_point_to_segment(px, py, ax, ay, bx, by)
+                if d < best:
+                    best = d
+        return best
+
+    def _river_land_price_field(self) -> np.ndarray:
+        if not self.rivers:
+            return None
+        W, H = int(self.map_size[0]), int(self.map_size[1])
+        X, Y = np.meshgrid(np.arange(W), np.arange(H))
+        field = np.zeros((H, W), dtype=float)
+        # 对每个像素计算到所有河折线的最小距离，再取每条河的核最大值
+        # 为效率，这里采用逐像素循环（图幅较小可接受）；必要时可向量化近似
+        for yy in range(H):
+            py = float(yy)
+            for xx in range(W):
+                px = float(xx)
+                v_max = 0.0
+                for r in self.rivers:
+                    if not r.get('enabled', True):
+                        continue
+                    peak = float(r.get('peak_value', 0.8))
+                    decay = float(r.get('decay_rate', 0.05))
+                    rmax = float(r.get('max_influence_distance', 20.0))
+                    mode = str(r.get('decay_mode', 'exponential'))
+                    sigma = float(r.get('sigma_px', 6.0))
+                    gamma = float(r.get('gamma_px', 6.0))
+                    d = self._min_dist_to_polylines(px, py)
+                    if d <= rmax:
+                        if mode == 'gaussian':
+                            # v = peak * exp( - d^2 / (2*sigma^2) )
+                            denom = 2.0 * max(1e-6, sigma) * max(1e-6, sigma)
+                            v = peak * math.exp(-(d * d) / denom)
+                        elif mode == 'lorentzian':
+                            # v = peak * gamma^2 / (d^2 + gamma^2)
+                            g2 = max(1e-6, gamma) * max(1e-6, gamma)
+                            v = peak * (g2 / (d * d + g2))
+                        else:
+                            # exponential: v = peak * exp(-decay * d)
+                            v = peak * math.exp(-decay * d)
+                        if v > v_max:
+                            v_max = v
+                field[yy, xx] = v_max
+        return field
+
+    # ----------------------
+    # 建筑点核
+    # ----------------------
+    def _building_kernel_field(self, city_state: Dict, X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+        if not self.building_kernel_enabled or city_state is None:
+            return np.zeros(self.map_size, dtype=float)
+        field = np.zeros(self.map_size, dtype=float)
+        sigma = float(self.building_kernel_sigma_px if self.building_kernel_sigma_px > 0 else 3.0)
+        peak = float(self.building_kernel_peak)
+        for t in self.building_kernel_types:
+            arr = city_state.get(t, []) if isinstance(city_state, dict) else []
+            for b in arr:
+                pos = b.get('xy') if isinstance(b, dict) else None
+                if not pos or len(pos) < 2:
+                    continue
+                try:
+                    cx = float(pos[0]); cy = float(pos[1])
+                except Exception:
+                    continue
+                g = self._gaussian_2d(X, Y, cx, cy, sigma, peak)
+                field = np.maximum(field, g)
+        return field
+
+    # ----------------------
+    # 融合策略
+    # ----------------------
+    def _normalize_component(self, comp: np.ndarray) -> np.ndarray:
+        if not self.component_normalize:
+            return comp
+        vmax = float(np.max(comp)) if comp.size > 0 else 0.0
+        if vmax <= 1e-9:
+            return np.zeros_like(comp)
+        return comp / vmax
+
+    def _post_normalize(self, fused: np.ndarray) -> np.ndarray:
+        mode = self.fusion_normalize
+        if mode == 'minmax':
+            vmin = float(np.min(fused))
+            vmax = float(np.max(fused))
+            if vmax - vmin <= 1e-9:
+                return np.zeros_like(fused)
+            return (fused - vmin) / (vmax - vmin)
+        if mode == 'clip01':
+            return np.clip(fused, 0.0, 1.0)
+        return fused
+
+    def _fuse_components(
+        self,
+        hub_land_price: np.ndarray,
+        road_land_price: np.ndarray,
+        river_land_price: np.ndarray,
+        build_land_price: np.ndarray,
+    ) -> np.ndarray:
+        if self.fusion_mode == 'weighted_sum':
+            h = self._normalize_component(hub_land_price)
+            r = self._normalize_component(road_land_price)
+            v = self._normalize_component(river_land_price)
+            b = self._normalize_component(build_land_price)
+            fused = (
+                self.fusion_weights.get('hub', 1.0) * h +
+                self.fusion_weights.get('road', 1.0) * r +
+                self.fusion_weights.get('river', 1.0) * v +
+                self.fusion_weights.get('build', 1.0) * b
+            )
+            return self._post_normalize(fused)
+        # max 模式
+        fused = np.maximum(np.maximum(hub_land_price, road_land_price), river_land_price)
+        if self.building_kernel_enabled:
+            fused = np.maximum(fused, build_land_price * max(0.0, self.building_kernel_weight))
+        return fused
     
     def _get_evolution_stage(self, month: int) -> Dict:
         """获取当前演化阶段配置"""
@@ -264,7 +528,7 @@ class GaussianLandPriceSystem:
         self.current_month = month
         evolution_stage = self._get_evolution_stage(month)
         
-        new_land_price = self._create_land_price_field(month)
+        new_land_price = self._create_land_price_field(month, city_state)
         
         if self.land_price_field is not None:
             alpha = self.sdf_config.get('alpha_inertia', 0.25)
@@ -301,16 +565,37 @@ class GaussianLandPriceSystem:
             'std': float(np.std(self.land_price_field))
         }
     
-    def get_land_price(self, position: List[int]) -> float:
-        """获取指定位置的地价值"""
+    def get_land_price(self, position: List[float]) -> float:
+        """获取指定位置的地价值（支持浮点坐标，采用双线性插值）。"""
         if self.land_price_field is None:
             return 0.0
-        
-        x, y = position[0], position[1]
-        if (x < 0 or x >= self.map_size[0] or y < 0 or y >= self.map_size[1]):
+
+        try:
+            xf = float(position[0]); yf = float(position[1])
+        except Exception:
             return 0.0
-        
-        return float(self.land_price_field[y, x])
+
+        # 边界裁剪到 [0, W-1] / [0, H-1]
+        W = int(self.map_size[0]); H = int(self.map_size[1])
+        if W <= 0 or H <= 0:
+            return 0.0
+        if xf < 0.0: xf = 0.0
+        if yf < 0.0: yf = 0.0
+        if xf > (W - 1): xf = float(W - 1)
+        if yf > (H - 1): yf = float(H - 1)
+
+        # 双线性插值
+        x0 = int(math.floor(xf)); x1 = min(x0 + 1, W - 1)
+        y0 = int(math.floor(yf)); y1 = min(y0 + 1, H - 1)
+        dx = xf - x0; dy = yf - y0
+
+        f00 = float(self.land_price_field[y0, x0])
+        f10 = float(self.land_price_field[y0, x1])
+        f01 = float(self.land_price_field[y1, x0])
+        f11 = float(self.land_price_field[y1, x1])
+
+        val = (1 - dx) * (1 - dy) * f00 + dx * (1 - dy) * f10 + (1 - dx) * dy * f01 + dx * dy * f11
+        return float(val)
     
     def get_evolution_history(self) -> List[Dict]:
         """获取演化历史"""
@@ -361,17 +646,38 @@ class GaussianLandPriceSystem:
                 hub_gaussian = self._gaussian_2d(X, Y, hub[0], hub[1], hub_sigma, s)
                 hub_land_price = np.maximum(hub_land_price, hub_gaussian)
 
+            # 同样在组件图中叠加“静态 Hub 点核”（若启用）
+            if self.extra_hub_point_peak > 0.0:
+                stat_sigma = self.extra_hub_point_sigma_px if self.extra_hub_point_sigma_px > 0 else self.hub_sigma_base
+                stat_gauss = self._gaussian_2d(X, Y, hub[0], hub[1], stat_sigma, self.extra_hub_point_peak)
+                hub_land_price = np.maximum(hub_land_price, stat_gauss)
+
         road_land_price = np.zeros(self.map_size, dtype=float)
         if len(self.transport_hubs) >= 2 and road_strength > 0:
             road_land_price = self._line_gaussian(X, Y, self.transport_hubs[0], self.transport_hubs[1], road_sigma, road_strength)
 
-        combined_land_price = np.maximum(hub_land_price, road_land_price)
+        river_land_price = np.zeros(self.map_size, dtype=float)
+        if self.rivers:
+            rlp = self._river_land_price_field()
+            if rlp is not None:
+                river_land_price = rlp
+
+        # 建筑点核（基于当前 self.land_price_field 形成时对应城市状态；此处不额外注入）
+        build_land_price = np.zeros(self.map_size, dtype=float)
+        combined_land_price = self._fuse_components(
+            hub_land_price=hub_land_price,
+            road_land_price=road_land_price,
+            river_land_price=river_land_price,
+            build_land_price=build_land_price,
+        )
         combined_land_price[combined_land_price < self.min_threshold] = 0
 
         return {
             'hub_land_price': hub_land_price,
             'road_land_price': road_land_price,
-            'combined_land_price': combined_land_price
+            'river_land_price': river_land_price,
+            'combined_land_price': combined_land_price,
+            'building_land_price': build_land_price
         }
 
 # 为了保持兼容性，保留原来的类名作为别名

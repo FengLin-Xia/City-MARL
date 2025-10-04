@@ -1,0 +1,24 @@
+{
+  "month": 67,
+  "score": 0.5519503777182438,
+  "actions": [
+    {
+      "agent": "IND",
+      "size": "M",
+      "footprint_slots": [
+        "s_512",
+        "s_513"
+      ],
+      "score": 0.30735404146453305
+    },
+    {
+      "agent": "IND",
+      "size": "S",
+      "footprint_slots": [
+        "s_553"
+      ],
+      "score": 0.2445963362537108
+    }
+  ],
+  "active_agent": "IND"
+}

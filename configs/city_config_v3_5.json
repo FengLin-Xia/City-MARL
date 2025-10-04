@@ -3,9 +3,9 @@
     "total_months": 48
   },
   "city": {
-    "map_size": [110, 110],
+    "map_size": [200, 200],
     "trunk_road": [],
-    "transport_hubs": [[90, 55], [67, 94]]
+    "transport_hubs": [[125, 75], [121, 112]]
   },
   "gaussian_land_price_system": {
     "meters_per_pixel": 2.0,
@@ -46,16 +46,15 @@
     },
     "slot_generator": {
       "mode": "square_grid",
+      "use_points_file": true,
+      "points_file": "slotpoints.txt",
       "use_landprice_mask": false,
       "mixed_pool": true,
       "grid": { "cell_size_px": 6, "origin": [0, 0] },
       "per_hub_grid": { "enabled": true, "disjoint": true, "limit_radius_px": 40 },
       "hex_grid": { "enabled": false, "size_px": 4, "orientation": "pointy" },
       "radial": { "enabled": false, "delta_radius_px": 4, "angle_step_deg": 12 },
-      "per_hub": [
-        { "pattern": "hex", "size_px": 4, "orientation": "pointy" },
-        { "pattern": "radial", "delta_radius_px": 4, "angle_step_deg": 12 }
-      ]
+      "per_hub": []
     },
     "commercial": { "start_P": 0.85, "depth_m": 12, "gap_m": 8, "arc_spacing_m": [16, 24] },
     "residential": { "start_P": 0.65, "depth_m": 12, "gap_m": 18, "arc_spacing_m": [22, 32] },

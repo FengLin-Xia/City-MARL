@@ -1,0 +1,43 @@
+{
+  "month": 0,
+  "count": 3,
+  "actions": [
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_1211"
+      ],
+      "lp_norm": 0.7470288894045823,
+      "cost": 1647.0,
+      "reward": 245.0,
+      "prestige": 0.2,
+      "score": 0.0
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_1211"
+      ],
+      "lp_norm": 0.7470288894045823,
+      "cost": 2147.0,
+      "reward": 411.0,
+      "prestige": 0.6,
+      "score": 0.377870984523345
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_1211"
+      ],
+      "lp_norm": 0.7470288894045823,
+      "cost": 2847.0,
+      "reward": 632.0,
+      "prestige": 1.0,
+      "score": 0.8039358174014828
+    }
+  ],
+  "active_agent": "EDU"
+}

@@ -1,7 +1,88 @@
 {
   "execute_month": 25,
   "scheduled_tasks": 1,
-  "P_low_eff": 0.39996736232793473,
-  "P_high_eff": 0.4749565989545965,
-  "changes": []
+  "P_low_eff": 0.6731567823062121,
+  "P_high_eff": 0.7721715210294133,
+  "changes": [
+    {
+      "id": "com_163",
+      "from_type": "commercial",
+      "to_type": "residential",
+      "position": [
+        105.65299453,
+        128.78468141
+      ],
+      "land_price_value": 0.6466837761513733
+    },
+    {
+      "id": "com_162",
+      "from_type": "commercial",
+      "to_type": "residential",
+      "position": [
+        118.04209662,
+        134.33368983
+      ],
+      "land_price_value": 0.6520802649024612
+    },
+    {
+      "id": "res_52",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        111.47926784,
+        126.14256839
+      ],
+      "land_price_value": 0.7826405977385561
+    },
+    {
+      "id": "res_51",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        104.17688813,
+        108.99057772
+      ],
+      "land_price_value": 0.781840754828524
+    },
+    {
+      "id": "res_49",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        114.86763394,
+        88.75991126
+      ],
+      "land_price_value": 0.7818022041257287
+    },
+    {
+      "id": "res_50",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        126.41363845,
+        92.02943412
+      ],
+      "land_price_value": 0.7817786404368178
+    },
+    {
+      "id": "res_48",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        130.8072271,
+        91.19494098
+      ],
+      "land_price_value": 0.7791637925582116
+    },
+    {
+      "id": "res_47",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        111.56388624,
+        85.74573622
+      ],
+      "land_price_value": 0.7791035807091145
+    }
+  ]
 }

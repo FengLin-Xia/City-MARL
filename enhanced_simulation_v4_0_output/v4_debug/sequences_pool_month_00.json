@@ -1,0 +1,70 @@
+{
+  "month": 0,
+  "count": 3,
+  "sequences": [
+    {
+      "score": 0.8039358174014828,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1211"
+          ],
+          "score": 0.8039358174014828
+        }
+      ]
+    },
+    {
+      "score": 0.377870984523345,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "M",
+          "footprint_slots": [
+            "s_1211"
+          ],
+          "score": 0.377870984523345
+        }
+      ]
+    },
+    {
+      "score": 0.0,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "S",
+          "footprint_slots": [
+            "s_1211"
+          ],
+          "score": 0.0
+        }
+      ]
+    }
+  ],
+  "debug": {
+    "layers": [
+      {
+        "beam_in": 3,
+        "non_conflict_min": 3,
+        "non_conflict_max": 3,
+        "non_conflict_avg": 3.0,
+        "new_beam_kept": 3,
+        "expansions_used": 3
+      }
+    ],
+    "stopped": "no_new_beam",
+    "stratified": {
+      "enabled": true,
+      "per_depth": 10,
+      "counts": {
+        "1": 3,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    }
+  },
+  "active_agent": "EDU"
+}

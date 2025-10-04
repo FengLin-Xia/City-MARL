@@ -1,0 +1,1554 @@
+{
+  "month": 9,
+  "count": 50,
+  "sequences": [
+    {
+      "score": 0.33197842141703204,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        }
+      ]
+    },
+    {
+      "score": 0.25759289176090466,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        }
+      ]
+    },
+    {
+      "score": 0.2558158319870759,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 0.2558158319870759,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 0.2522357489037618,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 0.2504067620586199,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        }
+      ]
+    },
+    {
+      "score": 0.24862970228479117,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_798"
+          ],
+          "score": 0.24862970228479117
+        }
+      ]
+    },
+    {
+      "score": 0.24860373874913455,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_799"
+          ],
+          "score": 0.24860373874913455
+        }
+      ]
+    },
+    {
+      "score": 0.24507558273713365,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_819"
+          ],
+          "score": 0.24507558273713365
+        }
+      ]
+    },
+    {
+      "score": 0.24504961920147703,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_806"
+          ],
+          "score": 0.24504961920147703
+        }
+      ]
+    },
+    {
+      "score": 0.5895713131779368,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        }
+      ]
+    },
+    {
+      "score": 0.587794253404108,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 0.587794253404108,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 0.5842141703207939,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 0.5823851834756519,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        }
+      ]
+    },
+    {
+      "score": 0.5806081237018232,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_798"
+          ],
+          "score": 0.24862970228479117
+        }
+      ]
+    },
+    {
+      "score": 0.5805821601661666,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_799"
+          ],
+          "score": 0.24860373874913455
+        }
+      ]
+    },
+    {
+      "score": 0.5770540041541656,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_819"
+          ],
+          "score": 0.24507558273713365
+        }
+      ]
+    },
+    {
+      "score": 0.5770280406185091,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_806"
+          ],
+          "score": 0.24504961920147703
+        }
+      ]
+    },
+    {
+      "score": 0.5752509808446803,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_785"
+          ],
+          "score": 0.24327255942764828
+        }
+      ]
+    },
+    {
+      "score": 0.8453871451650127,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 0.8453871451650127,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 0.8436100853911839,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 0.8418070620816986,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 0.8400300023078698,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 0.8400300023078698,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 0.8399780752365567,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        }
+      ]
+    },
+    {
+      "score": 0.838201015462728,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_798"
+          ],
+          "score": 0.24862970228479117
+        }
+      ]
+    },
+    {
+      "score": 0.8382010154627278,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        }
+      ]
+    },
+    {
+      "score": 0.8382010154627278,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        }
+      ]
+    },
+    {
+      "score": 1.1012029771520886,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 1.0976228940687744,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 1.0976228940687744,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 1.0958458342949458,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 1.0957939072236327,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        }
+      ]
+    },
+    {
+      "score": 1.0957939072236327,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        }
+      ]
+    },
+    {
+      "score": 1.094016847449804,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_798"
+          ],
+          "score": 0.24862970228479117
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 1.094016847449804,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_798"
+          ],
+          "score": 0.24862970228479117
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 1.0940168474498038,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        }
+      ]
+    },
+    {
+      "score": 1.0939908839141472,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_799"
+          ],
+          "score": 0.24860373874913455
+        }
+      ]
+    },
+    {
+      "score": 1.3534387260558505,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 1.3516097392107085,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        }
+      ]
+    },
+    {
+      "score": 1.3498326794368798,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_798"
+          ],
+          "score": 0.24862970228479117
+        }
+      ]
+    },
+    {
+      "score": 1.3498067159012233,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_799"
+          ],
+          "score": 0.24860373874913455
+        }
+      ]
+    },
+    {
+      "score": 1.3480296561273946,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 1.3480296561273946,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_831"
+          ],
+          "score": 0.2504067620586199
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 1.3462785598892224,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_819"
+          ],
+          "score": 0.24507558273713365
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        }
+      ]
+    },
+    {
+      "score": 1.3462525963535659,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_798"
+          ],
+          "score": 0.24862970228479117
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 1.3462525963535659,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_798"
+          ],
+          "score": 0.24862970228479117
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_820"
+          ],
+          "score": 0.2522357489037618
+        }
+      ]
+    },
+    {
+      "score": 1.3462525963535656,
+      "actions": [
+        {
+          "agent": "IND",
+          "size": "M",
+          "footprint_slots": [
+            "s_148",
+            "s_149"
+          ],
+          "score": 0.33197842141703204
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_810"
+          ],
+          "score": 0.25759289176090466
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_809"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_821"
+          ],
+          "score": 0.2558158319870759
+        },
+        {
+          "agent": "IND",
+          "size": "S",
+          "footprint_slots": [
+            "s_806"
+          ],
+          "score": 0.24504961920147703
+        }
+      ]
+    }
+  ],
+  "debug": {
+    "layers": [
+      {
+        "beam_in": 50,
+        "non_conflict_min": 60,
+        "non_conflict_max": 60,
+        "non_conflict_avg": 60.0,
+        "new_beam_kept": 50,
+        "expansions_used": 60
+      },
+      {
+        "beam_in": 50,
+        "non_conflict_min": 57,
+        "non_conflict_max": 59,
+        "non_conflict_avg": 58.92,
+        "new_beam_kept": 50,
+        "expansions_used": 3006
+      },
+      {
+        "beam_in": 50,
+        "non_conflict_min": 56,
+        "non_conflict_max": 56,
+        "non_conflict_avg": 56.0,
+        "new_beam_kept": 50,
+        "expansions_used": 5806
+      },
+      {
+        "beam_in": 50,
+        "non_conflict_min": 55,
+        "non_conflict_max": 55,
+        "non_conflict_avg": 55.0,
+        "new_beam_kept": 50,
+        "expansions_used": 8556
+      },
+      {
+        "beam_in": 50,
+        "non_conflict_min": 54,
+        "non_conflict_max": 54,
+        "non_conflict_avg": 54.0,
+        "new_beam_kept": 50,
+        "expansions_used": 11256
+      }
+    ],
+    "stopped": "",
+    "stratified": {
+      "enabled": true,
+      "per_depth": 10,
+      "counts": {
+        "1": 10,
+        "2": 10,
+        "3": 10,
+        "4": 10,
+        "5": 10
+      }
+    }
+  },
+  "active_agent": "IND"
+}

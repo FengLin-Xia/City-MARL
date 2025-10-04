@@ -32,6 +32,9 @@ class SlotNode:
     slot_id: str
     x: int
     y: int
+    # 原始浮点坐标（用于输出/精度保留，不影响4邻接整数栅格）
+    fx: Optional[float] = None
+    fy: Optional[float] = None
     neighbors: List[str] = field(default_factory=list)
     terrain_mask: Optional[str] = None
     road_dist: Optional[float] = None
@@ -145,7 +148,7 @@ class ActionEnumerator:
         caps = caps or {}
         actions: List[Action] = []
         # 预先过滤可用槽位
-        free_ids: Set[str] = {sid for sid in candidates if (sid not in occupied and not self.slots[sid].reserved_in_turn)}
+        free_ids: Set[str] = {sid for sid in candidates if (sid not in occupied and sid in self.slots and not self.slots[sid].reserved_in_turn)}
 
         # EDU/IND 的 S/M/L
         for agent in agent_types:
@@ -196,96 +199,31 @@ class ActionEnumerator:
         res: List[List[str]] = []
         seen_pairs: Set[Tuple[str, str]] = set()
         for sid in free_ids:
-            for nb in self.slots[sid].neighbors:
-                if nb in free_ids:
-                    key = tuple(sorted((sid, nb)))
-                    if key not in seen_pairs:
-                        seen_pairs.add(key)
-                        res.append([key[0], key[1]])
+            if sid in self.slots:
+                for nb in self.slots[sid].neighbors:
+                    if nb in free_ids:
+                        key = tuple(sorted((sid, nb)))
+                        if key not in seen_pairs:
+                            seen_pairs.add(key)
+                            res.append([key[0], key[1]])
         return res
 
     def _enumerate_2x2_blocks(self, free_ids: Set[str]) -> List[List[str]]:
-        """宽容版 2×2 检测：估计步长(step_x, step_y)+容差 ε，近似匹配四点方块。
-        注意：使用 free_ids 限定仅在可用槽位上枚举。
-        """
-        coords: List[Tuple[str, float, float]] = [
-            (sid, float(self.slots[sid].x), float(self.slots[sid].y)) for sid in free_ids
-            if sid in self.slots
-        ]
-        if len(coords) < 4:
-            return []
-
-        # 估计水平/垂直步长（使用近邻统计的中位数）
-        def median(lst: List[float]) -> float:
-            if not lst:
-                return 1.0
-            s = sorted(lst)
-            m = len(s) // 2
-            return (s[m] if len(s) % 2 == 1 else 0.5 * (s[m - 1] + s[m]))
-
-        # 搜集正向最近 dx（|dy| 小）与正向最近 dy（|dx| 小）
-        dx_samples: List[float] = []
-        dy_samples: List[float] = []
-        # 容许的小跨越阈值（以像素计），用于判定“近似水平/垂直”
-        small = 2.0
-        for i, (_, x0, y0) in enumerate(coords):
-            best_dx = 1e9
-            best_dy = 1e9
-            for j, (_, x1, y1) in enumerate(coords):
-                if i == j:
-                    continue
-                dx = x1 - x0
-                dy = y1 - y0
-                # 水平邻近（dy 很小、dx>0 最小）
-                if abs(dy) <= small and dx > 0 and dx < best_dx:
-                    best_dx = dx
-                # 垂直邻近（dx 很小、dy>0 最小）
-                if abs(dx) <= small and dy > 0 and dy < best_dy:
-                    best_dy = dy
-            if best_dx < 1e9:
-                dx_samples.append(best_dx)
-            if best_dy < 1e9:
-                dy_samples.append(best_dy)
-
-        step_x = median(dx_samples)
-        step_y = median(dy_samples)
-        # 容差：允许 35% 偏差
-        eps = 0.35 * max(1.0, min(step_x, step_y))
-
-        # 辅助：在 coords 中寻找接近 (tx,ty) 的槽位 sid，阈值 eps
-        def find_near(tx: float, ty: float, exclude: Set[str]) -> Optional[str]:
-            best_sid = None
-            best_d2 = eps * eps
-            for sid, x, y in coords:
-                if sid in exclude:
-                    continue
-                d2 = (x - tx) * (x - tx) + (y - ty) * (y - ty)
-                if d2 <= best_d2:
-                    best_sid = sid
-                    best_d2 = d2
-            return best_sid
-
-        seen_blocks: Set[Tuple[str, str, str, str]] = set()
         res: List[List[str]] = []
-        for sid_a, x0, y0 in coords:
-            used = {sid_a}
-            # 目标四点：A(x0,y0), B(x0+step_x,y0), C(x0,y0+step_y), D(x0+step_x,y0+step_y)
-            sid_b = find_near(x0 + step_x, y0, used)
-            if not sid_b:
-                continue
-            used.add(sid_b)
-            sid_c = find_near(x0, y0 + step_y, used)
-            if not sid_c:
-                continue
-            used.add(sid_c)
-            sid_d = find_near(x0 + step_x, y0 + step_y, used)
-            if not sid_d:
-                continue
-            block = tuple(sorted([sid_a, sid_b, sid_c, sid_d]))
-            if block in seen_blocks:
-                continue
-            seen_blocks.add(block)
-            res.append([sid_a, sid_b, sid_c, sid_d])
+        # 用坐标判断 2×2 ：(x,y),(x+1,y),(x,y+1),(x+1,y+1)
+        by_coord: Dict[Tuple[int, int], str] = {}
+        for nid in free_ids:
+            if nid in self.slots:
+                n = self.slots[nid]
+                by_coord[(n.x, n.y)] = nid
+        for (x, y), sid in by_coord.items():
+            a = sid
+            b = by_coord.get((x + 1, y))
+            c = by_coord.get((x, y + 1))
+            d = by_coord.get((x + 1, y + 1))
+            if b and c and d:
+                block = [a, b, c, d]
+                res.append(block)
         return res
 
 
@@ -300,14 +238,22 @@ class ActionScorer:
     objective: {'EDU':{'w_r':..,'w_p':..,'w_c':..}, 'IND':{...}}
     """
 
-    def __init__(self, objective: Dict[str, Dict[str, float]], normalize: str = 'per-month-pool-minmax'):
+    def __init__(self, objective: Dict[str, Dict[str, float]], normalize: str = 'per-month-pool-minmax', eval_params: Optional[Dict] = None):
         self.objective = objective
         self.normalize = normalize
+        # 默认评估参数，可被配置覆盖
+        self.params = self._build_default_params()
+        if isinstance(eval_params, dict):
+            for k, v in eval_params.items():
+                if isinstance(v, dict) and k in self.params and isinstance(self.params[k], dict):
+                    self.params[k].update(v)
+                else:
+                    self.params[k] = v
 
-    def score_actions(self, actions: List[Action]) -> List[Action]:
+    def score_actions(self, actions: List[Action], river_distance_provider=None) -> List[Action]:
         # 1) 先计算原始 cost/reward/prestige
         for a in actions:
-            self._calc_crp(a)
+            self._calc_crp(a, river_distance_provider=river_distance_provider)
 
         # 2) 归一化（各自维度 min-max）
         costs = [a.cost for a in actions]
@@ -331,27 +277,183 @@ class ActionScorer:
             a.score = float(w.get('w_r', 0.5)) * nr + float(w.get('w_p', 0.3)) * np_ - float(w.get('w_c', 0.2)) * nc
         return actions
 
-    def _calc_crp(self, a: Action) -> None:
-        """简化版评估公式（可用配置替换）。
-        - EDU：reward 更依赖 prestige/容量；cost 随 LP_norm 上升；prestige 随 adjacency 与 LP 增益
-        - IND：reward 随市场/容量（用 LP_norm 近似）；cost 随 GFA_k（用 footprint 面积近似）；prestige 略受污染扣减
+    def _calc_crp(self, a: Action, river_distance_provider=None) -> None:
+        """PRD 正式实现（units: cost=M£, reward=k£/mo, prestige=—）。
+
+        EDU:
+          cost = (Base_EDU[size]+Add_EDU[size]) × LP_norm + ZoneAdd[zone]
+          reward = (α × Capacity[size]) × m_zone × m_adj − OPEX_EDU[size]
+          prestige = PrestigeBase[size] + I(zone==near) + I(adj) − β × Pollution[size]
+        IND:
+          cost = (Base_IND[size]+Add_IND[size]) × LP_norm + ZoneAdd[zone]
+          reward = ((p_market × u × Capacity[size]) / 1000) × m_zone × m_adj − c_opex × GFA_k[size] + s_zone[zone]
+          prestige = PrestigeBase[size] + I(zone==near) + I(adj) − 0.2 × Pollution[size]
         """
-        fp = len(a.footprint_slots)
-        lp = max(0.0, min(1.0, a.LP_norm))
-        if a.agent == 'EDU':
-            cap_k = {'S': 60, 'M': 120, 'L': 240}
-            base_cost = {'S': 0.8, 'M': 1.2, 'L': 2.0}
-            opex = {'S': 0.15, 'M': 0.25, 'L': 0.35}
-            a.cost = base_cost.get(a.size, 1.0) * (0.6 + 0.4 * lp)
-            a.reward = 0.004 * cap_k.get(a.size, 80) * (0.7 + 0.3 * lp) - opex.get(a.size, 0.2)
-            a.prestige = {'S': 0.20, 'M': 0.35, 'L': 0.55}.get(a.size, 0.3) + 0.10 * lp + 0.02 * fp
-        else:  # IND
-            cap_k = {'S': 80, 'M': 200, 'L': 500}
-            gfa_k = {'S': 1.0, 'M': 2.0, 'L': 4.0}
-            opex = 0.12 * gfa_k.get(a.size, 1.0)
-            a.cost = (0.7 + 0.8 * gfa_k.get(a.size, 1.0)) * (0.5 + 0.5 * lp)
-            a.reward = (0.006 * cap_k.get(a.size, 100) * (0.8 + 0.4 * lp)) - opex
-            a.prestige = {'S': 0.05, 'M': 0.02, 'L': -0.02}.get(a.size, 0.0) + 0.04 * (1.0 - lp)
+        P = self.params
+        size = (a.size or 'S')
+        agent = (a.agent or 'EDU')
+        zone = (a.zone or 'mid')
+        lp = self._clamp(a.LP_norm, 0.1, 1.0)
+
+        # --- INT 版地价与河流溢价计算 ---
+        # LP_idx: 10..100，线性映射自 LP_norm（可由配置覆盖）
+        lp_idx_min = int(P.get('LP_idx_min', 10))
+        lp_idx_max = int(P.get('LP_idx_max', 100))
+        lp_idx = int(round(lp_idx_min + (lp_idx_max - lp_idx_min) * lp))
+        lp_idx = max(lp_idx_min, min(lp_idx_max, lp_idx))
+
+        # LandPriceBase: kGBP per LP_idx point → LP_value in kGBP
+        land_price_base = float(P.get('LandPriceBase', 11.0))
+        LP_value = float(lp_idx) * land_price_base
+
+        # river distance（米）
+        river_dist_m = 0.0
+        if callable(river_distance_provider):
+            try:
+                # 取 footprint 内最小距离
+                dists = []
+                for sid in (a.footprint_slots or []):
+                    d = river_distance_provider(str(sid))
+                    if d is not None:
+                        dists.append(float(d))
+                if dists:
+                    river_dist_m = max(0.0, min(dists))
+            except Exception:
+                river_dist_m = 0.0
+
+        # 衰减：2^(- d / RiverD_half_m)
+        half_m = float(P.get('RiverD_half_m', 120.0))
+        if half_m <= 1e-9:
+            decay = 0.0
+        else:
+            decay = 2.0 ** (-(max(0.0, river_dist_m) / half_m))
+        # Max premium pct
+        rpct_map = P.get('RiverPmax_pct', {'IND': 20.0, 'EDU': 15.0})
+        rpct = float(rpct_map.get(agent, 0.0)) / 100.0
+        # Zone revenue base（kGBP）
+        ZR = P.get('ZR', {'near': 80, 'mid': 40, 'far': 0})
+        RevBase_IND = P.get('RevBase_IND', {'S': 180, 'M': 320, 'L': 520})
+        RevBase_EDU = P.get('RevBase_EDU', {'S': 140, 'M': 260, 'L': 420})
+        if agent == 'IND':
+            base_for_premium = float(RevBase_IND.get(size, 0.0)) + float(ZR.get(zone, 0.0))
+        else:
+            base_for_premium = float(RevBase_EDU.get(size, 0.0)) + float(ZR.get(zone, 0.0))
+        raw_river_prem = base_for_premium * rpct * decay
+        # round & clamp
+        cap_k = float(P.get('RiverPremiumCap_kGBP', 10000.0))
+        if str(P.get('RoundMode', 'nearest')).lower() == 'nearest':
+            river_premium = float(int(round(raw_river_prem)))
+        else:
+            river_premium = raw_river_prem
+        river_premium = max(0.0, min(cap_k, river_premium))
+
+        # 邻接：优先读动作标志；否则 footprint>1 视为相邻
+        is_adj = 0
+        if isinstance(a.adjacency, dict):
+            if 'adjacency' in a.adjacency:
+                is_adj = 1 if self._bool(a.adjacency.get('adjacency')) else 0
+            elif 'footprint' in a.adjacency:
+                is_adj = 1 if int(a.adjacency.get('footprint', 1)) > 1 else 0
+        if not is_adj and len(a.footprint_slots) > 1:
+            is_adj = 1
+
+        # 乘子
+        m_zone = float(P.get('m_zone', {}).get(zone, 1.0))
+        m_adj = float(P.get('m_adj', {}).get('on' if is_adj else 'off', 1.0))
+
+        # 区位附加（成本/收入）与 OPEX、租金、基表（kGBP）
+        ZC = P.get('ZC', {'near': 200, 'mid': 100, 'far': 0})
+        OPEX_IND = P.get('OPEX_IND', {'S': 100, 'M': 180, 'L': 300})
+        OPEX_EDU = P.get('OPEX_EDU', {'S': 70, 'M': 120, 'L': 190})
+        Rent = P.get('Rent', {'S': 25, 'M': 45, 'L': 70})
+        Adj_bonus = float(P.get('Adj_bonus', 0))
+        # Base costs
+        BaseCost_IND = P.get('BaseCost_IND', {'S': 900, 'M': 1500, 'L': 2400})
+        BaseCost_EDU = P.get('BaseCost_EDU', {'S': 700, 'M': 1200, 'L': 1900})
+
+        if agent == 'EDU':
+            # 建造成本（含地价货币化）
+            cost = float(BaseCost_EDU.get(size, 0.0)) + float(ZC.get(zone, 0.0)) + LP_value
+            # 月度收入（build + land）
+            rev_build = float(RevBase_EDU.get(size, 0.0)) + float(ZR.get(zone, 0.0)) + Adj_bonus * is_adj - float(OPEX_EDU.get(size, 0.0)) + river_premium
+            rev_land = float(Rent.get(size, 0.0))
+            reward = rev_build + rev_land
+            # 声望先延用旧表（如需可改）
+            pres0 = float(P.get('PrestigeBase_EDU', {'S': 0.2, 'M': 0.6, 'L': 1.0}).get(size, 0.0))
+            prestige = pres0
+        else:
+            cost = float(BaseCost_IND.get(size, 0.0)) + float(ZC.get(zone, 0.0)) + LP_value
+            rev = float(RevBase_IND.get(size, 0.0)) + float(ZR.get(zone, 0.0)) + Adj_bonus * is_adj - float(OPEX_IND.get(size, 0.0)) - float(Rent.get(size, 0.0)) + river_premium
+            reward = rev
+            pres0 = float(P.get('PrestigeBase_IND', {'S': 0.2, 'M': 0.1, 'L': -0.1}).get(size, 0.0))
+            prestige = pres0
+
+        # --- LP 正相关收益增益（INT 版）---
+        # reward *= (1 + k * LP_norm)
+        kmap = P.get('RewardLP_k', {'IND': 0.25, 'EDU': 0.10})
+        try:
+            k_lp = float(kmap.get(agent, 0.0))
+        except Exception:
+            k_lp = 0.0
+        reward = reward * (1.0 + k_lp * lp)
+
+        # 整数化（与 RoundMode 一致，默认 nearest）
+        if str(P.get('RoundMode', 'nearest')).lower() == 'nearest':
+            reward = float(int(round(reward)))
+
+        a.cost = float(cost)
+        a.reward = float(reward)
+        a.prestige = float(prestige)
+
+    # ---- helpers & defaults ----
+    def _clamp(self, v: float, lo: float, hi: float) -> float:
+        try:
+            v = float(v)
+        except Exception:
+            v = lo
+        return max(lo, min(hi, v))
+
+    def _bool(self, v) -> bool:
+        if isinstance(v, bool):
+            return v
+        if v is None:
+            return False
+        try:
+            return bool(int(v))
+        except Exception:
+            return str(v).lower() in ('true', 'yes', 'y', 'on', '1')
+
+    def _build_default_params(self) -> Dict:
+        # 可由 cfg.growth_v4_0.evaluation 覆盖
+        return {
+            # --- EDU ---
+            'Base_EDU': {'S': 1.2, 'M': 2.8, 'L': 5.5},
+            'Add_EDU':  {'S': 0.4, 'M': 0.9, 'L': 1.6},
+            'Capacity_EDU': {'S': 60, 'M': 120, 'L': 240},
+            'OPEX_EDU':     {'S': 0.20, 'M': 0.35, 'L': 0.55},
+            'PrestigeBase_EDU': {'S': 0.2, 'M': 0.6, 'L': 1.0},
+            'Pollution_EDU':    {'S': 0.2, 'M': 0.4, 'L': 0.6},
+
+            # --- IND ---
+            'Base_IND': {'S': 1.0, 'M': 2.2, 'L': 4.5},
+            'Add_IND':  {'S': 0.5, 'M': 1.0, 'L': 2.0},
+            'Capacity_IND': {'S': 80, 'M': 200, 'L': 500},
+            'GFA_k':        {'S': 1.0, 'M': 2.0, 'L': 4.0},
+            'PrestigeBase_IND': {'S': 0.2, 'M': 0.1, 'L': -0.1},
+            'Pollution_IND':    {'S': 0.6, 'M': 0.9, 'L': 1.2},
+
+            # --- Shared / scalars ---
+            'ZoneAdd': {'near': 0.8, 'mid': 0.3, 'far': 0.0},
+            's_zone':  {'near': 0.5, 'mid': 0.2, 'far': 0.0},
+            'm_zone':  {'near': 1.10, 'mid': 1.00, 'far': 0.90},
+            'm_adj':   {'on': 1.10, 'off': 1.00},
+
+            'alpha': 0.08,
+            'beta':  0.25,
+            'p_market': 12.0,
+            'u': 0.85,
+            'c_opex': 0.30,
+        }
 
 
 # -----------------------------
@@ -447,8 +549,10 @@ class V4Planner:
             'IND': obj.get('IND', {'w_r': 0.6, 'w_p': 0.2, 'w_c': 0.2}),
         }
         self.normalize = str(obj.get('normalize', 'per-month-pool-minmax'))
+        # 读取评估参数（可覆盖默认表）
+        self.eval_params = cfg.get('growth_v4_0', {}).get('evaluation', {})
 
-        self.scorer = ActionScorer(self.objective, self.normalize)
+        self.scorer = ActionScorer(self.objective, self.normalize, eval_params=self.eval_params)
         self.selector = SequenceSelector(self.length_max, self.beam_width, self.max_expansions)
 
     def plan(
@@ -457,6 +561,7 @@ class V4Planner:
         candidates: Set[str],
         occupied: Set[str],
         lp_provider,
+        river_distance_provider=None,
         agent_types: Optional[List[str]] = None,
         sizes: Optional[Dict[str, List[str]]] = None,
     ) -> Tuple[List[Action], Sequence]:
@@ -474,7 +579,7 @@ class V4Planner:
             caps=self.caps,
         )
 
-        scored = self.scorer.score_actions(actions)
+        scored = self.scorer.score_actions(actions, river_distance_provider=river_distance_provider)
         best_seq = self.selector.choose_best_sequence(scored)
         return scored, best_seq
 
