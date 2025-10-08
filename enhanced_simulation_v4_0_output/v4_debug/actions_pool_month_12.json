@@ -1,5082 +1,2526 @@
 {
   "month": 12,
-  "count": 423,
+  "count": 210,
   "actions": [
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1250"
+        "s_11"
       ],
-      "lp_norm": 0.3384148555350649,
-      "cost": 1240.0,
-      "reward": 233.0,
+      "lp_norm": 0.6260190876432264,
+      "cost": 1626.0,
+      "reward": 289.0,
       "prestige": 0.2,
-      "score": 0.000850668136106902
+      "score": 0.02902684276586033
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_981"
+        "s_64"
       ],
-      "lp_norm": 0.7818514157774819,
-      "cost": 1680.0,
-      "reward": 248.0,
+      "lp_norm": 0.5514025657181058,
+      "cost": 1560.0,
+      "reward": 288.0,
       "prestige": 0.2,
-      "score": -0.0064506130320980855
+      "score": 0.031101665905979004
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1277"
+        "s_0"
       ],
-      "lp_norm": 0.28692247939460314,
-      "cost": 1196.0,
-      "reward": 232.0,
-      "prestige": 0.2,
-      "score": 0.002107728337236534
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1147"
-      ],
-      "lp_norm": 0.7711033977036373,
-      "cost": 1669.0,
-      "reward": 246.0,
-      "prestige": 0.2,
-      "score": -0.007980610276897646
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1193"
-      ],
-      "lp_norm": 0.8271499867903724,
-      "cost": 1724.0,
-      "reward": 247.0,
-      "prestige": 0.2,
-      "score": -0.00981540157046425
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1034"
-      ],
-      "lp_norm": 0.5025813321538812,
-      "cost": 1405.0,
-      "reward": 239.0,
-      "prestige": 0.2,
-      "score": -0.0014921132387381193
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1201"
-      ],
-      "lp_norm": 0.6369066455437369,
-      "cost": 1537.0,
-      "reward": 242.0,
-      "prestige": 0.2,
-      "score": -0.005263293842127016
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1221"
-      ],
-      "lp_norm": 0.630418711533568,
-      "cost": 1537.0,
-      "reward": 242.0,
-      "prestige": 0.2,
-      "score": -0.005263293842127016
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1187"
-      ],
-      "lp_norm": 0.5592678601138628,
-      "cost": 1460.0,
-      "reward": 239.0,
-      "prestige": 0.2,
-      "score": -0.004380768700922993
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1157"
-      ],
-      "lp_norm": 0.8890658834905093,
-      "cost": 1790.0,
-      "reward": 251.0,
-      "prestige": 0.2,
-      "score": -0.009066331450613033
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1226"
-      ],
-      "lp_norm": 0.56887147709648,
-      "cost": 1471.0,
-      "reward": 240.0,
-      "prestige": 0.2,
-      "score": -0.0039046356247416977
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1215"
-      ],
-      "lp_norm": 0.48418276063872123,
-      "cost": 1394.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.0019682463149194116
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1144"
-      ],
-      "lp_norm": 0.6937813299973606,
-      "cost": 1592.0,
-      "reward": 245.0,
-      "prestige": 0.2,
-      "score": -0.00499035679845709
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1443"
-      ],
-      "lp_norm": 0.33225365845786226,
-      "cost": 1240.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.000850668136106902
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1175"
-      ],
-      "lp_norm": 0.9096715186921065,
-      "cost": 1812.0,
-      "reward": 250.0,
-      "prestige": 0.2,
-      "score": -0.011275657804105249
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1138"
-      ],
-      "lp_norm": 0.9303089827339183,
-      "cost": 1834.0,
-      "reward": 251.0,
-      "prestige": 0.2,
-      "score": -0.011377255820360931
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1352"
-      ],
-      "lp_norm": 0.7348748901442237,
-      "cost": 1636.0,
-      "reward": 245.0,
-      "prestige": 0.2,
-      "score": -0.007301281168204988
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1238"
-      ],
-      "lp_norm": 0.2995800572741834,
-      "cost": 1207.0,
-      "reward": 232.0,
-      "prestige": 0.2,
-      "score": 0.001529997244799559
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1359"
-      ],
-      "lp_norm": 0.5330254931958924,
-      "cost": 1438.0,
-      "reward": 239.0,
-      "prestige": 0.2,
-      "score": -0.0032253065160490427
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1264"
-      ],
-      "lp_norm": 0.30275700509363496,
-      "cost": 1207.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0025838614134178262
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1257"
-      ],
-      "lp_norm": 0.29019839867661745,
-      "cost": 1196.0,
-      "reward": 232.0,
-      "prestige": 0.2,
-      "score": 0.002107728337236534
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1248"
-      ],
-      "lp_norm": 0.30550505313802184,
-      "cost": 1207.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0025838614134178262
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1217"
-      ],
-      "lp_norm": 0.8730080225088994,
-      "cost": 1779.0,
-      "reward": 249.0,
-      "prestige": 0.2,
-      "score": -0.010596328695412594
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1165"
-      ],
-      "lp_norm": 0.8216081056050544,
-      "cost": 1724.0,
-      "reward": 249.0,
-      "prestige": 0.2,
-      "score": -0.00770767323322772
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1481"
-      ],
-      "lp_norm": 0.28715076754606134,
-      "cost": 1196.0,
-      "reward": 231.0,
-      "prestige": 0.2,
-      "score": 0.001053864168618267
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1129"
-      ],
-      "lp_norm": 0.9852590418584112,
-      "cost": 1889.0,
-      "reward": 254.0,
-      "prestige": 0.2,
-      "score": -0.011104318776691005
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1386"
-      ],
-      "lp_norm": 0.5158182473688148,
-      "cost": 1416.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.0031237084997933606
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1177"
-      ],
-      "lp_norm": 0.9564235183136602,
-      "cost": 1856.0,
-      "reward": 253.0,
-      "prestige": 0.2,
-      "score": -0.01042498966799835
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1234"
-      ],
-      "lp_norm": 0.7127054211723145,
-      "cost": 1614.0,
-      "reward": 244.0,
-      "prestige": 0.2,
-      "score": -0.007199683151949306
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_953"
-      ],
-      "lp_norm": 0.7276905748394271,
-      "cost": 1625.0,
-      "reward": 247.0,
-      "prestige": 0.2,
-      "score": -0.004615821738531478
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1028"
-      ],
-      "lp_norm": 0.47861165469727607,
-      "cost": 1383.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.0013905152224824354
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1452"
-      ],
-      "lp_norm": 0.3033031705037423,
-      "cost": 1207.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0025838614134178262
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1190"
-      ],
-      "lp_norm": 0.6887732393982028,
-      "cost": 1592.0,
-      "reward": 242.0,
-      "prestige": 0.2,
-      "score": -0.00815194930431189
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1145"
-      ],
-      "lp_norm": 0.7680962515031154,
-      "cost": 1669.0,
-      "reward": 247.0,
-      "prestige": 0.2,
-      "score": -0.006926746108279376
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1202"
-      ],
-      "lp_norm": 0.4813704784953411,
-      "cost": 1383.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.0013905152224824354
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1245"
-      ],
-      "lp_norm": 0.32078317054440575,
-      "cost": 1229.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0014283992285438767
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1258"
-      ],
-      "lp_norm": 0.3267632126712098,
-      "cost": 1229.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0014283992285438767
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1236"
-      ],
-      "lp_norm": 0.3246881801920938,
-      "cost": 1229.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0014283992285438767
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1173"
-      ],
-      "lp_norm": 0.9492758140638299,
-      "cost": 1845.0,
-      "reward": 253.0,
-      "prestige": 0.2,
-      "score": -0.009847258575561377
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1285"
-      ],
-      "lp_norm": 0.3188727476361687,
-      "cost": 1229.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0014283992285438767
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1213"
-      ],
-      "lp_norm": 0.8779737682083809,
-      "cost": 1779.0,
-      "reward": 249.0,
-      "prestige": 0.2,
-      "score": -0.010596328695412594
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1232"
-      ],
-      "lp_norm": 0.5500380600711968,
-      "cost": 1460.0,
-      "reward": 239.0,
-      "prestige": 0.2,
-      "score": -0.004380768700922993
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1387"
-      ],
-      "lp_norm": 0.49865981982036756,
-      "cost": 1405.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.002545977407356386
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1399"
-      ],
-      "lp_norm": 0.6316980069021427,
-      "cost": 1537.0,
-      "reward": 242.0,
-      "prestige": 0.2,
-      "score": -0.005263293842127016
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1283"
-      ],
-      "lp_norm": 0.29211460046955395,
-      "cost": 1196.0,
-      "reward": 231.0,
-      "prestige": 0.2,
-      "score": 0.001053864168618267
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1243"
-      ],
-      "lp_norm": 0.3241107770639915,
-      "cost": 1229.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0014283992285438767
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1179"
-      ],
-      "lp_norm": 0.9212921727639132,
-      "cost": 1823.0,
-      "reward": 252.0,
-      "prestige": 0.2,
-      "score": -0.009745660559305688
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1222"
-      ],
-      "lp_norm": 0.5495477612812745,
-      "cost": 1449.0,
-      "reward": 239.0,
-      "prestige": 0.2,
-      "score": -0.003803037608486019
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1053"
-      ],
-      "lp_norm": 0.5467074111271988,
-      "cost": 1449.0,
-      "reward": 240.0,
-      "prestige": 0.2,
-      "score": -0.0027491734398677505
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_976"
-      ],
-      "lp_norm": 0.8239970885879713,
-      "cost": 1724.0,
-      "reward": 249.0,
-      "prestige": 0.2,
-      "score": -0.00770767323322772
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1198"
-      ],
-      "lp_norm": 0.635176843962642,
-      "cost": 1537.0,
-      "reward": 242.0,
-      "prestige": 0.2,
-      "score": -0.005263293842127016
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1227"
-      ],
-      "lp_norm": 0.5633919618654688,
-      "cost": 1471.0,
-      "reward": 240.0,
-      "prestige": 0.2,
-      "score": -0.0039046356247416977
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1126"
-      ],
-      "lp_norm": 0.8776618188371186,
-      "cost": 1779.0,
-      "reward": 249.0,
-      "prestige": 0.2,
-      "score": -0.010596328695412594
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1210"
-      ],
-      "lp_norm": 0.713514929856766,
-      "cost": 1614.0,
-      "reward": 245.0,
-      "prestige": 0.2,
-      "score": -0.006145818983331039
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1408"
-      ],
-      "lp_norm": 0.48293774934605055,
-      "cost": 1383.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.0013905152224824354
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1191"
-      ],
-      "lp_norm": 0.6888780003432516,
-      "cost": 1592.0,
-      "reward": 243.0,
-      "prestige": 0.2,
-      "score": -0.0070980851356936235
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1136"
-      ],
-      "lp_norm": 0.871007788121438,
-      "cost": 1768.0,
-      "reward": 251.0,
-      "prestige": 0.2,
-      "score": -0.007910869265739084
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1419"
-      ],
-      "lp_norm": 0.28892012805692924,
-      "cost": 1196.0,
-      "reward": 232.0,
-      "prestige": 0.2,
-      "score": 0.002107728337236534
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1151"
-      ],
-      "lp_norm": 0.9441664374060954,
-      "cost": 1845.0,
-      "reward": 253.0,
-      "prestige": 0.2,
-      "score": -0.009847258575561377
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1203"
-      ],
-      "lp_norm": 0.6933639550220484,
-      "cost": 1592.0,
-      "reward": 244.0,
-      "prestige": 0.2,
-      "score": -0.006044220967075357
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1392"
-      ],
-      "lp_norm": 0.4788648220554309,
-      "cost": 1383.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.0013905152224824354
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1143"
-      ],
-      "lp_norm": 0.9655045934704938,
-      "cost": 1867.0,
-      "reward": 253.0,
-      "prestige": 0.2,
-      "score": -0.01100272076043533
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1381"
-      ],
-      "lp_norm": 0.6644521836151955,
-      "cost": 1570.0,
-      "reward": 244.0,
-      "prestige": 0.2,
-      "score": -0.004888758782201404
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1218"
-      ],
-      "lp_norm": 0.6006945357689016,
-      "cost": 1504.0,
-      "reward": 241.0,
-      "prestige": 0.2,
-      "score": -0.004583964733434358
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1265"
-      ],
-      "lp_norm": 0.29739603284388066,
-      "cost": 1207.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0025838614134178262
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1131"
-      ],
-      "lp_norm": 0.9423736293386562,
-      "cost": 1845.0,
-      "reward": 251.0,
-      "prestige": 0.2,
-      "score": -0.011954986912797911
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1362"
-      ],
-      "lp_norm": 0.8162924300621512,
-      "cost": 1713.0,
-      "reward": 247.0,
-      "prestige": 0.2,
-      "score": -0.009237670478027274
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1207"
-      ],
-      "lp_norm": 0.5607272391232587,
-      "cost": 1460.0,
-      "reward": 240.0,
-      "prestige": 0.2,
-      "score": -0.003326904532304725
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1017"
-      ],
-      "lp_norm": 0.5541261186921218,
-      "cost": 1460.0,
-      "reward": 240.0,
-      "prestige": 0.2,
-      "score": -0.003326904532304725
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1174"
-      ],
-      "lp_norm": 0.9436598759008944,
-      "cost": 1845.0,
-      "reward": 251.0,
-      "prestige": 0.2,
-      "score": -0.011954986912797911
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1160"
-      ],
-      "lp_norm": 0.7932109818367221,
-      "cost": 1691.0,
-      "reward": 247.0,
-      "prestige": 0.2,
-      "score": -0.008082208293153328
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1223"
-      ],
-      "lp_norm": 0.8472730402199214,
-      "cost": 1746.0,
-      "reward": 247.0,
-      "prestige": 0.2,
-      "score": -0.010970863755338196
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1309"
-      ],
-      "lp_norm": 0.8565649269082636,
-      "cost": 1757.0,
-      "reward": 249.0,
-      "prestige": 0.2,
-      "score": -0.009440866510538645
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1172"
-      ],
-      "lp_norm": 0.9739906261157385,
-      "cost": 1878.0,
-      "reward": 253.0,
-      "prestige": 0.2,
-      "score": -0.011580451852872303
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1168"
-      ],
-      "lp_norm": 0.8891292827705496,
-      "cost": 1790.0,
-      "reward": 251.0,
-      "prestige": 0.2,
-      "score": -0.009066331450613033
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1155"
-      ],
-      "lp_norm": 0.858999268310203,
-      "cost": 1757.0,
-      "reward": 248.0,
-      "prestige": 0.2,
-      "score": -0.010494730679156912
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1230"
-      ],
-      "lp_norm": 0.5848650156106153,
-      "cost": 1493.0,
-      "reward": 240.0,
-      "prestige": 0.2,
-      "score": -0.005060097809615648
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1220"
-      ],
-      "lp_norm": 0.7167495900652352,
-      "cost": 1625.0,
-      "reward": 244.0,
-      "prestige": 0.2,
-      "score": -0.007777414244386282
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1394"
-      ],
-      "lp_norm": 0.4838184009970138,
-      "cost": 1394.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.0019682463149194116
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1453"
-      ],
-      "lp_norm": 0.3429872844418679,
+      "lp_norm": 0.3493633382985958,
       "cost": 1251.0,
-      "reward": 234.0,
+      "reward": 236.0,
       "prestige": 0.2,
-      "score": 0.0013268012122881938
+      "score": -0.003545184847101781
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1166"
+        "s_37"
       ],
-      "lp_norm": 0.9097292425212025,
-      "cost": 1812.0,
-      "reward": 251.0,
+      "lp_norm": 0.49600407478884695,
+      "cost": 1505.0,
+      "reward": 285.0,
       "prestige": 0.2,
-      "score": -0.010221793635486986
+      "score": 0.030799435189411223
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1208"
+        "s_4"
       ],
-      "lp_norm": 0.5148463755483899,
-      "cost": 1416.0,
-      "reward": 238.0,
+      "lp_norm": 0.3358220568207771,
+      "cost": 1240.0,
+      "reward": 236.0,
       "prestige": 0.2,
-      "score": -0.0031237084997933606
+      "score": -0.0030431309904153363
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1219"
+        "s_80"
       ],
-      "lp_norm": 0.5869100283771385,
-      "cost": 1493.0,
-      "reward": 240.0,
+      "lp_norm": 0.6171758881005505,
+      "cost": 1526.0,
+      "reward": 245.0,
       "prestige": 0.2,
-      "score": -0.005060097809615648
+      "score": -0.007659031264262893
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1141"
+        "s_16"
       ],
-      "lp_norm": 0.9131177096366171,
-      "cost": 1812.0,
-      "reward": 251.0,
-      "prestige": 0.2,
-      "score": -0.010221793635486986
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1368"
-      ],
-      "lp_norm": 0.6805001475429767,
-      "cost": 1581.0,
-      "reward": 243.0,
-      "prestige": 0.2,
-      "score": -0.006520354043256647
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1445"
-      ],
-      "lp_norm": 0.29040318795474623,
-      "cost": 1196.0,
-      "reward": 231.0,
-      "prestige": 0.2,
-      "score": 0.001053864168618267
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1390"
-      ],
-      "lp_norm": 0.6584287257558532,
-      "cost": 1559.0,
-      "reward": 243.0,
-      "prestige": 0.2,
-      "score": -0.005364891858382698
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1200"
-      ],
-      "lp_norm": 0.5498593096639787,
-      "cost": 1449.0,
-      "reward": 239.0,
-      "prestige": 0.2,
-      "score": -0.003803037608486019
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_974"
-      ],
-      "lp_norm": 0.8448889593531315,
-      "cost": 1746.0,
-      "reward": 250.0,
-      "prestige": 0.2,
-      "score": -0.007809271249483395
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1164"
-      ],
-      "lp_norm": 0.9071150197508607,
-      "cost": 1812.0,
-      "reward": 251.0,
-      "prestige": 0.2,
-      "score": -0.010221793635486986
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1240"
-      ],
-      "lp_norm": 0.3505538592261345,
-      "cost": 1262.0,
-      "reward": 234.0,
-      "prestige": 0.2,
-      "score": 0.0007490701198512189
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1125"
-      ],
-      "lp_norm": 0.7965014357131882,
-      "cost": 1702.0,
-      "reward": 248.0,
-      "prestige": 0.2,
-      "score": -0.007606075216972038
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1205"
-      ],
-      "lp_norm": 0.5099168051836136,
-      "cost": 1416.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.0031237084997933606
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1216"
-      ],
-      "lp_norm": 0.8872080809797528,
-      "cost": 1790.0,
-      "reward": 248.0,
-      "prestige": 0.2,
-      "score": -0.012227923956467834
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1199"
-      ],
-      "lp_norm": 0.457492762956783,
-      "cost": 1361.0,
+      "lp_norm": 0.4001716098463918,
+      "cost": 1306.0,
       "reward": 237.0,
       "prestige": 0.2,
-      "score": -0.0012889172062267532
+      "score": -0.005117954130534003
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1278"
+        "s_60"
       ],
-      "lp_norm": 0.2964354469242527,
-      "cost": 1207.0,
-      "reward": 232.0,
+      "lp_norm": 0.6418983407432843,
+      "cost": 1648.0,
+      "reward": 292.0,
       "prestige": 0.2,
-      "score": 0.001529997244799559
+      "score": 0.030835235052487447
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1122"
+        "s_53"
       ],
-      "lp_norm": 0.8727034308101105,
-      "cost": 1779.0,
-      "reward": 250.0,
+      "lp_norm": 0.8501522914058368,
+      "cost": 1857.0,
+      "reward": 297.0,
       "prestige": 0.2,
-      "score": -0.009542464526794324
+      "score": 0.025983711775444993
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1292"
+        "s_12"
       ],
-      "lp_norm": 0.766585246985353,
-      "cost": 1669.0,
-      "reward": 246.0,
+      "lp_norm": 0.49871265304981643,
+      "cost": 1505.0,
+      "reward": 284.0,
       "prestige": 0.2,
-      "score": -0.007980610276897646
+      "score": 0.02986193518941123
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1214"
+        "s_62"
       ],
-      "lp_norm": 0.7953142177639951,
-      "cost": 1702.0,
-      "reward": 246.0,
+      "lp_norm": 0.6553059674553045,
+      "cost": 1659.0,
+      "reward": 292.0,
       "prestige": 0.2,
-      "score": -0.009713803554208571
+      "score": 0.030333181195801
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1045"
+        "s_14"
       ],
-      "lp_norm": 0.5012383026428586,
-      "cost": 1405.0,
+      "lp_norm": 0.4743209860451089,
+      "cost": 1483.0,
+      "reward": 284.0,
+      "prestige": 0.2,
+      "score": 0.03086604290278412
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_28"
+      ],
+      "lp_norm": 0.5948402977836504,
+      "cost": 1604.0,
+      "reward": 289.0,
+      "prestige": 0.2,
+      "score": 0.030030950479233223
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_49"
+      ],
+      "lp_norm": 0.8694010299395732,
+      "cost": 1868.0,
+      "reward": 298.0,
+      "prestige": 0.2,
+      "score": 0.026419157918758554
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_19"
+      ],
+      "lp_norm": 0.3870039654691433,
+      "cost": 1295.0,
+      "reward": 237.0,
+      "prestige": 0.2,
+      "score": -0.004615900273847557
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_79"
+      ],
+      "lp_norm": 0.5403104933608446,
+      "cost": 1449.0,
+      "reward": 242.0,
+      "prestige": 0.2,
+      "score": -0.006957154267457782
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_24"
+      ],
+      "lp_norm": 0.4668714577823526,
+      "cost": 1372.0,
       "reward": 239.0,
       "prestige": 0.2,
-      "score": -0.0014921132387381193
+      "score": -0.0062552772706526705
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1181"
+        "s_67"
       ],
-      "lp_norm": 0.7565376128515773,
-      "cost": 1658.0,
-      "reward": 246.0,
+      "lp_norm": 0.5854250631368854,
+      "cost": 1593.0,
+      "reward": 289.0,
       "prestige": 0.2,
-      "score": -0.00740287918446067
+      "score": 0.030533004335919663
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1188"
+        "s_8"
       ],
-      "lp_norm": 0.5286425537761825,
-      "cost": 1438.0,
-      "reward": 239.0,
+      "lp_norm": 0.37191383063397787,
+      "cost": 1273.0,
+      "reward": 238.0,
       "prestige": 0.2,
-      "score": -0.0032253065160490427
+      "score": -0.00267429256047467
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1464"
+        "s_20"
       ],
-      "lp_norm": 0.29201746869994977,
-      "cost": 1196.0,
-      "reward": 231.0,
+      "lp_norm": 0.4602365077302154,
+      "cost": 1361.0,
+      "reward": 238.0,
       "prestige": 0.2,
-      "score": 0.001053864168618267
+      "score": -0.006690723413966227
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1012"
+        "s_52"
       ],
-      "lp_norm": 0.6791321346162051,
-      "cost": 1581.0,
-      "reward": 243.0,
+      "lp_norm": 0.7837259235844041,
+      "cost": 1791.0,
+      "reward": 294.0,
       "prestige": 0.2,
-      "score": -0.006520354043256647
+      "score": 0.026183534915563675
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1228"
+        "s_82"
       ],
-      "lp_norm": 0.5674951145369989,
-      "cost": 1471.0,
-      "reward": 241.0,
-      "prestige": 0.2,
-      "score": -0.002850771456123431
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1459"
-      ],
-      "lp_norm": 0.2889706445440997,
-      "cost": 1196.0,
-      "reward": 231.0,
-      "prestige": 0.2,
-      "score": 0.001053864168618267
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1185"
-      ],
-      "lp_norm": 0.7938419214158999,
-      "cost": 1691.0,
-      "reward": 246.0,
-      "prestige": 0.2,
-      "score": -0.009136072461771599
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1195"
-      ],
-      "lp_norm": 0.6602960734369889,
-      "cost": 1559.0,
+      "lp_norm": 0.611601110318951,
+      "cost": 1515.0,
       "reward": 244.0,
       "prestige": 0.2,
-      "score": -0.004311027689764432
+      "score": -0.008094477407576451
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1163"
+        "s_29"
       ],
-      "lp_norm": 0.8329030388844576,
-      "cost": 1735.0,
-      "reward": 249.0,
+      "lp_norm": 0.5220134816060301,
+      "cost": 1527.0,
+      "reward": 286.0,
       "prestige": 0.2,
-      "score": -0.008285404325664693
+      "score": 0.030732827476038338
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1161"
+        "s_30"
       ],
-      "lp_norm": 0.9028696192277578,
-      "cost": 1801.0,
-      "reward": 252.0,
+      "lp_norm": 0.5717815020962222,
+      "cost": 1571.0,
+      "reward": 288.0,
       "prestige": 0.2,
-      "score": -0.008590198374431736
+      "score": 0.03059961204929256
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1018"
+        "s_10"
       ],
-      "lp_norm": 0.5098670436429549,
-      "cost": 1416.0,
-      "reward": 239.0,
+      "lp_norm": 0.5234125600142662,
+      "cost": 1527.0,
+      "reward": 285.0,
       "prestige": 0.2,
-      "score": -0.002069844331175094
+      "score": 0.029795327476038337
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1182"
+        "s_1"
       ],
-      "lp_norm": 0.7346212397682861,
-      "cost": 1636.0,
-      "reward": 245.0,
-      "prestige": 0.2,
-      "score": -0.007301281168204988
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1197"
-      ],
-      "lp_norm": 0.6231120743064825,
-      "cost": 1526.0,
-      "reward": 242.0,
-      "prestige": 0.2,
-      "score": -0.00468556274969004
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1186"
-      ],
-      "lp_norm": 0.8218647471858278,
-      "cost": 1724.0,
-      "reward": 248.0,
-      "prestige": 0.2,
-      "score": -0.008761537401845987
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1426"
-      ],
-      "lp_norm": 0.2979078370013064,
-      "cost": 1207.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0025838614134178262
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1407"
-      ],
-      "lp_norm": 0.5184423628758954,
-      "cost": 1427.0,
-      "reward": 239.0,
-      "prestige": 0.2,
-      "score": -0.0026475754236120683
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1438"
-      ],
-      "lp_norm": 0.28782463520369506,
-      "cost": 1196.0,
-      "reward": 231.0,
-      "prestige": 0.2,
-      "score": 0.001053864168618267
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1229"
-      ],
-      "lp_norm": 0.5088857205383785,
-      "cost": 1416.0,
+      "lp_norm": 0.39409229257482153,
+      "cost": 1295.0,
       "reward": 238.0,
       "prestige": 0.2,
-      "score": -0.0031237084997933606
+      "score": -0.0036784002738475576
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1192"
+        "s_7"
       ],
-      "lp_norm": 0.6173564887782432,
-      "cost": 1526.0,
-      "reward": 241.0,
-      "prestige": 0.2,
-      "score": -0.005739426918308307
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1272"
-      ],
-      "lp_norm": 0.30556020669212036,
-      "cost": 1218.0,
-      "reward": 232.0,
-      "prestige": 0.2,
-      "score": 0.0009522661523625844
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1196"
-      ],
-      "lp_norm": 0.49553042014118387,
-      "cost": 1405.0,
-      "reward": 238.0,
-      "prestige": 0.2,
-      "score": -0.002545977407356386
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1276"
-      ],
-      "lp_norm": 0.3018532717111678,
-      "cost": 1207.0,
-      "reward": 232.0,
-      "prestige": 0.2,
-      "score": 0.001529997244799559
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1356"
-      ],
-      "lp_norm": 0.4626810575974264,
-      "cost": 1372.0,
-      "reward": 237.0,
-      "prestige": 0.2,
-      "score": -0.0018666482986637277
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1235"
-      ],
-      "lp_norm": 0.5356408639468441,
-      "cost": 1438.0,
-      "reward": 239.0,
-      "prestige": 0.2,
-      "score": -0.0032253065160490427
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1150"
-      ],
-      "lp_norm": 0.9708977799351618,
-      "cost": 1867.0,
-      "reward": 253.0,
-      "prestige": 0.2,
-      "score": -0.01100272076043533
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1441"
-      ],
-      "lp_norm": 0.31544333378797784,
-      "cost": 1218.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0020061303209808513
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1358"
-      ],
-      "lp_norm": 0.7594808487547302,
-      "cost": 1658.0,
-      "reward": 246.0,
-      "prestige": 0.2,
-      "score": -0.00740287918446067
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1184"
-      ],
-      "lp_norm": 0.6221316315750665,
-      "cost": 1526.0,
-      "reward": 241.0,
-      "prestige": 0.2,
-      "score": -0.005739426918308307
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1224"
-      ],
-      "lp_norm": 0.5392849371444356,
-      "cost": 1449.0,
-      "reward": 239.0,
-      "prestige": 0.2,
-      "score": -0.003803037608486019
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1374"
-      ],
-      "lp_norm": 0.7090287463347196,
-      "cost": 1614.0,
-      "reward": 245.0,
-      "prestige": 0.2,
-      "score": -0.006145818983331039
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1142"
-      ],
-      "lp_norm": 0.905399580099596,
-      "cost": 1801.0,
-      "reward": 251.0,
-      "prestige": 0.2,
-      "score": -0.009644062543050006
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1281"
-      ],
-      "lp_norm": 0.2933951718340544,
-      "cost": 1196.0,
-      "reward": 231.0,
-      "prestige": 0.2,
-      "score": 0.001053864168618267
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1344"
-      ],
-      "lp_norm": 0.8235722490932137,
-      "cost": 1724.0,
-      "reward": 248.0,
-      "prestige": 0.2,
-      "score": -0.008761537401845987
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1442"
-      ],
-      "lp_norm": 0.30751806284549643,
-      "cost": 1218.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0020061303209808513
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1194"
-      ],
-      "lp_norm": 0.6506986716040666,
-      "cost": 1559.0,
-      "reward": 242.0,
-      "prestige": 0.2,
-      "score": -0.006418756027000965
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1326"
-      ],
-      "lp_norm": 0.7698296304707747,
-      "cost": 1669.0,
-      "reward": 247.0,
-      "prestige": 0.2,
-      "score": -0.006926746108279376
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1140"
-      ],
-      "lp_norm": 0.855008311726338,
-      "cost": 1757.0,
-      "reward": 249.0,
-      "prestige": 0.2,
-      "score": -0.009440866510538645
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1253"
-      ],
-      "lp_norm": 0.31318765439365837,
-      "cost": 1218.0,
-      "reward": 233.0,
-      "prestige": 0.2,
-      "score": 0.0020061303209808513
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1327"
-      ],
-      "lp_norm": 0.7175491947886043,
-      "cost": 1625.0,
-      "reward": 245.0,
-      "prestige": 0.2,
-      "score": -0.006723550075768015
-    },
-    {
-      "agent": "EDU",
-      "size": "S",
-      "footprint_slots": [
-        "s_1261"
-      ],
-      "lp_norm": 0.31988329723229997,
+      "lp_norm": 0.3194225431770671,
       "cost": 1229.0,
-      "reward": 233.0,
+      "reward": 236.0,
       "prestige": 0.2,
-      "score": 0.0014283992285438767
+      "score": -0.0025410771337288918
     },
     {
       "agent": "EDU",
       "size": "S",
       "footprint_slots": [
-        "s_1225"
+        "s_34"
       ],
-      "lp_norm": 0.6272864187778793,
-      "cost": 1526.0,
+      "lp_norm": 0.468005645249415,
+      "cost": 1472.0,
+      "reward": 285.0,
+      "prestige": 0.2,
+      "score": 0.03230559675947056
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_65"
+      ],
+      "lp_norm": 0.7249504178572065,
+      "cost": 1725.0,
+      "reward": 294.0,
+      "prestige": 0.2,
+      "score": 0.02919585805568234
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_33"
+      ],
+      "lp_norm": 0.6451125542883582,
+      "cost": 1648.0,
+      "reward": 291.0,
+      "prestige": 0.2,
+      "score": 0.029897735052487454
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_22"
+      ],
+      "lp_norm": 0.36638335334882366,
+      "cost": 1273.0,
+      "reward": 236.0,
+      "prestige": 0.2,
+      "score": -0.00454929256047467
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_15"
+      ],
+      "lp_norm": 0.5091965586354945,
+      "cost": 1516.0,
+      "reward": 286.0,
+      "prestige": 0.2,
+      "score": 0.03123488133272478
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_295"
+      ],
+      "lp_norm": 0.4471194782958659,
+      "cost": 1450.0,
+      "reward": 284.0,
+      "prestige": 0.2,
+      "score": 0.032372204472843454
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_21"
+      ],
+      "lp_norm": 0.4926554918824573,
+      "cost": 1394.0,
+      "reward": 240.0,
+      "prestige": 0.2,
+      "score": -0.0063218849840255605
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_68"
+      ],
+      "lp_norm": 0.8122490959996791,
+      "cost": 1813.0,
+      "reward": 296.0,
+      "prestige": 0.2,
+      "score": 0.027054427202190784
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_71"
+      ],
+      "lp_norm": 0.4608412995944001,
+      "cost": 1361.0,
+      "reward": 241.0,
+      "prestige": 0.2,
+      "score": -0.003878223413966226
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_83"
+      ],
+      "lp_norm": 0.6758320771641103,
+      "cost": 1581.0,
+      "reward": 245.0,
+      "prestige": 0.2,
+      "score": -0.010169300547695114
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_2"
+      ],
+      "lp_norm": 0.5107058290495592,
+      "cost": 1516.0,
+      "reward": 287.0,
+      "prestige": 0.2,
+      "score": 0.03217238133272478
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_63"
+      ],
+      "lp_norm": 0.7084085551031623,
+      "cost": 1714.0,
+      "reward": 294.0,
+      "prestige": 0.2,
+      "score": 0.029697911912368785
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_5"
+      ],
+      "lp_norm": 0.38436713083733753,
+      "cost": 1295.0,
+      "reward": 238.0,
+      "prestige": 0.2,
+      "score": -0.0036784002738475576
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_32"
+      ],
+      "lp_norm": 0.5602170998647277,
+      "cost": 1560.0,
+      "reward": 288.0,
+      "prestige": 0.2,
+      "score": 0.031101665905979004
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_13"
+      ],
+      "lp_norm": 0.5386751178516611,
+      "cost": 1538.0,
+      "reward": 286.0,
+      "prestige": 0.2,
+      "score": 0.03023077361935189
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_56"
+      ],
+      "lp_norm": 0.7441022701177296,
+      "cost": 1747.0,
+      "reward": 294.0,
+      "prestige": 0.2,
+      "score": 0.028191750342309453
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_36"
+      ],
+      "lp_norm": 0.7086813151831032,
+      "cost": 1714.0,
+      "reward": 293.0,
+      "prestige": 0.2,
+      "score": 0.028760411912368777
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_27"
+      ],
+      "lp_norm": 0.5446769227457211,
+      "cost": 1549.0,
+      "reward": 287.0,
+      "prestige": 0.2,
+      "score": 0.03066621976266545
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_43"
+      ],
+      "lp_norm": 0.8716515300598133,
+      "cost": 1868.0,
+      "reward": 298.0,
+      "prestige": 0.2,
+      "score": 0.026419157918758554
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_23"
+      ],
+      "lp_norm": 0.4222880716330534,
+      "cost": 1328.0,
+      "reward": 238.0,
+      "prestige": 0.2,
+      "score": -0.005184561843906895
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_85"
+      ],
+      "lp_norm": 0.706423804321117,
+      "cost": 1714.0,
+      "reward": 294.0,
+      "prestige": 0.2,
+      "score": 0.029697911912368785
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_9"
+      ],
+      "lp_norm": 0.41164618332114056,
+      "cost": 1317.0,
+      "reward": 239.0,
+      "prestige": 0.2,
+      "score": -0.0037450079872204493
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_75"
+      ],
+      "lp_norm": 0.48769146086087223,
+      "cost": 1394.0,
+      "reward": 241.0,
+      "prestige": 0.2,
+      "score": -0.005384384984025561
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_3"
+      ],
+      "lp_norm": 0.4335846153690358,
+      "cost": 1339.0,
+      "reward": 240.0,
+      "prestige": 0.2,
+      "score": -0.003811615700593336
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_77"
+      ],
+      "lp_norm": 0.554415531387541,
+      "cost": 1460.0,
+      "reward": 244.0,
+      "prestige": 0.2,
+      "score": -0.00558420812414423
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_84"
+      ],
+      "lp_norm": 0.7333060624974789,
+      "cost": 1636.0,
+      "reward": 248.0,
+      "prestige": 0.2,
+      "score": -0.009867069831127343
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_39"
+      ],
+      "lp_norm": 0.7753081073934127,
+      "cost": 1780.0,
+      "reward": 295.0,
+      "prestige": 0.2,
+      "score": 0.027623088772250122
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_17"
+      ],
+      "lp_norm": 0.5114988000049205,
+      "cost": 1416.0,
+      "reward": 239.0,
+      "prestige": 0.2,
+      "score": -0.008263492697398449
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_31"
+      ],
+      "lp_norm": 0.43718925669231123,
+      "cost": 1439.0,
+      "reward": 284.0,
+      "prestige": 0.2,
+      "score": 0.0328742583295299
+    },
+    {
+      "agent": "EDU",
+      "size": "S",
+      "footprint_slots": [
+        "s_73"
+      ],
+      "lp_norm": 0.47017132793684313,
+      "cost": 1372.0,
       "reward": 242.0,
       "prestige": 0.2,
-      "score": -0.00468556274969004
+      "score": -0.003442777270652668
     },
     {
       "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1250"
-      ],
-      "lp_norm": 0.3384148555350649,
-      "cost": 1740.0,
-      "reward": 392.0,
-      "prestige": 0.6,
-      "score": 0.3671545667447307
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_981"
-      ],
-      "lp_norm": 0.7818514157774819,
-      "cost": 2180.0,
-      "reward": 417.0,
-      "prestige": 0.6,
-      "score": 0.3703919272627083
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1277"
-      ],
-      "lp_norm": 0.28692247939460314,
-      "cost": 1696.0,
-      "reward": 391.0,
-      "prestige": 0.6,
-      "score": 0.36841162694586027
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1147"
-      ],
-      "lp_norm": 0.7711033977036373,
-      "cost": 2169.0,
-      "reward": 415.0,
-      "prestige": 0.6,
-      "score": 0.3688619300179088
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1193"
-      ],
-      "lp_norm": 0.8271499867903724,
-      "cost": 2224.0,
-      "reward": 415.0,
-      "prestige": 0.6,
-      "score": 0.3659732745557239
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1034"
-      ],
-      "lp_norm": 0.5025813321538812,
-      "cost": 1905.0,
-      "reward": 402.0,
-      "prestige": 0.6,
-      "score": 0.36902724204435877
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1201"
-      ],
-      "lp_norm": 0.6369066455437369,
-      "cost": 2037.0,
-      "reward": 407.0,
-      "prestige": 0.6,
-      "score": 0.36736378977820633
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1221"
-      ],
-      "lp_norm": 0.630418711533568,
-      "cost": 2037.0,
-      "reward": 407.0,
-      "prestige": 0.6,
-      "score": 0.36736378977820633
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1187"
-      ],
-      "lp_norm": 0.5592678601138628,
-      "cost": 1960.0,
-      "reward": 402.0,
-      "prestige": 0.6,
-      "score": 0.36613858658217385
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1157"
-      ],
-      "lp_norm": 0.8890658834905093,
-      "cost": 2290.0,
-      "reward": 422.0,
-      "prestige": 0.6,
-      "score": 0.3698839371814299
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1226"
-      ],
-      "lp_norm": 0.56887147709648,
-      "cost": 1971.0,
-      "reward": 403.0,
-      "prestige": 0.6,
-      "score": 0.36661471965835507
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1215"
-      ],
-      "lp_norm": 0.48418276063872123,
-      "cost": 1894.0,
-      "reward": 399.0,
-      "prestige": 0.6,
-      "score": 0.3664433806309409
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1144"
-      ],
-      "lp_norm": 0.6937813299973606,
-      "cost": 2092.0,
-      "reward": 412.0,
-      "prestige": 0.6,
-      "score": 0.3697444551591128
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1443"
-      ],
-      "lp_norm": 0.33225365845786226,
-      "cost": 1740.0,
-      "reward": 392.0,
-      "prestige": 0.6,
-      "score": 0.3671545667447307
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1175"
-      ],
-      "lp_norm": 0.9096715186921065,
-      "cost": 2312.0,
-      "reward": 420.0,
-      "prestige": 0.6,
-      "score": 0.36662074665931943
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1138"
-      ],
-      "lp_norm": 0.9303089827339183,
-      "cost": 2334.0,
-      "reward": 422.0,
-      "prestige": 0.6,
-      "score": 0.36757301281168203
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1352"
-      ],
-      "lp_norm": 0.7348748901442237,
-      "cost": 2136.0,
-      "reward": 412.0,
-      "prestige": 0.6,
-      "score": 0.3674335307893649
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1238"
-      ],
-      "lp_norm": 0.2995800572741834,
-      "cost": 1707.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.36678003168480505
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1359"
-      ],
-      "lp_norm": 0.5330254931958924,
-      "cost": 1938.0,
-      "reward": 402.0,
-      "prestige": 0.6,
-      "score": 0.36729404876704785
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1264"
-      ],
-      "lp_norm": 0.30275700509363496,
-      "cost": 1707.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.36678003168480505
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1257"
-      ],
-      "lp_norm": 0.29019839867661745,
-      "cost": 1696.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.367357762777242
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1248"
-      ],
-      "lp_norm": 0.30550505313802184,
-      "cost": 1707.0,
-      "reward": 391.0,
-      "prestige": 0.6,
-      "score": 0.3678338958534233
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1217"
-      ],
-      "lp_norm": 0.8730080225088994,
-      "cost": 2279.0,
-      "reward": 418.0,
-      "prestige": 0.6,
-      "score": 0.3662462115993938
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1165"
-      ],
-      "lp_norm": 0.8216081056050544,
-      "cost": 2224.0,
-      "reward": 418.0,
-      "prestige": 0.6,
-      "score": 0.3691348670615787
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1481"
-      ],
-      "lp_norm": 0.28715076754606134,
-      "cost": 1696.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.367357762777242
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1129"
-      ],
-      "lp_norm": 0.9852590418584112,
-      "cost": 2389.0,
-      "reward": 427.0,
-      "prestige": 0.6,
-      "score": 0.3699536781925885
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1386"
-      ],
-      "lp_norm": 0.5158182473688148,
-      "cost": 1916.0,
-      "reward": 401.0,
-      "prestige": 0.6,
-      "score": 0.3673956467833035
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1177"
-      ],
-      "lp_norm": 0.9564235183136602,
-      "cost": 2356.0,
-      "reward": 426.0,
-      "prestige": 0.6,
-      "score": 0.3706330073012811
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1234"
-      ],
-      "lp_norm": 0.7127054211723145,
-      "cost": 2114.0,
-      "reward": 410.0,
-      "prestige": 0.6,
-      "score": 0.3664812646370023
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_953"
-      ],
-      "lp_norm": 0.7276905748394271,
-      "cost": 2125.0,
-      "reward": 414.0,
-      "prestige": 0.6,
-      "score": 0.37011899021903844
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1028"
-      ],
-      "lp_norm": 0.47861165469727607,
-      "cost": 1883.0,
-      "reward": 400.0,
-      "prestige": 0.6,
-      "score": 0.3680749758919961
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1452"
-      ],
-      "lp_norm": 0.3033031705037423,
-      "cost": 1707.0,
-      "reward": 391.0,
-      "prestige": 0.6,
-      "score": 0.3678338958534233
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1190"
-      ],
-      "lp_norm": 0.6887732393982028,
-      "cost": 2092.0,
-      "reward": 408.0,
-      "prestige": 0.6,
-      "score": 0.36552899848463977
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1145"
-      ],
-      "lp_norm": 0.7680962515031154,
-      "cost": 2169.0,
-      "reward": 415.0,
-      "prestige": 0.6,
-      "score": 0.3688619300179088
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1202"
-      ],
-      "lp_norm": 0.4813704784953411,
-      "cost": 1883.0,
-      "reward": 399.0,
-      "prestige": 0.6,
-      "score": 0.36702111172337787
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1245"
-      ],
-      "lp_norm": 0.32078317054440575,
-      "cost": 1729.0,
-      "reward": 392.0,
-      "prestige": 0.6,
-      "score": 0.36773229783716765
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1258"
-      ],
-      "lp_norm": 0.3267632126712098,
-      "cost": 1729.0,
-      "reward": 392.0,
-      "prestige": 0.6,
-      "score": 0.36773229783716765
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1236"
-      ],
-      "lp_norm": 0.3246881801920938,
-      "cost": 1729.0,
-      "reward": 392.0,
-      "prestige": 0.6,
-      "score": 0.36773229783716765
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1173"
-      ],
-      "lp_norm": 0.9492758140638299,
-      "cost": 2345.0,
-      "reward": 424.0,
-      "prestige": 0.6,
-      "score": 0.3691030100564816
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1285"
-      ],
-      "lp_norm": 0.3188727476361687,
-      "cost": 1729.0,
-      "reward": 392.0,
-      "prestige": 0.6,
-      "score": 0.36773229783716765
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1213"
-      ],
-      "lp_norm": 0.8779737682083809,
-      "cost": 2279.0,
-      "reward": 418.0,
-      "prestige": 0.6,
-      "score": 0.3662462115993938
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1232"
-      ],
-      "lp_norm": 0.5500380600711968,
-      "cost": 1960.0,
-      "reward": 402.0,
-      "prestige": 0.6,
-      "score": 0.36613858658217385
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1387"
-      ],
-      "lp_norm": 0.49865981982036756,
-      "cost": 1905.0,
-      "reward": 400.0,
-      "prestige": 0.6,
-      "score": 0.36691951370712217
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1399"
-      ],
-      "lp_norm": 0.6316980069021427,
-      "cost": 2037.0,
-      "reward": 407.0,
-      "prestige": 0.6,
-      "score": 0.36736378977820633
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1283"
-      ],
-      "lp_norm": 0.29211460046955395,
-      "cost": 1696.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.367357762777242
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1243"
-      ],
-      "lp_norm": 0.3241107770639915,
-      "cost": 1729.0,
-      "reward": 392.0,
-      "prestige": 0.6,
-      "score": 0.36773229783716765
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1179"
-      ],
-      "lp_norm": 0.9212921727639132,
-      "cost": 2323.0,
-      "reward": 423.0,
-      "prestige": 0.6,
-      "score": 0.36920460807273725
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1222"
-      ],
-      "lp_norm": 0.5495477612812745,
-      "cost": 1949.0,
-      "reward": 403.0,
-      "prestige": 0.6,
-      "score": 0.36777018184322907
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1053"
-      ],
-      "lp_norm": 0.5467074111271988,
-      "cost": 1949.0,
-      "reward": 404.0,
-      "prestige": 0.6,
-      "score": 0.3688240460118474
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_976"
-      ],
-      "lp_norm": 0.8239970885879713,
-      "cost": 2224.0,
-      "reward": 419.0,
-      "prestige": 0.6,
-      "score": 0.3701887312301969
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1198"
-      ],
-      "lp_norm": 0.635176843962642,
-      "cost": 2037.0,
-      "reward": 407.0,
-      "prestige": 0.6,
-      "score": 0.36736378977820633
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1227"
-      ],
-      "lp_norm": 0.5633919618654688,
-      "cost": 1971.0,
-      "reward": 403.0,
-      "prestige": 0.6,
-      "score": 0.36661471965835507
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1126"
-      ],
-      "lp_norm": 0.8776618188371186,
-      "cost": 2279.0,
-      "reward": 418.0,
-      "prestige": 0.6,
-      "score": 0.3662462115993938
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1210"
-      ],
-      "lp_norm": 0.713514929856766,
-      "cost": 2114.0,
-      "reward": 412.0,
-      "prestige": 0.6,
-      "score": 0.36858899297423886
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1408"
-      ],
-      "lp_norm": 0.48293774934605055,
-      "cost": 1883.0,
-      "reward": 400.0,
-      "prestige": 0.6,
-      "score": 0.3680749758919961
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1191"
-      ],
-      "lp_norm": 0.6888780003432516,
-      "cost": 2092.0,
-      "reward": 410.0,
-      "prestige": 0.6,
-      "score": 0.36763672682187626
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1136"
-      ],
-      "lp_norm": 0.871007788121438,
-      "cost": 2268.0,
-      "reward": 421.0,
-      "prestige": 0.6,
-      "score": 0.3699855351976856
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1419"
-      ],
-      "lp_norm": 0.28892012805692924,
-      "cost": 1696.0,
-      "reward": 391.0,
-      "prestige": 0.6,
-      "score": 0.36841162694586027
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1151"
-      ],
-      "lp_norm": 0.9441664374060954,
-      "cost": 2345.0,
-      "reward": 424.0,
-      "prestige": 0.6,
-      "score": 0.3691030100564816
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1203"
+        "s_18"
       ],
-      "lp_norm": 0.6933639550220484,
-      "cost": 2092.0,
-      "reward": 409.0,
-      "prestige": 0.6,
-      "score": 0.366582862653258
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1392"
-      ],
-      "lp_norm": 0.4788648220554309,
-      "cost": 1883.0,
-      "reward": 399.0,
-      "prestige": 0.6,
-      "score": 0.36702111172337787
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1143"
-      ],
-      "lp_norm": 0.9655045934704938,
-      "cost": 2367.0,
-      "reward": 425.0,
-      "prestige": 0.6,
-      "score": 0.3690014120402259
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1381"
-      ],
-      "lp_norm": 0.6644521836151955,
-      "cost": 2070.0,
-      "reward": 410.0,
-      "prestige": 0.6,
-      "score": 0.3687921890067502
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1218"
-      ],
-      "lp_norm": 0.6006945357689016,
-      "cost": 2004.0,
-      "reward": 407.0,
-      "prestige": 0.6,
-      "score": 0.36909698305551725
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1265"
-      ],
-      "lp_norm": 0.29739603284388066,
-      "cost": 1707.0,
-      "reward": 391.0,
-      "prestige": 0.6,
-      "score": 0.3678338958534233
+      "lp_norm": 0.5614446230412673,
+      "cost": 1471.0,
+      "reward": 242.0,
+      "prestige": 0.2,
+      "score": -0.007961261980830671
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1131"
+        "s_25"
       ],
-      "lp_norm": 0.9423736293386562,
-      "cost": 2345.0,
-      "reward": 423.0,
-      "prestige": 0.6,
-      "score": 0.3680491458878633
+      "lp_norm": 0.5345731248276852,
+      "cost": 1538.0,
+      "reward": 286.0,
+      "prestige": 0.2,
+      "score": 0.03023077361935189
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1362"
+        "s_61"
       ],
-      "lp_norm": 0.8162924300621512,
-      "cost": 2213.0,
-      "reward": 416.0,
-      "prestige": 0.6,
-      "score": 0.3676048698167791
+      "lp_norm": 0.48781448862468574,
+      "cost": 1494.0,
+      "reward": 286.0,
+      "prestige": 0.2,
+      "score": 0.03223898904609767
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1207"
+        "s_26"
       ],
-      "lp_norm": 0.5607272391232587,
-      "cost": 1960.0,
-      "reward": 403.0,
-      "prestige": 0.6,
-      "score": 0.36719245075079204
+      "lp_norm": 0.6776596891731697,
+      "cost": 1681.0,
+      "reward": 291.0,
+      "prestige": 0.2,
+      "score": 0.028391573482428118
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1017"
+        "s_57"
       ],
-      "lp_norm": 0.5541261186921218,
-      "cost": 1960.0,
-      "reward": 404.0,
-      "prestige": 0.6,
-      "score": 0.36824631491941034
+      "lp_norm": 0.8362070589501502,
+      "cost": 1835.0,
+      "reward": 298.0,
+      "prestige": 0.2,
+      "score": 0.027925319488817893
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1174"
+        "s_58"
       ],
-      "lp_norm": 0.9436598759008944,
-      "cost": 2345.0,
-      "reward": 423.0,
-      "prestige": 0.6,
-      "score": 0.3680491458878633
+      "lp_norm": 0.5224684521887402,
+      "cost": 1427.0,
+      "reward": 240.0,
+      "prestige": 0.2,
+      "score": -0.007828046554084893
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1160"
+        "s_59"
       ],
-      "lp_norm": 0.7932109818367221,
-      "cost": 2191.0,
-      "reward": 415.0,
-      "prestige": 0.6,
-      "score": 0.36770646783303484
+      "lp_norm": 0.5781261038455485,
+      "cost": 1582.0,
+      "reward": 290.0,
+      "prestige": 0.2,
+      "score": 0.031972558192606124
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1223"
+        "s_6"
       ],
-      "lp_norm": 0.8472730402199214,
-      "cost": 2246.0,
-      "reward": 416.0,
-      "prestige": 0.6,
-      "score": 0.36587167653946817
+      "lp_norm": 0.4154968776446769,
+      "cost": 1317.0,
+      "reward": 239.0,
+      "prestige": 0.2,
+      "score": -0.0037450079872204493
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1309"
+        "s_38"
       ],
-      "lp_norm": 0.8565649269082636,
-      "cost": 2257.0,
-      "reward": 419.0,
-      "prestige": 0.6,
-      "score": 0.368455537952886
+      "lp_norm": 0.6783925220825093,
+      "cost": 1681.0,
+      "reward": 291.0,
+      "prestige": 0.2,
+      "score": 0.028391573482428118
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1172"
+        "s_46"
       ],
-      "lp_norm": 0.9739906261157385,
-      "cost": 2378.0,
-      "reward": 427.0,
-      "prestige": 0.6,
-      "score": 0.3705314092850255
+      "lp_norm": 0.6290696497392915,
+      "cost": 1637.0,
+      "reward": 291.0,
+      "prestige": 0.2,
+      "score": 0.030399788909173893
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1168"
+        "s_76"
       ],
-      "lp_norm": 0.8891292827705496,
-      "cost": 2290.0,
-      "reward": 422.0,
-      "prestige": 0.6,
-      "score": 0.3698839371814299
+      "lp_norm": 0.5092714997647588,
+      "cost": 1416.0,
+      "reward": 242.0,
+      "prestige": 0.2,
+      "score": -0.005450992697398446
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1155"
+        "s_55"
       ],
-      "lp_norm": 0.858999268310203,
-      "cost": 2257.0,
-      "reward": 419.0,
-      "prestige": 0.6,
-      "score": 0.368455537952886
+      "lp_norm": 0.7126101425300586,
+      "cost": 1714.0,
+      "reward": 292.0,
+      "prestige": 0.2,
+      "score": 0.027822911912368777
     },
     {
       "agent": "EDU",
-      "size": "M",
+      "size": "S",
       "footprint_slots": [
-        "s_1230"
+        "s_35"
       ],
-      "lp_norm": 0.5848650156106153,
-      "cost": 1993.0,
-      "reward": 404.0,
-      "prestige": 0.6,
-      "score": 0.3665131216420994
+      "lp_norm": 0.6284157787609741,
+      "cost": 1637.0,
+      "reward": 290.0,
+      "prestige": 0.2,
+      "score": 0.0294622889091739
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1220"
+        "s_11"
       ],
-      "lp_norm": 0.7167495900652352,
-      "cost": 2125.0,
-      "reward": 411.0,
+      "lp_norm": 0.6260190876432264,
+      "cost": 2126.0,
+      "reward": 453.0,
       "prestige": 0.6,
-      "score": 0.36695739771318364
+      "score": 0.38495621291647647
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1394"
+        "s_64"
       ],
-      "lp_norm": 0.4838184009970138,
-      "cost": 1894.0,
-      "reward": 400.0,
+      "lp_norm": 0.5514025657181058,
+      "cost": 2060.0,
+      "reward": 452.0,
       "prestige": 0.6,
-      "score": 0.36749724479955914
+      "score": 0.38703103605659517
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1453"
+        "s_0"
       ],
-      "lp_norm": 0.3429872844418679,
+      "lp_norm": 0.3493633382985958,
       "cost": 1751.0,
-      "reward": 393.0,
+      "reward": 397.0,
       "prestige": 0.6,
-      "score": 0.3676306998209119
+      "score": 0.34957168530351435
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1166"
+        "s_37"
       ],
-      "lp_norm": 0.9097292425212025,
-      "cost": 2312.0,
-      "reward": 421.0,
+      "lp_norm": 0.49600407478884695,
+      "cost": 2005.0,
+      "reward": 448.0,
       "prestige": 0.6,
-      "score": 0.36767461082793773
+      "score": 0.38579130534002737
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1208"
+        "s_4"
       ],
-      "lp_norm": 0.5148463755483899,
-      "cost": 1916.0,
-      "reward": 401.0,
+      "lp_norm": 0.3358220568207771,
+      "cost": 1740.0,
+      "reward": 397.0,
       "prestige": 0.6,
-      "score": 0.3673956467833035
+      "score": 0.3500737391602008
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1219"
+        "s_80"
       ],
-      "lp_norm": 0.5869100283771385,
-      "cost": 1993.0,
-      "reward": 404.0,
+      "lp_norm": 0.6171758881005505,
+      "cost": 2026.0,
+      "reward": 412.0,
       "prestige": 0.6,
-      "score": 0.3665131216420994
+      "score": 0.3510828388863532
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1141"
+        "s_16"
       ],
-      "lp_norm": 0.9131177096366171,
-      "cost": 2312.0,
-      "reward": 421.0,
-      "prestige": 0.6,
-      "score": 0.36767461082793773
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1368"
-      ],
-      "lp_norm": 0.6805001475429767,
-      "cost": 2081.0,
-      "reward": 409.0,
-      "prestige": 0.6,
-      "score": 0.367160593745695
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1445"
-      ],
-      "lp_norm": 0.29040318795474623,
-      "cost": 1696.0,
-      "reward": 389.0,
-      "prestige": 0.6,
-      "score": 0.3663038986086238
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1390"
-      ],
-      "lp_norm": 0.6584287257558532,
-      "cost": 2059.0,
-      "reward": 409.0,
-      "prestige": 0.6,
-      "score": 0.36831605593056893
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1200"
-      ],
-      "lp_norm": 0.5498593096639787,
-      "cost": 1949.0,
-      "reward": 403.0,
-      "prestige": 0.6,
-      "score": 0.36777018184322907
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_974"
-      ],
-      "lp_norm": 0.8448889593531315,
-      "cost": 2246.0,
-      "reward": 420.0,
-      "prestige": 0.6,
-      "score": 0.37008713321394127
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1164"
-      ],
-      "lp_norm": 0.9071150197508607,
-      "cost": 2312.0,
-      "reward": 422.0,
-      "prestige": 0.6,
-      "score": 0.368728474996556
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1240"
-      ],
-      "lp_norm": 0.3505538592261345,
-      "cost": 1762.0,
-      "reward": 393.0,
-      "prestige": 0.6,
-      "score": 0.3670529687284749
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1125"
-      ],
-      "lp_norm": 0.7965014357131882,
-      "cost": 2202.0,
-      "reward": 417.0,
-      "prestige": 0.6,
-      "score": 0.36923646507783436
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1205"
-      ],
-      "lp_norm": 0.5099168051836136,
-      "cost": 1916.0,
-      "reward": 400.0,
-      "prestige": 0.6,
-      "score": 0.3663417826146852
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1216"
-      ],
-      "lp_norm": 0.8872080809797528,
-      "cost": 2290.0,
-      "reward": 418.0,
-      "prestige": 0.6,
-      "score": 0.36566848050695683
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1199"
-      ],
-      "lp_norm": 0.457492762956783,
-      "cost": 1861.0,
+      "lp_norm": 0.4001716098463918,
+      "cost": 1806.0,
       "reward": 398.0,
       "prestige": 0.6,
-      "score": 0.36712270973963357
+      "score": 0.34799891602008215
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1278"
+        "s_60"
       ],
-      "lp_norm": 0.2964354469242527,
-      "cost": 1707.0,
-      "reward": 391.0,
+      "lp_norm": 0.6418983407432843,
+      "cost": 2148.0,
+      "reward": 458.0,
       "prestige": 0.6,
-      "score": 0.3678338958534233
+      "score": 0.3886396052031036
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1122"
+        "s_53"
       ],
-      "lp_norm": 0.8727034308101105,
-      "cost": 2279.0,
-      "reward": 420.0,
+      "lp_norm": 0.8501522914058368,
+      "cost": 2357.0,
+      "reward": 466.0,
       "prestige": 0.6,
-      "score": 0.36835393993663035
+      "score": 0.38660058192606117
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1292"
+        "s_12"
       ],
-      "lp_norm": 0.766585246985353,
-      "cost": 2169.0,
-      "reward": 415.0,
+      "lp_norm": 0.49871265304981643,
+      "cost": 2005.0,
+      "reward": 447.0,
       "prestige": 0.6,
-      "score": 0.3688619300179088
+      "score": 0.3848538053400274
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1214"
+        "s_62"
       ],
-      "lp_norm": 0.7953142177639951,
-      "cost": 2202.0,
-      "reward": 413.0,
+      "lp_norm": 0.6553059674553045,
+      "cost": 2159.0,
+      "reward": 458.0,
       "prestige": 0.6,
-      "score": 0.36502100840336127
+      "score": 0.38813755134641714
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1045"
+        "s_14"
       ],
-      "lp_norm": 0.5012383026428586,
-      "cost": 1905.0,
-      "reward": 402.0,
+      "lp_norm": 0.4743209860451089,
+      "cost": 1983.0,
+      "reward": 446.0,
       "prestige": 0.6,
-      "score": 0.36902724204435877
+      "score": 0.3849204130534002
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1181"
+        "s_28"
       ],
-      "lp_norm": 0.7565376128515773,
-      "cost": 2158.0,
-      "reward": 414.0,
+      "lp_norm": 0.5948402977836504,
+      "cost": 2104.0,
+      "reward": 453.0,
       "prestige": 0.6,
-      "score": 0.3683857969417275
+      "score": 0.38596032062984936
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1188"
+        "s_49"
       ],
-      "lp_norm": 0.5286425537761825,
-      "cost": 1938.0,
-      "reward": 402.0,
+      "lp_norm": 0.8694010299395732,
+      "cost": 2368.0,
+      "reward": 466.0,
       "prestige": 0.6,
-      "score": 0.36729404876704785
+      "score": 0.3860985280693747
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1464"
+        "s_19"
       ],
-      "lp_norm": 0.29201746869994977,
-      "cost": 1696.0,
-      "reward": 390.0,
+      "lp_norm": 0.3870039654691433,
+      "cost": 1795.0,
+      "reward": 397.0,
       "prestige": 0.6,
-      "score": 0.367357762777242
+      "score": 0.34756346987676856
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1012"
+        "s_79"
       ],
-      "lp_norm": 0.6791321346162051,
-      "cost": 2081.0,
-      "reward": 410.0,
+      "lp_norm": 0.5403104933608446,
+      "cost": 1949.0,
+      "reward": 406.0,
       "prestige": 0.6,
-      "score": 0.36821445791431323
+      "score": 0.34897221588315835
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1228"
+        "s_24"
       ],
-      "lp_norm": 0.5674951145369989,
-      "cost": 1971.0,
+      "lp_norm": 0.4668714577823526,
+      "cost": 1872.0,
+      "reward": 403.0,
+      "prestige": 0.6,
+      "score": 0.3496740928799635
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_67"
+      ],
+      "lp_norm": 0.5854250631368854,
+      "cost": 2093.0,
+      "reward": 454.0,
+      "prestige": 0.6,
+      "score": 0.38739987448653584
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_8"
+      ],
+      "lp_norm": 0.37191383063397787,
+      "cost": 1773.0,
+      "reward": 400.0,
+      "prestige": 0.6,
+      "score": 0.35138007759014145
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_20"
+      ],
+      "lp_norm": 0.4602365077302154,
+      "cost": 1861.0,
+      "reward": 401.0,
+      "prestige": 0.6,
+      "score": 0.3483011467366499
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_52"
+      ],
+      "lp_norm": 0.7837259235844041,
+      "cost": 2291.0,
+      "reward": 461.0,
+      "prestige": 0.6,
+      "score": 0.3849254050661798
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_82"
+      ],
+      "lp_norm": 0.611601110318951,
+      "cost": 2015.0,
+      "reward": 409.0,
+      "prestige": 0.6,
+      "score": 0.34877239274303967
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_29"
+      ],
+      "lp_norm": 0.5220134816060301,
+      "cost": 2027.0,
+      "reward": 449.0,
+      "prestige": 0.6,
+      "score": 0.38572469762665446
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_30"
+      ],
+      "lp_norm": 0.5717815020962222,
+      "cost": 2071.0,
+      "reward": 452.0,
+      "prestige": 0.6,
+      "score": 0.3865289821999087
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_10"
+      ],
+      "lp_norm": 0.5234125600142662,
+      "cost": 2027.0,
+      "reward": 448.0,
+      "prestige": 0.6,
+      "score": 0.3847871976266545
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_1"
+      ],
+      "lp_norm": 0.39409229257482153,
+      "cost": 1795.0,
+      "reward": 400.0,
+      "prestige": 0.6,
+      "score": 0.35037596987676856
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_7"
+      ],
+      "lp_norm": 0.3194225431770671,
+      "cost": 1729.0,
+      "reward": 397.0,
+      "prestige": 0.6,
+      "score": 0.35057579301688724
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_34"
+      ],
+      "lp_norm": 0.468005645249415,
+      "cost": 1972.0,
+      "reward": 447.0,
+      "prestige": 0.6,
+      "score": 0.38635996691008667
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_65"
+      ],
+      "lp_norm": 0.7249504178572065,
+      "cost": 2225.0,
+      "reward": 461.0,
+      "prestige": 0.6,
+      "score": 0.38793772820629846
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_33"
+      ],
+      "lp_norm": 0.6451125542883582,
+      "cost": 2148.0,
+      "reward": 457.0,
+      "prestige": 0.6,
+      "score": 0.3877021052031036
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_22"
+      ],
+      "lp_norm": 0.36638335334882366,
+      "cost": 1773.0,
+      "reward": 397.0,
+      "prestige": 0.6,
+      "score": 0.34856757759014145
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_15"
+      ],
+      "lp_norm": 0.5091965586354945,
+      "cost": 2016.0,
+      "reward": 448.0,
+      "prestige": 0.6,
+      "score": 0.3852892514833409
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_295"
+      ],
+      "lp_norm": 0.4471194782958659,
+      "cost": 1950.0,
+      "reward": 445.0,
+      "prestige": 0.6,
+      "score": 0.3854890746234596
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_21"
+      ],
+      "lp_norm": 0.4926554918824573,
+      "cost": 1894.0,
       "reward": 404.0,
       "prestige": 0.6,
-      "score": 0.36766858382697337
+      "score": 0.34960748516659057
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1459"
+        "s_68"
       ],
-      "lp_norm": 0.2889706445440997,
-      "cost": 1696.0,
-      "reward": 389.0,
+      "lp_norm": 0.8122490959996791,
+      "cost": 2313.0,
+      "reward": 465.0,
       "prestige": 0.6,
-      "score": 0.3663038986086238
+      "score": 0.3876712973528069
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1185"
+        "s_71"
       ],
-      "lp_norm": 0.7938419214158999,
-      "cost": 2191.0,
-      "reward": 414.0,
+      "lp_norm": 0.4608412995944001,
+      "cost": 1861.0,
+      "reward": 406.0,
       "prestige": 0.6,
-      "score": 0.36665260366441654
+      "score": 0.35298864673664987
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1195"
+        "s_83"
       ],
-      "lp_norm": 0.6602960734369889,
-      "cost": 2059.0,
-      "reward": 410.0,
+      "lp_norm": 0.6758320771641103,
+      "cost": 2081.0,
+      "reward": 413.0,
       "prestige": 0.6,
-      "score": 0.3693699200991872
+      "score": 0.349510069602921
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1163"
+        "s_2"
       ],
-      "lp_norm": 0.8329030388844576,
-      "cost": 2235.0,
-      "reward": 418.0,
+      "lp_norm": 0.5107058290495592,
+      "cost": 2016.0,
+      "reward": 449.0,
       "prestige": 0.6,
-      "score": 0.36855713596914175
+      "score": 0.3862267514833409
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1161"
+        "s_63"
       ],
-      "lp_norm": 0.9028696192277578,
-      "cost": 2301.0,
-      "reward": 423.0,
+      "lp_norm": 0.7084085551031623,
+      "cost": 2214.0,
+      "reward": 461.0,
       "prestige": 0.6,
-      "score": 0.3703600702576112
+      "score": 0.3884397820629849
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1018"
+        "s_5"
       ],
-      "lp_norm": 0.5098670436429549,
+      "lp_norm": 0.38436713083733753,
+      "cost": 1795.0,
+      "reward": 399.0,
+      "prestige": 0.6,
+      "score": 0.3494384698767685
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_32"
+      ],
+      "lp_norm": 0.5602170998647277,
+      "cost": 2060.0,
+      "reward": 452.0,
+      "prestige": 0.6,
+      "score": 0.38703103605659517
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_13"
+      ],
+      "lp_norm": 0.5386751178516611,
+      "cost": 2038.0,
+      "reward": 450.0,
+      "prestige": 0.6,
+      "score": 0.38616014376996805
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_56"
+      ],
+      "lp_norm": 0.7441022701177296,
+      "cost": 2247.0,
+      "reward": 461.0,
+      "prestige": 0.6,
+      "score": 0.38693362049292557
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_36"
+      ],
+      "lp_norm": 0.7086813151831032,
+      "cost": 2214.0,
+      "reward": 460.0,
+      "prestige": 0.6,
+      "score": 0.3875022820629849
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_27"
+      ],
+      "lp_norm": 0.5446769227457211,
+      "cost": 2049.0,
+      "reward": 449.0,
+      "prestige": 0.6,
+      "score": 0.38472058991328156
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_43"
+      ],
+      "lp_norm": 0.8716515300598133,
+      "cost": 2368.0,
+      "reward": 466.0,
+      "prestige": 0.6,
+      "score": 0.3860985280693747
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_23"
+      ],
+      "lp_norm": 0.4222880716330534,
+      "cost": 1828.0,
+      "reward": 400.0,
+      "prestige": 0.6,
+      "score": 0.3488698083067092
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_85"
+      ],
+      "lp_norm": 0.706423804321117,
+      "cost": 2214.0,
+      "reward": 461.0,
+      "prestige": 0.6,
+      "score": 0.3884397820629849
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_9"
+      ],
+      "lp_norm": 0.41164618332114056,
+      "cost": 1817.0,
+      "reward": 403.0,
+      "prestige": 0.6,
+      "score": 0.35218436216339566
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_75"
+      ],
+      "lp_norm": 0.48769146086087223,
+      "cost": 1894.0,
+      "reward": 406.0,
+      "prestige": 0.6,
+      "score": 0.3514824851665906
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_3"
+      ],
+      "lp_norm": 0.4335846153690358,
+      "cost": 1839.0,
+      "reward": 402.0,
+      "prestige": 0.6,
+      "score": 0.35024275445002273
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_77"
+      ],
+      "lp_norm": 0.554415531387541,
+      "cost": 1960.0,
+      "reward": 409.0,
+      "prestige": 0.6,
+      "score": 0.3512826620264719
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_84"
+      ],
+      "lp_norm": 0.7333060624974789,
+      "cost": 2136.0,
+      "reward": 417.0,
+      "prestige": 0.6,
+      "score": 0.35074980031948877
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_39"
+      ],
+      "lp_norm": 0.7753081073934127,
+      "cost": 2280.0,
+      "reward": 463.0,
+      "prestige": 0.6,
+      "score": 0.38730245892286624
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_17"
+      ],
+      "lp_norm": 0.5114988000049205,
       "cost": 1916.0,
       "reward": 403.0,
       "prestige": 0.6,
-      "score": 0.36950337512054
+      "score": 0.3476658774532177
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1182"
+        "s_31"
       ],
-      "lp_norm": 0.7346212397682861,
-      "cost": 2136.0,
-      "reward": 411.0,
+      "lp_norm": 0.43718925669231123,
+      "cost": 1939.0,
+      "reward": 445.0,
       "prestige": 0.6,
-      "score": 0.36637966662074667
+      "score": 0.38599112848014605
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1197"
+        "s_73"
       ],
-      "lp_norm": 0.6231120743064825,
-      "cost": 2026.0,
-      "reward": 406.0,
-      "prestige": 0.6,
-      "score": 0.36688765670202506
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1186"
-      ],
-      "lp_norm": 0.8218647471858278,
-      "cost": 2224.0,
-      "reward": 416.0,
-      "prestige": 0.6,
-      "score": 0.3670271387243421
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1426"
-      ],
-      "lp_norm": 0.2979078370013064,
-      "cost": 1707.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.36678003168480505
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1407"
-      ],
-      "lp_norm": 0.5184423628758954,
-      "cost": 1927.0,
-      "reward": 401.0,
-      "prestige": 0.6,
-      "score": 0.3668179156908665
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1438"
-      ],
-      "lp_norm": 0.28782463520369506,
-      "cost": 1696.0,
-      "reward": 389.0,
-      "prestige": 0.6,
-      "score": 0.3663038986086238
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1229"
-      ],
-      "lp_norm": 0.5088857205383785,
-      "cost": 1916.0,
-      "reward": 400.0,
-      "prestige": 0.6,
-      "score": 0.3663417826146852
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1192"
-      ],
-      "lp_norm": 0.6173564887782432,
-      "cost": 2026.0,
-      "reward": 405.0,
-      "prestige": 0.6,
-      "score": 0.3658337925334068
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1272"
-      ],
-      "lp_norm": 0.30556020669212036,
-      "cost": 1718.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.3662023005923681
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1196"
-      ],
-      "lp_norm": 0.49553042014118387,
-      "cost": 1905.0,
-      "reward": 401.0,
-      "prestige": 0.6,
-      "score": 0.36797337787574047
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1276"
-      ],
-      "lp_norm": 0.3018532717111678,
-      "cost": 1707.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.36678003168480505
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1356"
-      ],
-      "lp_norm": 0.4626810575974264,
+      "lp_norm": 0.47017132793684313,
       "cost": 1872.0,
-      "reward": 399.0,
-      "prestige": 0.6,
-      "score": 0.36759884281581484
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1235"
-      ],
-      "lp_norm": 0.5356408639468441,
-      "cost": 1938.0,
-      "reward": 401.0,
-      "prestige": 0.6,
-      "score": 0.36624018459842955
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1150"
-      ],
-      "lp_norm": 0.9708977799351618,
-      "cost": 2367.0,
-      "reward": 425.0,
-      "prestige": 0.6,
-      "score": 0.3690014120402259
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1441"
-      ],
-      "lp_norm": 0.31544333378797784,
-      "cost": 1718.0,
-      "reward": 392.0,
-      "prestige": 0.6,
-      "score": 0.3683100289296046
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1358"
-      ],
-      "lp_norm": 0.7594808487547302,
-      "cost": 2158.0,
-      "reward": 414.0,
-      "prestige": 0.6,
-      "score": 0.3683857969417275
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1184"
-      ],
-      "lp_norm": 0.6221316315750665,
-      "cost": 2026.0,
-      "reward": 405.0,
-      "prestige": 0.6,
-      "score": 0.3658337925334068
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1224"
-      ],
-      "lp_norm": 0.5392849371444356,
-      "cost": 1949.0,
-      "reward": 401.0,
-      "prestige": 0.6,
-      "score": 0.3656624535059926
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1374"
-      ],
-      "lp_norm": 0.7090287463347196,
-      "cost": 2114.0,
-      "reward": 412.0,
-      "prestige": 0.6,
-      "score": 0.36858899297423886
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1142"
-      ],
-      "lp_norm": 0.905399580099596,
-      "cost": 2301.0,
-      "reward": 422.0,
-      "prestige": 0.6,
-      "score": 0.36930620608899295
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1281"
-      ],
-      "lp_norm": 0.2933951718340544,
-      "cost": 1696.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.367357762777242
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1344"
-      ],
-      "lp_norm": 0.8235722490932137,
-      "cost": 2224.0,
-      "reward": 417.0,
-      "prestige": 0.6,
-      "score": 0.3680810028929604
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1442"
-      ],
-      "lp_norm": 0.30751806284549643,
-      "cost": 1718.0,
-      "reward": 390.0,
-      "prestige": 0.6,
-      "score": 0.3662023005923681
-    },
-    {
-      "agent": "EDU",
-      "size": "M",
-      "footprint_slots": [
-        "s_1194"
-      ],
-      "lp_norm": 0.6506986716040666,
-      "cost": 2059.0,
       "reward": 406.0,
       "prestige": 0.6,
-      "score": 0.36515446342471414
+      "score": 0.3524865928799635
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1326"
+        "s_18"
       ],
-      "lp_norm": 0.7698296304707747,
-      "cost": 2169.0,
-      "reward": 415.0,
+      "lp_norm": 0.5614446230412673,
+      "cost": 1971.0,
+      "reward": 406.0,
       "prestige": 0.6,
-      "score": 0.3688619300179088
+      "score": 0.34796810816978546
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1140"
+        "s_25"
       ],
-      "lp_norm": 0.855008311726338,
-      "cost": 2257.0,
-      "reward": 420.0,
+      "lp_norm": 0.5345731248276852,
+      "cost": 2038.0,
+      "reward": 448.0,
       "prestige": 0.6,
-      "score": 0.3695094021215043
+      "score": 0.38428514376996803
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1253"
+        "s_61"
       ],
-      "lp_norm": 0.31318765439365837,
-      "cost": 1718.0,
-      "reward": 391.0,
+      "lp_norm": 0.48781448862468574,
+      "cost": 1994.0,
+      "reward": 450.0,
       "prestige": 0.6,
-      "score": 0.3672561647609863
+      "score": 0.38816835919671383
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1327"
+        "s_26"
       ],
-      "lp_norm": 0.7175491947886043,
-      "cost": 2125.0,
-      "reward": 413.0,
+      "lp_norm": 0.6776596891731697,
+      "cost": 2181.0,
+      "reward": 457.0,
       "prestige": 0.6,
-      "score": 0.36906512605042013
+      "score": 0.38619594363304427
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1261"
+        "s_57"
       ],
-      "lp_norm": 0.31988329723229997,
-      "cost": 1729.0,
-      "reward": 391.0,
+      "lp_norm": 0.8362070589501502,
+      "cost": 2335.0,
+      "reward": 467.0,
       "prestige": 0.6,
-      "score": 0.36667843366854935
+      "score": 0.388542189639434
     },
     {
       "agent": "EDU",
       "size": "M",
       "footprint_slots": [
-        "s_1225"
+        "s_58"
       ],
-      "lp_norm": 0.6272864187778793,
-      "cost": 2026.0,
-      "reward": 407.0,
+      "lp_norm": 0.5224684521887402,
+      "cost": 1927.0,
+      "reward": 404.0,
       "prestige": 0.6,
-      "score": 0.3679415208706433
+      "score": 0.34810132359653123
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_59"
+      ],
+      "lp_norm": 0.5781261038455485,
+      "cost": 2082.0,
+      "reward": 454.0,
+      "prestige": 0.6,
+      "score": 0.3879019283432223
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_6"
+      ],
+      "lp_norm": 0.4154968776446769,
+      "cost": 1817.0,
+      "reward": 403.0,
+      "prestige": 0.6,
+      "score": 0.35218436216339566
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_38"
+      ],
+      "lp_norm": 0.6783925220825093,
+      "cost": 2181.0,
+      "reward": 458.0,
+      "prestige": 0.6,
+      "score": 0.38713344363304425
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_46"
+      ],
+      "lp_norm": 0.6290696497392915,
+      "cost": 2137.0,
+      "reward": 456.0,
+      "prestige": 0.6,
+      "score": 0.38726665905979
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_76"
+      ],
+      "lp_norm": 0.5092714997647588,
+      "cost": 1916.0,
+      "reward": 405.0,
+      "prestige": 0.6,
+      "score": 0.3495408774532177
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_55"
+      ],
+      "lp_norm": 0.7126101425300586,
+      "cost": 2214.0,
+      "reward": 458.0,
+      "prestige": 0.6,
+      "score": 0.3856272820629849
+    },
+    {
+      "agent": "EDU",
+      "size": "M",
+      "footprint_slots": [
+        "s_35"
+      ],
+      "lp_norm": 0.6284157787609741,
+      "cost": 2137.0,
+      "reward": 456.0,
+      "prestige": 0.6,
+      "score": 0.38726665905979
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1250"
+        "s_11"
       ],
-      "lp_norm": 0.3384148555350649,
+      "lp_norm": 0.6260190876432264,
+      "cost": 2826.0,
+      "reward": 671.0,
+      "prestige": 1.0,
+      "score": 0.7823823311273391
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_64"
+      ],
+      "lp_norm": 0.5514025657181058,
+      "cost": 2760.0,
+      "reward": 668.0,
+      "prestige": 1.0,
+      "score": 0.7825821542674578
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_0"
+      ],
+      "lp_norm": 0.3493633382985958,
+      "cost": 2451.0,
+      "reward": 610.0,
+      "prestige": 1.0,
+      "score": 0.742310303514377
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_37"
+      ],
+      "lp_norm": 0.49600407478884695,
+      "cost": 2705.0,
+      "reward": 663.0,
+      "prestige": 1.0,
+      "score": 0.7804049235508901
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_4"
+      ],
+      "lp_norm": 0.3358220568207771,
       "cost": 2440.0,
-      "reward": 603.0,
+      "reward": 609.0,
       "prestige": 1.0,
-      "score": 0.7777552004408321
+      "score": 0.7418748573710634
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_981"
+        "s_80"
       ],
-      "lp_norm": 0.7818514157774819,
-      "cost": 2880.0,
-      "reward": 640.0,
+      "lp_norm": 0.6171758881005505,
+      "cost": 2726.0,
+      "reward": 631.0,
       "prestige": 1.0,
-      "score": 0.7936389309822289
+      "score": 0.7494464570972159
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1277"
+        "s_16"
       ],
-      "lp_norm": 0.28692247939460314,
-      "cost": 2396.0,
-      "reward": 600.0,
+      "lp_norm": 0.4001716098463918,
+      "cost": 2506.0,
+      "reward": 611.0,
       "prestige": 1.0,
-      "score": 0.7769045323047252
+      "score": 0.7407375342309448
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1147"
+        "s_60"
       ],
-      "lp_norm": 0.7711033977036373,
-      "cost": 2869.0,
-      "reward": 637.0,
+      "lp_norm": 0.6418983407432843,
+      "cost": 2848.0,
+      "reward": 678.0,
       "prestige": 1.0,
-      "score": 0.7910550695688111
+      "score": 0.7879407234139661
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1193"
+        "s_53"
       ],
-      "lp_norm": 0.8271499867903724,
-      "cost": 2924.0,
-      "reward": 638.0,
+      "lp_norm": 0.8501522914058368,
+      "cost": 3057.0,
+      "reward": 689.0,
       "prestige": 1.0,
-      "score": 0.7892202782752445
+      "score": 0.7887142001369238
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1034"
+        "s_12"
       ],
-      "lp_norm": 0.5025813321538812,
-      "cost": 2605.0,
-      "reward": 617.0,
+      "lp_norm": 0.49871265304981643,
+      "cost": 2705.0,
+      "reward": 661.0,
       "prestige": 1.0,
-      "score": 0.7838433324149333
+      "score": 0.77852992355089
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1201"
+        "s_62"
       ],
-      "lp_norm": 0.6369066455437369,
-      "cost": 2737.0,
-      "reward": 625.0,
+      "lp_norm": 0.6553059674553045,
+      "cost": 2859.0,
+      "reward": 677.0,
       "prestige": 1.0,
-      "score": 0.7853414726546356
+      "score": 0.7865011695572798
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1221"
+        "s_14"
       ],
-      "lp_norm": 0.630418711533568,
-      "cost": 2737.0,
+      "lp_norm": 0.4743209860451089,
+      "cost": 2683.0,
+      "reward": 659.0,
+      "prestige": 1.0,
+      "score": 0.777659031264263
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_28"
+      ],
+      "lp_norm": 0.5948402977836504,
+      "cost": 2804.0,
+      "reward": 670.0,
+      "prestige": 1.0,
+      "score": 0.782448938840712
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_49"
+      ],
+      "lp_norm": 0.8694010299395732,
+      "cost": 3068.0,
+      "reward": 690.0,
+      "prestige": 1.0,
+      "score": 0.7891496462802374
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_19"
+      ],
+      "lp_norm": 0.3870039654691433,
+      "cost": 2495.0,
+      "reward": 610.0,
+      "prestige": 1.0,
+      "score": 0.7403020880876312
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_79"
+      ],
+      "lp_norm": 0.5403104933608446,
+      "cost": 2649.0,
       "reward": 624.0,
       "prestige": 1.0,
-      "score": 0.7842876084860173
+      "score": 0.746398334094021
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1187"
+        "s_24"
       ],
-      "lp_norm": 0.5592678601138628,
-      "cost": 2660.0,
-      "reward": 617.0,
-      "prestige": 1.0,
-      "score": 0.7809546769527484
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1157"
-      ],
-      "lp_norm": 0.8890658834905093,
-      "cost": 2990.0,
-      "reward": 648.0,
-      "prestige": 1.0,
-      "score": 0.7962925334068053
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1226"
-      ],
-      "lp_norm": 0.56887147709648,
-      "cost": 2671.0,
+      "lp_norm": 0.4668714577823526,
+      "cost": 2572.0,
       "reward": 619.0,
       "prestige": 1.0,
-      "score": 0.782484674197548
+      "score": 0.7452252110908262
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1215"
+        "s_67"
       ],
-      "lp_norm": 0.48418276063872123,
-      "cost": 2594.0,
-      "reward": 613.0,
+      "lp_norm": 0.5854250631368854,
+      "cost": 2793.0,
+      "reward": 672.0,
       "prestige": 1.0,
-      "score": 0.7802056068328971
+      "score": 0.7848259926973984
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1144"
+        "s_8"
       ],
-      "lp_norm": 0.6937813299973606,
-      "cost": 2792.0,
-      "reward": 632.0,
+      "lp_norm": 0.37191383063397787,
+      "cost": 2473.0,
+      "reward": 614.0,
       "prestige": 1.0,
-      "score": 0.7898298663727786
+      "score": 0.7450561958010041
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1443"
+        "s_20"
       ],
-      "lp_norm": 0.33225365845786226,
-      "cost": 2440.0,
-      "reward": 603.0,
-      "prestige": 1.0,
-      "score": 0.7777552004408321
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1175"
-      ],
-      "lp_norm": 0.9096715186921065,
-      "cost": 3012.0,
-      "reward": 645.0,
-      "prestige": 1.0,
-      "score": 0.7919754787160765
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1138"
-      ],
-      "lp_norm": 0.9303089827339183,
-      "cost": 3034.0,
-      "reward": 649.0,
-      "prestige": 1.0,
-      "score": 0.7950354732056758
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1352"
-      ],
-      "lp_norm": 0.7348748901442237,
-      "cost": 2836.0,
-      "reward": 633.0,
-      "prestige": 1.0,
-      "score": 0.7885728061716489
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1238"
-      ],
-      "lp_norm": 0.2995800572741834,
-      "cost": 2407.0,
-      "reward": 599.0,
-      "prestige": 1.0,
-      "score": 0.77527293704367
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1359"
-      ],
-      "lp_norm": 0.5330254931958924,
-      "cost": 2638.0,
+      "lp_norm": 0.4602365077302154,
+      "cost": 2561.0,
       "reward": 617.0,
       "prestige": 1.0,
-      "score": 0.7821101391376224
+      "score": 0.7438522649475126
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1264"
+        "s_52"
       ],
-      "lp_norm": 0.30275700509363496,
-      "cost": 2407.0,
-      "reward": 600.0,
+      "lp_norm": 0.7837259235844041,
+      "cost": 2991.0,
+      "reward": 683.0,
       "prestige": 1.0,
-      "score": 0.7763268012122883
+      "score": 0.7861015232770425
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1257"
+        "s_82"
       ],
-      "lp_norm": 0.29019839867661745,
-      "cost": 2396.0,
-      "reward": 598.0,
-      "prestige": 1.0,
-      "score": 0.7747968039674886
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1248"
-      ],
-      "lp_norm": 0.30550505313802184,
-      "cost": 2407.0,
-      "reward": 601.0,
-      "prestige": 1.0,
-      "score": 0.7773806653809064
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1217"
-      ],
-      "lp_norm": 0.8730080225088994,
-      "cost": 2979.0,
-      "reward": 642.0,
-      "prestige": 1.0,
-      "score": 0.7905470794875327
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1165"
-      ],
-      "lp_norm": 0.8216081056050544,
-      "cost": 2924.0,
-      "reward": 643.0,
-      "prestige": 1.0,
-      "score": 0.7944895991183358
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1481"
-      ],
-      "lp_norm": 0.28715076754606134,
-      "cost": 2396.0,
-      "reward": 597.0,
-      "prestige": 1.0,
-      "score": 0.7737429397988704
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1129"
-      ],
-      "lp_norm": 0.9852590418584112,
-      "cost": 3089.0,
-      "reward": 655.0,
-      "prestige": 1.0,
-      "score": 0.7984700027552005
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1386"
-      ],
-      "lp_norm": 0.5158182473688148,
-      "cost": 2616.0,
-      "reward": 617.0,
-      "prestige": 1.0,
-      "score": 0.7832656013224963
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1177"
-      ],
-      "lp_norm": 0.9564235183136602,
-      "cost": 3056.0,
-      "reward": 653.0,
-      "prestige": 1.0,
-      "score": 0.7980954676952748
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1234"
-      ],
-      "lp_norm": 0.7127054211723145,
-      "cost": 2814.0,
+      "lp_norm": 0.611601110318951,
+      "cost": 2715.0,
       "reward": 629.0,
       "prestige": 1.0,
-      "score": 0.7855128116820499
+      "score": 0.7480735109539023
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_953"
+        "s_29"
       ],
-      "lp_norm": 0.7276905748394271,
-      "cost": 2825.0,
-      "reward": 636.0,
+      "lp_norm": 0.5220134816060301,
+      "cost": 2727.0,
+      "reward": 664.0,
       "prestige": 1.0,
-      "score": 0.7923121297699407
+      "score": 0.7803383158375171
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1028"
+        "s_30"
       ],
-      "lp_norm": 0.47861165469727607,
-      "cost": 2583.0,
-      "reward": 613.0,
+      "lp_norm": 0.5717815020962222,
+      "cost": 2771.0,
+      "reward": 669.0,
       "prestige": 1.0,
-      "score": 0.780783337925334
+      "score": 0.7830176004107714
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1452"
+        "s_10"
       ],
-      "lp_norm": 0.3033031705037423,
-      "cost": 2407.0,
-      "reward": 601.0,
+      "lp_norm": 0.5234125600142662,
+      "cost": 2727.0,
+      "reward": 662.0,
       "prestige": 1.0,
-      "score": 0.7773806653809064
+      "score": 0.7784633158375172
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1190"
+        "s_1"
       ],
-      "lp_norm": 0.6887732393982028,
-      "cost": 2792.0,
-      "reward": 627.0,
-      "prestige": 1.0,
-      "score": 0.7845605455296872
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1145"
-      ],
-      "lp_norm": 0.7680962515031154,
-      "cost": 2869.0,
-      "reward": 638.0,
-      "prestige": 1.0,
-      "score": 0.7921089337374294
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1202"
-      ],
-      "lp_norm": 0.4813704784953411,
-      "cost": 2583.0,
+      "lp_norm": 0.39409229257482153,
+      "cost": 2495.0,
       "reward": 614.0,
       "prestige": 1.0,
-      "score": 0.7818372020939525
+      "score": 0.7440520880876312
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1245"
+        "s_7"
       ],
-      "lp_norm": 0.32078317054440575,
+      "lp_norm": 0.3194225431770671,
       "cost": 2429.0,
-      "reward": 601.0,
+      "reward": 609.0,
       "prestige": 1.0,
-      "score": 0.7762252031960325
+      "score": 0.7423769112277498
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1258"
+        "s_34"
       ],
-      "lp_norm": 0.3267632126712098,
-      "cost": 2429.0,
-      "reward": 601.0,
+      "lp_norm": 0.468005645249415,
+      "cost": 2672.0,
+      "reward": 661.0,
       "prestige": 1.0,
-      "score": 0.7762252031960325
+      "score": 0.7800360851209494
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1236"
+        "s_65"
       ],
-      "lp_norm": 0.3246881801920938,
-      "cost": 2429.0,
-      "reward": 601.0,
+      "lp_norm": 0.7249504178572065,
+      "cost": 2925.0,
+      "reward": 682.0,
       "prestige": 1.0,
-      "score": 0.7762252031960325
+      "score": 0.7881763464171611
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1173"
+        "s_33"
       ],
-      "lp_norm": 0.9492758140638299,
-      "cost": 3045.0,
-      "reward": 652.0,
+      "lp_norm": 0.6451125542883582,
+      "cost": 2848.0,
+      "reward": 676.0,
       "prestige": 1.0,
-      "score": 0.7976193346190936
+      "score": 0.7860657234139663
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1285"
+        "s_22"
       ],
-      "lp_norm": 0.3188727476361687,
-      "cost": 2429.0,
-      "reward": 602.0,
+      "lp_norm": 0.36638335334882366,
+      "cost": 2473.0,
+      "reward": 610.0,
       "prestige": 1.0,
-      "score": 0.7772790673646508
+      "score": 0.7413061958010041
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1213"
+        "s_15"
       ],
-      "lp_norm": 0.8779737682083809,
-      "cost": 2979.0,
-      "reward": 642.0,
+      "lp_norm": 0.5091965586354945,
+      "cost": 2716.0,
+      "reward": 663.0,
       "prestige": 1.0,
-      "score": 0.7905470794875327
+      "score": 0.7799028696942036
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1232"
+        "s_295"
       ],
-      "lp_norm": 0.5500380600711968,
-      "cost": 2660.0,
-      "reward": 618.0,
+      "lp_norm": 0.4471194782958659,
+      "cost": 2650.0,
+      "reward": 659.0,
       "prestige": 1.0,
-      "score": 0.7820085411213666
+      "score": 0.7791651928343223
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1387"
+        "s_21"
       ],
-      "lp_norm": 0.49865981982036756,
-      "cost": 2605.0,
-      "reward": 614.0,
-      "prestige": 1.0,
-      "score": 0.7806817399090785
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1399"
-      ],
-      "lp_norm": 0.6316980069021427,
-      "cost": 2737.0,
-      "reward": 625.0,
-      "prestige": 1.0,
-      "score": 0.7853414726546356
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1283"
-      ],
-      "lp_norm": 0.29211460046955395,
-      "cost": 2396.0,
-      "reward": 598.0,
-      "prestige": 1.0,
-      "score": 0.7747968039674886
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1243"
-      ],
-      "lp_norm": 0.3241107770639915,
-      "cost": 2429.0,
-      "reward": 602.0,
-      "prestige": 1.0,
-      "score": 0.7772790673646508
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1179"
-      ],
-      "lp_norm": 0.9212921727639132,
-      "cost": 3023.0,
-      "reward": 649.0,
-      "prestige": 1.0,
-      "score": 0.7956132042981128
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1222"
-      ],
-      "lp_norm": 0.5495477612812745,
-      "cost": 2649.0,
-      "reward": 619.0,
-      "prestige": 1.0,
-      "score": 0.7836401363824219
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1053"
-      ],
-      "lp_norm": 0.5467074111271988,
-      "cost": 2649.0,
+      "lp_norm": 0.4926554918824573,
+      "cost": 2594.0,
       "reward": 620.0,
       "prestige": 1.0,
-      "score": 0.7846940005510401
+      "score": 0.7451586033774532
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_976"
+        "s_68"
       ],
-      "lp_norm": 0.8239970885879713,
-      "cost": 2924.0,
-      "reward": 642.0,
+      "lp_norm": 0.8122490959996791,
+      "cost": 3013.0,
+      "reward": 688.0,
       "prestige": 1.0,
-      "score": 0.7934357349497175
+      "score": 0.7897849155636696
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1198"
+        "s_71"
       ],
-      "lp_norm": 0.635176843962642,
-      "cost": 2737.0,
-      "reward": 625.0,
-      "prestige": 1.0,
-      "score": 0.7853414726546356
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1227"
-      ],
-      "lp_norm": 0.5633919618654688,
-      "cost": 2671.0,
-      "reward": 618.0,
-      "prestige": 1.0,
-      "score": 0.7814308100289296
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1126"
-      ],
-      "lp_norm": 0.8776618188371186,
-      "cost": 2979.0,
-      "reward": 643.0,
-      "prestige": 1.0,
-      "score": 0.791600943656151
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1210"
-      ],
-      "lp_norm": 0.713514929856766,
-      "cost": 2814.0,
-      "reward": 633.0,
-      "prestige": 1.0,
-      "score": 0.7897282683565229
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1408"
-      ],
-      "lp_norm": 0.48293774934605055,
-      "cost": 2583.0,
-      "reward": 614.0,
-      "prestige": 1.0,
-      "score": 0.7818372020939525
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1191"
-      ],
-      "lp_norm": 0.6888780003432516,
-      "cost": 2792.0,
-      "reward": 629.0,
-      "prestige": 1.0,
-      "score": 0.7866682738669238
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1136"
-      ],
-      "lp_norm": 0.871007788121438,
-      "cost": 2968.0,
-      "reward": 646.0,
-      "prestige": 1.0,
-      "score": 0.7953402672544428
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1419"
-      ],
-      "lp_norm": 0.28892012805692924,
-      "cost": 2396.0,
-      "reward": 600.0,
-      "prestige": 1.0,
-      "score": 0.7769045323047252
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1151"
-      ],
-      "lp_norm": 0.9441664374060954,
-      "cost": 3045.0,
-      "reward": 651.0,
-      "prestige": 1.0,
-      "score": 0.7965654704504753
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1203"
-      ],
-      "lp_norm": 0.6933639550220484,
-      "cost": 2792.0,
-      "reward": 628.0,
-      "prestige": 1.0,
-      "score": 0.7856144096983055
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1392"
-      ],
-      "lp_norm": 0.4788648220554309,
-      "cost": 2583.0,
-      "reward": 612.0,
-      "prestige": 1.0,
-      "score": 0.7797294737567159
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1143"
-      ],
-      "lp_norm": 0.9655045934704938,
-      "cost": 3067.0,
-      "reward": 652.0,
-      "prestige": 1.0,
-      "score": 0.7964638724342197
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1381"
-      ],
-      "lp_norm": 0.6644521836151955,
-      "cost": 2770.0,
-      "reward": 630.0,
-      "prestige": 1.0,
-      "score": 0.788877600220416
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1218"
-      ],
-      "lp_norm": 0.6006945357689016,
-      "cost": 2704.0,
+      "lp_norm": 0.4608412995944001,
+      "cost": 2561.0,
       "reward": 624.0,
       "prestige": 1.0,
-      "score": 0.7860208017633283
+      "score": 0.7504147649475126
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1265"
+        "s_83"
       ],
-      "lp_norm": 0.29739603284388066,
-      "cost": 2407.0,
-      "reward": 601.0,
+      "lp_norm": 0.6758320771641103,
+      "cost": 2781.0,
+      "reward": 635.0,
       "prestige": 1.0,
-      "score": 0.7773806653809064
+      "score": 0.7506861878137836
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1131"
+        "s_2"
       ],
-      "lp_norm": 0.9423736293386562,
-      "cost": 3045.0,
-      "reward": 649.0,
+      "lp_norm": 0.5107058290495592,
+      "cost": 2716.0,
+      "reward": 665.0,
       "prestige": 1.0,
-      "score": 0.7944577421132388
+      "score": 0.7817778696942035
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1362"
+        "s_63"
       ],
-      "lp_norm": 0.8162924300621512,
-      "cost": 2913.0,
-      "reward": 639.0,
+      "lp_norm": 0.7084085551031623,
+      "cost": 2914.0,
+      "reward": 683.0,
       "prestige": 1.0,
-      "score": 0.7908518735362997
+      "score": 0.7896159002738475
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1207"
+        "s_5"
       ],
-      "lp_norm": 0.5607272391232587,
-      "cost": 2660.0,
+      "lp_norm": 0.38436713083733753,
+      "cost": 2495.0,
+      "reward": 614.0,
+      "prestige": 1.0,
+      "score": 0.7440520880876312
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_32"
+      ],
+      "lp_norm": 0.5602170998647277,
+      "cost": 2760.0,
+      "reward": 669.0,
+      "prestige": 1.0,
+      "score": 0.7835196542674578
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_13"
+      ],
+      "lp_norm": 0.5386751178516611,
+      "cost": 2738.0,
+      "reward": 665.0,
+      "prestige": 1.0,
+      "score": 0.7807737619808306
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_56"
+      ],
+      "lp_norm": 0.7441022701177296,
+      "cost": 2947.0,
+      "reward": 682.0,
+      "prestige": 1.0,
+      "score": 0.7871722387037882
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_36"
+      ],
+      "lp_norm": 0.7086813151831032,
+      "cost": 2914.0,
+      "reward": 680.0,
+      "prestige": 1.0,
+      "score": 0.7868034002738475
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_27"
+      ],
+      "lp_norm": 0.5446769227457211,
+      "cost": 2749.0,
+      "reward": 665.0,
+      "prestige": 1.0,
+      "score": 0.7802717081241441
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_43"
+      ],
+      "lp_norm": 0.8716515300598133,
+      "cost": 3068.0,
+      "reward": 690.0,
+      "prestige": 1.0,
+      "score": 0.7891496462802374
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_23"
+      ],
+      "lp_norm": 0.4222880716330534,
+      "cost": 2528.0,
+      "reward": 614.0,
+      "prestige": 1.0,
+      "score": 0.7425459265175719
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_85"
+      ],
+      "lp_norm": 0.706423804321117,
+      "cost": 2914.0,
+      "reward": 682.0,
+      "prestige": 1.0,
+      "score": 0.7886784002738475
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_9"
+      ],
+      "lp_norm": 0.41164618332114056,
+      "cost": 2517.0,
       "reward": 619.0,
       "prestige": 1.0,
-      "score": 0.7830624052899848
+      "score": 0.7477354803742584
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1017"
+        "s_75"
       ],
-      "lp_norm": 0.5541261186921218,
-      "cost": 2660.0,
-      "reward": 621.0,
-      "prestige": 1.0,
-      "score": 0.7851701336272214
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1174"
-      ],
-      "lp_norm": 0.9436598759008944,
-      "cost": 3045.0,
-      "reward": 649.0,
-      "prestige": 1.0,
-      "score": 0.7944577421132388
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1160"
-      ],
-      "lp_norm": 0.7932109818367221,
-      "cost": 2891.0,
-      "reward": 638.0,
-      "prestige": 1.0,
-      "score": 0.7909534715525555
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1223"
-      ],
-      "lp_norm": 0.8472730402199214,
-      "cost": 2946.0,
-      "reward": 639.0,
-      "prestige": 1.0,
-      "score": 0.7891186802589888
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1309"
-      ],
-      "lp_norm": 0.8565649269082636,
-      "cost": 2957.0,
-      "reward": 643.0,
-      "prestige": 1.0,
-      "score": 0.7927564058410249
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1172"
-      ],
-      "lp_norm": 0.9739906261157385,
-      "cost": 3078.0,
-      "reward": 655.0,
-      "prestige": 1.0,
-      "score": 0.7990477338476375
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1168"
-      ],
-      "lp_norm": 0.8891292827705496,
-      "cost": 2990.0,
-      "reward": 647.0,
-      "prestige": 1.0,
-      "score": 0.7952386692381871
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1155"
-      ],
-      "lp_norm": 0.858999268310203,
-      "cost": 2957.0,
-      "reward": 642.0,
-      "prestige": 1.0,
-      "score": 0.7917025416724066
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1230"
-      ],
-      "lp_norm": 0.5848650156106153,
-      "cost": 2693.0,
-      "reward": 621.0,
-      "prestige": 1.0,
-      "score": 0.7834369403499104
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1220"
-      ],
-      "lp_norm": 0.7167495900652352,
-      "cost": 2825.0,
-      "reward": 632.0,
-      "prestige": 1.0,
-      "score": 0.7880966730954677
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1394"
-      ],
-      "lp_norm": 0.4838184009970138,
+      "lp_norm": 0.48769146086087223,
       "cost": 2594.0,
-      "reward": 615.0,
-      "prestige": 1.0,
-      "score": 0.7823133351701337
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1453"
-      ],
-      "lp_norm": 0.3429872844418679,
-      "cost": 2451.0,
-      "reward": 603.0,
-      "prestige": 1.0,
-      "score": 0.7771774693483952
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1166"
-      ],
-      "lp_norm": 0.9097292425212025,
-      "cost": 3012.0,
-      "reward": 646.0,
-      "prestige": 1.0,
-      "score": 0.793029342884695
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1208"
-      ],
-      "lp_norm": 0.5148463755483899,
-      "cost": 2616.0,
-      "reward": 617.0,
-      "prestige": 1.0,
-      "score": 0.7832656013224963
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1219"
-      ],
-      "lp_norm": 0.5869100283771385,
-      "cost": 2693.0,
-      "reward": 621.0,
-      "prestige": 1.0,
-      "score": 0.7834369403499104
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1141"
-      ],
-      "lp_norm": 0.9131177096366171,
-      "cost": 3012.0,
-      "reward": 647.0,
-      "prestige": 1.0,
-      "score": 0.7940832070533131
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1368"
-      ],
-      "lp_norm": 0.6805001475429767,
-      "cost": 2781.0,
-      "reward": 628.0,
-      "prestige": 1.0,
-      "score": 0.7861921407907425
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1445"
-      ],
-      "lp_norm": 0.29040318795474623,
-      "cost": 2396.0,
-      "reward": 597.0,
-      "prestige": 1.0,
-      "score": 0.7737429397988704
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1390"
-      ],
-      "lp_norm": 0.6584287257558532,
-      "cost": 2759.0,
-      "reward": 627.0,
-      "prestige": 1.0,
-      "score": 0.7862937388069982
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1200"
-      ],
-      "lp_norm": 0.5498593096639787,
-      "cost": 2649.0,
-      "reward": 619.0,
-      "prestige": 1.0,
-      "score": 0.7836401363824219
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_974"
-      ],
-      "lp_norm": 0.8448889593531315,
-      "cost": 2946.0,
-      "reward": 646.0,
-      "prestige": 1.0,
-      "score": 0.7964957294393168
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1164"
-      ],
-      "lp_norm": 0.9071150197508607,
-      "cost": 3012.0,
-      "reward": 647.0,
-      "prestige": 1.0,
-      "score": 0.7940832070533131
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1240"
-      ],
-      "lp_norm": 0.3505538592261345,
-      "cost": 2462.0,
-      "reward": 604.0,
-      "prestige": 1.0,
-      "score": 0.7776536024245764
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1125"
-      ],
-      "lp_norm": 0.7965014357131882,
-      "cost": 2902.0,
-      "reward": 641.0,
-      "prestige": 1.0,
-      "score": 0.7935373329659733
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1205"
-      ],
-      "lp_norm": 0.5099168051836136,
-      "cost": 2616.0,
-      "reward": 614.0,
-      "prestige": 1.0,
-      "score": 0.7801040088166415
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1216"
-      ],
-      "lp_norm": 0.8872080809797528,
-      "cost": 2990.0,
-      "reward": 642.0,
-      "prestige": 1.0,
-      "score": 0.7899693483950957
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1199"
-      ],
-      "lp_norm": 0.457492762956783,
-      "cost": 2561.0,
-      "reward": 612.0,
-      "prestige": 1.0,
-      "score": 0.7808849359415898
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1278"
-      ],
-      "lp_norm": 0.2964354469242527,
-      "cost": 2407.0,
-      "reward": 600.0,
-      "prestige": 1.0,
-      "score": 0.7763268012122883
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1122"
-      ],
-      "lp_norm": 0.8727034308101105,
-      "cost": 2979.0,
-      "reward": 645.0,
-      "prestige": 1.0,
-      "score": 0.7937086719933875
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1292"
-      ],
-      "lp_norm": 0.766585246985353,
-      "cost": 2869.0,
-      "reward": 637.0,
-      "prestige": 1.0,
-      "score": 0.7910550695688111
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1214"
-      ],
-      "lp_norm": 0.7953142177639951,
-      "cost": 2902.0,
-      "reward": 635.0,
-      "prestige": 1.0,
-      "score": 0.7872141479542637
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1045"
-      ],
-      "lp_norm": 0.5012383026428586,
-      "cost": 2605.0,
-      "reward": 617.0,
-      "prestige": 1.0,
-      "score": 0.7838433324149333
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1181"
-      ],
-      "lp_norm": 0.7565376128515773,
-      "cost": 2858.0,
-      "reward": 635.0,
-      "prestige": 1.0,
-      "score": 0.7895250723240116
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1188"
-      ],
-      "lp_norm": 0.5286425537761825,
-      "cost": 2638.0,
-      "reward": 616.0,
-      "prestige": 1.0,
-      "score": 0.781056274969004
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1464"
-      ],
-      "lp_norm": 0.29201746869994977,
-      "cost": 2396.0,
-      "reward": 598.0,
-      "prestige": 1.0,
-      "score": 0.7747968039674886
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1012"
-      ],
-      "lp_norm": 0.6791321346162051,
-      "cost": 2781.0,
-      "reward": 628.0,
-      "prestige": 1.0,
-      "score": 0.7861921407907425
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1228"
-      ],
-      "lp_norm": 0.5674951145369989,
-      "cost": 2671.0,
-      "reward": 621.0,
-      "prestige": 1.0,
-      "score": 0.7845924025347844
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1459"
-      ],
-      "lp_norm": 0.2889706445440997,
-      "cost": 2396.0,
-      "reward": 597.0,
-      "prestige": 1.0,
-      "score": 0.7737429397988704
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1185"
-      ],
-      "lp_norm": 0.7938419214158999,
-      "cost": 2891.0,
-      "reward": 636.0,
-      "prestige": 1.0,
-      "score": 0.7888457432153189
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1195"
-      ],
-      "lp_norm": 0.6602960734369889,
-      "cost": 2759.0,
-      "reward": 629.0,
-      "prestige": 1.0,
-      "score": 0.7884014671442348
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1163"
-      ],
-      "lp_norm": 0.8329030388844576,
-      "cost": 2935.0,
-      "reward": 642.0,
-      "prestige": 1.0,
-      "score": 0.7928580038572806
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1161"
-      ],
-      "lp_norm": 0.9028696192277578,
-      "cost": 3001.0,
-      "reward": 649.0,
-      "prestige": 1.0,
-      "score": 0.7967686664829867
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1018"
-      ],
-      "lp_norm": 0.5098670436429549,
-      "cost": 2616.0,
-      "reward": 618.0,
-      "prestige": 1.0,
-      "score": 0.7843194654911145
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1182"
-      ],
-      "lp_norm": 0.7346212397682861,
-      "cost": 2836.0,
-      "reward": 632.0,
-      "prestige": 1.0,
-      "score": 0.7875189420030307
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1197"
-      ],
-      "lp_norm": 0.6231120743064825,
-      "cost": 2726.0,
-      "reward": 625.0,
-      "prestige": 1.0,
-      "score": 0.7859192037470726
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1186"
-      ],
-      "lp_norm": 0.8218647471858278,
-      "cost": 2924.0,
-      "reward": 639.0,
-      "prestige": 1.0,
-      "score": 0.7902741424438627
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1426"
-      ],
-      "lp_norm": 0.2979078370013064,
-      "cost": 2407.0,
-      "reward": 600.0,
-      "prestige": 1.0,
-      "score": 0.7763268012122883
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1407"
-      ],
-      "lp_norm": 0.5184423628758954,
-      "cost": 2627.0,
-      "reward": 616.0,
-      "prestige": 1.0,
-      "score": 0.7816340060614408
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1438"
-      ],
-      "lp_norm": 0.28782463520369506,
-      "cost": 2396.0,
-      "reward": 597.0,
-      "prestige": 1.0,
-      "score": 0.7737429397988704
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1229"
-      ],
-      "lp_norm": 0.5088857205383785,
-      "cost": 2616.0,
-      "reward": 615.0,
-      "prestige": 1.0,
-      "score": 0.7811578729852597
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1192"
-      ],
-      "lp_norm": 0.6173564887782432,
-      "cost": 2726.0,
-      "reward": 622.0,
-      "prestige": 1.0,
-      "score": 0.7827576112412178
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1272"
-      ],
-      "lp_norm": 0.30556020669212036,
-      "cost": 2418.0,
-      "reward": 599.0,
-      "prestige": 1.0,
-      "score": 0.774695205951233
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1196"
-      ],
-      "lp_norm": 0.49553042014118387,
-      "cost": 2605.0,
-      "reward": 614.0,
-      "prestige": 1.0,
-      "score": 0.7806817399090785
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1276"
-      ],
-      "lp_norm": 0.3018532717111678,
-      "cost": 2407.0,
-      "reward": 599.0,
-      "prestige": 1.0,
-      "score": 0.77527293704367
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1356"
-      ],
-      "lp_norm": 0.4626810575974264,
-      "cost": 2572.0,
-      "reward": 613.0,
-      "prestige": 1.0,
-      "score": 0.781361069017771
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1235"
-      ],
-      "lp_norm": 0.5356408639468441,
-      "cost": 2638.0,
-      "reward": 616.0,
-      "prestige": 1.0,
-      "score": 0.781056274969004
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1150"
-      ],
-      "lp_norm": 0.9708977799351618,
-      "cost": 3067.0,
-      "reward": 653.0,
-      "prestige": 1.0,
-      "score": 0.7975177366028379
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1441"
-      ],
-      "lp_norm": 0.31544333378797784,
-      "cost": 2418.0,
-      "reward": 601.0,
-      "prestige": 1.0,
-      "score": 0.7768029342884695
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1358"
-      ],
-      "lp_norm": 0.7594808487547302,
-      "cost": 2858.0,
-      "reward": 635.0,
-      "prestige": 1.0,
-      "score": 0.7895250723240116
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1184"
-      ],
-      "lp_norm": 0.6221316315750665,
-      "cost": 2726.0,
       "reward": 623.0,
       "prestige": 1.0,
-      "score": 0.7838114754098361
+      "score": 0.7479711033774532
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1224"
+        "s_3"
       ],
-      "lp_norm": 0.5392849371444356,
-      "cost": 2649.0,
-      "reward": 616.0,
+      "lp_norm": 0.4335846153690358,
+      "cost": 2539.0,
+      "reward": 618.0,
       "prestige": 1.0,
-      "score": 0.7804785438765669
+      "score": 0.7457938726608855
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1374"
+        "s_77"
       ],
-      "lp_norm": 0.7090287463347196,
-      "cost": 2814.0,
-      "reward": 632.0,
+      "lp_norm": 0.554415531387541,
+      "cost": 2660.0,
+      "reward": 628.0,
       "prestige": 1.0,
-      "score": 0.7886744041879047
+      "score": 0.7496462802373345
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1142"
+        "s_84"
       ],
-      "lp_norm": 0.905399580099596,
-      "cost": 3001.0,
-      "reward": 647.0,
-      "prestige": 1.0,
-      "score": 0.7946609381457501
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1281"
-      ],
-      "lp_norm": 0.2933951718340544,
-      "cost": 2396.0,
-      "reward": 599.0,
-      "prestige": 1.0,
-      "score": 0.7758506681361069
-    },
-    {
-      "agent": "EDU",
-      "size": "L",
-      "footprint_slots": [
-        "s_1344"
-      ],
-      "lp_norm": 0.8235722490932137,
-      "cost": 2924.0,
+      "lp_norm": 0.7333060624974789,
+      "cost": 2836.0,
       "reward": 640.0,
       "prestige": 1.0,
-      "score": 0.791328006612481
+      "score": 0.7528634185303513
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1442"
+        "s_39"
       ],
-      "lp_norm": 0.30751806284549643,
-      "cost": 2418.0,
-      "reward": 599.0,
+      "lp_norm": 0.7753081073934127,
+      "cost": 2980.0,
+      "reward": 685.0,
       "prestige": 1.0,
-      "score": 0.774695205951233
+      "score": 0.7884785771337288
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1194"
+        "s_17"
       ],
-      "lp_norm": 0.6506986716040666,
-      "cost": 2759.0,
-      "reward": 625.0,
+      "lp_norm": 0.5114988000049205,
+      "cost": 2616.0,
+      "reward": 619.0,
       "prestige": 1.0,
-      "score": 0.7841860104697617
+      "score": 0.7432169956640804
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1326"
+        "s_31"
       ],
-      "lp_norm": 0.7698296304707747,
-      "cost": 2869.0,
-      "reward": 638.0,
+      "lp_norm": 0.43718925669231123,
+      "cost": 2639.0,
+      "reward": 659.0,
       "prestige": 1.0,
-      "score": 0.7921089337374294
+      "score": 0.7796672466910087
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1140"
+        "s_73"
       ],
-      "lp_norm": 0.855008311726338,
-      "cost": 2957.0,
-      "reward": 644.0,
+      "lp_norm": 0.47017132793684313,
+      "cost": 2572.0,
+      "reward": 623.0,
       "prestige": 1.0,
-      "score": 0.7938102700096432
+      "score": 0.7489752110908261
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1253"
+        "s_18"
       ],
-      "lp_norm": 0.31318765439365837,
-      "cost": 2418.0,
-      "reward": 600.0,
+      "lp_norm": 0.5614446230412673,
+      "cost": 2671.0,
+      "reward": 624.0,
       "prestige": 1.0,
-      "score": 0.7757490701198513
+      "score": 0.7453942263806481
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1327"
+        "s_25"
       ],
-      "lp_norm": 0.7175491947886043,
-      "cost": 2825.0,
-      "reward": 634.0,
+      "lp_norm": 0.5345731248276852,
+      "cost": 2738.0,
+      "reward": 663.0,
       "prestige": 1.0,
-      "score": 0.7902044014327043
+      "score": 0.7788987619808307
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1261"
+        "s_61"
       ],
-      "lp_norm": 0.31988329723229997,
-      "cost": 2429.0,
-      "reward": 601.0,
+      "lp_norm": 0.48781448862468574,
+      "cost": 2694.0,
+      "reward": 665.0,
       "prestige": 1.0,
-      "score": 0.7762252031960325
+      "score": 0.7827819774075764
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1225"
+        "s_26"
       ],
-      "lp_norm": 0.6272864187778793,
-      "cost": 2726.0,
-      "reward": 625.0,
+      "lp_norm": 0.6776596891731697,
+      "cost": 2881.0,
+      "reward": 675.0,
       "prestige": 1.0,
-      "score": 0.7859192037470726
+      "score": 0.7836220618439069
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_57"
+      ],
+      "lp_norm": 0.8362070589501502,
+      "cost": 3035.0,
+      "reward": 690.0,
+      "prestige": 1.0,
+      "score": 0.7906558078502968
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_58"
+      ],
+      "lp_norm": 0.5224684521887402,
+      "cost": 2627.0,
+      "reward": 619.0,
+      "prestige": 1.0,
+      "score": 0.742714941807394
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_59"
+      ],
+      "lp_norm": 0.5781261038455485,
+      "cost": 2782.0,
+      "reward": 672.0,
+      "prestige": 1.0,
+      "score": 0.7853280465540848
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_6"
+      ],
+      "lp_norm": 0.4154968776446769,
+      "cost": 2517.0,
+      "reward": 618.0,
+      "prestige": 1.0,
+      "score": 0.7467979803742584
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_38"
+      ],
+      "lp_norm": 0.6783925220825093,
+      "cost": 2881.0,
+      "reward": 676.0,
+      "prestige": 1.0,
+      "score": 0.784559561843907
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_46"
+      ],
+      "lp_norm": 0.6290696497392915,
+      "cost": 2837.0,
+      "reward": 674.0,
+      "prestige": 1.0,
+      "score": 0.7846927772706527
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_76"
+      ],
+      "lp_norm": 0.5092714997647588,
+      "cost": 2616.0,
+      "reward": 624.0,
+      "prestige": 1.0,
+      "score": 0.7479044956640803
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_55"
+      ],
+      "lp_norm": 0.7126101425300586,
+      "cost": 2914.0,
+      "reward": 678.0,
+      "prestige": 1.0,
+      "score": 0.7849284002738475
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_35"
+      ],
+      "lp_norm": 0.6284157787609741,
+      "cost": 2837.0,
+      "reward": 673.0,
+      "prestige": 1.0,
+      "score": 0.7837552772706526
     }
   ],
   "active_agent": "EDU"

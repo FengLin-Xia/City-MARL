@@ -1,30 +1,46 @@
 {
   "month": 28,
-  "score": 2.3894376251576057,
+  "score": 3.8346271746586025,
   "actions": [
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1314"
+        "s_10"
       ],
-      "score": 0.7968131165170955
+      "score": 0.7817651680488871
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_974"
+        "s_25"
       ],
-      "score": 0.7963282466810058
+      "score": 0.7817651680488871
     },
     {
       "agent": "EDU",
       "size": "L",
       "footprint_slots": [
-        "s_1006"
+        "s_77"
       ],
-      "score": 0.7962962619595045
+      "score": 0.7564039408866994
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_84"
+      ],
+      "score": 0.7586304171603169
+    },
+    {
+      "agent": "EDU",
+      "size": "L",
+      "footprint_slots": [
+        "s_71"
+      ],
+      "score": 0.7560624805138119
     }
   ],
   "active_agent": "EDU"

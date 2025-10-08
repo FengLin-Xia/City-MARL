@@ -134,6 +134,59 @@ class ActionEnumerator:
 
     def __init__(self, slots: Dict[str, SlotNode]):
         self.slots = slots
+    
+    def _calculate_zone_for_slots(self, footprint_slots: List[str]) -> str:
+        """计算槽位集合的zone（near/mid/far）
+        
+        基于槽位到最近的hub的距离来计算zone
+        """
+        if not footprint_slots:
+            return 'mid'
+        
+        # 获取所有hub位置（从slots中推断或使用固定位置）
+        hub_positions = []
+        
+        # 方法1：从slots中寻找hub标记的槽位
+        for slot_id, slot in self.slots.items():
+            if hasattr(slot, 'is_hub') and slot.is_hub:
+                hub_positions.append((slot.x, slot.y))
+        
+        # 方法2：如果没有找到hub标记，使用固定位置（从配置中获取）
+        if not hub_positions:
+            # 使用默认hub位置（这些应该从配置中获取）
+            hub_positions = [(122, 80), (112, 121)]
+        
+        # 计算每个槽位到最近hub的距离
+        min_distances = []
+        for slot_id in footprint_slots:
+            slot = self.slots.get(slot_id)
+            if slot is None:
+                continue
+                
+            x = getattr(slot, 'fx', getattr(slot, 'x', 0))
+            y = getattr(slot, 'fy', getattr(slot, 'y', 0))
+            
+            min_dist_to_hub = float('inf')
+            for hub_x, hub_y in hub_positions:
+                dist = ((x - hub_x) ** 2 + (y - hub_y) ** 2) ** 0.5
+                min_dist_to_hub = min(min_dist_to_hub, dist)
+            
+            if min_dist_to_hub != float('inf'):
+                min_distances.append(min_dist_to_hub)
+        
+        if not min_distances:
+            return 'mid'
+        
+        # 使用平均距离
+        avg_distance = sum(min_distances) / len(min_distances)
+        
+        # 根据距离阈值确定zone
+        if avg_distance <= 20:
+            return 'near'
+        elif avg_distance <= 50:
+            return 'mid'
+        else:
+            return 'far'
 
     def enumerate_actions(
         self,
@@ -162,11 +215,14 @@ class ActionEnumerator:
                 for fp in feats:
                     lp_vals = [float(lp_provider(sid)) for sid in fp]
                     lp_norm = float(sum(lp_vals) / max(1, len(lp_vals)))
+                    # 计算zone（基于槽位位置和hub距离）
+                    zone = self._calculate_zone_for_slots(fp)
+                    
                     act = Action(
                         agent=agent,
                         size=size,
                         footprint_slots=list(fp),
-                        zone=None,
+                        zone=zone,
                         LP_norm=lp_norm,
                         adjacency={'footprint': len(fp)}
                     )
@@ -265,7 +321,8 @@ class ActionScorer:
 
         def norm(v, lo, hi):
             if hi - lo <= 1e-9:
-                return 0.0
+                # 当所有值相同时，返回0.5而不是0.0，避免完全抹平差异
+                return 0.5
             return (v - lo) / (hi - lo)
 
         # 3) 按 agent 使用不同权重

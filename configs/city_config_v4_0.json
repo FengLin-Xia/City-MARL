@@ -1,6 +1,6 @@
 {
   "simulation": {
-    "total_months": 290
+    "total_months": 30
     
 
   },
@@ -45,8 +45,8 @@
     "hubs": {
       "mode": "explicit",
       "list": [
-        {"id": "hub1", "x": 125, "y": 75, "R0": 0, "dR": 1.0, "weight": 0.5},
-        {"id": "hub2", "x": 112, "y": 121, "R0": 0, "dR": 1.0, "weight": 0.5}
+        {"id": "hub1", "x": 122, "y": 80, "R0": 15, "dR": 2.0, "weight": 0.5},
+        {"id": "hub2", "x": 112, "y": 121, "R0": 15, "dR": 2.0, "weight": 0.5}
       ]
     },
     "slots": {
