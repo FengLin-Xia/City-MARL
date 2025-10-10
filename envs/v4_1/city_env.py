@@ -38,6 +38,16 @@ class CityEnvironment:
         self.map_size = self.city_cfg.get('map_size', [200, 200])
         self.hubs = self.city_cfg.get('transport_hubs', [[125, 75], [112, 121]])
         
+        # Budget系统配置
+        self.budget_cfg = cfg.get('budget_system', {'enabled': False})
+        if self.budget_cfg.get('enabled', False):
+            self.budgets = dict(self.budget_cfg.get('initial_budgets', {'IND': 5000, 'EDU': 4000}))
+            self.budget_history = {agent: [] for agent in self.rl_cfg['agents']}
+            print(f"[Budget] 系统已启用 - IND: {self.budgets.get('IND', 0)}, EDU: {self.budgets.get('EDU', 0)}")
+        else:
+            self.budgets = None
+            self.budget_history = None
+        
         # v4.1配置
         self.v4_cfg = cfg.get('growth_v4_1', {})
         if not self.v4_cfg:
@@ -155,6 +165,12 @@ class CityEnvironment:
         # 清空建筑状态
         self.buildings = {'public': [], 'industrial': []}
         
+        # 重置Budget
+        if self.budgets is not None:
+            self.budgets = dict(self.budget_cfg.get('initial_budgets', {'IND': 5000, 'EDU': 4000}))
+            for agent in self.rl_cfg['agents']:
+                self.budget_history[agent].clear()
+        
         # 清空缓存和历史
         self.state_cache.clear()
         self.action_cache.clear()
@@ -265,6 +281,7 @@ class CityEnvironment:
             tol=1.0
         )
         
+        # 【修正顺序】先应用河流连通域过滤，再应用邻近性约束
         # 根据当前智能体过滤到对应连通域
         if hasattr(self, 'hub_components') and len(self.hub_components) >= 2:
             agent_idx = self.rl_cfg['agents'].index(self.current_agent)
@@ -284,10 +301,26 @@ class CityEnvironment:
                     filtered_candidates.add(slot_id)
             
             print(f"    [River Filter] {self.current_agent} agent: {len(all_candidates)} -> {len(filtered_candidates)} candidates (连通域 {expected_comp})")
-            return filtered_candidates
+            all_candidates = filtered_candidates
         else:
             print(f"    [River Filter] hub_components未设置，返回所有候选槽位: {len(all_candidates)}")
-            return all_candidates
+        
+        # 【新增】邻近性约束：优先选择靠近已有建筑的槽位（在河流过滤之后，只在同一连通域内）
+        proximity_cfg = self.v4_cfg.get('proximity_constraint', {})
+        if proximity_cfg.get('enabled', False) and self.current_month >= proximity_cfg.get('apply_after_month', 1):
+            from enhanced_city_simulation_v4_0 import filter_near_buildings
+            # 只使用当前agent类型的建筑作为参考（避免跨连通域）
+            agent_type = 'industrial' if self.current_agent == 'IND' else 'public'
+            agent_buildings = self.buildings.get(agent_type, [])
+            all_candidates = filter_near_buildings(
+                all_candidates,
+                self.slots,
+                agent_buildings,
+                max_distance=float(proximity_cfg.get('max_distance', 10.0)),
+                min_candidates=int(proximity_cfg.get('min_candidates', 5))
+            )
+        
+        return all_candidates
     
     def _get_land_price_field(self) -> np.ndarray:
         """获取地价场"""
@@ -344,15 +377,42 @@ class CityEnvironment:
         if self.rl_cfg.get('cooperation_lambda', 0) > 0:
             cooperation_bonus = self._calculate_cooperation_reward(agent, action)
         
-        # 5. 总奖励
-        total_reward = base_reward + quality_reward + progress_reward + cooperation_bonus
+        # 5. Budget惩罚（新增）
+        budget_penalty = 0.0
+        if self.budgets is not None:
+            # 更新预算
+            budget_before = self.budgets[agent]
+            self.budgets[agent] -= action.cost
+            self.budgets[agent] += action.reward
+            budget_after = self.budgets[agent]
+            
+            # 记录历史
+            self.budget_history[agent].append(budget_after)
+            
+            # 负债惩罚
+            if budget_after < 0:
+                debt_penalty_coef = self.budget_cfg.get('debt_penalty_coef', 0.5)
+                budget_penalty = abs(budget_after) * debt_penalty_coef
+            
+            # 破产检测
+            bankruptcy_threshold = self.budget_cfg.get('bankruptcy_threshold', -5000)
+            if budget_after < bankruptcy_threshold:
+                bankruptcy_penalty = abs(self.budget_cfg.get('bankruptcy_penalty', -100.0))
+                budget_penalty += bankruptcy_penalty
+        
+        # 6. 总奖励（包含budget惩罚）
+        total_reward = base_reward + quality_reward + progress_reward + cooperation_bonus - budget_penalty
         
         # 记录奖励
         self.monthly_rewards[agent].append(total_reward)
         
         
         # 奖励缩放：将奖励缩放到合理范围
-        scaled_reward = total_reward / 100.0
+        # 注意：budget_penalty可能很大，需要更强的缩放
+        scaled_reward = total_reward / 200.0  # 从100改为200，减小波动
+        
+        # Reward clipping: 防止极端值破坏训练
+        scaled_reward = np.clip(scaled_reward, -10.0, 10.0)
         
         
         # 调试信息

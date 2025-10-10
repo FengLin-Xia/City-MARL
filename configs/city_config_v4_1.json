@@ -7,6 +7,23 @@
     "trunk_road": [],
     "transport_hubs": [[122, 80], [112, 121]]
   },
+  "budget_system": {
+    "enabled": true,
+    "mode": "soft_constraint",
+    "initial_budgets": {
+      "IND": 15000,
+      "EDU": 10000
+    
+    },
+    "debt_penalty_coef": 0.3,
+    "max_debt": -2000,
+    "monthly_grant": 0,
+    "bankruptcy_threshold": -5000,
+    "bankruptcy_penalty": -100.0,
+    "budget_in_observation": true,
+    "normalize_budget": true,
+    "budget_norm_range": [-2000, 10000]
+  },
   "solver": {
     "mode": "rl",
     "rl": {
@@ -15,13 +32,14 @@
       "clip_eps": 0.2,
       "gamma": 0.99,
       "gae_lambda": 0.95,
-      "lr": 1e-3,
+      "lr": 1e-4,
       "ent_coef": 0.05,
       "vf_coef": 0.5,
       "K_epochs": 2,
+      "num_epochs": 1,
       "rollout_steps": 10,
       "mini_batch_size": 10,
-      "max_updates": 50,
+      "max_updates": 10,
       "mask_illegal_actions": true,
       "cooperation_lambda": 0.2,
       "seed": 42,
@@ -40,7 +58,7 @@
         "type": "nearest_k",
         "temperature": 1.0,
         "rule": "euclidean",
-        "k": 5
+        "k": 3
       }
     }
   },
@@ -79,10 +97,10 @@
   "growth_v4_1": {
     "hubs": {
       "mode": "explicit",
-      "candidate_mode": "ring",
+      "candidate_mode": "cumulative",
       "tol": 0.5,
       "list": [
-        {"id": "hub1", "x": 122, "y": 80, "R0": 2, "dR": 1.5, "weight": 0.5},
+        {"id": "hub1", "x": 122, "y": 80, "R0": 5, "dR": 1.5, "weight": 0.5},
         {"id": "hub2", "x": 112, "y": 121, "R0": 2, "dR": 1.5, "weight": 0.5}
       ]
     },
@@ -112,7 +130,16 @@
       "lock_period": 3,
       "hysteresis_delta": 0.04
     },
+    "proximity_constraint": {
+      "enabled": true,
+      "max_distance": 15.0,
+      "apply_after_month": 0,
+      "min_candidates": 5
+    },
     "evaluation": {
+      "proximity_threshold": 15.0,
+      "proximity_reward": 1500.0,
+      "distance_penalty_coef": 1.0,
       "ZoneAdd": {"near": 0.8, "mid": 0.3, "far": 0.0},
       "s_zone": {"near": 0.5, "mid": 0.2, "far": 0.0},
       "m_zone": {"near": 1.15, "mid": 1.00, "far": 0.90},
@@ -143,8 +170,8 @@
             "enabled": true,
             "peak_value": 1.0,
             "decay_mode": "lorentzian",
-            "gamma_px": 8.0,
-            "max_influence_distance": 40.0
+            "gamma_px": 5.0,
+            "max_influence_distance": 20.0
           }
         }
       ]

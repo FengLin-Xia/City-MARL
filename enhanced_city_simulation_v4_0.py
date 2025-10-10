@@ -28,6 +28,7 @@ def load_slots_from_points_file(points_file: str, map_size: List[int]) -> Dict[s
     """从简单文本点集文件加载槽位（每行含两个坐标即可，允许夹杂其他数字）。
     - 保留浮点坐标精度
     - 自动生成 4-neighbor 邻接
+    - 支持第4列：building_level（3=只能建S, 4=可建S/M, 5=可建S/M/L）
     """
     import re
     if not os.path.exists(points_file):
@@ -47,6 +48,8 @@ def load_slots_from_points_file(points_file: str, map_size: List[int]) -> Dict[s
             num_total += 1
             try:
                 xf = float(nums[0]); yf = float(nums[1])
+                # 读取第4列作为building_level（如果存在）
+                building_level = int(float(nums[3])) if len(nums) > 3 else 3
             except Exception:
                 continue
             # 画布范围判断（保留浮点）
@@ -57,7 +60,7 @@ def load_slots_from_points_file(points_file: str, map_size: List[int]) -> Dict[s
                 continue
             seen.add(key)
             sid = f"s_{len(nodes)}"
-            nodes[sid] = SlotNode(slot_id=sid, x=int(round(xf)), y=int(round(yf)), fx=xf, fy=yf)
+            nodes[sid] = SlotNode(slot_id=sid, x=int(round(xf)), y=int(round(yf)), fx=xf, fy=yf, building_level=building_level)
     # 自动补邻接（基于像素坐标的 4-neighbor）
     _auto_fill_neighbors_4n(nodes)
     return nodes
@@ -122,6 +125,66 @@ def compute_R(month: int, hubs_cfg: Dict, use_pixel: bool = True) -> Tuple[float
     R_prev = R0 + dR * max(0, month - 1)
     R_curr = R0 + dR * month
     return R_prev, R_curr
+
+
+def filter_near_buildings(
+    candidates: Set[str],
+    slots: Dict[str, SlotNode],
+    buildings: List[Dict],
+    max_distance: float = 10.0,
+    min_candidates: int = 5
+) -> Set[str]:
+    """
+    过滤候选槽位，只保留距离已有建筑≤max_distance的槽位（邻近性约束）
+    
+    参数：
+    - candidates: 候选槽位ID集合
+    - slots: 所有槽位字典
+    - buildings: 已有建筑列表 [{'xy': [x, y], ...}, ...]
+    - max_distance: 最大距离（像素）
+    - min_candidates: 最少保留N个候选槽位（防止无槽位）
+    
+    返回：
+    - 过滤后的候选槽位集合
+    """
+    if not buildings or len(buildings) == 0:
+        # 没有建筑时，返回所有候选槽位
+        return candidates
+    
+    # 提取所有建筑位置
+    building_positions = []
+    for b in buildings:
+        xy = b.get('xy', [0, 0])
+        building_positions.append((float(xy[0]), float(xy[1])))
+    
+    if not building_positions:
+        return candidates
+    
+    # 计算每个候选槽位到最近建筑的距离
+    near_candidates = set()
+    for slot_id in candidates:
+        slot = slots.get(slot_id)
+        if slot is None:
+            continue
+        
+        # 使用浮点坐标
+        sx = float(getattr(slot, 'fx', slot.x))
+        sy = float(getattr(slot, 'fy', slot.y))
+        
+        # 计算到最近建筑的距离
+        min_dist = min(
+            math.hypot(sx - bx, sy - by)
+            for bx, by in building_positions
+        )
+        
+        if min_dist <= max_distance:
+            near_candidates.add(slot_id)
+    
+    # 如果过滤后槽位太少，返回原候选集（避免无槽位可选）
+    if len(near_candidates) < min_candidates:
+        return candidates
+    
+    return near_candidates
 
 
 def ring_candidates(nodes: Dict[str, SlotNode], hubs: List[List[float]], month: int, hubs_cfg: Dict, tol: float = 1.0) -> Set[str]:
@@ -513,6 +576,7 @@ def main():
             else:
                 active_agent = 'IND' if (m % 2 == 0) else 'EDU'
             active_sizes = {active_agent: ['S', 'M', 'L']}
+            all_buildings = buildings.get('public', []) + buildings.get('industrial', [])
             actions, best_seq = planner.plan(
                 slots=slots,
                 candidates=cand_ids,
@@ -521,8 +585,10 @@ def main():
                 river_distance_provider=river_distance_provider,
                 agent_types=[active_agent],
                 sizes=active_sizes,
+                buildings=all_buildings,
             )
         else:
+            all_buildings = buildings.get('public', []) + buildings.get('industrial', [])
             actions, best_seq = planner.plan(
                 slots=slots,
                 candidates=cand_ids,
@@ -531,8 +597,41 @@ def main():
                 river_distance_provider=river_distance_provider,
                 agent_types=['EDU', 'IND'],
                 sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L']},
+                buildings=all_buildings,
             )
 
+        # 【新增】在河流过滤之前，先按连通域过滤候选槽位，再应用邻近性约束
+        # 这样邻近性约束只在各自的连通域内生效
+        if turn_based:
+            # 获取当前agent的连通域
+            target_comp = hub1_comp if active_agent == 'IND' else hub2_comp
+            
+            # 先过滤连通域
+            comp_filtered_cand = set()
+            for slot_id in cand_ids:
+                slot = slots.get(slot_id)
+                if slot:
+                    x = float(getattr(slot, 'fx', slot.x))
+                    y = float(getattr(slot, 'fy', slot.y))
+                    if comp_of_xy(x, y) == target_comp:
+                        comp_filtered_cand.add(slot_id)
+            
+            # 再应用邻近性约束（只在同一连通域内）
+            proximity_cfg = v4.get('proximity_constraint', {})
+            if proximity_cfg.get('enabled', False) and m >= proximity_cfg.get('apply_after_month', 1):
+                # 只使用同一agent类型的建筑作为参考
+                agent_buildings = buildings.get('industrial', []) if active_agent == 'IND' else buildings.get('public', [])
+                comp_filtered_cand = filter_near_buildings(
+                    comp_filtered_cand,
+                    slots,
+                    agent_buildings,
+                    max_distance=float(proximity_cfg.get('max_distance', 10.0)),
+                    min_candidates=int(proximity_cfg.get('min_candidates', 5))
+                )
+            
+            # 更新候选集
+            cand_ids = comp_filtered_cand
+        
         # 同侧过滤：IND 仅在 hub1 一侧；EDU 仅在 hub2 一侧
         def node_comp(n: SlotNode) -> int:
             # 使用 fx/fy 若有，否则用整数像素坐标
@@ -620,7 +719,15 @@ def main():
         chosen = []
         if best_seq and getattr(best_seq, 'actions', None):
             for a in best_seq.actions:
-                chosen.append({'agent': a.agent, 'size': a.size, 'footprint_slots': a.footprint_slots, 'score': float(a.score)})
+                chosen.append({
+                    'agent': a.agent,
+                    'size': a.size,
+                    'footprint_slots': a.footprint_slots,
+                    'cost': float(a.cost),
+                    'reward': float(a.reward),
+                    'prestige': float(a.prestige),
+                    'score': float(a.score)
+                })
         with open(os.path.join(dbg_dir, f'chosen_sequence_month_{m:02d}.json'), 'w', encoding='utf-8') as f:
             out_chosen = {'month': m, 'score': float(best_seq.score if best_seq else 0.0), 'actions': chosen}
             if turn_based:

@@ -40,6 +40,7 @@ class SlotNode:
     road_dist: Optional[float] = None
     occupied_by: Optional[str] = None
     reserved_in_turn: bool = False
+    building_level: int = 3  # 建筑等级：3=只能建S, 4=可建S/M, 5=可建S/M/L
 
 
 @dataclass
@@ -206,8 +207,15 @@ class ActionEnumerator:
         # EDU/IND 的 S/M/L
         for agent in agent_types:
             for size in sizes.get(agent, []):
-                if agent == 'IND' and size in ('M', 'L'):
-                    feats = self._enumerate_ind_footprints(size, free_ids)
+                # 旧逻辑（已注释）：IND M/L需要相邻对/区块
+                # if agent == 'IND' and size in ('M', 'L'):
+                #     feats = self._enumerate_ind_footprints(size, free_ids)
+                # else:
+                #     feats = self._enumerate_single_slots(free_ids)
+                
+                # 新逻辑：IND根据building_level过滤，EDU保持不变
+                if agent == 'IND':
+                    feats = self._enumerate_ind_by_level(size, free_ids)
                 else:
                     feats = self._enumerate_single_slots(free_ids)
 
@@ -242,6 +250,42 @@ class ActionEnumerator:
 
     def _enumerate_single_slots(self, free_ids: Set[str]) -> List[List[str]]:
         return [[sid] for sid in free_ids]
+
+    def _enumerate_ind_by_level(self, size: str, free_ids: Set[str]) -> List[List[str]]:
+        """
+        根据槽位的building_level属性枚举IND建筑（新逻辑）
+        
+        规则：
+        - S型：所有等级（3/4/5）都可以建
+        - M型：只有等级4和5可以建
+        - L型：只有等级5可以建
+        
+        所有IND建筑都是单槽位（不再需要相邻对/区块）
+        """
+        result = []
+        
+        for slot_id in free_ids:
+            slot = self.slots.get(slot_id)
+            if slot is None:
+                continue
+            
+            # 获取槽位的建筑等级
+            level = getattr(slot, 'building_level', 3)
+            
+            # 根据size和level判断是否可以建造
+            if size == 'S':
+                # S型：所有等级都可以
+                result.append([slot_id])
+            elif size == 'M':
+                # M型：只有等级4和5
+                if level >= 4:
+                    result.append([slot_id])
+            elif size == 'L':
+                # L型：只有等级5
+                if level >= 5:
+                    result.append([slot_id])
+        
+        return result
 
     def _enumerate_ind_footprints(self, size: str, free_ids: Set[str]) -> List[List[str]]:
         """IND M=1×2 相邻对；IND L=2×2 区块。"""
@@ -294,9 +338,10 @@ class ActionScorer:
     objective: {'EDU':{'w_r':..,'w_p':..,'w_c':..}, 'IND':{...}}
     """
 
-    def __init__(self, objective: Dict[str, Dict[str, float]], normalize: str = 'per-month-pool-minmax', eval_params: Optional[Dict] = None):
+    def __init__(self, objective: Dict[str, Dict[str, float]], normalize: str = 'per-month-pool-minmax', eval_params: Optional[Dict] = None, slots: Optional[Dict[str, SlotNode]] = None):
         self.objective = objective
         self.normalize = normalize
+        self.slots = slots  # 用于邻近性奖励计算
         # 默认评估参数，可被配置覆盖
         self.params = self._build_default_params()
         if isinstance(eval_params, dict):
@@ -306,10 +351,10 @@ class ActionScorer:
                 else:
                     self.params[k] = v
 
-    def score_actions(self, actions: List[Action], river_distance_provider=None) -> List[Action]:
+    def score_actions(self, actions: List[Action], river_distance_provider=None, buildings=None) -> List[Action]:
         # 1) 先计算原始 cost/reward/prestige
         for a in actions:
-            self._calc_crp(a, river_distance_provider=river_distance_provider)
+            self._calc_crp(a, river_distance_provider=river_distance_provider, buildings=buildings)
 
         # 2) 归一化（各自维度 min-max）
         costs = [a.cost for a in actions]
@@ -334,7 +379,7 @@ class ActionScorer:
             a.score = float(w.get('w_r', 0.5)) * nr + float(w.get('w_p', 0.3)) * np_ - float(w.get('w_c', 0.2)) * nc
         return actions
 
-    def _calc_crp(self, a: Action, river_distance_provider=None) -> None:
+    def _calc_crp(self, a: Action, river_distance_provider=None, buildings=None) -> None:
         """PRD 正式实现（units: cost=M£, reward=k£/mo, prestige=—）。
 
         EDU:
@@ -345,6 +390,9 @@ class ActionScorer:
           cost = (Base_IND[size]+Add_IND[size]) × LP_norm + ZoneAdd[zone]
           reward = ((p_market × u × Capacity[size]) / 1000) × m_zone × m_adj − c_opex × GFA_k[size] + s_zone[zone]
           prestige = PrestigeBase[size] + I(zone==near) + I(adj) − 0.2 × Pollution[size]
+        
+        新增（邻近性奖励）：
+          如果buildings参数提供，计算到最近建筑的距离，给予邻近奖励或距离惩罚
         """
         P = self.params
         size = (a.size or 'S')
@@ -457,6 +505,37 @@ class ActionScorer:
         # 整数化（与 RoundMode 一致，默认 nearest）
         if str(P.get('RoundMode', 'nearest')).lower() == 'nearest':
             reward = float(int(round(reward)))
+
+        # --- 邻近性奖励/惩罚（新增）---
+        if buildings and len(buildings) > 0:
+            # 获取动作的槽位位置
+            if a.footprint_slots and len(a.footprint_slots) > 0:
+                slot_id = a.footprint_slots[0]
+                slot = self.slots.get(slot_id)
+                if slot:
+                    sx = float(getattr(slot, 'fx', slot.x))
+                    sy = float(getattr(slot, 'fy', slot.y))
+                    
+                    # 计算到最近建筑的距离
+                    min_dist = float('inf')
+                    for b in buildings:
+                        bxy = b.get('xy', [0, 0])
+                        dist = math.hypot(sx - float(bxy[0]), sy - float(bxy[1]))
+                        min_dist = min(min_dist, dist)
+                    
+                    # 邻近奖励/距离惩罚
+                    proximity_threshold = float(P.get('proximity_threshold', 10.0))
+                    proximity_reward_val = float(P.get('proximity_reward', 50.0))
+                    distance_penalty_coef = float(P.get('distance_penalty_coef', 2.0))
+                    
+                    if min_dist <= proximity_threshold:
+                        # 邻近奖励（距离越近，奖励越高）
+                        proximity_bonus = proximity_reward_val * (1.0 - min_dist / proximity_threshold)
+                        reward = reward + proximity_bonus
+                    else:
+                        # 距离惩罚（距离越远，惩罚越大）
+                        distance_penalty = (min_dist - proximity_threshold) * distance_penalty_coef
+                        reward = reward - distance_penalty
 
         a.cost = float(cost)
         a.reward = float(reward)
@@ -609,8 +688,9 @@ class V4Planner:
         # 读取评估参数（可覆盖默认表）
         self.eval_params = cfg.get('growth_v4_0', {}).get('evaluation', {})
 
-        self.scorer = ActionScorer(self.objective, self.normalize, eval_params=self.eval_params)
+        self.scorer = ActionScorer(self.objective, self.normalize, eval_params=self.eval_params, slots=None)
         self.selector = SequenceSelector(self.length_max, self.beam_width, self.max_expansions)
+        self.slots = None  # 将在plan()中设置
 
     def plan(
         self,
@@ -621,10 +701,15 @@ class V4Planner:
         river_distance_provider=None,
         agent_types: Optional[List[str]] = None,
         sizes: Optional[Dict[str, List[str]]] = None,
+        buildings: Optional[List[Dict]] = None,
     ) -> Tuple[List[Action], Sequence]:
         agent_types = agent_types or ['EDU', 'IND']
         sizes = sizes or {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L']}
 
+        # 设置slots到scorer（用于邻近性奖励计算）
+        if self.scorer.slots is None:
+            self.scorer.slots = slots
+        
         enumerator = ActionEnumerator(slots)
         actions = enumerator.enumerate_actions(
             candidates=candidates,
@@ -636,7 +721,7 @@ class V4Planner:
             caps=self.caps,
         )
 
-        scored = self.scorer.score_actions(actions, river_distance_provider=river_distance_provider)
+        scored = self.scorer.score_actions(actions, river_distance_provider=river_distance_provider, buildings=buildings)
         best_seq = self.selector.choose_best_sequence(scored)
         return scored, best_seq
 

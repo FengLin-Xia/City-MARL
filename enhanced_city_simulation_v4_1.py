@@ -140,13 +140,15 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
                 break
             
             # 使用RL选择器选择动作序列
+            all_buildings = env.buildings.get('public', []) + env.buildings.get('industrial', [])
             _, selected_sequence = selector.choose_action_sequence(
                 slots=env.slots,
                 candidates=set(actions[i].footprint_slots[0] for i in range(len(actions)) if actions[i].footprint_slots),
                 occupied=env._get_occupied_slots(),
                 lp_provider=env._create_lp_provider(),
                 agent_types=[current_agent],
-                sizes={current_agent: ['S', 'M', 'L']}
+                sizes={current_agent: ['S', 'M', 'L']},
+                buildings=all_buildings
             )
             
             if selected_sequence is None:
@@ -341,6 +343,11 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
         print(f"  IND选择次数: {ind_total}")
         print(f"  平均动作得分: {np.mean(all_avg_scores):.3f}")
     
+    # 收集Budget历史
+    budget_history = {}
+    if env.budget_history is not None:
+        budget_history = {agent: history.copy() for agent, history in env.budget_history.items()}
+    
     # 更新结果
     results['slot_selection_history_path'] = history_save_path
     results['slot_selection_stats'] = {
@@ -351,6 +358,7 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
         'ind_selections': ind_total,
         'avg_action_score': np.mean(all_avg_scores) if all_avg_scores else 0.0
     }
+    results['budget_history'] = budget_history
     
     print(f"评估完成: 平均总奖励={avg_total_return:.3f}, EDU={avg_edu_return:.3f}, IND={avg_ind_return:.3f}")
     
@@ -382,10 +390,12 @@ def run_single_episode(env, selector, seed: Optional[int] = None) -> Tuple[List[
             break
         
         # 使用RL选择器选择动作序列
+        all_buildings = env.buildings.get('public', []) + env.buildings.get('industrial', [])
         _, selected_sequence = selector.choose_action_sequence(
             slots=env.slots,
             candidates=set(actions[i].footprint_slots[0] for i in range(len(actions)) if actions[i].footprint_slots),
             occupied=env._get_occupied_slots(),
+            buildings=all_buildings,
             lp_provider=env._create_lp_provider(),
             agent_types=[current_agent],
             sizes={current_agent: ['S', 'M', 'L']}
@@ -718,6 +728,11 @@ def train_rl_model(trainer, cfg: Dict) -> Dict:
         print(f"  IND选择次数: {ind_total}")
         print(f"  平均动作得分: {np.mean(all_avg_scores):.3f}")
     
+    # 收集Budget历史
+    budget_history = {}
+    if env.budget_history is not None:
+        budget_history = {agent: history.copy() for agent, history in env.budget_history.items()}
+    
     results = {
         'mode': 'rl_train',
         'training_updates': rl_cfg['max_updates'],
@@ -733,7 +748,8 @@ def train_rl_model(trainer, cfg: Dict) -> Dict:
             'edu_selections': edu_total,
             'ind_selections': ind_total,
             'avg_action_score': np.mean(all_avg_scores) if all_avg_scores else 0.0
-        }
+        },
+        'budget_history': budget_history
     }
     
     return results
@@ -836,6 +852,24 @@ def main():
             raise ValueError(f"不支持的求解模式: {cfg['solver']['mode']}")
         
         print(f"\\n运行完成，结果: {results}")
+        
+        # 保存训练结果（包含budget历史）
+        if 'budget_history' in results:
+            import datetime
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            rl_cfg = cfg['solver']['rl']
+            results_path = os.path.join(rl_cfg['model_save_path'], f'training_results_{timestamp}.json')
+            
+            # 将set转换为list以便JSON序列化
+            results_copy = results.copy()
+            if 'slot_selection_stats' in results_copy:
+                for key, value in results_copy['slot_selection_stats'].items():
+                    if isinstance(value, set):
+                        results_copy['slot_selection_stats'][key] = list(value)
+            
+            with open(results_path, 'w', encoding='utf-8') as f:
+                json.dump(results_copy, f, indent=2, ensure_ascii=False)
+            print(f"训练结果已保存: {results_path}")
     
     elapsed_time = time.time() - start_time
     print(f"\\n总运行时间: {elapsed_time:.2f} 秒")

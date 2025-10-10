@@ -145,8 +145,8 @@ class PPOTrainer:
                     # 恢复action_index属性
                     selected_sequence.action_index = original_action_index
                 
-                # 记录旧策略的动作概率
-                old_log_prob = self._get_action_log_prob(selected_sequence, state)
+                # 记录旧策略的动作概率（传入真实动作数量）
+                old_log_prob = self._get_action_log_prob(selected_sequence, state, len(actions))
                 
                 # 执行动作并收集经验
                 experience = {
@@ -154,7 +154,8 @@ class PPOTrainer:
                     'action': selected_sequence,
                     'agent': current_agent,
                     'month': env.current_month,
-                    'old_log_prob': old_log_prob  # 记录旧策略概率
+                    'old_log_prob': old_log_prob,  # 记录旧策略概率
+                    'num_actions': len(actions)  # 保存动作数量，确保更新时一致
                 }
                 
                 next_state, reward, done, info = env.step(current_agent, selected_sequence)
@@ -176,8 +177,14 @@ class PPOTrainer:
         print(f"收集了 {len(all_experiences)} 步经验")
         return all_experiences
     
-    def _get_action_log_prob(self, sequence, state):
-        """获取动作的对数概率"""
+    def _get_action_log_prob(self, sequence, state, num_actions):
+        """获取动作的对数概率
+        
+        参数:
+            sequence: 选择的动作序列
+            state: 当前状态
+            num_actions: 可用动作的总数（必须与选择时一致）
+        """
         action_idx = getattr(sequence, 'action_index', -1)
         if action_idx < 0:
             return torch.tensor(0.0)
@@ -194,13 +201,13 @@ class PPOTrainer:
             logits = self.selector.actor(state_embed)
             value = self.selector.critic(state_embed)
         
-        # 计算动作概率
-        num_actions = min(5, self.selector.max_actions)
+        # 计算动作概率 - 使用真实的动作数量（不再硬编码5）
+        num_actions = min(num_actions, self.selector.max_actions)
         valid_logits = logits[0, :num_actions]
         valid_action_idx = min(action_idx, num_actions - 1)
         
         dist = torch.distributions.Categorical(logits=valid_logits.unsqueeze(0))
-        log_prob = dist.log_prob(torch.tensor(valid_action_idx))
+        log_prob = dist.log_prob(torch.tensor(valid_action_idx).to(self.device))
         
         return log_prob
     
@@ -341,12 +348,12 @@ class PPOTrainer:
                 # 使用真正的概率分布计算动作概率
                 action_idx = getattr(sequence, 'action_index', -1)
                 if action_idx >= 0:
-                    # 限制logits到有效动作数量
-                    # 使用经验中的动作数量，如果没有则使用默认值
-                    num_actions = min(len(exp.get('available_actions', [])), self.selector.max_actions)
-                    if num_actions == 0:
-                        num_actions = min(5, self.selector.max_actions)  # 使用默认的5个动作
+                    # 使用收集时保存的动作数量，确保与old_log_prob计算时一致
+                    num_actions = exp.get('num_actions', len(exp.get('available_actions', [])))
+                    if num_actions == 0 or num_actions is None:
+                        num_actions = 5  # 回退到默认值
                     
+                    num_actions = min(num_actions, self.selector.max_actions)
                     valid_logits = logits[0, :num_actions]
                     valid_action_idx = min(action_idx, num_actions - 1)
                     
@@ -407,7 +414,9 @@ class PPOTrainer:
             
             # 计算KL散度和裁剪比例
             with torch.no_grad():
-                kl_div = (old_log_probs - current_log_probs).mean()
+                # 修复KL散度计算：使用正确的近似公式
+                # KL(old||new) ≈ E[(ratio - 1) - log(ratio)]
+                kl_div = ((ratio - 1.0) - torch.log(ratio + 1e-8)).mean()
                 clip_fraction = ((ratio - 1.0).abs() > self.clip_ratio).float().mean()
             
             # 记录损失

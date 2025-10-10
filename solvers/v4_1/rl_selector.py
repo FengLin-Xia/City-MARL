@@ -151,7 +151,7 @@ class RLPolicySelector:
         
         try:
             from logic.v4_enumeration import ActionScorer
-            self.scorer = ActionScorer(objective, normalize, eval_params=eval_params)
+            self.scorer = ActionScorer(objective, normalize, eval_params=eval_params, slots=None)
             print("ActionScorer已在__init__中初始化")
         except Exception as e:
             print(f"ActionScorer初始化失败: {e}")
@@ -197,11 +197,16 @@ class RLPolicySelector:
         river_distance_provider=None,
         agent_types: Optional[List[str]] = None,
         sizes: Optional[Dict[str, List[str]]] = None,
+        buildings: Optional[List[Dict]] = None,
     ) -> Tuple[List[Action], Optional[Sequence]]:
         """使用RL策略选择动作序列（恢复v4.0的序列机制）"""
         
         # 保存当前槽位信息，供扩展策略使用
         self._current_slots = slots
+        
+        # 设置slots到scorer（用于邻近性奖励计算）
+        if self.scorer and self.scorer.slots is None:
+            self.scorer.slots = slots
         
         # 1. 枚举合法动作池
         if self.enumerator is None:
@@ -226,7 +231,7 @@ class RLPolicySelector:
             return [], None
         
         # 计算动作得分
-        actions = self.scorer.score_actions(actions, river_distance_provider)
+        actions = self.scorer.score_actions(actions, river_distance_provider, buildings=buildings)
         
         # 3. 初始化序列选择器
         if self.sequence_selector is None:
