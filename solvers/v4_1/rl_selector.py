@@ -105,27 +105,46 @@ class RLPolicySelector:
         # 设备配置
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-        # 初始化独立的Actor和Critic网络
+        # 【MAPPO】为每个agent创建独立的Actor和Critic网络
         self.state_dim = 512  # 简化状态维度
         self.max_actions = 50  # 最大动作数量
         
-        self.actor = Actor(state_dim=self.state_dim, max_actions=self.max_actions).to(self.device)
-        self.critic = Critic(state_dim=self.state_dim).to(self.device)
+        agents = self.rl_cfg.get('agents', ['IND', 'EDU'])
         
-        # 设置初始温度参数（可以调节）
-        self.actor.temperature = self.rl_cfg.get('temperature', 1.2)  # 调试温度1.2
+        # 独立的Actor网络（每个agent一个）
+        self.actors = {}
+        for agent in agents:
+            actor = Actor(state_dim=self.state_dim, max_actions=self.max_actions).to(self.device)
+            actor.temperature = self.rl_cfg.get('temperature', 1.2)
+            self.actors[agent] = actor
+        
+        # 独立的Critic网络（每个agent一个）
+        self.critics = {}
+        for agent in agents:
+            critic = Critic(state_dim=self.state_dim).to(self.device)
+            self.critics[agent] = critic
         
         # 独立的优化器
-        self.actor_optimizer = torch.optim.Adam(
-            self.actor.parameters(), 
-            lr=self.rl_cfg.get('actor_lr', 3e-4)
-        )
-        self.critic_optimizer = torch.optim.Adam(
-            self.critic.parameters(), 
-            lr=self.rl_cfg.get('critic_lr', 3e-4)
-        )
+        actor_lr = self.rl_cfg.get('actor_lr', 3e-4)
+        critic_lr = self.rl_cfg.get('critic_lr', 3e-4)
         
-        # 保持向后兼容的优化器接口
+        self.actor_optimizers = {}
+        self.critic_optimizers = {}
+        for agent in agents:
+            self.actor_optimizers[agent] = torch.optim.Adam(
+                self.actors[agent].parameters(), 
+                lr=actor_lr
+            )
+            self.critic_optimizers[agent] = torch.optim.Adam(
+                self.critics[agent].parameters(), 
+                lr=critic_lr
+            )
+        
+        # 保持向后兼容的接口（使用第一个agent的）
+        self.actor = self.actors[agents[0]]
+        self.critic = self.critics[agents[0]]
+        self.actor_optimizer = self.actor_optimizers[agents[0]]
+        self.critic_optimizer = self.critic_optimizers[agents[0]]
         self.optimizer = self.actor_optimizer
         
         # 探索参数
@@ -255,6 +274,10 @@ class RLPolicySelector:
         if not actions:
             return None, -1
         
+        # 【MAPPO】获取当前agent，选择对应的网络
+        current_agent = actions[0].agent if actions else 'IND'
+        actor = self.actors.get(current_agent, self.actor)
+        
         # 限制动作数量
         num_actions = min(len(actions), self.max_actions)
         action_subset = actions[:num_actions]
@@ -268,9 +291,9 @@ class RLPolicySelector:
             selected_idx = np.random.randint(0, num_actions)
             selected_action = action_subset[selected_idx]
         else:
-            # 利用：使用策略网络选择锚点动作
+            # 利用：使用该agent的策略网络选择锚点动作
             with torch.no_grad():
-                logits = self.actor(state_embed)
+                logits = actor(state_embed)
                 # 只使用有效动作数量的logits
                 valid_logits = logits[0, :num_actions]
                 action_probs = F.softmax(valid_logits, dim=-1)
@@ -301,9 +324,13 @@ class RLPolicySelector:
             # 生成状态编码
             state_embed = self._encode_state_for_rl(action_subset)
             
-            # 使用当前策略计算log概率
+            # 【MAPPO】获取当前agent的网络
+            current_agent = actions[0].agent if actions else 'IND'
+            actor = self.actors.get(current_agent, self.actor)
+            
+            # 使用该agent的策略网络计算log概率
             with torch.no_grad():
-                logits = self.actor(state_embed)
+                logits = actor(state_embed)
                 valid_logits = logits[0, :num_actions]
                 
                 # 创建分布并计算log概率
@@ -501,7 +528,7 @@ class RLPolicySelector:
         return torch.tensor(features, dtype=torch.float32, device=self.device).unsqueeze(0)
     
     def save_model(self, path: str):
-        """保存模型权重"""
+        """保存模型权重（MAPPO：保存所有agent的网络）"""
         import os
         import datetime
         import json
@@ -509,40 +536,63 @@ class RLPolicySelector:
         # 确保目录存在
         os.makedirs(os.path.dirname(path), exist_ok=True)
         
+        # 【MAPPO】保存所有agent的网络
         model_data = {
-            'actor_state_dict': self.actor.state_dict(),
-            'critic_state_dict': self.critic.state_dict(),
-            'actor_optimizer_state': self.actor_optimizer.state_dict(),
-            'critic_optimizer_state': self.critic_optimizer.state_dict(),
-            'rl_config': self.rl_cfg,
-            'model_version': 'v4.1',
+            'model_version': 'v4.1_mappo',
             'timestamp': datetime.datetime.now().isoformat(),
+            'rl_config': self.rl_cfg,
             'epsilon': self.epsilon,
             'state_dim': self.state_dim,
             'max_actions': self.max_actions,
-            'actor_temperature': self.actor.temperature,
         }
+        
+        # 保存各agent的网络
+        for agent in self.actors.keys():
+            model_data[f'actor_{agent}_state_dict'] = self.actors[agent].state_dict()
+            model_data[f'critic_{agent}_state_dict'] = self.critics[agent].state_dict()
+            model_data[f'actor_{agent}_optimizer_state'] = self.actor_optimizers[agent].state_dict()
+            model_data[f'critic_{agent}_optimizer_state'] = self.critic_optimizers[agent].state_dict()
+            model_data[f'actor_{agent}_temperature'] = self.actors[agent].temperature
+        
         torch.save(model_data, path)
-        print(f"模型权重已保存到: {path}")
+        print(f"MAPPO模型权重已保存到: {path} (包含{len(self.actors)}个agent的网络)")
     
     def load_model(self, path: str):
-        """加载模型权重"""
+        """加载模型权重（MAPPO：加载所有agent的网络）"""
         if os.path.exists(path):
             model_data = torch.load(path, map_location=self.device)
-            self.actor.load_state_dict(model_data['actor_state_dict'])
-            self.critic.load_state_dict(model_data['critic_state_dict'])
             
-            # 加载优化器状态（如果存在）
-            if 'actor_optimizer_state' in model_data:
-                self.actor_optimizer.load_state_dict(model_data['actor_optimizer_state'])
-            if 'critic_optimizer_state' in model_data:
-                self.critic_optimizer.load_state_dict(model_data['critic_optimizer_state'])
+            model_version = model_data.get('model_version', 'unknown')
+            
+            # 【MAPPO】检查是否是MAPPO模型
+            if 'v4.1_mappo' in model_version or any(f'actor_{ag}_state_dict' in model_data for ag in self.actors.keys()):
+                # 加载MAPPO模型（多个agent）
+                for agent in self.actors.keys():
+                    if f'actor_{agent}_state_dict' in model_data:
+                        self.actors[agent].load_state_dict(model_data[f'actor_{agent}_state_dict'])
+                        self.critics[agent].load_state_dict(model_data[f'critic_{agent}_state_dict'])
+                        
+                        if f'actor_{agent}_optimizer_state' in model_data:
+                            self.actor_optimizers[agent].load_state_dict(model_data[f'actor_{agent}_optimizer_state'])
+                        if f'critic_{agent}_optimizer_state' in model_data:
+                            self.critic_optimizers[agent].load_state_dict(model_data[f'critic_{agent}_optimizer_state'])
+                        
+                        if f'actor_{agent}_temperature' in model_data:
+                            self.actors[agent].temperature = model_data[f'actor_{agent}_temperature']
+                
+                print(f"MAPPO模型权重已从 {path} 加载 (包含{len(self.actors)}个agent的网络)")
+            else:
+                # 向后兼容：加载旧的共享网络模型
+                print(f"警告：加载旧的共享网络模型，将复制到所有agent")
+                if 'actor_state_dict' in model_data:
+                    for agent in self.actors.keys():
+                        self.actors[agent].load_state_dict(model_data['actor_state_dict'])
+                        self.critics[agent].load_state_dict(model_data['critic_state_dict'])
+                print(f"旧模型权重已加载并复制到{len(self.actors)}个agent")
             
             # 恢复其他参数
             self.epsilon = model_data.get('epsilon', 0.1)
-            self.actor.temperature = model_data.get('actor_temperature', 1.0)
             
-            print(f"模型权重已从 {path} 加载")
             return model_data
         else:
             print(f"模型文件不存在: {path}")

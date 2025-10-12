@@ -272,13 +272,23 @@ class PPOTrainer:
             
             # 使用RL选择器的价值网络
             if self.selector.actor is not None:
+                # 【MAPPO】获取该经验对应的agent
+                agent = exp.get('agent', 'IND')
+                if not agent or agent not in self.selector.critics:
+                    # 从action推断
+                    first_action = sequence.actions[0] if sequence.actions else None
+                    agent = first_action.agent if first_action and hasattr(first_action, 'agent') else 'IND'
+                
+                # 选择该agent的Critic
+                critic = self.selector.critics.get(agent, self.selector.critic)
+                
                 # 编码状态（使用序列中的第一个动作）
                 first_action = sequence.actions[0] if sequence.actions else None
                 state_embed = self.selector._encode_state_for_rl([first_action]) if first_action else self.selector._encode_state_for_rl([])
                 
-                # 获取价值估计
+                # 使用该agent的Critic获取价值估计
                 with torch.no_grad():
-                    value = self.selector.critic(state_embed)
+                    value = critic(state_embed)
                     values.append(value.item())
             else:
                 # 回退到奖励估计
@@ -288,7 +298,7 @@ class PPOTrainer:
     
     def update_policy(self, experiences: List[Dict]) -> Dict[str, float]:
         """
-        更新策略网络 - PPO-Clip算法
+        更新策略网络 - PPO-Clip算法（MAPPO：分agent更新）
         
         Args:
             experiences: 经验列表
@@ -299,16 +309,32 @@ class PPOTrainer:
         if not experiences:
             return {'policy_loss': 0.0, 'value_loss': 0.0, 'entropy_loss': 0.0, 'total_loss': 0.0}
         
-        # 提取数据
-        states = [exp['state'] for exp in experiences]
-        actions = [exp['action'] for exp in experiences]
-        rewards = [exp['reward'] for exp in experiences]
-        dones = [exp['done'] for exp in experiences]
+        # 【MAPPO】按agent分组经验
+        agent_experiences = {}
+        for exp in experiences:
+            agent = exp.get('agent', 'IND')  # 从经验中获取agent
+            if agent not in agent_experiences:
+                agent_experiences[agent] = []
+            agent_experiences[agent].append(exp)
         
-        # 调试信息：检查经验质量
-        print(f"    经验奖励分布: min={min(rewards):.3f}, max={max(rewards):.3f}, mean={np.mean(rewards):.3f}")
-        print(f"    非零奖励数量: {sum(1 for r in rewards if r != 0)}/{len(rewards)}")
-        print(f"    序列得分分布: {[getattr(a, 'score', 0.0) for a in actions[:3]]}")
+        # 如果经验中没有agent信息，用传统方式（向后兼容）
+        if not agent_experiences or all(len(exps)==0 for exps in agent_experiences.values()):
+            # 尝试从action中推断agent
+            for exp in experiences:
+                action = exp['action']
+                if action and action.actions:
+                    agent = action.actions[0].agent if hasattr(action.actions[0], 'agent') else 'IND'
+                else:
+                    agent = 'IND'
+                if agent not in agent_experiences:
+                    agent_experiences[agent] = []
+                agent_experiences[agent].append(exp)
+        
+        # 调试信息
+        for agent, exps in agent_experiences.items():
+            if exps:
+                agent_rewards = [exp['reward'] for exp in exps]
+                print(f"    [{agent}] 经验数: {len(exps)}, 奖励: min={min(agent_rewards):.3f}, max={max(agent_rewards):.3f}, mean={np.mean(agent_rewards):.3f}")
         
         # 计算价值估计（使用价值网络）
         values = self._compute_values(experiences)
@@ -337,13 +363,24 @@ class PPOTrainer:
                 state = exp['state']
                 sequence = exp['action']  # 这是Sequence对象
                 
+                # 【MAPPO】获取该经验对应的agent
+                agent = exp.get('agent', 'IND')
+                if not agent or agent not in self.selector.actors:
+                    # 尝试从action推断
+                    first_action = sequence.actions[0] if sequence.actions else None
+                    agent = first_action.agent if first_action and hasattr(first_action, 'agent') else 'IND'
+                
+                # 选择该agent的网络
+                actor = self.selector.actors.get(agent, self.selector.actor)
+                critic = self.selector.critics.get(agent, self.selector.critic)
+                
                 # 编码状态（使用序列中的第一个动作）
                 first_action = sequence.actions[0] if sequence.actions else None
                 state_embed = self.selector._encode_state_for_rl([first_action]) if first_action else self.selector._encode_state_for_rl([])
                 
-                # 获取当前策略输出
-                logits = self.selector.actor(state_embed)
-                value = self.selector.critic(state_embed)
+                # 使用该agent的网络获取输出
+                logits = actor(state_embed)
+                value = critic(state_embed)
                 
                 # 使用真正的概率分布计算动作概率
                 action_idx = getattr(sequence, 'action_index', -1)
@@ -398,19 +435,37 @@ class PPOTrainer:
                          self.value_loss_coef * value_loss - 
                          self.entropy_coef * entropy)
             
-            # 分别更新Actor和Critic网络
-            # 1. 更新Actor（策略网络）
+            # 【MAPPO】分别更新各agent的Actor和Critic网络
+            # 1. 更新所有agent的Actor（策略网络）
             actor_loss = policy_loss - self.entropy_coef * entropy
-            self.selector.actor_optimizer.zero_grad()
-            actor_loss.backward(retain_graph=True)
-            torch.nn.utils.clip_grad_norm_(self.selector.actor.parameters(), self.max_grad_norm)
-            self.selector.actor_optimizer.step()
+            for agent in self.selector.actor_optimizers.keys():
+                optimizer = self.selector.actor_optimizers[agent]
+                actor_net = self.selector.actors[agent]
+                
+                optimizer.zero_grad()
             
-            # 2. 更新Critic（价值网络）
-            self.selector.critic_optimizer.zero_grad()
+            actor_loss.backward(retain_graph=True)
+            
+            for agent in self.selector.actor_optimizers.keys():
+                optimizer = self.selector.actor_optimizers[agent]
+                actor_net = self.selector.actors[agent]
+                
+                torch.nn.utils.clip_grad_norm_(actor_net.parameters(), self.max_grad_norm)
+                optimizer.step()
+            
+            # 2. 更新所有agent的Critic（价值网络）
+            for agent in self.selector.critic_optimizers.keys():
+                optimizer = self.selector.critic_optimizers[agent]
+                optimizer.zero_grad()
+            
             value_loss.backward()
-            torch.nn.utils.clip_grad_norm_(self.selector.critic.parameters(), self.max_grad_norm)
-            self.selector.critic_optimizer.step()
+            
+            for agent in self.selector.critic_optimizers.keys():
+                optimizer = self.selector.critic_optimizers[agent]
+                critic_net = self.selector.critics[agent]
+                
+                torch.nn.utils.clip_grad_norm_(critic_net.parameters(), self.max_grad_norm)
+                optimizer.step()
             
             # 计算KL散度和裁剪比例
             with torch.no_grad():

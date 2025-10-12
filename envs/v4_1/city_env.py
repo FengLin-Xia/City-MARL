@@ -72,6 +72,10 @@ class CityEnvironment:
         self.episode_history = []
         self.monthly_rewards = {agent: [] for agent in self.rl_cfg['agents']}
         
+        # 【月度收益机制】在营资产管理
+        self.active_assets = {agent: [] for agent in self.rl_cfg['agents']}
+        self.monthly_income_history = {agent: [] for agent in self.rl_cfg['agents']}
+        
     def _initialize_environment(self):
         """初始化环境组件"""
         # 加载槽位
@@ -159,8 +163,15 @@ class CityEnvironment:
         
         # 重置状态
         self.current_month = 0
-        self.current_agent = self.rl_cfg['agents'][0]
-        self.agent_turn = 0
+        
+        # 支持first_agent配置
+        first_agent = self.v4_cfg.get('enumeration', {}).get('first_agent', None)
+        if first_agent and first_agent in self.rl_cfg['agents']:
+            self.agent_turn = self.rl_cfg['agents'].index(first_agent)
+            self.current_agent = first_agent
+        else:
+            self.agent_turn = 0
+            self.current_agent = self.rl_cfg['agents'][0]
         
         # 清空建筑状态
         self.buildings = {'public': [], 'industrial': []}
@@ -198,12 +209,17 @@ class CityEnvironment:
         # 执行序列中的所有动作
         if sequence and sequence.actions:
             for action in sequence.actions:
-                # 计算单个动作奖励
+                # 执行建筑放置（先放置，以便计算收益）
+                self._place_building(agent, action)
+                
+                # 【月度收益机制】更新budget：扣除建造成本
+                if self.budgets is not None:
+                    build_cost = float(action.cost) if action.cost is not None else 0.0
+                    self.budgets[agent] -= build_cost
+                
+                # 计算单个动作奖励（已包含monthly_income）
                 action_reward = self._calculate_reward(agent, action)
                 total_reward += action_reward
-                
-                # 执行建筑放置
-                self._place_building(agent, action)
                 
                 # 记录单个动作历史
                 self.episode_history.append({
@@ -214,8 +230,9 @@ class CityEnvironment:
                     'buildings': self.buildings.copy()
                 })
         else:
-            # 空序列，只有基础奖励
-            total_reward = 0.0
+            # 空序列：只有月度收益（无建造）
+            monthly_income = self._calculate_monthly_income(agent)
+            total_reward = monthly_income / self.rl_cfg.get('reward_scale', 500.0)
         
         # 切换到下一个月（序列执行完成后）
         next_state, done, info = self._advance_turn()
@@ -351,73 +368,72 @@ class CityEnvironment:
         return stats
     
     def _calculate_reward(self, agent: str, action: Action) -> float:
-        """计算奖励"""
-        # 1. 基础奖励：使用Action的score（已经过ActionScorer计算）
-        # base_reward = float(action.score) if action.score is not None else 0.0  # 问题：score = reward - cost，新建筑总是负数
-        base_reward = float(action.reward) if action.reward is not None else 0.0  # 修复：直接使用reward，忽略一次性成本
+        """计算奖励（固定NPV机制）"""
+        # 【固定NPV机制】核心改造
+        # 只评估"建造动作本身"的价值，不包含被动收益
         
-        # 2. 动作质量奖励：基于cost/reward/prestige的原始值
-        quality_reward = 0.0
-        if action.reward is not None:
-            quality_reward += float(action.reward) * 0.01  # 缩放奖励
-        if action.prestige is not None:
-            quality_reward += float(action.prestige) * 10.0  # 声望奖励
-        if action.cost is not None:
-            quality_reward -= float(action.cost) * 0.001  # 成本惩罚
+        # 1. 计算建造成本
+        build_cost = float(action.cost) if action.cost is not None else 0.0
         
-        # 3. 进度奖励：建筑数量增长
-        progress_reward = 0.0
-        if agent == 'EDU':
-            progress_reward = len(self.buildings['public']) * 0.1
-        elif agent == 'IND':
-            progress_reward = len(self.buildings['industrial']) * 0.1
-        
-        # 4. 协作奖励
-        cooperation_bonus = 0.0
-        if self.rl_cfg.get('cooperation_lambda', 0) > 0:
-            cooperation_bonus = self._calculate_cooperation_reward(agent, action)
-        
-        # 5. Budget惩罚（新增）
-        budget_penalty = 0.0
-        if self.budgets is not None:
-            # 更新预算
-            budget_before = self.budgets[agent]
-            self.budgets[agent] -= action.cost
-            self.budgets[agent] += action.reward
-            budget_after = self.budgets[agent]
+        if build_cost > 0:  # 有建造
+            # 2. 计算未来收益（固定回报期）
+            expected_lifetime = self.rl_cfg.get('expected_lifetime', 12)
+            monthly_reward = float(action.reward) if action.reward is not None else 0.0
+            future_income = monthly_reward * expected_lifetime
             
-            # 记录历史
-            self.budget_history[agent].append(budget_after)
+            # 3. NPV = 未来收益 - 成本
+            npv = future_income - build_cost
             
-            # 负债惩罚
-            if budget_after < 0:
-                debt_penalty_coef = self.budget_cfg.get('debt_penalty_coef', 0.5)
-                budget_penalty = abs(budget_after) * debt_penalty_coef
+            # 4. 进度奖励
+            progress_reward = 0.0
+            if agent == 'EDU':
+                progress_reward = len(self.buildings['public']) * 0.5
+            elif agent == 'IND':
+                progress_reward = len(self.buildings['industrial']) * 0.5
             
-            # 破产检测
-            bankruptcy_threshold = self.budget_cfg.get('bankruptcy_threshold', -5000)
-            if budget_after < bankruptcy_threshold:
-                bankruptcy_penalty = abs(self.budget_cfg.get('bankruptcy_penalty', -100.0))
-                budget_penalty += bankruptcy_penalty
-        
-        # 6. 总奖励（包含budget惩罚）
-        total_reward = base_reward + quality_reward + progress_reward + cooperation_bonus - budget_penalty
+            # 5. 协作奖励（已禁用）
+            cooperation_bonus = 0.0
+            if self.rl_cfg.get('cooperation_lambda', 0) > 0:
+                cooperation_bonus = self._calculate_cooperation_reward(agent, action)
+            
+            # 6. Budget惩罚（软约束）
+            budget_penalty = 0.0
+            if self.budgets is not None:
+                # 预估建造后的budget
+                budget_after = self.budgets[agent] - build_cost
+                
+                # 负债惩罚
+                if budget_after < 0:
+                    debt_penalty_coef = self.budget_cfg.get('debt_penalty_coef', 0.1)
+                    budget_penalty = abs(budget_after) * debt_penalty_coef
+                
+                # 破产检测
+                bankruptcy_threshold = self.budget_cfg.get('bankruptcy_threshold', -5000)
+                if budget_after < bankruptcy_threshold:
+                    bankruptcy_penalty = abs(self.budget_cfg.get('bankruptcy_penalty', -100.0))
+                    budget_penalty += bankruptcy_penalty
+            
+            # 7. 总奖励 = NPV + 进度 - 惩罚
+            total_reward = npv + progress_reward + cooperation_bonus - budget_penalty
+        else:
+            # 空序列（不建造）：无reward
+            total_reward = 0.0
         
         # 记录奖励
         self.monthly_rewards[agent].append(total_reward)
         
+        # 8. 奖励缩放到[-1, 1]范围
+        scale_factor = self.rl_cfg.get('reward_scale', 3000.0)
+        scaled_reward = total_reward / scale_factor
         
-        # 奖励缩放：将奖励缩放到合理范围
-        # 注意：budget_penalty可能很大，需要更强的缩放
-        scaled_reward = total_reward / 200.0  # 从100改为200，减小波动
-        
-        # Reward clipping: 防止极端值破坏训练
-        scaled_reward = np.clip(scaled_reward, -10.0, 10.0)
+        # Reward clipping
+        clip_value = self.rl_cfg.get('reward_clip', 1.0)
+        scaled_reward = np.clip(scaled_reward, -clip_value, clip_value)
         
         
         # 调试信息
-        if abs(scaled_reward) > 10:
-            print(f"    [Reward Debug] {agent}: base={base_reward:.3f}, quality={quality_reward:.3f}, progress={progress_reward:.3f}, coop={cooperation_bonus:.3f}, total={total_reward:.3f}, scaled={scaled_reward:.3f}")
+        if abs(scaled_reward) > 1:
+            print(f"    [Reward Debug] {agent}: npv={npv if build_cost > 0 else 0:.1f}, progress={progress_reward if build_cost > 0 else 0:.1f}, total={total_reward:.1f}, scaled={scaled_reward:.3f}")
         
         return scaled_reward
     
@@ -459,6 +475,14 @@ class CityEnvironment:
         
         return cooperation_lambda * cooperation_bonus
     
+    def _calculate_monthly_income(self, agent: str) -> float:
+        """计算agent的月度收益（所有在营建筑的累加）"""
+        if agent not in self.active_assets:
+            return 0.0
+        
+        total_income = sum([asset['monthly_income'] for asset in self.active_assets[agent]])
+        return float(total_income)
+    
     def _place_building(self, agent: str, action: Action):
         """放置建筑"""
         # 根据智能体类型和动作确定建筑类型
@@ -490,16 +514,48 @@ class CityEnvironment:
         
         # 添加到建筑列表
         self.buildings[building_type].append(building)
+        
+        # 【月度收益机制】记录为在营资产
+        asset = {
+            'size': action.size,
+            'monthly_income': float(action.reward) if action.reward is not None else 0.0,
+            'cost': float(action.cost) if action.cost is not None else 0.0,
+            'built_month': self.current_month,
+            'building_id': len(self.active_assets[agent])  # 唯一ID
+        }
+        self.active_assets[agent].append(asset)
     
     def _advance_turn(self) -> Tuple[Dict[str, Any], bool, Dict[str, Any]]:
-        """推进回合（智能体轮换模式：EDU→IND→下个月）"""
-        # 智能体轮换逻辑
-        self.agent_turn = (self.agent_turn + 1) % len(self.rl_cfg['agents'])
-        self.current_agent = self.rl_cfg['agents'][self.agent_turn]
+        """推进回合（支持Turn-Based和Multi-Agent模式）"""
+        # 【月度收益机制】每月开始时，为所有agent累加月度收益到budget
+        if self.budgets is not None:
+            for ag in self.rl_cfg['agents']:
+                monthly_income = self._calculate_monthly_income(ag)
+                self.budgets[ag] += monthly_income
+                
+                # 记录月度收益历史
+                self.monthly_income_history[ag].append(monthly_income)
         
-        # 如果轮换回第一个智能体(EDU)，进入下个月
-        if self.agent_turn == 0:
+        # 检查是否启用turn-based模式
+        turn_based = self.v4_cfg.get('enumeration', {}).get('turn_based', False)
+        
+        if turn_based:
+            # Turn-Based模式：每月一个agent，轮流行动
+            # 先进入下个月
             self.current_month += 1
+            
+            # 再轮换到下一个agent
+            self.agent_turn = (self.agent_turn + 1) % len(self.rl_cfg['agents'])
+            self.current_agent = self.rl_cfg['agents'][self.agent_turn]
+        else:
+            # Multi-Agent模式（原v4.1）：每月两个agent依次行动
+            # 先轮换agent
+            self.agent_turn = (self.agent_turn + 1) % len(self.rl_cfg['agents'])
+            self.current_agent = self.rl_cfg['agents'][self.agent_turn]
+            
+            # 如果轮换回第一个智能体，进入下个月
+            if self.agent_turn == 0:
+                self.current_month += 1
         
         # 检查是否完成整个episode
         done = self.current_month >= self.total_months

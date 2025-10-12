@@ -536,6 +536,12 @@ class ActionScorer:
                         # 距离惩罚（距离越远，惩罚越大）
                         distance_penalty = (min_dist - proximity_threshold) * distance_penalty_coef
                         reward = reward - distance_penalty
+        
+        # --- Size Bonus（鼓励建造M/L型建筑）---
+        size_bonus_cfg = P.get('size_bonus', {})
+        if size_bonus_cfg and size in size_bonus_cfg:
+            size_bonus = float(size_bonus_cfg.get(size, 0))
+            reward = reward + size_bonus
 
         a.cost = float(cost)
         a.reward = float(reward)

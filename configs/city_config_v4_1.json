@@ -1,6 +1,6 @@
 {
   "simulation": {
-    "total_months": 20
+    "total_months": 30
   },
   "city": {
     "map_size": [200, 200],
@@ -15,7 +15,7 @@
       "EDU": 10000
     
     },
-    "debt_penalty_coef": 0.3,
+    "debt_penalty_coef": 0.1,
     "max_debt": -2000,
     "monthly_grant": 0,
     "bankruptcy_threshold": -5000,
@@ -29,19 +29,18 @@
     "rl": {
       "algo": "mappo",
       "agents": ["IND", "EDU"],
-      "clip_eps": 0.2,
+      "clip_eps": 0.15,
       "gamma": 0.99,
       "gae_lambda": 0.95,
-      "lr": 1e-4,
-      "ent_coef": 0.05,
+      "ent_coef": 0.08,
       "vf_coef": 0.5,
       "K_epochs": 2,
-      "num_epochs": 1,
+      "num_epochs": 3,
       "rollout_steps": 10,
       "mini_batch_size": 10,
       "max_updates": 10,
       "mask_illegal_actions": true,
-      "cooperation_lambda": 0.2,
+      "cooperation_lambda": 0.0,
       "seed": 42,
       "eval_every": 2,
       "save_every": 2,
@@ -50,10 +49,13 @@
       "eval_seed_set": [42, 123],
       "experiment_name": "baseline_v1",
       "keep_last_n_models": 5,
-      "temperature": 2.0,
-      "entropy_coef": 0.02,
-      "actor_lr": 3e-4,
-      "critic_lr": 3e-4,
+      "temperature": 2.5,
+      "entropy_coef": 0.04,
+      "actor_lr": 5e-5,
+      "critic_lr": 5e-4,
+      "reward_scale": 3000.0,
+      "reward_clip": 1.0,
+      "expected_lifetime": 12,
       "expansion_policy": {
         "type": "nearest_k",
         "temperature": 1.0,
@@ -111,6 +113,8 @@
       "filters": {"respect_terrain": true, "respect_roads": true}
     },
     "enumeration": {
+      "turn_based": true,
+      "first_agent": "IND",
       "length_max": 5,
       "use_skip": true,
       "search_mode": "exhaustive",
@@ -140,6 +144,7 @@
       "proximity_threshold": 15.0,
       "proximity_reward": 1500.0,
       "distance_penalty_coef": 1.0,
+      "size_bonus": {"S": 0, "M": 1000, "L": 2000},
       "ZoneAdd": {"near": 0.8, "mid": 0.3, "far": 0.0},
       "s_zone": {"near": 0.5, "mid": 0.2, "far": 0.0},
       "m_zone": {"near": 1.15, "mid": 1.00, "far": 0.90},
