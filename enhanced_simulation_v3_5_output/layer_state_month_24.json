@@ -1,0 +1,34 @@
+{
+  "month": 24,
+  "quarter": 8,
+  "R_prev": 115.0,
+  "R_curr": 120.0,
+  "candidate_count": 0,
+  "thresholds": null,
+  "layers": {
+    "commercial": [
+      {
+        "layer_id": "residential_G0",
+        "status": "active",
+        "activated_quarter": 4,
+        "capacity": 361,
+        "dead_slots": 0,
+        "capacity_effective": 361,
+        "placed": 0,
+        "density": 0.0
+      }
+    ],
+    "residential": [
+      {
+        "layer_id": "residential_G0",
+        "status": "active",
+        "activated_quarter": 4,
+        "capacity": 361,
+        "dead_slots": 0,
+        "capacity_effective": 361,
+        "placed": 0,
+        "density": 0.0
+      }
+    ]
+  }
+}

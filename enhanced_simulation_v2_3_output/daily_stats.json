@@ -1,0 +1,962 @@
+[
+  {
+    "month": 0,
+    "quarter": 0,
+    "year": 0,
+    "population": 108,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 0,
+    "total_buildings": 5,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 0.0,
+        "avg": 0.0,
+        "total": 0.0
+      },
+      "commercial_intensity": {
+        "max": 0.0,
+        "avg": 0.0,
+        "total": 0.0
+      },
+      "combined_intensity": {
+        "max": 0.0,
+        "avg": 0.0,
+        "total": 0.0
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "initial",
+      "hub_sigma": 20.0,
+      "road_sigma": 10.0,
+      "description": "初始阶段",
+      "month": 0
+    }
+  },
+  {
+    "month": 1,
+    "quarter": 0,
+    "year": 0,
+    "population": 119,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 8,
+    "total_buildings": 13,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 86.4,
+        "avg": 0.1125732421875,
+        "total": 7377.6
+      },
+      "commercial_intensity": {
+        "max": 57.12000000000011,
+        "avg": 0.0009228515625000017,
+        "total": 60.48000000000011
+      },
+      "combined_intensity": {
+        "max": 138.7200000000001,
+        "avg": 0.11349609375,
+        "total": 7438.08
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "initial",
+      "hub_sigma": 20.591089329029835,
+      "road_sigma": 10.297019900398672,
+      "description": "初始阶段",
+      "month": 1
+    }
+  },
+  {
+    "month": 2,
+    "quarter": 0,
+    "year": 0,
+    "population": 132,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 8,
+    "total_buildings": 13,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 164.32000000000002,
+        "avg": 0.21447265625,
+        "total": 14055.68
+      },
+      "commercial_intensity": {
+        "max": 106.17600000000026,
+        "avg": 0.001755126953125004,
+        "total": 115.02400000000026
+      },
+      "combined_intensity": {
+        "max": 257.8560000000003,
+        "avg": 0.21622778320312505,
+        "total": 14170.704000000003
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "initial",
+      "hub_sigma": 21.164709328315023,
+      "road_sigma": 10.588158412715153,
+      "description": "初始阶段",
+      "month": 2
+    }
+  },
+  {
+    "month": 3,
+    "quarter": 1,
+    "year": 0,
+    "population": 147,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 8,
+    "total_buildings": 13,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 237.05600000000004,
+        "avg": 0.3100791015625001,
+        "total": 20321.34400000001
+      },
+      "commercial_intensity": {
+        "max": 148.78079999999952,
+        "avg": 0.0025320312499999926,
+        "total": 165.93919999999952
+      },
+      "combined_intensity": {
+        "max": 361.32479999999964,
+        "avg": 0.3126111328125001,
+        "total": 20487.283200000005
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "initial",
+      "hub_sigma": 21.721376294575435,
+      "road_sigma": 10.87353199623627,
+      "description": "初始阶段",
+      "month": 3
+    }
+  },
+  {
+    "month": 4,
+    "quarter": 1,
+    "year": 0,
+    "population": 162,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 16,
+    "total_buildings": 21,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 307.24480000000005,
+        "avg": 0.39864921875000014,
+        "total": 26125.87520000001
+      },
+      "commercial_intensity": {
+        "max": 182.8646399999986,
+        "avg": 0.0032817285156249783,
+        "total": 215.07135999999858
+      },
+      "combined_intensity": {
+        "max": 444.0998399999987,
+        "avg": 0.40193094726562506,
+        "total": 26340.946560000004
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "initial",
+      "hub_sigma": 22.26159126565685,
+      "road_sigma": 11.153254804200463,
+      "description": "初始阶段",
+      "month": 4
+    }
+  },
+  {
+    "month": 5,
+    "quarter": 1,
+    "year": 0,
+    "population": 176,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 16,
+    "total_buildings": 21,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 375.3958400000001,
+        "avg": 0.4815902734375001,
+        "total": 31561.500160000007
+      },
+      "commercial_intensity": {
+        "max": 210.13171199999783,
+        "avg": 0.004009660156249967,
+        "total": 262.77708799999783
+      },
+      "combined_intensity": {
+        "max": 510.3198719999979,
+        "avg": 0.4855999335937501,
+        "total": 31824.277248000006
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "initial",
+      "hub_sigma": 22.785840471498844,
+      "road_sigma": 11.427438729460606,
+      "description": "初始阶段",
+      "month": 5
+    }
+  },
+  {
+    "month": 6,
+    "quarter": 2,
+    "year": 0,
+    "population": 196,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 16,
+    "total_buildings": 21,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 441.1166720000001,
+        "avg": 0.5592224140625002,
+        "total": 36649.20012800001
+      },
+      "commercial_intensity": {
+        "max": 231.94536959999724,
+        "avg": 0.004711634374999959,
+        "total": 308.7816703999973
+      },
+      "combined_intensity": {
+        "max": 563.2958975999973,
+        "avg": 0.5639340484375001,
+        "total": 36957.981798400004
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "early_growth",
+      "hub_sigma": 23.29459577177456,
+      "road_sigma": 11.696193449242639,
+      "description": "早期增长",
+      "month": 6
+    }
+  },
+  {
+    "month": 7,
+    "quarter": 2,
+    "year": 0,
+    "population": 216,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 21,
+    "total_buildings": 26,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 509.6933376000001,
+        "avg": 0.6374414078125001,
+        "total": 41775.36010240001
+      },
+      "commercial_intensity": {
+        "max": 249.3962956799968,
+        "avg": 0.005444112187499955,
+        "total": 356.78533631999704
+      },
+      "combined_intensity": {
+        "max": 605.6767180799969,
+        "avg": 0.6428855200000002,
+        "total": 42132.145438720014
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "early_growth",
+      "hub_sigma": 23.78831508059626,
+      "road_sigma": 11.959626469017913,
+      "description": "早期增长",
+      "month": 7
+    }
+  },
+  {
+    "month": 8,
+    "quarter": 2,
+    "year": 0,
+    "population": 241,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 21,
+    "total_buildings": 26,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 580.5546700800002,
+        "avg": 0.7186201184375002,
+        "total": 47095.48808192001
+      },
+      "commercial_intensity": {
+        "max": 263.3570365439964,
+        "avg": 0.006200992874999952,
+        "total": 406.38826905599683
+      },
+      "combined_intensity": {
+        "max": 639.5813744639966,
+        "avg": 0.7248211113125002,
+        "total": 47501.87635097601
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "early_growth",
+      "hub_sigma": 24.267442778668933,
+      "road_sigma": 12.21784316550683,
+      "description": "早期增长",
+      "month": 8
+    }
+  },
+  {
+    "month": 9,
+    "quarter": 3,
+    "year": 0,
+    "population": 261,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 21,
+    "total_buildings": 26,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 657.2437360640001,
+        "avg": 0.8092710947500003,
+        "total": 53036.39046553602
+      },
+      "commercial_intensity": {
+        "max": 274.5256292351961,
+        "avg": 0.0070201204718749405,
+        "total": 460.0706152447961
+      },
+      "combined_intensity": {
+        "max": 666.7050995711962,
+        "avg": 0.8162912152218751,
+        "total": 53496.461080780806
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "early_growth",
+      "hub_sigma": 24.732410113262937,
+      "road_sigma": 12.47094682883092,
+      "description": "早期增长",
+      "month": 9
+    }
+  },
+  {
+    "month": 10,
+    "quarter": 3,
+    "year": 0,
+    "population": 285,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 29,
+    "total_buildings": 34,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 734.5949888512001,
+        "avg": 0.9027757625187502,
+        "total": 59164.312372428816
+      },
+      "commercial_intensity": {
+        "max": 283.46050338815587,
+        "avg": 0.007846320986874924,
+        "total": 514.216492195835
+      },
+      "combined_intensity": {
+        "max": 734.5949888512001,
+        "avg": 0.9106220835056252,
+        "total": 59678.528864624655
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "early_growth",
+      "hub_sigma": 25.183635586365646,
+      "road_sigma": 12.719038703830272,
+      "description": "早期增长",
+      "month": 10
+    }
+  },
+  {
+    "month": 11,
+    "quarter": 3,
+    "year": 0,
+    "population": 317,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 29,
+    "total_buildings": 34,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 812.4759910809602,
+        "avg": 1.0013099654837503,
+        "total": 65621.84989794306
+      },
+      "commercial_intensity": {
+        "max": 290.60840271052365,
+        "avg": 0.008712359523874912,
+        "total": 570.9731937566662
+      },
+      "combined_intensity": {
+        "max": 812.4759910809602,
+        "avg": 1.010022325007625,
+        "total": 66192.82309169971
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "early_growth",
+      "hub_sigma": 25.62152533136148,
+      "road_sigma": 12.962218030562822,
+      "description": "早期增长",
+      "month": 11
+    }
+  },
+  {
+    "month": 12,
+    "quarter": 4,
+    "year": 1,
+    "population": 345,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 29,
+    "total_buildings": 34,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.09685698605109856,
+      "std": 0.21081738072973302
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 874.7807928647683,
+        "avg": 1.1026348864495001,
+        "total": 72262.27991835444
+      },
+      "commercial_intensity": {
+        "max": 296.3267221684179,
+        "avg": 0.0096786278534749,
+        "total": 634.2985550053311
+      },
+      "combined_intensity": {
+        "max": 874.7807928647683,
+        "avg": 1.112313514302975,
+        "total": 72896.57847335977
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mid_growth",
+      "hub_sigma": 26.04647347857938,
+      "road_sigma": 13.200582084001697,
+      "description": "中期增长",
+      "month": 12
+    }
+  },
+  {
+    "month": 13,
+    "quarter": 4,
+    "year": 1,
+    "population": 379,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 38,
+    "total_buildings": 43,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 924.6246342918147,
+        "avg": 1.1966831044721005,
+        "total": 78425.82393468358
+      },
+      "commercial_intensity": {
+        "max": 300.90137773473333,
+        "avg": 0.010690900329654893,
+        "total": 700.6388440042631
+      },
+      "combined_intensity": {
+        "max": 924.6246342918147,
+        "avg": 1.2073740048017552,
+        "total": 79126.46277868783
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mid_growth",
+      "hub_sigma": 26.458862510036706,
+      "road_sigma": 13.434226212946507,
+      "description": "中期增长",
+      "month": 13
+    }
+  },
+  {
+    "month": 14,
+    "quarter": 4,
+    "year": 1,
+    "population": 414,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 38,
+    "total_buildings": 43,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 964.4997074334519,
+        "avg": 1.2876931632651802,
+        "total": 84390.25914774685
+      },
+      "commercial_intensity": {
+        "max": 304.56110218778565,
+        "avg": 0.011791245654348888,
+        "total": 772.7510752034087
+      },
+      "combined_intensity": {
+        "max": 964.4997074334519,
+        "avg": 1.299484408919529,
+        "total": 85163.01022295025
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mid_growth",
+      "hub_sigma": 26.859063603698864,
+      "road_sigma": 13.663243878164117,
+      "description": "中期增长",
+      "month": 14
+    }
+  },
+  {
+    "month": 15,
+    "quarter": 5,
+    "year": 1,
+    "population": 460,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 38,
+    "total_buildings": 43,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 996.3997659467616,
+        "avg": 1.3767365618621443,
+        "total": 90225.80731819749
+      },
+      "commercial_intensity": {
+        "max": 307.4888817502275,
+        "avg": 0.012970594179729086,
+        "total": 850.0408601627254
+      },
+      "combined_intensity": {
+        "max": 996.3997659467616,
+        "avg": 1.3897071560418732,
+        "total": 91075.8481783602
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mid_growth",
+      "hub_sigma": 27.247436967564536,
+      "road_sigma": 13.887726689774231,
+      "description": "中期增长",
+      "month": 15
+    }
+  },
+  {
+    "month": 16,
+    "quarter": 5,
+    "year": 1,
+    "population": 509,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 48,
+    "total_buildings": 53,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1021.9198127574093,
+        "avg": 1.4758033119897154,
+        "total": 96718.24585455799
+      },
+      "commercial_intensity": {
+        "max": 309.831105400181,
+        "avg": 0.014307139406283236,
+        "total": 937.6326881301782
+      },
+      "combined_intensity": {
+        "max": 1021.9198127574093,
+        "avg": 1.4901104513959986,
+        "total": 97655.87854268817
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mid_growth",
+      "hub_sigma": 27.62433216387718,
+      "road_sigma": 14.107764443894638,
+      "description": "中期增长",
+      "month": 16
+    }
+  },
+  {
+    "month": 17,
+    "quarter": 5,
+    "year": 1,
+    "population": 566,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 48,
+    "total_buildings": 53,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1042.3358502059275,
+        "avg": 1.5851348370917724,
+        "total": 103883.3966836464
+      },
+      "commercial_intensity": {
+        "max": 311.7048843201438,
+        "avg": 0.015795076759401543,
+        "total": 1035.1461505041395
+      },
+      "combined_intensity": {
+        "max": 1042.3358502059275,
+        "avg": 1.6009299138511737,
+        "total": 104918.54283415052
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mid_growth",
+      "hub_sigma": 27.99008842375468,
+      "road_sigma": 14.323445158560855,
+      "description": "中期增长",
+      "month": 17
+    }
+  },
+  {
+    "month": 18,
+    "quarter": 6,
+    "year": 1,
+    "population": 624,
+    "public_buildings": 0,
+    "residential_buildings": 5,
+    "commercial_buildings": 48,
+    "total_buildings": 53,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1058.668680164742,
+        "avg": 1.7090136313921678,
+        "total": 112001.91734691711
+      },
+      "commercial_intensity": {
+        "max": 313.203907456114,
+        "avg": 0.01747248718877119,
+        "total": 1145.0769204033088
+      },
+      "combined_intensity": {
+        "max": 1058.668680164742,
+        "avg": 1.7264861185809388,
+        "total": 113146.9942673204
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mature",
+      "hub_sigma": 28.345034952520205,
+      "road_sigma": 14.534855108934535,
+      "description": "成熟阶段",
+      "month": 18
+    }
+  },
+  {
+    "month": 19,
+    "quarter": 6,
+    "year": 1,
+    "population": 685,
+    "public_buildings": 1,
+    "residential_buildings": 5,
+    "commercial_buildings": 55,
+    "total_buildings": 61,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1071.7349441317936,
+        "avg": 1.8336049480824843,
+        "total": 120167.13387753369
+      },
+      "commercial_intensity": {
+        "max": 314.4031259648902,
+        "avg": 0.019310021001016912,
+        "total": 1265.5015363226444
+      },
+      "combined_intensity": {
+        "max": 1071.7349441317936,
+        "avg": 1.8529149690835012,
+        "total": 121432.63541385633
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mature",
+      "hub_sigma": 28.689491226009256,
+      "road_sigma": 14.742078861814662,
+      "description": "成熟阶段",
+      "month": 19
+    }
+  },
+  {
+    "month": 20,
+    "quarter": 6,
+    "year": 1,
+    "population": 761,
+    "public_buildings": 1,
+    "residential_buildings": 5,
+    "commercial_buildings": 55,
+    "total_buildings": 61,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1082.1879553054348,
+        "avg": 1.9603531967472374,
+        "total": 128473.70710202695
+      },
+      "commercial_intensity": {
+        "max": 315.36250077191113,
+        "avg": 0.021301288285188485,
+        "total": 1396.0012290581126
+      },
+      "combined_intensity": {
+        "max": 1082.1879553054348,
+        "avg": 1.981654485032426,
+        "total": 129869.70833108507
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mature",
+      "hub_sigma": 29.02376727811947,
+      "road_sigma": 14.945199309465412,
+      "description": "成熟阶段",
+      "month": 20
+    }
+  },
+  {
+    "month": 21,
+    "quarter": 7,
+    "year": 1,
+    "population": 800,
+    "public_buildings": 1,
+    "residential_buildings": 5,
+    "commercial_buildings": 55,
+    "total_buildings": 61,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1090.550364244348,
+        "avg": 2.09561410036654,
+        "total": 137338.16568162155
+      },
+      "commercial_intensity": {
+        "max": 316.1300006175279,
+        "avg": 0.023543716175025747,
+        "total": 1542.9609832464873
+      },
+      "combined_intensity": {
+        "max": 1090.550364244348,
+        "avg": 2.119157816541566,
+        "total": 138881.12666486806
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mature",
+      "hub_sigma": 29.348163979862054,
+      "road_sigma": 15.14429770277415,
+      "description": "成熟阶段",
+      "month": 21
+    }
+  },
+  {
+    "month": 22,
+    "quarter": 7,
+    "year": 1,
+    "population": 800,
+    "public_buildings": 1,
+    "residential_buildings": 5,
+    "commercial_buildings": 62,
+    "total_buildings": 68,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1097.2402913954784,
+        "avg": 2.220961495136982,
+        "total": 145552.93254529726
+      },
+      "commercial_intensity": {
+        "max": 331.68841703423516,
+        "avg": 0.025670910440020536,
+        "total": 1682.3687865971858
+      },
+      "combined_intensity": {
+        "max": 1097.2402913954784,
+        "avg": 2.246632405577003,
+        "total": 147235.30133189447
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mature",
+      "hub_sigma": 29.662973310166016,
+      "road_sigma": 15.339453683752879,
+      "description": "成熟阶段",
+      "month": 22
+    }
+  },
+  {
+    "month": 23,
+    "quarter": 7,
+    "year": 1,
+    "population": 800,
+    "public_buildings": 1,
+    "residential_buildings": 5,
+    "commercial_buildings": 62,
+    "total_buildings": 68,
+    "land_price_stats": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.13171063772420283,
+      "std": 0.23648222444014286
+    },
+    "trajectory_stats": {
+      "commute_intensity": {
+        "max": 1102.5922331163827,
+        "avg": 2.3212394109533356,
+        "total": 152124.7460362378
+      },
+      "commercial_intensity": {
+        "max": 345.9907336273868,
+        "avg": 0.027372665852016365,
+        "total": 1793.8950292777445
+      },
+      "combined_intensity": {
+        "max": 1102.5922331163827,
+        "avg": 2.3486120768053524,
+        "total": 153918.64106551558
+      }
+    },
+    "land_price_evolution_stage": {
+      "name": "mature",
+      "hub_sigma": 29.968478618678887,
+      "road_sigma": 15.53074531739611,
+      "description": "成熟阶段",
+      "month": 23
+    }
+  }
+]

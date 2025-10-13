@@ -1,0 +1,100 @@
+{
+  "month": 7,
+  "quarter": 2,
+  "layers": {
+    "commercial": [
+      {
+        "layer_id": "commercial_P0",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 6,
+        "dead_slots": 0,
+        "capacity_effective": 6,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "commercial_P1",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 7,
+        "dead_slots": 0,
+        "capacity_effective": 7,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "commercial_P2",
+        "status": "active",
+        "activated_quarter": 0,
+        "capacity": 8,
+        "dead_slots": 0,
+        "capacity_effective": 8,
+        "placed": 8,
+        "density": 1.0
+      },
+      {
+        "layer_id": "commercial_P3_new",
+        "status": "active",
+        "activated_quarter": 2,
+        "capacity": 12,
+        "dead_slots": 0,
+        "capacity_effective": 12,
+        "placed": 0,
+        "density": 0.0
+      }
+    ],
+    "residential": [
+      {
+        "layer_id": "residential_P0",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 12,
+        "dead_slots": 0,
+        "capacity_effective": 12,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P1",
+        "status": "active",
+        "activated_quarter": 0,
+        "capacity": 22,
+        "dead_slots": 0,
+        "capacity_effective": 22,
+        "placed": 22,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_P2",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 22,
+        "dead_slots": 0,
+        "capacity_effective": 22,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P3",
+        "status": "locked",
+        "activated_quarter": -1,
+        "capacity": 8,
+        "dead_slots": 0,
+        "capacity_effective": 8,
+        "placed": 0,
+        "density": 0.0
+      },
+      {
+        "layer_id": "residential_P4_new",
+        "status": "active",
+        "activated_quarter": 2,
+        "capacity": 19,
+        "dead_slots": 0,
+        "capacity_effective": 19,
+        "placed": 0,
+        "density": 0.0
+      }
+    ]
+  }
+}

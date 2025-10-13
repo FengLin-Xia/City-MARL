@@ -1,0 +1,68 @@
+{
+  "execute_month": 11,
+  "scheduled_tasks": 1,
+  "P_low_eff": 0.3846396122622208,
+  "P_high_eff": 0.7082100340780814,
+  "changes": [
+    {
+      "id": "res_53",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        121.18463901,
+        120.67627012
+      ],
+      "land_price_value": 0.8391616788008404
+    },
+    {
+      "id": "res_55",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        116.70624549,
+        119.73042276
+      ],
+      "land_price_value": 0.8362205548284696
+    },
+    {
+      "id": "res_52",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        131.60749539,
+        81.02835008
+      ],
+      "land_price_value": 0.8351006937632223
+    },
+    {
+      "id": "res_51",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        116.2128227,
+        76.66898627
+      ],
+      "land_price_value": 0.8349383312263993
+    },
+    {
+      "id": "res_50",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        133.7871773,
+        73.33101373
+      ],
+      "land_price_value": 0.8344176696119333
+    },
+    {
+      "id": "res_54",
+      "from_type": "residential",
+      "to_type": "commercial",
+      "position": [
+        112.47264452,
+        116.1139004
+      ],
+      "land_price_value": 0.8248589702762592
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "month": 2,
+  "timestamp": "month_02",
+  "new_buildings": [
+    {
+      "id": "res_23",
+      "type": "residential",
+      "position": [
+        131.31792273,
+        74.71042734
+      ],
+      "land_price_value": 0.0
+    },
+    {
+      "id": "res_24",
+      "type": "residential",
+      "position": [
+        119.22699774,
+        73.36523857
+      ],
+      "land_price_value": 0.0
+    },
+    {
+      "id": "res_25",
+      "type": "residential",
+      "position": [
+        118.68207727,
+        75.28957266
+      ],
+      "land_price_value": 0.5858489513381713
+    },
+    {
+      "id": "res_26",
+      "type": "residential",
+      "position": [
+        130.77300226,
+        76.63476143
+      ],
+      "land_price_value": 0.5968197233862018
+    },
+    {
+      "id": "res_27",
+      "type": "residential",
+      "position": [
+        130.22808178,
+        78.55909551
+      ],
+      "land_price_value": 0.6073518827352575
+    },
+    {
+      "id": "res_28",
+      "type": "residential",
+      "position": [
+        120.06149088,
+        77.75882722
+      ],
+      "land_price_value": 0.6353648781200185
+    },
+    {
+      "id": "res_29",
+      "type": "residential",
+      "position": [
+        127.75882722,
+        79.93850912
+      ],
+      "land_price_value": 0.6662426702427839
+    },
+    {
+      "id": "res_30",
+      "type": "residential",
+      "position": [
+        115.10234708,
+        114.69984681
+      ],
+      "land_price_value": 0.0
+    },
+    {
+      "id": "com_11",
+      "type": "commercial",
+      "position": [
+        125.28957266,
+        81.31792273
+      ],
+      "land_price_value": 0.6963905976412805
+    },
+    {
+      "id": "com_12",
+      "type": "commercial",
+      "position": [
+        123.36523857,
+        80.77300226
+      ],
+      "land_price_value": 0.6960714594976721
+    },
+    {
+      "id": "com_13",
+      "type": "commercial",
+      "position": [
+        121.44090449,
+        80.22808178
+      ],
+      "land_price_value": 0.6717011409069014
+    },
+    {
+      "id": "com_14",
+      "type": "commercial",
+      "position": [
+        119.63076781,
+        118.28545662
+      ],
+      "land_price_value": 0.0
+    }
+  ],
+  "reclassified": []
+}

@@ -1,0 +1,154 @@
+{
+  "city": {
+    "map_size": [
+      110,
+      110
+    ],
+    "meters_per_pixel": 2.0,
+    "trunk_road": [
+      [
+        20,
+        55
+      ],
+      [
+        90,
+        55
+      ]
+    ],
+    "transport_hubs": [
+      [
+        22,
+        55
+      ],
+      [
+        88,
+        55
+      ]
+    ]
+  },
+  "government_backbone": {
+    "road_corridor": {
+      "sigma_perp_m": 40,
+      "setback_m": {
+        "commercial": 8,
+        "residential": 10,
+        "industrial": 14
+      }
+    },
+    "hubs": {
+      "commercial": {
+        "sigma_perp_m": 12,
+        "sigma_parallel_m": 36
+      },
+      "industrial": {
+        "sigma_perp_m": 15,
+        "sigma_parallel_m": 45
+      }
+    },
+    "zoning": {
+      "hub_com_radius_m": 60,
+      "hub_ind_radius_m": 80,
+      "mid_corridor_residential": true
+    },
+    "quotas_per_quarter": {
+      "residential": [
+        6,
+        12,
+        10,
+        16
+      ],
+      "commercial": [
+        3,
+        8,
+        5,
+        10
+      ],
+      "industrial": [
+        2,
+        6,
+        4,
+        8
+      ]
+    },
+    "strict_layering": true,
+    "dead_slots_ratio_max": 0.05
+  },
+  "gaussian_land_price_system": {
+    "w_r": 0.6,
+    "w_c": 0.5,
+    "w_i": 0.5,
+    "w_cor": 0.2,
+    "bias": 0.0,
+    "hub_sigma_base_m": 12,
+    "road_sigma_base_m": 20,
+    "hub_growth_rate": 0.03,
+    "road_growth_rate": 0.02,
+    "max_hub_multiplier": 1.1,
+    "max_road_multiplier": 2.0,
+    "normalize": true,
+    "smoothstep_tau": 0.0
+  },
+  "scoring_weights": {
+    "commercial": {
+      "f_price": 0.35,
+      "f_hub_com": 0.25,
+      "f_road": 0.2,
+      "f_heat": 0.15,
+      "f_access": 0.05,
+      "crowding": -0.03,
+      "junction_penalty": -0.02
+    },
+    "industrial": {
+      "f_price": -0.2,
+      "f_hub_ind": 0.45,
+      "f_road": 0.25,
+      "f_access": 0.05,
+      "crowding": -0.1,
+      "junction_penalty": -0.05
+    },
+    "residential": {
+      "f_price": 0.1,
+      "f_road": 0.45,
+      "f_access": 0.15,
+      "f_hub_com": -0.15,
+      "f_hub_ind": -0.1,
+      "crowding": -0.05
+    }
+  },
+  "isocontour_layout": {
+    "commercial": {
+      "levels": [
+        0.95,
+        0.9,
+        0.85
+      ],
+      "arc_spacing_m": [
+        80,
+        120
+      ]
+    },
+    "industrial": {
+      "levels": [
+        0.00010338097490603104,
+        0.010734993498772383,
+        0.21514740586280823
+      ],
+      "arc_spacing_m": [
+        100,
+        150
+      ]
+    },
+    "residential": {
+      "band": [
+        0.45,
+        0.65
+      ],
+      "arc_spacing_m": [
+        90,
+        130
+      ]
+    },
+    "normal_offset_m": 3.0,
+    "jitter_m": 1.5
+  }
+}

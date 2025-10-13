@@ -1,0 +1,279 @@
+增强城市模拟系统 PRD v4.0
+
+---
+
+## 1. 项目概述
+
+### 1.1 项目名称
+
+增强城市模拟系统 (Enhanced City Simulation System)
+
+### 1.2 项目目标
+
+在 v3.6 的基础上，引入 **外部槽位系统**、**教育/工业 S/M/L 占位规则**、以及 **当月穷举 → 评估 → 最优序列** 的新放置逻辑，并整合评估系统。目标是更真实地模拟多类型建筑的放置与收益逻辑，为 RL 和玩法平衡提供接口。
+
+### 1.3 核心特性（v4.0）
+
+* 外部可配置 Hub 与槽位坐标（支持地形/道路/禁建层过滤）
+* 教育 EDU 与工业 IND 建筑：S/M/L 三种尺寸与占位规则（IND M=两格相邻，L=2×2 四格）
+* 每月流程：穷举所有单一合法动作 → 穷举≤5步序列 → 评估系统计算 cost/reward/prestige → 选择最优序列
+* 保留 v3.6 的 Hub 外扩 R(m)、Lock Period、滞后 δ 框架
+* 增强输出：动作池、序列池、最终序列完整记录
+
+---
+
+## 2. 系统架构
+
+整体架构不变，新增 **动作枚举器 / 打分器 / 序列选择器** 模块，并扩展数据系统支持外部槽位与评估日志。
+
+### 2.1 整体架构（继承自 v3.6）
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   配置系统      │    │   逻辑系统      │    │   可视化系统    │
+│  - 城市配置     │    │  - 地价场系统   │    │  - 渲染引擎     │
+│  - 建筑配置     │    │  - 智能体系统   │    │  - 动画系统     │
+│  - 智能体配置   │    │  - 轨迹系统     │    │  - 热力图显示   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │   数据系统      │
+                    │  - 状态管理     │
+                    │  - 输出系统     │
+                    │  - 统计系统     │
+                    └─────────────────┘
+
+### 2.2 模块划分（继承自 v3.6，v4.0 扩展）
+- 配置模块 (configs/): v4.0 新增 growth_v4_0、外部 hubs/slots 与枚举/目标配置
+- 逻辑模块 (logic/): 地价场、智能体、轨迹；v4.0 新增 ActionEnumerator/Scorer/SequenceSelector
+- 可视化模块 (viz/): 渲染、热力图、动画（v4.0 可选扩展）
+- 数据模块: 状态管理、输出与统计；v4.0 扩展动作/序列/评估日志
+
+---
+
+## 3. 数据模型
+
+### 3.1 城市状态 (City State) 扩展
+
+* `slot`: `{id,x,y,neighbors[],terrain_mask,road_dist,occupied_by,reserved_in_turn}`
+* `building`: `{id,type:EDU|IND,size:S|M|L,footprint_slots:[],lock_expiry}`
+* `range_state`: 增加 `adjacency_availability: {pairs_1x2, blocks_2x2}`
+
+### 3.2 动作与序列数据
+
+* 动作：`{agent,size,footprint_slots,zone,LP_norm,adjacency,cost,reward,prestige,score}`
+* 序列：动作列表 + 累计 cost/reward/prestige/score
+
+---
+
+## 4. 功能模块
+
+### 4.5 生长逻辑（v4.0 替代 v3.6 流程）
+
+1. 更新 LP(x,y,m)
+2. 计算 R(m)，筛选候选集合 C(m)
+3. **动作枚举**：生成当月所有合法动作 A(m)
+4. **动作评估**：调用评估系统计算 cost/reward/prestige，并打分
+5. **序列穷举**：生成所有长度 ≤ 5 的不冲突序列 S(m)
+6. **序列评估**：累加 cost/reward/prestige，计算 Score_seq
+7. **选择与落位**：选取最高分序列落地（含 Skip），更新城市状态
+8. 对锁定期满的建筑，根据策略是否重判
+
+### 4.6 公共用地机制
+
+与 v3.6 保持一致，不消耗配额。
+
+---
+
+## 5. 评估系统（新增章节）
+
+### 5.1 输入
+
+`slot_id, type, size, zone, LP_norm, adjacency`
+
+### 5.2 输出
+
+* cost (M£)
+* reward (k£/mo)
+* prestige (—)
+
+### 5.3 公式（标准版）
+
+* EDU: cost = (Base_EDU[size]+Add_EDU[size])×LP_norm + ZoneAdd[zone]
+  reward = (α×Capacity[size])×m_zone×m_adj − OPEX_EDU[size]
+  prestige = PrestigeBase[size] + I(zone==near)+I(adj) − β×Pollution[size]
+* IND: cost = (Base_IND[size]+Add_IND[size])×LP_norm + ZoneAdd[zone]
+  reward = ((p_market×u×Capacity[size])/1000)×m_zone×m_adj − c_opex×GFA_k[size] + s_zone[zone]
+  prestige = PrestigeBase[size] + I(zone==near)+I(adj) − 0.2×Pollution[size]
+
+### 5.3.1 公式（INT 版：地价货币化 + 河流溢价）
+
+- 输入扩展：LP_idx∈[10,100]（由 LP_norm 线性映射）；river_dist_m（到河近似最小距离，米）
+- 参数（kGBP，整数化约定按 nearest）：
+  - LandPriceBase（每个 LP_idx 点对应货币化地价）
+  - BaseCost_IND/EDU[size]，ZC[zone]（区位建造附加）
+  - RevBase_IND/EDU[size]，ZR[zone]（区位收益附加）
+  - OPEX_IND/EDU[size]，Rent[size]，Adj_bonus（相邻奖励，默认 0）
+  - RiverPmax_pct{IND,EDU}（河流溢价最高占比%），RiverD_half_m（半衰距离，m），RiverPremiumCap_kGBP（封顶），RoundMode（nearest）
+
+- 地价货币化：
+  - LP_value = LP_idx × LandPriceBase（kGBP）
+  - EDU receives land：LP_value（一次性正项）；IND pays land：LP_value（一次性负项）。在 cost 中计入。
+
+- 河流溢价（按月，计入收入侧）：
+  - d_eff = max(0, river_dist_m)
+  - decay = 2^(− d_eff / RiverD_half_m)
+  - BaseForPremium(type,size,zone) = RevBase_type[size] + ZR[zone]
+  - RawRiverPrem(type) = BaseForPremium × (RiverPmax_pct[type]/100) × decay
+  - RiverPremium(type) = clamp(round_nearest(RawRiverPrem), 0, RiverPremiumCap_kGBP)
+
+- 成本（一次性）：
+  - cost_IND = BaseCost_IND[size] + ZC[zone] + LP_value
+  - cost_EDU = BaseCost_EDU[size] + ZC[zone] + LP_value
+
+- 收入（按月）：
+  - IND：rev_IND = RevBase_IND[size] + ZR[zone] + Adj_bonus·adj − OPEX_IND[size] − Rent[size] + RiverPremium(IND)
+  - EDU：rev_EDU = (RevBase_EDU[size] + ZR[zone] + Adj_bonus·adj − OPEX_EDU[size] + RiverPremium(EDU)) + Rent[size]
+
+- 备注：LP_idx 映射与 LandPriceBase 可通过配置 `growth_v4_0.evaluation` 调整；river_dist_m 由主流程提供（对 footprint 取近点）。
+
+### 5.4 RL 接口
+
+`R_RL = w1·norm(reward) + w2·norm(prestige) − w3·norm(cost)`
+
+---
+
+## 6. 配置系统（v4.0 替换 v3.6 placement）
+
+```
+"growth_v4_0": {
+  "hubs": {
+    "mode": "explicit",
+    "list": [ {"id":"hub1","x":120,"y":380,"R0":0,"dR":40,"weight":0.45} ]
+  },
+  "slots": {
+    "source": "file",
+    "path": "data/slots_cityA.json",
+    "adjacency": "4-neighbor",
+    "filters": {"respect_terrain":true,"respect_roads":true}
+  },
+  "enumeration": {
+    "length_max": 5,
+    "use_skip": true,
+    "search_mode": "exhaustive",
+    "beam_width": 16,
+    "max_expansions": 2000,
+    "caps": {
+      "top_slots_per_agent_size": {"EDU":{"S":300},"IND":{"L":120}},
+      "max_actions_per_agent_size": {"EDU":{"S":800},"IND":{"L":200}}
+    },
+    "objective": {
+      "EDU":{"w_r":0.3,"w_p":0.6,"w_c":0.1},
+      "IND":{"w_r":0.6,"w_p":0.2,"w_c":0.2},
+      "normalize": "per-month-pool-minmax"
+    }
+  },
+  "locking": {
+    "lock_period": 3,
+    "hysteresis_delta": 0.04
+  },
+  "evaluation": {
+    "LP_idx_min": 10, "LP_idx_max": 100,
+    "LandPriceBase": 11,
+    "ZC": {"near":200, "mid":100, "far":0},
+    "ZR": {"near":80, "mid":40, "far":0},
+    "BaseCost_IND": {"S":900, "M":1500, "L":2400},
+    "BaseCost_EDU": {"S":700, "M":1200, "L":1900},
+    "RevBase_IND": {"S":180, "M":320, "L":520},
+    "RevBase_EDU": {"S":140, "M":260, "L":420},
+    "OPEX_IND": {"S":100, "M":180, "L":300},
+    "OPEX_EDU": {"S":70, "M":120, "L":190},
+    "Rent": {"S":25, "M":45, "L":70},
+    "Adj_bonus": 0,
+    "RiverPmax_pct": {"IND":20, "EDU":15},
+    "RiverD_half_m": 120,
+    "RiverPremiumCap_kGBP": 10000,
+    "RoundMode": "nearest"
+  }
+}
+```
+
+---
+
+## 7. 输出系统（扩展）
+
+* **actions_pool.csv**：当月所有单一动作，含 score/cost/reward/prestige
+* **sequences_pool.csv**：当月所有合法序列，含累计指标
+* **chosen_sequence.csv**：最终选定序列，含执行顺序与累计值
+* **audits.csv**：新增统计：枚举数量、裁剪后数量、搜索宽度、耗时
+
+---
+
+## 8. 验收标准（v4.0）
+
+1. 工业 M/L 的 footprint 仅来源于邻接合法组合，落位槽位 ∈ C(m)
+2. 每月完整生成 actions_pool → sequences_pool → chosen_sequence 全链路
+3. 单动作与序列的 cost/reward/prestige 可手算复核
+4. Lock Period=3 按 footprint 生效，重判策略与配置一致
+5. 日志一致性：chosen_sequence 的累计值 = actions_pool 中对应动作值之和
+6. 性能：枚举与序列生成受 caps 与 max_expansions 控制，可回退 beam/greedy
+
+---
+
+## 9. 风险评估
+
+* 组合爆炸 → caps 裁剪 + Beam/Greedy 替代
+* 邻接检查耗时 → 导入时预计算 1×2/2×2 列表
+* 评估偏置 → 权重可热更新
+* 与 LP 分位分类 → EDU/IND 为政策性专项，不受 P_high/P_low 约束
+
+---
+
+## 10. 版本历史
+
+* v4.0：外部槽位 + EDU/IND S/M/L 占位 + 穷举/评估/最优序列 + 评估系统
+* v3.6：单池槽位 + Hub 外扩 + 分位分类 + 锁定/重判
+
+---
+
+附录A：v3.6 通用模块（并入 v4.0）
+
+A.1 时间系统（继承）
+- 地价场更新：年度/半年级别，σ 渐进增长（可用平滑系数 α≈0.25）
+- 建筑更新：每月在 R(m) 范围内落位（v4.0 改为“动作/序列”评分后落位）
+- 人口/热力更新：每月
+- 推荐顺序：居民轨迹 → 热力更新 → 地价场微调 → 候选/动作 → 评估/序列 → 落位 → 重判（若启用）
+
+A.2 轨迹系统（继承）
+- 居民日程：住宅 → 工作 → 购物 → 住宅
+- 热力更新：每次移动累积，月度衰减约 20%
+- 输出层：通勤热力、商业热力、综合热力
+
+A.3 智能体系统（继承）
+- 政府：配置策略与配额，插入公共用地（不消耗配额）
+- 企业：按规则落位新建筑（v4.0 通过动作/序列评分选择）
+- 居民：选择居住/工作位置，驱动热力与需求
+
+A.4 高斯核地价潜力场系统（继承）
+- 点核（Hub）：各向异性高斯；线核（道路）：垂直高斯衰减；河流边界核（如启用）：边界峰值+距离衰减
+- 融合：加权和 + 归一化（可与河流边界最大值混合）
+- 时间演化：分阶段（道路优先 → Hub 增强 → 多中心平衡）
+
+A.5 可视化系统（继承）
+- 渲染顺序：网格 → 热力图 → 道路/枢纽 → R(m) → 槽位/候选 → 建筑
+- 动画：新建筑成长动画（约 0.6s）；符号集：🏫 🏥 🌳 🏛️（可选）
+- v4.0 扩展：可视化“动作/序列”与最优序列的空间轨迹（可选）
+
+A.6 输出与日志（继承并扩展）
+- 保留 v3.6：
+  - range_state_month_m.json：记录 R(m)/候选规模/（可选）分位数
+  - building_delta_month_m.json：新增与重判建筑（如需要）
+  - audits.csv：月度统计（候选、落位数量、阈值、转化数等）
+- v4.0 新增：
+  - actions_pool.csv / sequences_pool.csv / chosen_sequence.csv（详见正文第7章）
+  - （可选）debug_reclass_month_m.json：重判调试
+
+A.7 配置（继承）
+- 继承 v3.6 的通用配置结构（city / gaussian_land_price_system / terrain_features 等）；
+- v4.0 使用 growth_v4_0 替换 v3.6 的 placement 流程；地价/轨迹/可视化参数保持兼容；
+- 若启用外部槽位：在 slots.path 指定外部 JSON 槽位文件，并按 filters 控制地形/道路/禁建过滤。

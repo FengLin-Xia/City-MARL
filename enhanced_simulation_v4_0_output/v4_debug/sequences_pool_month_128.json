@@ -1,0 +1,1513 @@
+{
+  "month": 128,
+  "count": 50,
+  "sequences": [
+    {
+      "score": 0.7928371836135567,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        }
+      ]
+    },
+    {
+      "score": 0.7877531910332487,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        }
+      ]
+    },
+    {
+      "score": 0.7872615471189146,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        }
+      ]
+    },
+    {
+      "score": 0.7871682799236595,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        }
+      ]
+    },
+    {
+      "score": 0.7871619529391448,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        }
+      ]
+    },
+    {
+      "score": 0.787062358759375,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        }
+      ]
+    },
+    {
+      "score": 0.7869627645796053,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        }
+      ]
+    },
+    {
+      "score": 0.7868758243688647,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1368"
+          ],
+          "score": 0.7868758243688647
+        }
+      ]
+    },
+    {
+      "score": 0.7867699032045805,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1013"
+          ],
+          "score": 0.7867699032045805
+        }
+      ]
+    },
+    {
+      "score": 0.7866703090248108,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1040"
+          ],
+          "score": 0.7866703090248108
+        }
+      ]
+    },
+    {
+      "score": 1.5805903746468055,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        }
+      ]
+    },
+    {
+      "score": 1.5800987307324714,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        }
+      ]
+    },
+    {
+      "score": 1.580005463537216,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        }
+      ]
+    },
+    {
+      "score": 1.5799991365527015,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        }
+      ]
+    },
+    {
+      "score": 1.5798995423729316,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        }
+      ]
+    },
+    {
+      "score": 1.5797999481931622,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        }
+      ]
+    },
+    {
+      "score": 1.5797130079824213,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1368"
+          ],
+          "score": 0.7868758243688647
+        }
+      ]
+    },
+    {
+      "score": 1.5796070868181373,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1013"
+          ],
+          "score": 0.7867699032045805
+        }
+      ]
+    },
+    {
+      "score": 1.5795074926383674,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1040"
+          ],
+          "score": 0.7866703090248108
+        }
+      ]
+    },
+    {
+      "score": 1.5795074926383674,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1038"
+          ],
+          "score": 0.7866703090248108
+        }
+      ]
+    },
+    {
+      "score": 2.36785192176572,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        }
+      ]
+    },
+    {
+      "score": 2.3677586545704647,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        }
+      ]
+    },
+    {
+      "score": 2.3677523275859502,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        }
+      ]
+    },
+    {
+      "score": 2.3676527334061808,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        }
+      ]
+    },
+    {
+      "score": 2.367553139226411,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        }
+      ]
+    },
+    {
+      "score": 2.36746619901567,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1368"
+          ],
+          "score": 0.7868758243688647
+        }
+      ]
+    },
+    {
+      "score": 2.367360277851386,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1013"
+          ],
+          "score": 0.7867699032045805
+        }
+      ]
+    },
+    {
+      "score": 2.367267010656131,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        }
+      ]
+    },
+    {
+      "score": 2.367260683671616,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1040"
+          ],
+          "score": 0.7866703090248108
+        }
+      ]
+    },
+    {
+      "score": 2.367260683671616,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1038"
+          ],
+          "score": 0.7866703090248108
+        }
+      ]
+    },
+    {
+      "score": 3.15502020168938,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        }
+      ]
+    },
+    {
+      "score": 3.155013874704865,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        }
+      ]
+    },
+    {
+      "score": 3.15492060750961,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        }
+      ]
+    },
+    {
+      "score": 3.1549142805250954,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        }
+      ]
+    },
+    {
+      "score": 3.1548210133298404,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        }
+      ]
+    },
+    {
+      "score": 3.1548146863453255,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        }
+      ]
+    },
+    {
+      "score": 3.1548146863453255,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        }
+      ]
+    },
+    {
+      "score": 3.154727746134585,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1368"
+          ],
+          "score": 0.7868758243688647
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        }
+      ]
+    },
+    {
+      "score": 3.1547214191500705,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        }
+      ]
+    },
+    {
+      "score": 3.1547150921655556,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        }
+      ]
+    },
+    {
+      "score": 3.9421821546285245,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        }
+      ]
+    },
+    {
+      "score": 3.942082560448755,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        }
+      ]
+    },
+    {
+      "score": 3.94207623346424,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        }
+      ]
+    },
+    {
+      "score": 3.941982966268985,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        }
+      ]
+    },
+    {
+      "score": 3.941982966268985,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        }
+      ]
+    },
+    {
+      "score": 3.94197663928447,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        }
+      ]
+    },
+    {
+      "score": 3.9418960260582447,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1368"
+          ],
+          "score": 0.7868758243688647
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        }
+      ]
+    },
+    {
+      "score": 3.9418896990737298,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1368"
+          ],
+          "score": 0.7868758243688647
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        }
+      ]
+    },
+    {
+      "score": 3.9418833720892152,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1191"
+          ],
+          "score": 0.7871619529391448
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1355"
+          ],
+          "score": 0.7871682799236595
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        }
+      ]
+    },
+    {
+      "score": 3.9418770451047007,
+      "actions": [
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1503"
+          ],
+          "score": 0.7928371836135567
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1353"
+          ],
+          "score": 0.7877531910332487
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1378"
+          ],
+          "score": 0.7872615471189146
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1197"
+          ],
+          "score": 0.787062358759375
+        },
+        {
+          "agent": "EDU",
+          "size": "L",
+          "footprint_slots": [
+            "s_1009"
+          ],
+          "score": 0.7869627645796053
+        }
+      ]
+    }
+  ],
+  "debug": {
+    "layers": [
+      {
+        "beam_in": 50,
+        "non_conflict_min": 102,
+        "non_conflict_max": 102,
+        "non_conflict_avg": 102.0,
+        "new_beam_kept": 50,
+        "expansions_used": 102
+      },
+      {
+        "beam_in": 50,
+        "non_conflict_min": 99,
+        "non_conflict_max": 99,
+        "non_conflict_avg": 99.0,
+        "new_beam_kept": 50,
+        "expansions_used": 5052
+      },
+      {
+        "beam_in": 50,
+        "non_conflict_min": 96,
+        "non_conflict_max": 96,
+        "non_conflict_avg": 96.0,
+        "new_beam_kept": 50,
+        "expansions_used": 9852
+      },
+      {
+        "beam_in": 50,
+        "non_conflict_min": 93,
+        "non_conflict_max": 93,
+        "non_conflict_avg": 93.0,
+        "new_beam_kept": 50,
+        "expansions_used": 14502
+      },
+      {
+        "beam_in": 50,
+        "non_conflict_min": 90,
+        "non_conflict_max": 90,
+        "non_conflict_avg": 90.0,
+        "new_beam_kept": 50,
+        "expansions_used": 19002
+      }
+    ],
+    "stopped": "",
+    "stratified": {
+      "enabled": true,
+      "per_depth": 10,
+      "counts": {
+        "1": 10,
+        "2": 10,
+        "3": 10,
+        "4": 10,
+        "5": 10
+      }
+    }
+  },
+  "active_agent": "EDU"
+}

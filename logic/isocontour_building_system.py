@@ -46,6 +46,20 @@ class IsocontourBuildingSystem:
         # 通用配置
         self.normal_offset_m = self.isocontour_config.get('normal_offset_m', 4)
         self.jitter_m = self.isocontour_config.get('jitter_m', 1.5)
+
+        # 阈值模式：支持全局相对峰值（relative）与分位数（percentile）
+        self.threshold_mode = self.isocontour_config.get('threshold_mode', 'percentile')
+        self.relative_levels_cfg = self.isocontour_config.get('relative_levels', {
+            'commercial': [0.95, 0.90, 0.85],
+            'residential': [0.80, 0.75, 0.70, 0.65]
+        })
+
+        # 过滤与合并参数（可配置）
+        self.filter_cfg = self.isocontour_config.get('filters', {})
+        self.inactive_hub_bypass_until_month = int(self.filter_cfg.get('inactive_hub_bypass_until_month', 7))
+        self.inactive_hub_distance_px = float(self.filter_cfg.get('inactive_hub_distance_px', 30))
+        self.merge_near_hub_distance_px = float(self.filter_cfg.get('merge_near_hub_distance_px', 20))
+        self.road_stage_until_month = int(self.filter_cfg.get('road_stage_until_month', 7))
         
         # 分带配置
         self.front_zone_distance = 120  # 前排区域距离（米）
@@ -57,14 +71,79 @@ class IsocontourBuildingSystem:
         self.transport_hubs = []
         self.map_size = [256, 256]
         
-    def initialize_system(self, land_price_field: np.ndarray, transport_hubs: List[List[int]], map_size: List[int]):
+    def initialize_system(self, land_price_field: np.ndarray, transport_hubs: List[List[int]], map_size: List[int], current_month: int = 0, land_price_system=None):
         """初始化系统"""
         self.sdf_field = land_price_field  # 保持兼容性，但实际是地价场
         self.transport_hubs = transport_hubs
         self.map_size = map_size
+        self.current_month = current_month
+        self.land_price_system = land_price_system
         
-        print(f"🏗️ 等值线建筑系统初始化完成")
-        print(f"地价场值范围: [{np.min(land_price_field):.3f}, {np.max(land_price_field):.3f}]")
+        print(f"[Isocontour] System initialized")
+        print(f"[Isocontour] Field range: [{np.min(land_price_field):.3f}, {np.max(land_price_field):.3f}]")
+        print(f"[Isocontour] Current month: {current_month}")
+    
+    def _get_active_hubs(self) -> List[List[int]]:
+        """获取当前月份有地价影响的Hub"""
+        if not self.land_price_system:
+            return self.transport_hubs
+        
+        active_hubs = []
+        for i, hub in enumerate(self.transport_hubs):
+            if i == 0:  # Hub1
+                strength = self.land_price_system._get_component_strength('hub1', self.current_month)
+            elif i == 1:  # Hub2
+                strength = self.land_price_system._get_component_strength('hub2', self.current_month)
+            elif i == 2:  # Hub3
+                strength = self.land_price_system._get_component_strength('hub3', self.current_month)
+            else:
+                strength = 0.0
+            
+            if strength > 0:
+                active_hubs.append(hub)
+                print(f"  Hub{i+1} active (strength: {strength:.1f})")
+            else:
+                print(f"  Hub{i+1} inactive (strength: {strength:.1f})")
+        
+        return active_hubs
+    
+    def _contour_contains_inactive_hubs(self, contour: List[Tuple[int, int]]) -> bool:
+        """检查等值线是否包含非活跃Hub区域"""
+        if not self.land_price_system:
+            return False
+        
+        # 在道路发展阶段（可配置），允许所有等值线通过
+        # 因为此时道路影响是主要的，不应该过滤掉
+        if self.current_month < self.inactive_hub_bypass_until_month:
+            return False
+        
+        active_hubs = self._get_active_hubs()
+        inactive_hubs = []
+        
+        # 找出非活跃的Hub
+        for i, hub in enumerate(self.transport_hubs):
+            if i == 0:  # Hub1
+                strength = self.land_price_system._get_component_strength('hub1', self.current_month)
+            elif i == 1:  # Hub2
+                strength = self.land_price_system._get_component_strength('hub2', self.current_month)
+            elif i == 2:  # Hub3
+                strength = self.land_price_system._get_component_strength('hub3', self.current_month)
+            else:
+                strength = 0.0
+            
+            if strength == 0:
+                inactive_hubs.append(hub)
+        
+        # 检查等值线是否接近非活跃Hub
+        for hub in inactive_hubs:
+            hub_x, hub_y = hub[0], hub[1]
+            for point in contour:
+                x, y = point[0], point[1]
+                distance = np.sqrt((x - hub_x)**2 + (y - hub_y)**2)
+                if distance < self.inactive_hub_distance_px:
+                    return True
+        
+        return False
         
     def generate_commercial_buildings(self, city_state: Dict, target_count: int, target_layer: int = None) -> List[Dict]:
         """生成商业建筑（基于等值线）"""
@@ -74,10 +153,10 @@ class IsocontourBuildingSystem:
         # 如果指定了目标层，使用对应的等值线
         if target_layer is not None and target_layer < len(self.commercial_config['percentiles']):
             percentiles = [self.commercial_config['percentiles'][target_layer]]
-            print(f"🎯 商业建筑：目标第{target_layer}层，使用分位数{percentiles}")
+            print(f"[Commercial] target layer {target_layer}, percentiles {percentiles}")
         else:
             percentiles = self.commercial_config['percentiles']
-            print(f"🎯 商业建筑：使用所有分位数{percentiles}")
+            print(f"[Commercial] using percentiles {percentiles}")
         
         # 获取商业等值线（基于分位数）
         commercial_contours = self._extract_equidistant_contours(
@@ -86,7 +165,7 @@ class IsocontourBuildingSystem:
         )
         
         if not commercial_contours:
-            print(f"⚠️ 未找到商业等值线")
+            print(f"[Commercial] no contours found")
             return []
         
         # 在等值线上生成建筑位置
@@ -111,7 +190,7 @@ class IsocontourBuildingSystem:
             }
             new_buildings.append(building)
         
-        print(f"🏢 生成 {len(new_buildings)} 个商业建筑，等值线数量: {len(commercial_contours)}")
+        print(f"[Commercial] generated {len(new_buildings)} buildings, contours: {len(commercial_contours)}")
         return new_buildings
     
     def generate_residential_buildings(self, city_state: Dict, target_count: int, target_layer: int = None) -> List[Dict]:
@@ -121,16 +200,16 @@ class IsocontourBuildingSystem:
         
         # 检查分带限制
         if not self._check_residential_zone_availability(city_state):
-            print(f"❌ 住宅分带检查失败")
+            print(f"[Residential] zone check failed")
             return []
         
         # 如果指定了目标层，使用对应的等值线
         if target_layer is not None and target_layer < len(self.residential_config['percentiles']):
             percentiles = [self.residential_config['percentiles'][target_layer]]
-            print(f"🎯 住宅建筑：目标第{target_layer}层，使用分位数{percentiles}")
+            print(f"[Residential] target layer {target_layer}, percentiles {percentiles}")
         else:
             percentiles = self.residential_config['percentiles']
-            print(f"🎯 住宅建筑：使用所有分位数{percentiles}")
+            print(f"[Residential] using percentiles {percentiles}")
         
         # 获取住宅等值线（基于分位数）
         residential_contours = self._extract_equidistant_contours(
@@ -139,7 +218,7 @@ class IsocontourBuildingSystem:
         )
         
         if not residential_contours:
-            print(f"⚠️ 未找到住宅等值线")
+            print(f"[Residential] no contours found")
             return []
         
         # 在等值线上生成建筑位置
@@ -147,7 +226,7 @@ class IsocontourBuildingSystem:
             residential_contours, target_count, 'residential'
         )
         
-        print(f"🔍 住宅建筑位置生成: {len(building_positions)} 个位置")
+        print(f"[Residential] positions generated: {len(building_positions)}")
         
         # 创建住宅建筑
         new_buildings = []
@@ -166,43 +245,67 @@ class IsocontourBuildingSystem:
             }
             new_buildings.append(building)
         
-        print(f"🏠 生成 {len(new_buildings)} 个住宅建筑，等值线数量: {len(residential_contours)}")
+        print(f"[Residential] generated {len(new_buildings)} buildings, contours: {len(residential_contours)}")
         return new_buildings
     
     def _extract_equidistant_contours(self, percentiles: List[int], building_type: str) -> List[List[Tuple[int, int]]]:
-        """基于分位数提取等距等值线"""
+        """提取等距等值线：支持分位数与相对峰值两种阈值模式"""
         if self.sdf_field is None:
             return []
         
-        # 计算分位数对应的SDF值
-        sdf_flat = self.sdf_field.flatten()
-        sdf_percentiles = np.percentile(sdf_flat, percentiles)
-        
-        print(f"📊 {building_type} 等值线分位数: {percentiles}")
-        print(f"📊 {building_type} SDF阈值: {[f'{p:.3f}' for p in sdf_percentiles]}")
+        # 计算阈值序列
+        if str(self.threshold_mode).lower() == 'relative':
+            peak_global = float(np.max(self.sdf_field))
+            ratios = self.relative_levels_cfg.get(building_type, [])
+            thresholds_global = [peak_global * float(r) for r in ratios]
+            thresholds = list(thresholds_global)
+            # 在道路发展早期，增加基于道路峰值的相对阈值，确保线核也能形成等值线
+            road_based_thresholds = []
+            if hasattr(self, 'land_price_system') and self.land_price_system is not None:
+                try:
+                    road_strength = float(self.land_price_system._get_component_strength('road', getattr(self, 'current_month', 0)))
+                    if road_strength > 0:
+                        road_based_thresholds = [road_strength * float(r) for r in ratios]
+                        thresholds = sorted(set(thresholds + road_based_thresholds), reverse=True)
+                except Exception:
+                    pass
+            print(f"[Isocontour] {building_type} relative mode: peak_global={peak_global:.3f}, ratios={ratios}")
+            if road_based_thresholds:
+                print(f"[Isocontour] {building_type} road_peak={road_strength:.3f}, extra thresholds: {[f'{t:.3f}' for t in road_based_thresholds]}")
+            print(f"[Isocontour] {building_type} thresholds: {[f'{t:.3f}' for t in thresholds]}")
+        else:
+            sdf_flat = self.sdf_field.flatten()
+            thresholds = np.percentile(sdf_flat, percentiles)
+            print(f"[Isocontour] {building_type} percentiles: {percentiles}")
+            print(f"[Isocontour] {building_type} thresholds: {[f'{p:.3f}' for p in thresholds]}")
         
         contours = []
         
-        for i, threshold in enumerate(sdf_percentiles):
+        for i, threshold in enumerate(thresholds):
             # 提取等值线
             contour = self._extract_contour_at_level_cv2(threshold)
             
+            # 检查等值线是否包含非活跃Hub区域
+            if self._contour_contains_inactive_hubs(contour):
+                print(f"  - contour {i+1}: thr {threshold:.3f}, len {len(contour)} (skip: inactive hub)")
+                continue
+            
             if len(contour) > 20:  # 足够长的等值线
                 contours.append(contour)
-                print(f"  - 等值线 {i+1}: 阈值 {threshold:.3f}, 长度 {len(contour)}")
+                print(f"  - contour {i+1}: thr {threshold:.3f}, len {len(contour)}")
             else:
-                # 等值线太小，在hub周围等分4个点
+                # 等值线太小，在活跃hub周围等分点
                 small_contour = self._create_small_contour_around_hubs(threshold, building_type)
                 if small_contour:
                     contours.append(small_contour)
-                    print(f"  - 等值线 {i+1}: 阈值 {threshold:.3f}, 长度 {len(contour)} (使用hub周围4点)")
+                    print(f"  - contour {i+1}: thr {threshold:.3f}, orig len {len(contour)}, use small hub ring {len(small_contour)}")
                 else:
-                    print(f"  - 等值线 {i+1}: 阈值 {threshold:.3f}, 长度 {len(contour)} (跳过)")
+                    print(f"  - contour {i+1}: thr {threshold:.3f}, len {len(contour)} (skip)")
         
         return contours
     
     def _extract_contour_at_level_cv2(self, level: float) -> List[Tuple[int, int]]:
-        """使用OpenCV在指定SDF值水平提取等值线"""
+        """使用OpenCV在指定SDF值水平提取等值线（支持多个独立Hub）"""
         if self.sdf_field is None:
             return []
         
@@ -215,8 +318,61 @@ class IsocontourBuildingSystem:
         if not contours:
             return []
         
-        # 找到最大的轮廓
-        largest_contour = max(contours, key=cv2.contourArea)
+        # 获取当前月份活跃的Hub
+        active_hubs = self._get_active_hubs()
+        
+        # 如果只有一个轮廓，直接使用
+        if len(contours) == 1:
+            largest_contour = contours[0]
+        else:
+            # 多个轮廓时，在道路阶段（可配置）保留所有轮廓，以保证线核被保留
+            all_contour_points = []
+            if hasattr(self, 'current_month') and self.current_month < self.road_stage_until_month:
+                for contour in contours:
+                    for point in contour:
+                        x, y = point[0][0], point[0][1]
+                        all_contour_points.append((x, y))
+                return all_contour_points
+
+            for contour in contours:
+                # 检查轮廓是否包含任何活跃Hub
+                contains_active_hub = False
+                for hub in active_hubs:
+                    hub_x, hub_y = hub[0], hub[1]
+                    # 检查Hub是否在轮廓内或附近
+                    inside = cv2.pointPolygonTest(contour, (hub_x, hub_y), False)
+                    if inside >= 0:  # 在轮廓内
+                        contains_active_hub = True
+                        break
+                    else:
+                        # 检查是否在轮廓附近（可配置像素内）
+                        min_dist = float('inf')
+                        for point in contour:
+                            x, y = point[0][0], point[0][1]
+                            dist = np.sqrt((x - hub_x)**2 + (y - hub_y)**2)
+                            min_dist = min(min_dist, dist)
+                        if min_dist < self.merge_near_hub_distance_px:
+                            contains_active_hub = True
+                            break
+                
+                if contains_active_hub:
+                    # 将轮廓点添加到总列表中
+                    for point in contour:
+                        x, y = point[0][0], point[0][1]
+                        all_contour_points.append((x, y))
+            
+            # 如果没有找到包含Hub的轮廓，使用最大的轮廓
+            if not all_contour_points:
+                largest_contour = max(contours, key=cv2.contourArea)
+                # 转换为点列表
+                contour_points = []
+                for point in largest_contour:
+                    x, y = point[0][0], point[0][1]
+                    contour_points.append((x, y))
+                return contour_points
+            else:
+                # 返回合并后的轮廓点
+                return all_contour_points
         
         # 转换为点列表
         contour_points = []
@@ -227,8 +383,9 @@ class IsocontourBuildingSystem:
         return contour_points
     
     def _create_small_contour_around_hubs(self, threshold: float, building_type: str) -> List[Tuple[int, int]]:
-        """当等值线太小时，在hub周围生成更多点"""
-        if not self.transport_hubs:
+        """当等值线太小时，在活跃hub周围生成更多点"""
+        active_hubs = self._get_active_hubs()
+        if not active_hubs:
             return []
         
         # 计算到hub的距离，基于阈值
@@ -242,7 +399,7 @@ class IsocontourBuildingSystem:
         
         contour_points = []
         
-        for hub in self.transport_hubs:
+        for hub in active_hubs:
             hub_x, hub_y = hub[0], hub[1]
             
             # 根据阈值决定点的数量
@@ -449,7 +606,7 @@ class IsocontourBuildingSystem:
         
         # 放宽限制：如果前排区域建筑过多，限制住宅建设
         if front_zone_buildings > 20:  # 从10增加到20
-            print(f"⚠️ 前排区域建筑过多 ({front_zone_buildings})，限制住宅建设")
+            print(f"[Residential] too many front-zone buildings ({front_zone_buildings}), pause residential")
             return False
         
         return True

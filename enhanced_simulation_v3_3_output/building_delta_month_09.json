@@ -1,0 +1,89 @@
+{
+  "month": 9,
+  "new_buildings": [
+    {
+      "building_id": "commercial_2",
+      "xy": [
+        52,
+        63
+      ],
+      "building_type": "commercial",
+      "score": 0.6647978219426058,
+      "features": {
+        "f_price": 0.7902877330780029,
+        "f_road": 0.9231163463866358,
+        "f_hub_com": 0.8142953843519105,
+        "f_hub_ind": 0.8374595140352588,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "land_price_value": 0.7902877330780029,
+      "month_placed": 9
+    },
+    {
+      "building_id": "commercial_2",
+      "xy": [
+        47,
+        46
+      ],
+      "building_type": "commercial",
+      "score": 0.6511944725092196,
+      "features": {
+        "f_price": 0.7650913596153259,
+        "f_road": 0.903707077873196,
+        "f_hub_com": 0.8106843242768653,
+        "f_hub_ind": 0.7835029632314325,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "land_price_value": 0.7650913596153259,
+      "month_placed": 9
+    },
+    {
+      "building_id": "commercial_2",
+      "xy": [
+        30,
+        46
+      ],
+      "building_type": "commercial",
+      "score": 0.6455357803894854,
+      "features": {
+        "f_price": 0.7366421222686768,
+        "f_road": 0.903707077873196,
+        "f_hub_com": 0.8278784880832378,
+        "f_hub_ind": 0.6454130802570787,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "land_price_value": 0.7366421222686768,
+      "month_placed": 9
+    },
+    {
+      "building_id": "commercial_2",
+      "xy": [
+        62,
+        44
+      ],
+      "building_type": "commercial",
+      "score": 0.5853465470132628,
+      "features": {
+        "f_price": 0.7192389369010925,
+        "f_road": 0.8596327636025423,
+        "f_hub_com": 0.646745465509488,
+        "f_hub_ind": 0.8044865586401541,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 0.0,
+        "junction_penalty": 0.0
+      },
+      "land_price_value": 0.7192389369010925,
+      "month_placed": 9
+    }
+  ]
+}

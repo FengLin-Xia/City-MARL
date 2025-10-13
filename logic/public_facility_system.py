@@ -16,11 +16,13 @@ class PublicFacilitySystem:
     def __init__(self, config: Dict):
         self.config = config
         self.facility_config = config.get('public_facility_rules', {})
+        self.city_map_size = config.get('city', {}).get('map_size', [256, 256])
         
         # 设施类型配置
         self.school_config = self.facility_config.get('school', {
             'trigger_population': 500,
             'service_radius': 500,
+            'coverage_threshold': 0.8,
             'symbol': '🏫'
         })
         
@@ -33,12 +35,14 @@ class PublicFacilitySystem:
         self.park_config = self.facility_config.get('park', {
             'trigger_building_density': 0.6,
             'service_radius': 300,
+            'building_area_px': 100,
             'symbol': '🌳'
         })
         
         self.plaza_config = self.facility_config.get('plaza', {
             'trigger_commercial_density': 0.5,
             'service_radius': 400,
+            'commercial_area_px': 150,
             'symbol': '🏛️'
         })
         
@@ -82,7 +86,8 @@ class PublicFacilitySystem:
         coverage_ratio = covered_residents / population if population > 0 else 0
         
         # 判断是否需要建设
-        need_school = (population >= trigger_population and coverage_ratio < 0.8)
+        coverage_threshold = float(self.school_config.get('coverage_threshold', 0.8))
+        need_school = (population >= trigger_population and coverage_ratio < coverage_threshold)
         
         return {
             'needed': need_school,
@@ -140,9 +145,10 @@ class PublicFacilitySystem:
         existing_parks = [b for b in public_buildings if b.get('facility_type') == 'park']
         
         # 计算建筑密度
-        map_size = [256, 256]  # 假设地图大小
+        map_size = self.city_map_size
         total_area = map_size[0] * map_size[1]
-        building_area = len(all_buildings) * 100  # 假设每个建筑占地100像素
+        building_area_px = float(self.park_config.get('building_area_px', 100))
+        building_area = len(all_buildings) * building_area_px
         building_density = building_area / total_area
         
         # 判断是否需要建设
@@ -163,9 +169,10 @@ class PublicFacilitySystem:
         existing_plazas = [b for b in public_buildings if b.get('facility_type') == 'plaza']
         
         # 计算商业密度
-        map_size = [256, 256]
+        map_size = self.city_map_size
         total_area = map_size[0] * map_size[1]
-        commercial_area = len(commercial_buildings) * 150  # 假设商业建筑占地150像素
+        commercial_area_px = float(self.plaza_config.get('commercial_area_px', 150))
+        commercial_area = len(commercial_buildings) * commercial_area_px
         commercial_density = commercial_area / total_area
         
         # 判断是否需要建设
@@ -346,7 +353,8 @@ class PublicFacilitySystem:
     def _find_best_school_position(self, residents: List[Dict], public_buildings: List[Dict]) -> List[int]:
         """找到最佳学校位置"""
         # 找到未被学校覆盖的居民聚集区域
-        uncovered_demand = np.zeros((256, 256))
+        width, height = self.city_map_size[0], self.city_map_size[1]
+        uncovered_demand = np.zeros((height, width))
         
         for resident in residents:
             resident_pos = resident['pos']
@@ -366,7 +374,7 @@ class PublicFacilitySystem:
                 for dy in range(-50, 51):
                     for dx in range(-50, 51):
                         nx, ny = x + dx, y + dy
-                        if 0 <= nx < 256 and 0 <= ny < 256:
+                        if 0 <= nx < width and 0 <= ny < height:
                             distance = math.sqrt(dx*dx + dy*dy)
                             if distance <= 50:
                                 uncovered_demand[ny, nx] += 1.0 / (1.0 + distance)
@@ -382,10 +390,11 @@ class PublicFacilitySystem:
     def _find_best_hospital_position(self, residents: List[Dict], public_buildings: List[Dict]) -> List[int]:
         """找到最佳医院位置"""
         # 找到医疗可达性最差的区域
-        accessibility_map = np.zeros((256, 256))
+        width, height = self.city_map_size[0], self.city_map_size[1]
+        accessibility_map = np.zeros((height, width))
         
-        for y in range(256):
-            for x in range(256):
+        for y in range(height):
+            for x in range(width):
                 position = [x, y]
                 min_distance = float('inf')
                 
@@ -408,7 +417,8 @@ class PublicFacilitySystem:
     def _find_best_park_position(self, all_buildings: List[Dict]) -> List[int]:
         """找到最佳公园位置"""
         # 计算建筑密度图
-        density_map = np.zeros((256, 256))
+        width, height = self.city_map_size[0], self.city_map_size[1]
+        density_map = np.zeros((height, width))
         
         for building in all_buildings:
             building_pos = building['xy']
@@ -418,7 +428,7 @@ class PublicFacilitySystem:
             for dy in range(-30, 31):
                 for dx in range(-30, 31):
                     nx, ny = x + dx, y + dy
-                    if 0 <= nx < 256 and 0 <= ny < 256:
+                    if 0 <= nx < width and 0 <= ny < height:
                         distance = math.sqrt(dx*dx + dy*dy)
                         if distance <= 30:
                             density_map[ny, nx] += 1.0 / (1.0 + distance)
@@ -434,7 +444,8 @@ class PublicFacilitySystem:
     def _find_best_plaza_position(self, commercial_buildings: List[Dict]) -> List[int]:
         """找到最佳广场位置"""
         # 计算商业密度图
-        commercial_density = np.zeros((256, 256))
+        width, height = self.city_map_size[0], self.city_map_size[1]
+        commercial_density = np.zeros((height, width))
         
         for building in commercial_buildings:
             building_pos = building['xy']
@@ -444,7 +455,7 @@ class PublicFacilitySystem:
             for dy in range(-40, 41):
                 for dx in range(-40, 41):
                     nx, ny = x + dx, y + dy
-                    if 0 <= nx < 256 and 0 <= ny < 256:
+                    if 0 <= nx < width and 0 <= ny < height:
                         distance = math.sqrt(dx*dx + dy*dy)
                         if distance <= 40:
                             commercial_density[ny, nx] += 1.0 / (1.0 + distance)

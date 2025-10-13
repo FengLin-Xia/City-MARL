@@ -1,0 +1,120 @@
+{
+  "simulation": {
+    "total_months": 30
+    
+
+  },
+  "city": {
+    "map_size": [200, 200],
+    "trunk_road": [],
+    "transport_hubs": [[125, 75], [112, 121]]
+  },
+  "gaussian_land_price_system": {
+    "meters_per_pixel": 2.0,
+    "hub_sigma_base_m": 32,
+    "road_sigma_base_m": 20,
+    "hub_peak_value": 1.0,
+    "road_peak_value": 0.60,
+    "min_threshold": 0.04,
+    "alpha_inertia": 0.25,
+    "hub_growth_rate": 0.03,
+    "road_growth_rate": 0.02,
+    "max_hub_multiplier": 2.0,
+    "max_road_multiplier": 2.5,
+    "extra_hub_point_peak": 1.2,
+    "extra_hub_point_sigma_px": 6.0,
+    "fusion_mode": "weighted_sum",
+    "fusion_weights": {"hub": 0.8, "road": 0.4, "river": 0.8, "build": 0.2},
+    "component_normalize": true,
+    "fusion_normalize": "minmax",
+    "building_kernel": {"enabled": true, "peak_value": 0.08, "sigma_px": 4.0, "weight": 1.0, "types": ["public", "industrial"]}
+  },
+  "land_price_evolution": {
+    "enabled": true,
+    "road_activation_month": 0,
+    "road_peak_value": 0.7,
+    "hub_activation_month": 7,
+    "hub_growth_duration_months": 6,
+    "hub_initial_peak": 0.7,
+    "hub_final_peak": 1.0,
+    "hub3_keep_existing": true,
+    "growth_curve_type": "smooth",
+    "smooth_curve_steepness": 10.0
+  },
+  "growth_v4_0": {
+    "hubs": {
+      "mode": "explicit",
+      "list": [
+        {"id": "hub1", "x": 122, "y": 80, "R0": 15, "dR": 2.0, "weight": 0.5},
+        {"id": "hub2", "x": 112, "y": 121, "R0": 15, "dR": 2.0, "weight": 0.5}
+      ]
+    },
+    "slots": {
+      "source": "file",
+      "path": "slots_with_angle.txt",
+      "adjacency": "4-neighbor",
+      "filters": {"respect_terrain": true, "respect_roads": true}
+    },
+    "enumeration": {
+      "length_max": 5,
+      "use_skip": true,
+      "search_mode": "exhaustive",
+      "beam_width": 50,
+      "max_expansions":30000,
+      "caps": {
+        "top_slots_per_agent_size": {"EDU": {"S": 300, "M": 300, "L": 300}, "IND": {"L": 120}},
+        "max_actions_per_agent_size": {"EDU": {"S": 1200, "M": 800, "L": 600}, "IND": {"L": 200}}
+      },
+      "objective": {
+        "EDU": {"w_r": 0.45, "w_p": 0.45, "w_c": 0.10},
+        "IND": {"w_r": 0.6, "w_p": 0.2, "w_c": 0.2},
+        "normalize": "per-month-pool-minmax"
+      }
+    },
+    "locking": {
+      "lock_period": 3,
+      "hysteresis_delta": 0.04
+    },
+    "evaluation": {
+      "ZoneAdd": {"near": 0.8, "mid": 0.3, "far": 0.0},
+      "s_zone":  {"near": 0.5, "mid": 0.2, "far": 0.0},
+      "m_zone":  {"near": 1.15, "mid": 1.00, "far": 0.90},
+      "m_adj":   {"on": 1.12, "off": 1.00},
+
+      "Base_EDU": {"S": 1.2, "M": 2.8, "L": 5.5},
+      "Add_EDU":  {"S": 0.4, "M": 0.9, "L": 1.6},
+      "Capacity_EDU": {"S": 60, "M": 120, "L": 240},
+      "OPEX_EDU":     {"S": 0.20, "M": 0.35, "L": 0.55},
+      "PrestigeBase_EDU": {"S": 0.2, "M": 0.6, "L": 1.0},
+      "Pollution_EDU":    {"S": 0.2, "M": 0.4, "L": 0.6},
+      "alpha": 0.12,
+      "beta":  0.25,
+
+      "Base_IND": {"S": 1.0, "M": 2.2, "L": 4.5},
+      "Add_IND":  {"S": 0.5, "M": 1.0, "L": 2.0},
+      "Capacity_IND": {"S": 80, "M": 200, "L": 500},
+      "GFA_k":        {"S": 1.0, "M": 2.0, "L": 4.0},
+      "PrestigeBase_IND": {"S": 0.2, "M": 0.1, "L": -0.1},
+      "Pollution_IND":    {"S": 0.6, "M": 0.9, "L": 1.2},
+      "p_market": 12.0,
+      "u": 0.85,
+      "c_opex": 0.30
+    },
+    "terrain_features": {
+      "rivers": [
+        {
+          "coordinates": [],
+          "land_price": {
+            "enabled": true,
+            "peak_value": 1.0,
+            "decay_mode": "lorentzian",
+            "gamma_px": 8.0,
+            "max_influence_distance": 40.0
+          }
+        }
+      ]
+    }
+  }
+}
+
+

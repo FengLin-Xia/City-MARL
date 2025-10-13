@@ -1,0 +1,129 @@
+{
+  "hubs": [
+    {
+      "id": "A",
+      "xy": [
+        40,
+        128
+      ]
+    },
+    {
+      "id": "B",
+      "xy": [
+        216,
+        128
+      ]
+    }
+  ],
+  "trunk": [
+    [
+      40,
+      128
+    ],
+    [
+      216,
+      128
+    ]
+  ],
+  "public": [
+    {
+      "id": "school_1",
+      "type": "school",
+      "xy": [
+        128,
+        80
+      ]
+    },
+    {
+      "id": "clinic_1",
+      "type": "clinic",
+      "xy": [
+        128,
+        176
+      ]
+    },
+    {
+      "id": "clinic_3",
+      "type": "clinic",
+      "xy": [
+        124,
+        141
+      ]
+    },
+    {
+      "id": "clinic_4",
+      "type": "clinic",
+      "xy": [
+        142,
+        129
+      ]
+    }
+  ],
+  "residential": [
+    {
+      "id": "res_1",
+      "xy": [
+        80,
+        100
+      ],
+      "capacity": 200,
+      "current_population": 72
+    },
+    {
+      "id": "res_2",
+      "xy": [
+        176,
+        100
+      ],
+      "capacity": 200,
+      "current_population": 63
+    },
+    {
+      "id": "res_3",
+      "xy": [
+        80,
+        156
+      ],
+      "capacity": 200,
+      "current_population": 81
+    },
+    {
+      "id": "res_4",
+      "xy": [
+        176,
+        156
+      ],
+      "capacity": 200,
+      "current_population": 84
+    }
+  ],
+  "retail": [
+    {
+      "id": "ret_1",
+      "xy": [
+        128,
+        128
+      ],
+      "capacity": 800,
+      "current_population": 0
+    },
+    {
+      "id": "ret_2",
+      "xy": [
+        60,
+        128
+      ],
+      "capacity": 800,
+      "current_population": 0
+    },
+    {
+      "id": "ret_3",
+      "xy": [
+        196,
+        128
+      ],
+      "capacity": 800,
+      "current_population": 0
+    }
+  ]
+}

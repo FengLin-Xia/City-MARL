@@ -1,0 +1,100 @@
+{
+  "month": 18,
+  "timestamp": "month_18",
+  "new_buildings": [
+    {
+      "id": "res_54",
+      "type": "residential",
+      "position": [
+        39,
+        41
+      ],
+      "land_price_value": 0.5580208954915238,
+      "slot_id": "residential_39_41"
+    },
+    {
+      "id": "res_55",
+      "type": "residential",
+      "position": [
+        25,
+        41
+      ],
+      "land_price_value": 0.6963648270273735,
+      "slot_id": "residential_25_41"
+    },
+    {
+      "id": "res_56",
+      "type": "residential",
+      "position": [
+        30,
+        66
+      ],
+      "land_price_value": 0.7262484093903276,
+      "slot_id": "residential_30_66"
+    },
+    {
+      "id": "res_57",
+      "type": "residential",
+      "position": [
+        40,
+        57
+      ],
+      "land_price_value": 0.7226449158491803,
+      "slot_id": "residential_40_57"
+    },
+    {
+      "id": "com_31",
+      "type": "commercial",
+      "position": [
+        36,
+        50
+      ],
+      "land_price_value": 0.7578407833131362,
+      "slot_id": "commercial_36_50"
+    },
+    {
+      "id": "com_32",
+      "type": "commercial",
+      "position": [
+        28,
+        50
+      ],
+      "land_price_value": 0.8495623037281542,
+      "slot_id": "commercial_28_50"
+    },
+    {
+      "id": "com_33",
+      "type": "commercial",
+      "position": [
+        20,
+        50
+      ],
+      "land_price_value": 0.8831359113793624,
+      "slot_id": "commercial_20_50"
+    },
+    {
+      "id": "com_34",
+      "type": "commercial",
+      "position": [
+        25,
+        58
+      ],
+      "land_price_value": 0.891180995916681,
+      "slot_id": "commercial_25_58"
+    },
+    {
+      "id": "pub_park_2",
+      "type": "public",
+      "position": [
+        69,
+        109
+      ],
+      "land_price_value": 0.0,
+      "slot_id": ""
+    }
+  ],
+  "metadata": {
+    "total_buildings": 93,
+    "new_count": 9
+  }
+}

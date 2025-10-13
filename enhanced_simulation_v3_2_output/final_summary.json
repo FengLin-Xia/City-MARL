@@ -1,0 +1,150 @@
+{
+  "simulation_months": 24,
+  "final_layers": {
+    "growth_phase": "radial_expansion",
+    "road_layers_completed": true,
+    "total_layers": 7,
+    "active_layers": 0,
+    "completed_layers": 7,
+    "layers": [
+      {
+        "layer_id": "road_L0_com",
+        "status": "complete",
+        "layer_type": "road",
+        "activated_quarter": 0,
+        "capacity": 10,
+        "dead_slots": 0,
+        "capacity_effective": 10,
+        "placed": 10,
+        "density": 1.0
+      },
+      {
+        "layer_id": "road_L0_res",
+        "status": "complete",
+        "layer_type": "road",
+        "activated_quarter": 0,
+        "capacity": 8,
+        "dead_slots": 0,
+        "capacity_effective": 8,
+        "placed": 8,
+        "density": 1.0
+      },
+      {
+        "layer_id": "road_L0_ind",
+        "status": "complete",
+        "layer_type": "road",
+        "activated_quarter": 0,
+        "capacity": 6,
+        "dead_slots": 0,
+        "capacity_effective": 6,
+        "placed": 6,
+        "density": 1.0
+      },
+      {
+        "layer_id": "commercial_radial_P0",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 1,
+        "capacity": 30,
+        "dead_slots": 0,
+        "capacity_effective": 30,
+        "placed": 30,
+        "density": 1.0
+      },
+      {
+        "layer_id": "industrial_radial_P0",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 1,
+        "capacity": 24,
+        "dead_slots": 0,
+        "capacity_effective": 24,
+        "placed": 24,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_radial_P0",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 1,
+        "capacity": 40,
+        "dead_slots": 0,
+        "capacity_effective": 40,
+        "placed": 40,
+        "density": 1.0
+      },
+      {
+        "layer_id": "residential_radial_P1",
+        "status": "complete",
+        "layer_type": "radial",
+        "activated_quarter": 3,
+        "capacity": 20,
+        "dead_slots": 0,
+        "capacity_effective": 20,
+        "placed": 19,
+        "density": 0.95
+      }
+    ]
+  },
+  "final_buildings": {
+    "public": 0,
+    "residential": 137,
+    "commercial": 0,
+    "industrial": 0
+  },
+  "land_price_evolution": [
+    {
+      "month": 0,
+      "evolution_stage": {
+        "name": "initial",
+        "hub_sigma": 20.0,
+        "road_sigma": 10.0,
+        "description": "初始阶段",
+        "month": 0
+      },
+      "land_price_stats": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.32902827015623304,
+        "std": 0.3035100028853201
+      }
+    },
+    {
+      "month": 12,
+      "evolution_stage": {
+        "name": "mid_growth",
+        "hub_sigma": 26.04647347857938,
+        "road_sigma": 13.200582084001697,
+        "description": "中期增长",
+        "month": 12
+      },
+      "land_price_stats": {
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.4349669976410013,
+        "std": 0.28233361895191594
+      }
+    }
+  ],
+  "backbone_info": {
+    "road_corridor": {
+      "start": [
+        0,
+        55
+      ],
+      "end": [
+        110,
+        55
+      ],
+      "center_y": 55
+    },
+    "hub_commercial": [
+      20,
+      55
+    ],
+    "hub_industrial": [
+      90,
+      55
+    ]
+  }
+}

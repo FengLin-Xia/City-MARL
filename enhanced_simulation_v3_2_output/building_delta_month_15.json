@@ -1,0 +1,35 @@
+{
+  "month": 15,
+  "timestamp": "month_15",
+  "new_buildings": [
+    {
+      "id": "residential_82",
+      "type": "residential",
+      "position": [
+        68,
+        12
+      ],
+      "land_price_value": 0.0,
+      "slot_id": "residential_68_12",
+      "features": {
+        "f_road": 0.09913725251074738,
+        "f_hub_com": 0.009299656846050934,
+        "f_hub_ind": 0.04510439846882182,
+        "f_access": 0.0,
+        "f_heat": 0.0,
+        "crowding": 1.0,
+        "junction_penalty": 0.0
+      },
+      "scores": {
+        "commercial": -0.004592755390219961,
+        "industrial": -0.05040826771446116,
+        "residential": -0.009056964884159767
+      },
+      "winning_score": -0.009056964884159767
+    }
+  ],
+  "metadata": {
+    "total_buildings": 84,
+    "new_count": 1
+  }
+}

@@ -1,0 +1,75 @@
+Simplified Evaluation System (INT version, +LandPriceBase +RiverPremium)
+
+## 1. Input Fields (per slot)
+- slot_id: int  
+- type: enum {IND, EDU}  
+- size: enum {S, M, L}  
+- zone: enum {near, mid, far}  
+- LP_idx: int (10–100)  # normalized land-price index  
+- adj: int {0,1}  
+- river_dist_m: int  # distance to river (meters), non-negative
+
+## 2. Parameters (integers, kGBP)
+BaseCost_IND = {S:900, M:1500, L:2400}  
+BaseCost_EDU = {S:700, M:1200, L:1900}  
+ZC = {near:200, mid:100, far:0}  
+RevBase_IND = {S:180, M:320, L:520}  
+RevBase_EDU = {S:140, M:260, L:420}  
+ZR = {near:80, mid:40, far:0}  
+OPEX_IND = {S:100, M:180, L:300}  
+OPEX_EDU = {S:70, M:120, L:190}  
+Rent = {S:25, M:45, L:70}  
+Adj_bonus = 0
+
+# Deprecated (set to 0)
+LP_k = 0  
+Premium_k = 0
+
+# Land price monetization
+LandPriceBase = 11   # kGBP per LP_idx point  
+LP_value = LP_idx * LandPriceBase
+
+# River premium (revenue-side only)
+RiverPmax_pct = { IND:20, EDU:15 }   # max premium % of (RevBase + ZR)  
+RiverD_half_m = 120                  # half-decay distance (m)  
+RiverPremiumCap_kGBP = 10000         # cap  
+RoundMode = "nearest"
+
+## 3. Formulas
+
+### One-time cash items
+IND pays land: - LP_value  
+EDU receives land: + LP_value
+
+### Costs (build)
+cost_IND = BaseCost_IND[size] + ZC[zone] + LP_value  
+cost_EDU = BaseCost_EDU[size] + ZC[zone] + LP_value
+
+### River premium (monthly)
+d_eff = max(0, river_dist_m)  
+decay = 2^(- d_eff / RiverD_half_m)  
+BaseForPremium(type,size,zone) = RevBase_type[size] + ZR[zone]  
+RawRiverPrem(type) = BaseForPremium * RiverPmax_pct[type]/100 * decay  
+RiverPremium(type) = clamp(round_nearest(RawRiverPrem), 0, RiverPremiumCap_kGBP)
+
+### Revenues
+rev_IND = RevBase_IND[size] + ZR[zone] + Adj_bonus*adj - OPEX_IND[size] - Rent[size] + RiverPremium(IND)  
+rev_EDU_build = RevBase_EDU[size] + ZR[zone] + Adj_bonus*adj - OPEX_EDU[size] + RiverPremium(EDU)  
+rev_EDU_land = Rent[size]
+
+### Cashflow Relations
+IND pays: - LP_value (one-time), - Rent[size] (monthly)  
+EDU receives: + LP_value (one-time), + Rent[size] (monthly)
+
+## 4. Example
+Input: IND, size=M, zone=mid, LP_idx=72, adj=1, river_dist_m=30  
+LP_value = 72*11=792 kGBP  
+cost_IND = 1500+100+792=2392 kGBP  
+rev_IND base = 320+40+10-180-45=145 kGBP/mo  
+River premium ≈ 61 kGBP/mo  
+rev_IND_new = 145+61=206 kGBP/mo
+
+## 5. Notes
+- All parameters are integers; monthly revenues rounded to nearest int.  
+- To tune: adjust RiverPmax_pct or RiverD_half_m.  
+- To cap: lower RiverPremiumCap_kGBP.  
