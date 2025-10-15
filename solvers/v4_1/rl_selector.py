@@ -39,9 +39,9 @@ class Actor(nn.Module):
                 if module.bias is not None:
                     nn.init.constant_(module.bias, 0)
         
-        # 对输出层使用保守的初始化
-        nn.init.normal_(self.network[-1].weight, mean=0, std=0.01)
-        nn.init.constant_(self.network[-1].bias, 0)
+        # 按照1013-9.md建议：重初始化最后一层（提高gain）
+        torch.nn.init.orthogonal_(self.network[-1].weight, gain=0.5)
+        torch.nn.init.zeros_(self.network[-1].bias)
     
     def forward(self, state_embed: torch.Tensor) -> torch.Tensor:
         """
@@ -98,9 +98,10 @@ class Critic(nn.Module):
 class RLPolicySelector:
     """RL策略选择器 - 使用PPO/MAPPO模型进行动作选择"""
     
-    def __init__(self, cfg: Dict, model_path: Optional[str] = None):
+    def __init__(self, cfg: Dict, model_path: Optional[str] = None, slots: Optional[Dict] = None):
         self.cfg = cfg
         self.rl_cfg = cfg['solver']['rl']
+        self.slots = slots  # 保存槽位信息用于获取building_level
         
         # 设备配置
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -115,7 +116,7 @@ class RLPolicySelector:
         self.actors = {}
         for agent in agents:
             actor = Actor(state_dim=self.state_dim, max_actions=self.max_actions).to(self.device)
-            actor.temperature = self.rl_cfg.get('temperature', 1.2)
+            actor.temperature = self.rl_cfg.get('temperature', 3.0)  # 激进提升到3.0增加动作多样性
             self.actors[agent] = actor
         
         # 独立的Critic网络（每个agent一个）
@@ -131,10 +132,21 @@ class RLPolicySelector:
         self.actor_optimizers = {}
         self.critic_optimizers = {}
         for agent in agents:
-            self.actor_optimizers[agent] = torch.optim.Adam(
-                self.actors[agent].parameters(), 
-                lr=actor_lr
-            )
+            # === 按照1013-9.md建议：给最后一层单独设置更高学习率 ===
+            actor = self.actors[agent]
+            base_params = []
+            last_layer_params = []
+            
+            for name, param in actor.named_parameters():
+                if "network.2" in name:  # 最后一层
+                    last_layer_params.append(param)
+                else:
+                    base_params.append(param)
+            
+            self.actor_optimizers[agent] = torch.optim.Adam([
+                {"params": base_params, "lr": actor_lr, "weight_decay": 0.0},
+                {"params": last_layer_params, "lr": actor_lr * 3, "weight_decay": 0.0},  # 头部更大一点
+            ])
             self.critic_optimizers[agent] = torch.optim.Adam(
                 self.critics[agent].parameters(), 
                 lr=critic_lr
@@ -147,8 +159,11 @@ class RLPolicySelector:
         self.critic_optimizer = self.critic_optimizers[agents[0]]
         self.optimizer = self.actor_optimizer
         
-        # 探索参数
-        self.epsilon = 0.1  # ε-贪婪探索
+        # 探索参数 - 激进配置快速见效
+        self.epsilon = 0.8  # ε-贪婪探索 (激进提升到0.8)
+        self.epsilon_decay = 0.99  # 探索衰减率（快速衰减）
+        self.min_epsilon = 0.3  # 最小探索率（保持高探索率）
+        self.high_level_epsilon = 0.9  # 高等级槽位的额外探索率
         
         # 保留枚举器和打分器用于生成动作池和特征
         self.enumerator = None
@@ -244,6 +259,12 @@ class RLPolicySelector:
         if not actions:
             return [], None
         
+        # 1.5. 激进限制S型建筑数量以强制平衡动作池
+        actions = self._limit_s_size_actions(actions, max_s_ratio=0.3)  # 从0.5降到0.3
+        
+        # 1.6. 高等级槽位优先选择M/L型建筑
+        actions = self._prioritize_high_level_slots(actions)
+        
         # 2. 计算动作得分（ActionScorer已在__init__中初始化）
         if self.scorer is None:
             print("警告: ActionScorer未初始化，跳过动作打分")
@@ -251,6 +272,15 @@ class RLPolicySelector:
         
         # 计算动作得分
         actions = self.scorer.score_actions(actions, river_distance_provider, buildings=buildings)
+        
+        # 2.5. 给M/L型建筑添加探索奖励
+        actions = self._add_exploration_bonus(actions)
+        
+        # 调试：记录动作池分布
+        size_counts = {'S': 0, 'M': 0, 'L': 0}
+        for action in actions:
+            size_counts[action.size] += 1
+        print(f"动作池分布: S={size_counts['S']}, M={size_counts['M']}, L={size_counts['L']}, 总计={len(actions)}")
         
         # 3. 初始化序列选择器
         if self.sequence_selector is None:
@@ -285,24 +315,59 @@ class RLPolicySelector:
         # 生成状态编码
         state_embed = self._encode_state_for_rl(action_subset)
         
+        # 应用归一化（与训练时保持一致）
+        state_embed = self._normalize_state_embed(state_embed)
+        
+        # 初始化变量
+        subset_indices = None
+        cached_state_embed = None
+        
         # ε-贪婪探索
         if np.random.random() < self.epsilon:
             # 探索：随机选择一个动作作为锚点
             selected_idx = np.random.randint(0, num_actions)
             selected_action = action_subset[selected_idx]
+            # 探索时不需要log_prob，设为0
+            old_log_prob = torch.tensor(0.0, device=self.device)
+            # 探索时也设置基本的局部分布语境
+            subset_indices = torch.tensor(list(range(num_actions)), device=self.device, dtype=torch.long)
+            cached_state_embed = state_embed.detach().clone()
         else:
             # 利用：使用该agent的策略网络选择锚点动作
             with torch.no_grad():
-                logits = actor(state_embed)
-                # 只使用有效动作数量的logits
-                valid_logits = logits[0, :num_actions]
-                action_probs = F.softmax(valid_logits, dim=-1)
-                selected_idx = torch.multinomial(action_probs, 1).item()
+                # 1) 前向，与训练保持一致
+                logits = actor(state_embed)  # shape [1, A]
+
+                # 2) 局部动作子集（当前有效动作列表与顺序）
+                num_actions = len(action_subset)                       # 子集大小 K
+                # 假设action_subset中的动作有某种标识，这里用索引作为全局ID
+                subset_indices = torch.tensor(
+                    list(range(num_actions)),  # 如果没有global_id，使用局部索引
+                    device=self.device, dtype=torch.long
+                )
+
+                # 3) 局部 logits（严格按子集顺序）
+                valid_logits = logits[0, :num_actions]                # 配合 num_actions 的持久化
+                dist = torch.distributions.Categorical(logits=valid_logits)
+
+                # 4) 采样 + 局部索引（0..K-1）
+                selected_idx = dist.sample().item()                   # 局部索引
                 selected_action = action_subset[selected_idx]
+
+                # 5) old_log_prob（采样时的局部分布 + 局部索引）
+                old_log_prob = dist.log_prob(
+                    torch.tensor(selected_idx, device=self.device)
+                ).detach()
+
+                # 6) 缓存用于重放的一致前向输入
+                cached_state_embed = state_embed.detach().clone()
         
         if selected_action:
-            # 使用扩展策略生成多槽位序列
-            expanded_sequence = self._expand_anchor_to_sequence(selected_action, actions, selected_idx)
+            # 使用扩展策略生成多槽位序列，传递局部分布语境
+            expanded_sequence = self._expand_anchor_to_sequence(
+                selected_action, actions, selected_idx, old_log_prob, 
+                num_actions, subset_indices, cached_state_embed
+            )
             if expanded_sequence:
                 return expanded_sequence, selected_idx
         
@@ -337,8 +402,10 @@ class RLPolicySelector:
                 import torch.nn.functional as F
                 action_probs = F.softmax(valid_logits, dim=-1)
                 
-                if 0 <= anchor_idx < len(action_probs):
-                    log_prob = torch.log(action_probs[anchor_idx] + 1e-8)
+                # 确保索引在有效范围内（与训练时保持一致）
+                valid_anchor_idx = min(anchor_idx, len(action_probs) - 1)
+                if 0 <= valid_anchor_idx < len(action_probs):
+                    log_prob = torch.log(action_probs[valid_anchor_idx] + 1e-8)
                     return log_prob
                 else:
                     return torch.tensor(0.0)
@@ -347,7 +414,9 @@ class RLPolicySelector:
             print(f"Warning: Failed to compute anchor log prob: {e}")
             return torch.tensor(0.0)
     
-    def _expand_anchor_to_sequence(self, anchor_action: Action, all_actions: List[Action], anchor_idx: int) -> Optional[Sequence]:
+    def _expand_anchor_to_sequence(self, anchor_action: Action, all_actions: List[Action], anchor_idx: int, 
+                                 old_log_prob: torch.Tensor = None, num_actions: int = None, 
+                                 subset_indices: torch.Tensor = None, cached_state_embed: torch.Tensor = None) -> Optional[Sequence]:
         """将锚点动作扩展为多槽位序列
         
         注意：不要覆盖ActionScorer计算的score，保持与训练系统的一致性
@@ -364,6 +433,15 @@ class RLPolicySelector:
                 score=anchor_action.score
             )
             sequence.action_index = anchor_idx
+            # 保存采样时的log_prob和局部分布语境
+            if old_log_prob is not None:
+                sequence.old_log_prob = old_log_prob
+            if num_actions is not None:
+                sequence.num_actions = num_actions
+            if subset_indices is not None:
+                sequence.subset_indices = subset_indices
+            if cached_state_embed is not None:
+                sequence.cached_state_embed = cached_state_embed
             return sequence
         
         try:
@@ -380,6 +458,15 @@ class RLPolicySelector:
                     score=anchor_action.score
                 )
                 sequence.action_index = anchor_idx
+                # 保存采样时的log_prob和局部分布语境
+                if old_log_prob is not None:
+                    sequence.old_log_prob = old_log_prob
+                if num_actions is not None:
+                    sequence.num_actions = num_actions
+                if subset_indices is not None:
+                    sequence.subset_indices = subset_indices
+                if cached_state_embed is not None:
+                    sequence.cached_state_embed = cached_state_embed
                 return sequence
             
             # 准备扩展策略的状态信息
@@ -476,6 +563,15 @@ class RLPolicySelector:
             
             # 手动设置action_index属性
             expanded_sequence.action_index = anchor_idx
+            # 保存采样时的log_prob和局部分布语境
+            if old_log_prob is not None:
+                expanded_sequence.old_log_prob = old_log_prob
+            if num_actions is not None:
+                expanded_sequence.num_actions = num_actions
+            if subset_indices is not None:
+                expanded_sequence.subset_indices = subset_indices
+            if cached_state_embed is not None:
+                expanded_sequence.cached_state_embed = cached_state_embed
             
             # 存储扩展信息（用于调试）
             expanded_sequence.expansion_log_prob = expansion_log_prob
@@ -496,11 +592,20 @@ class RLPolicySelector:
                 score=anchor_action.score
             )
             sequence.action_index = anchor_idx
+            # 保存采样时的log_prob和局部分布语境
+            if old_log_prob is not None:
+                sequence.old_log_prob = old_log_prob
+            if num_actions is not None:
+                sequence.num_actions = num_actions
+            if subset_indices is not None:
+                sequence.subset_indices = subset_indices
+            if cached_state_embed is not None:
+                sequence.cached_state_embed = cached_state_embed
             return sequence
     
     def _encode_state_for_rl(self, actions: List[Action]) -> torch.Tensor:
-        """为RL生成简化的状态编码"""
-        # 简化状态编码：基于动作池的特征
+        """为RL生成增强的状态编码"""
+        # 增强状态编码：包含更多变化的信息
         if not actions:
             return torch.zeros(1, self.state_dim, device=self.device)
         
@@ -510,14 +615,42 @@ class RLPolicySelector:
         rewards = [action.reward for action in actions if action.reward is not None]
         prestiges = [action.prestige for action in actions if action.prestige is not None]
         
-        # 构建特征向量
+        # 构建增强特征向量
         features = []
+        
+        # 1. 基本统计特征
         features.append(len(actions))  # 动作数量
         features.append(np.mean(scores) if scores else 0.0)  # 平均得分
         features.append(np.std(scores) if scores else 0.0)   # 得分标准差
         features.append(np.mean(costs) if costs else 0.0)    # 平均成本
         features.append(np.mean(rewards) if rewards else 0.0)  # 平均奖励
         features.append(np.mean(prestiges) if prestiges else 0.0)  # 平均声望
+        
+        # 2. 添加更多变化特征
+        features.append(np.max(scores) if scores else 0.0)   # 最高得分
+        features.append(np.min(scores) if scores else 0.0)   # 最低得分
+        features.append(np.max(costs) if costs else 0.0)     # 最高成本
+        features.append(np.min(costs) if costs else 0.0)     # 最低成本
+        
+        # 3. 添加随机噪声以增加变化（临时解决方案）
+        import time
+        import random
+        random.seed(int(time.time() * 1000) % 10000)
+        features.append(random.random())  # 随机特征1
+        features.append(random.random())  # 随机特征2
+        features.append(random.random())  # 随机特征3
+        
+        # 4. 动作多样性特征
+        if len(actions) > 1:
+            # 计算动作得分的变异系数
+            score_cv = np.std(scores) / (np.mean(scores) + 1e-8) if scores and np.mean(scores) > 0 else 0.0
+            features.append(score_cv)
+            
+            # 计算动作成本的变异系数
+            cost_cv = np.std(costs) / (np.mean(costs) + 1e-8) if costs and np.mean(costs) > 0 else 0.0
+            features.append(cost_cv)
+        else:
+            features.extend([0.0, 0.0])
         
         # 扩展到固定维度
         while len(features) < self.state_dim:
@@ -526,6 +659,19 @@ class RLPolicySelector:
         features = features[:self.state_dim]
         
         return torch.tensor(features, dtype=torch.float32, device=self.device).unsqueeze(0)
+    
+    def _normalize_state_embed(self, state_embed: torch.Tensor) -> torch.Tensor:
+        """状态编码归一化（与训练时保持一致）"""
+        if not hasattr(self, '_embed_mean') or not hasattr(self, '_embed_std'):
+            # 如果没有running stats，使用当前batch的stats
+            mean = state_embed.mean()
+            std = state_embed.std()
+        else:
+            mean = self._embed_mean
+            std = self._embed_std
+        
+        normalized = (state_embed - mean) / (std + 1e-5)
+        return normalized.clamp(-5, 5)
     
     def save_model(self, path: str):
         """保存模型权重（MAPPO：保存所有agent的网络）"""
@@ -698,4 +844,113 @@ class RLPolicySelector:
         action_idx, _ = masked_sample(logits, mask)
         
         return action_idx.item()
+    
+    def update_exploration(self, episode: int):
+        """更新探索率（训练过程中逐步降低）"""
+        self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
+        
+        # 同步更新所有actor的温度参数
+        for agent, actor in self.actors.items():
+           # 温度参数也可以随探索率衰减
+           actor.temperature = max(1.5, 3.0 * self.epsilon / 0.8)
+    
+    def _limit_s_size_actions(self, actions: List[Action], max_s_ratio: float = 0.5) -> List[Action]:
+        """限制S型建筑在动作池中的数量以平衡分布"""
+        if not actions:
+            return actions
+        
+        # 按尺寸分组
+        s_actions = [a for a in actions if a.size == 'S']
+        m_actions = [a for a in actions if a.size == 'M']
+        l_actions = [a for a in actions if a.size == 'L']
+        
+        total_actions = len(actions)
+        max_s_count = int(total_actions * max_s_ratio)
+        
+        # 如果S型建筑数量超过限制
+        if len(s_actions) > max_s_count:
+            # 按得分排序，保留最好的S型建筑
+            s_actions.sort(key=lambda x: getattr(x, 'score', 0.0), reverse=True)
+            s_actions = s_actions[:max_s_count]
+            print(f"限制S型建筑数量: {len(s_actions)}/{total_actions} (比例: {len(s_actions)/total_actions:.2f})")
+        
+        # 重新组合动作列表
+        balanced_actions = s_actions + m_actions + l_actions
+        return balanced_actions
+    
+    def _add_exploration_bonus(self, actions: List[Action]) -> List[Action]:
+        """给M/L型建筑添加探索奖励，特别强化高等级槽位上的M/L建筑"""
+        if not actions:
+            return actions
+        
+        for action in actions:
+            # 获取槽位等级信息
+            slot_level = self._get_slot_level(action.footprint_slots[0]) if action.footprint_slots else 3
+            
+            if action.size == 'M':
+                # M型建筑额外奖励
+                base_bonus = self.epsilon * 0.5
+                
+                # 在高等级槽位上给更多奖励
+                if slot_level >= 4:
+                    level_bonus = base_bonus * 5.0  # 激进：高等级槽位奖励5倍
+                    action.score += level_bonus
+                    action.reward += level_bonus * 0.5
+                    print(f"高等级槽位M型建筑奖励: slot_level={slot_level}, bonus={level_bonus:.3f}")
+                else:
+                    action.score += base_bonus
+                    action.reward += base_bonus * 0.1
+                    
+            elif action.size == 'L':
+                # L型建筑更多奖励
+                base_bonus = self.epsilon * 1.0
+                
+                # 在高等级槽位上给更多奖励
+                if slot_level >= 5:
+                    level_bonus = base_bonus * 10.0  # 激进：Level 5槽位奖励10倍
+                    action.score += level_bonus
+                    action.reward += level_bonus * 1.0
+                    print(f"Level 5槽位L型建筑奖励: slot_level={slot_level}, bonus={level_bonus:.3f}")
+                elif slot_level >= 4:
+                    level_bonus = base_bonus * 7.0  # 激进：Level 4槽位奖励7倍
+                    action.score += level_bonus
+                    action.reward += level_bonus * 0.7
+                    print(f"Level 4槽位L型建筑奖励: slot_level={slot_level}, bonus={level_bonus:.3f}")
+                else:
+                    action.score += base_bonus
+                    action.reward += base_bonus * 0.1
+        
+        return actions
+    
+    def _get_slot_level(self, slot_id: str) -> int:
+        """获取槽位的建筑等级"""
+        if self.slots and slot_id in self.slots:
+            slot = self.slots[slot_id]
+            if hasattr(slot, 'building_level'):
+                return slot.building_level
+        return 3  # 默认Level 3
+    
+    def _prioritize_high_level_slots(self, actions: List[Action]) -> List[Action]:
+        """在高等级槽位上优先选择M/L型建筑"""
+        if not actions:
+            return actions
+        
+        # 按槽位等级和建筑尺寸重新排序
+        def action_priority(action):
+            slot_level = self._get_slot_level(action.footprint_slots[0]) if action.footprint_slots else 3
+            size_priority = {'L': 3, 'M': 2, 'S': 1}[action.size]
+            
+            # 优先级计算：高等级槽位 + 大尺寸建筑 = 高优先级
+            return (slot_level * 10 + size_priority, getattr(action, 'score', 0))
+        
+        # 重新排序，高等级槽位的大尺寸建筑排在前面
+        prioritized_actions = sorted(actions, key=action_priority, reverse=True)
+        
+        # 统计调整效果
+        high_level_m_l = sum(1 for a in prioritized_actions[:20] 
+                           if self._get_slot_level(a.footprint_slots[0]) >= 4 and a.size in ['M', 'L'])
+        if high_level_m_l > 0:
+            print(f"高等级槽位M/L型建筑优先排序: 前20个动作中有{high_level_m_l}个高等级M/L建筑")
+        
+        return prioritized_actions
     

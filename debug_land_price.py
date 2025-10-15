@@ -89,3 +89,6 @@ for agent_type, x, y in chosen_positions:
         print(f'{agent_type:4} ({x:6.1f},{y:6.1f}) {price:6.2f} {min_dist:8.1f}')
 
 
+
+
+

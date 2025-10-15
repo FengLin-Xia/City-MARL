@@ -111,3 +111,6 @@ for min_dist, max_dist in dist_ranges:
     print(f"  距离 {min_dist:2d}-{max_dist:2d}: {count:2d} 个槽位")
 
 
+
+
+
