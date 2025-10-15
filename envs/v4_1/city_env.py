@@ -592,7 +592,7 @@ class CityEnvironment:
             candidates=candidates,
             occupied=occupied,
             agent_types=[agent],
-            sizes={agent: ['S', 'M', 'L']},
+            sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L', 'A', 'B', 'C']},
             lp_provider=self._create_lp_provider(),
             adjacency='4-neighbor',
             caps=self.v4_cfg.get('enumeration', {}).get('caps', {})

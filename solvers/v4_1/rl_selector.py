@@ -246,11 +246,15 @@ class RLPolicySelector:
         if self.enumerator is None:
             self.enumerator = ActionEnumerator(slots)
         
+        actual_sizes = sizes or {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L', 'A', 'B', 'C']}
+        actual_agent_types = agent_types or self.rl_cfg['agents']
+        print(f"[DEBUG] Actual sizes parameter: {actual_sizes}")
+        print(f"[DEBUG] Actual agent_types parameter: {actual_agent_types}")
         actions = self.enumerator.enumerate_actions(
             candidates=candidates,
             occupied=occupied,
-            agent_types=agent_types or self.rl_cfg['agents'],
-            sizes=sizes or {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L']},
+            agent_types=actual_agent_types,
+            sizes=actual_sizes,
             lp_provider=lp_provider,
             adjacency='4-neighbor',
             caps=self.cfg.get('growth_v4_1', {}).get('enumeration', {}).get('caps', {}),
@@ -259,11 +263,23 @@ class RLPolicySelector:
         if not actions:
             return [], None
         
+        # 调试：记录过滤前的A/B/C动作数量
+        abc_before = [a for a in actions if a.size in ['A', 'B', 'C']]
+        print(f"[DEBUG] Before filtering: A/B/C actions = {len(abc_before)}")
+        
         # 1.5. 激进限制S型建筑数量以强制平衡动作池
         actions = self._limit_s_size_actions(actions, max_s_ratio=0.3)  # 从0.5降到0.3
         
+        # 调试：记录S型建筑限制后的A/B/C动作数量
+        abc_after_s_limit = [a for a in actions if a.size in ['A', 'B', 'C']]
+        print(f"[DEBUG] After S limit: A/B/C actions = {len(abc_after_s_limit)}")
+        
         # 1.6. 高等级槽位优先选择M/L型建筑
         actions = self._prioritize_high_level_slots(actions)
+        
+        # 调试：记录高等级槽位优先后的A/B/C动作数量
+        abc_after_prioritize = [a for a in actions if a.size in ['A', 'B', 'C']]
+        print(f"[DEBUG] After prioritize: A/B/C actions = {len(abc_after_prioritize)}")
         
         # 2. 计算动作得分（ActionScorer已在__init__中初始化）
         if self.scorer is None:
@@ -273,14 +289,28 @@ class RLPolicySelector:
         # 计算动作得分
         actions = self.scorer.score_actions(actions, river_distance_provider, buildings=buildings)
         
+        # 调试：记录ActionScorer后的A/B/C动作数量
+        abc_after_scorer = [a for a in actions if a.size in ['A', 'B', 'C']]
+        print(f"[DEBUG] After scorer: A/B/C actions = {len(abc_after_scorer)}")
+        
         # 2.5. 给M/L型建筑添加探索奖励
         actions = self._add_exploration_bonus(actions)
         
         # 调试：记录动作池分布
-        size_counts = {'S': 0, 'M': 0, 'L': 0}
+        size_counts = {'S': 0, 'M': 0, 'L': 0, 'A': 0, 'B': 0, 'C': 0}
         for action in actions:
-            size_counts[action.size] += 1
-        print(f"动作池分布: S={size_counts['S']}, M={size_counts['M']}, L={size_counts['L']}, 总计={len(actions)}")
+            if action.size in size_counts:
+                size_counts[action.size] += 1
+        print(f"Action pool distribution: S={size_counts['S']}, M={size_counts['M']}, L={size_counts['L']}, A={size_counts['A']}, B={size_counts['B']}, C={size_counts['C']}, Total={len(actions)}")
+        
+        # 调试：记录A/B/C动作的得分情况
+        abc_actions = [a for a in actions if a.size in ['A', 'B', 'C']]
+        if abc_actions:
+            print(f"A/B/C actions count: {len(abc_actions)}")
+            for action in abc_actions[:3]:  # 显示前3个A/B/C动作
+                print(f"  {action.agent}_{action.size}: score={action.score:.3f}, cost={action.cost:.1f}, reward={action.reward:.1f}")
+        else:
+            print("WARNING: No A/B/C actions found!")
         
         # 3. 初始化序列选择器
         if self.sequence_selector is None:
@@ -863,6 +893,9 @@ class RLPolicySelector:
         s_actions = [a for a in actions if a.size == 'S']
         m_actions = [a for a in actions if a.size == 'M']
         l_actions = [a for a in actions if a.size == 'L']
+        a_actions = [a for a in actions if a.size == 'A']
+        b_actions = [a for a in actions if a.size == 'B']
+        c_actions = [a for a in actions if a.size == 'C']
         
         total_actions = len(actions)
         max_s_count = int(total_actions * max_s_ratio)
@@ -875,7 +908,7 @@ class RLPolicySelector:
             print(f"限制S型建筑数量: {len(s_actions)}/{total_actions} (比例: {len(s_actions)/total_actions:.2f})")
         
         # 重新组合动作列表
-        balanced_actions = s_actions + m_actions + l_actions
+        balanced_actions = s_actions + m_actions + l_actions + a_actions + b_actions + c_actions
         return balanced_actions
     
     def _add_exploration_bonus(self, actions: List[Action]) -> List[Action]:
@@ -938,7 +971,7 @@ class RLPolicySelector:
         # 按槽位等级和建筑尺寸重新排序
         def action_priority(action):
             slot_level = self._get_slot_level(action.footprint_slots[0]) if action.footprint_slots else 3
-            size_priority = {'L': 3, 'M': 2, 'S': 1}[action.size]
+            size_priority = {'L': 3, 'M': 2, 'S': 1, 'A': 1, 'B': 2, 'C': 3}.get(action.size, 1)
             
             # 优先级计算：高等级槽位 + 大尺寸建筑 = 高优先级
             return (slot_level * 10 + size_priority, getattr(action, 'score', 0))

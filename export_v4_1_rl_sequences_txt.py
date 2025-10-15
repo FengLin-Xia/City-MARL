@@ -10,7 +10,7 @@ v4.1 RL序列导出为简化TXT格式
 输出格式：
 a(x,y,0)angle
 - EDU: S→0, M→1, L→2
-- IND: S→3, M→4, L→5
+- IND: S→3, M→4, L→5, A→6, B→7, C→8
 - IND M/L使用多槽位格式: {a(x1,y1,0)angle1, a(x2,y2,0)angle2, ...}
 
 输出目录：enhanced_simulation_v4_1_output/v4_txt/
@@ -26,6 +26,7 @@ from typing import Dict, Tuple, List, Optional
 AGENT_SIZE_CODE: Dict[Tuple[str, str], int] = {
     ('EDU', 'S'): 0, ('EDU', 'M'): 1, ('EDU', 'L'): 2,
     ('IND', 'S'): 3, ('IND', 'M'): 4, ('IND', 'L'): 5,
+    ('IND', 'A'): 6, ('IND', 'B'): 7, ('IND', 'C'): 8,
 }
 
 

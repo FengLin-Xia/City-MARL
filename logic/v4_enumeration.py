@@ -218,6 +218,10 @@ class ActionEnumerator:
                     feats = self._enumerate_ind_by_level(size, free_ids)
                 else:
                     feats = self._enumerate_single_slots(free_ids)
+                
+                # 调试信息：记录A/B/C动作的枚举情况
+                if size in ['A', 'B', 'C']:
+                    print(f"DEBUG {agent}_{size}: found {len(feats)} footprints")
 
                 # 生成动作
                 for fp in feats:
@@ -239,12 +243,16 @@ class ActionEnumerator:
                 # 裁剪 Top-K（可选）
                 top_caps = caps.get('top_slots_per_agent_size', {})
                 limit = int(top_caps.get(agent, {}).get(size, 0)) if top_caps else 0
+                if size in ['A', 'B', 'C']:
+                    print(f"[DEBUG] {agent}_{size}: limit={limit}, actions_before={len(actions)}")
                 if limit > 0 and len(actions) > limit:
                     # 按 LP_norm 选前 K（此处先粗选，后续打分再精排）
                     subset = [a for a in actions if a.agent == agent and a.size == size]
                     subset.sort(key=lambda a: a.LP_norm, reverse=True)
                     keep = set(id(a) for a in subset[:limit])
                     actions = [a for a in actions if (a.agent != agent or a.size != size or id(a) in keep)]
+                    if size in ['A', 'B', 'C']:
+                        print(f"[DEBUG] {agent}_{size}: after filtering, actions_after={len(actions)}")
 
         return actions
 
@@ -284,16 +292,23 @@ class ActionEnumerator:
                 # L型：只有等级5
                 if level >= 5:
                     result.append([slot_id])
+            elif size == 'A':  # A类型按S规则
+                result.append([slot_id])
+            elif size == 'B':  # B类型按S规则（暂时）
+                result.append([slot_id])
+            elif size == 'C':  # C类型按S规则（暂时）
+                result.append([slot_id])
         
         return result
 
     def _enumerate_ind_footprints(self, size: str, free_ids: Set[str]) -> List[List[str]]:
-        """IND M=1×2 相邻对；IND L=2×2 区块。"""
+        """IND M=1×2 相邻对；IND L=2×2 区块。A/B/C暂时按单槽位规则。"""
         if size == 'M':
             return self._enumerate_adjacent_pairs(free_ids)
-        if size == 'L':
+        elif size == 'L':
             return self._enumerate_2x2_blocks(free_ids)
-        return self._enumerate_single_slots(free_ids)
+        else:  # S, A, B, C 按单格规则
+            return self._enumerate_single_slots(free_ids)
 
     def _enumerate_adjacent_pairs(self, free_ids: Set[str]) -> List[List[str]]:
         res: List[List[str]] = []
@@ -432,9 +447,19 @@ class ActionScorer:
             decay = 0.0
         else:
             decay = 2.0 ** (-(max(0.0, river_dist_m) / half_m))
-        # Max premium pct
-        rpct_map = P.get('RiverPmax_pct', {'IND': 20.0, 'EDU': 15.0})
-        rpct = float(rpct_map.get(agent, 0.0)) / 100.0
+        # Max premium pct - 支持按size覆盖
+        if agent == 'IND':
+            # 优先使用按size覆盖的参数
+            rpct_by_size = P.get('RiverPmax_pct_IND_by_size', {})
+            if size in rpct_by_size:
+                rpct = float(rpct_by_size.get(size, 0.0)) / 100.0
+            else:
+                # 回退到默认IND参数
+                rpct_map = P.get('RiverPmax_pct', {'IND': 20.0, 'EDU': 15.0})
+                rpct = float(rpct_map.get(agent, 0.0)) / 100.0
+        else:
+            rpct_map = P.get('RiverPmax_pct', {'IND': 20.0, 'EDU': 15.0})
+            rpct = float(rpct_map.get(agent, 0.0)) / 100.0
         # Zone revenue base（kGBP）
         ZR = P.get('ZR', {'near': 80, 'mid': 40, 'far': 0})
         RevBase_IND = P.get('RevBase_IND', {'S': 180, 'M': 320, 'L': 520})
@@ -495,9 +520,22 @@ class ActionScorer:
 
         # --- LP 正相关收益增益（INT 版）---
         # reward *= (1 + k * LP_norm)
-        kmap = P.get('RewardLP_k', {'IND': 0.25, 'EDU': 0.10})
-        try:
+        # 支持按size覆盖的敏感度参数
+        if agent == 'IND':
+            # 优先使用按size覆盖的参数
+            k_by_size = P.get('RewardLP_k_IND_by_size', {})
+            if size in k_by_size:
+                k_lp = float(k_by_size.get(size, 0.0))
+            else:
+                # 回退到默认IND参数
+                kmap = P.get('RewardLP_k', {'IND': 0.25, 'EDU': 0.10})
+                k_lp = float(kmap.get(agent, 0.0))
+        else:
+            kmap = P.get('RewardLP_k', {'IND': 0.25, 'EDU': 0.10})
             k_lp = float(kmap.get(agent, 0.0))
+        
+        try:
+            k_lp = float(k_lp)
         except Exception:
             k_lp = 0.0
         reward = reward * (1.0 + k_lp * lp)
@@ -710,7 +748,7 @@ class V4Planner:
         buildings: Optional[List[Dict]] = None,
     ) -> Tuple[List[Action], Sequence]:
         agent_types = agent_types or ['EDU', 'IND']
-        sizes = sizes or {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L']}
+        sizes = sizes or {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L', 'A', 'B', 'C']}
 
         # 设置slots到scorer（用于邻近性奖励计算）
         if self.scorer.slots is None:

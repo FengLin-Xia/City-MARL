@@ -1,0 +1,42 @@
+{
+  "mode": "rl_eval",
+  "total_return": 29.637985147322965,
+  "edu_return": 20.02328134555459,
+  "ind_return": 9.614703801768375,
+  "steps_per_second": 0.0,
+  "final_layout": {},
+  "metrics": {
+    "total_returns": [
+      29.771876530661103,
+      29.504093763984827
+    ],
+    "edu_returns": [
+      20.402152726858116,
+      19.644409964251064
+    ],
+    "ind_returns": [
+      9.369723803802987,
+      9.859683799733764
+    ],
+    "std_total": 0.13389138333813833,
+    "std_edu": 0.3788713813035258,
+    "std_ind": 0.24497999796538839
+  },
+  "eval_seeds": [
+    42,
+    123
+  ],
+  "slot_selection_history_path": "models/v4_1_rl/slot_selection_history.json",
+  "slot_selection_stats": {
+    "total_episodes": 2,
+    "total_selections": 60,
+    "unique_slots_count": 126,
+    "edu_selections": 90,
+    "ind_selections": 90,
+    "avg_action_score": 0.3320330534334738
+  },
+  "budget_history": {
+    "IND": [],
+    "EDU": []
+  }
+}

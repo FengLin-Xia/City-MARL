@@ -1,0 +1,796 @@
+{
+  "experiment_info": {
+    "name": "ppo_training_v4_1",
+    "timestamp": "20251015_190343",
+    "start_time": "2025-10-15T19:03:43.833542",
+    "end_time": "2025-10-15T19:05:03.798176"
+  },
+  "episodes": [
+    {
+      "episode_id": 0,
+      "start_time": "2025-10-15T19:05:03.327930",
+      "steps": [
+        {
+          "agent": "IND",
+          "month": 0,
+          "reward": 0.8546235555555555,
+          "selected_slots": [
+            [
+              "s_181"
+            ],
+            [
+              "s_167"
+            ],
+            [
+              "s_232"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 1,
+          "reward": 0.9700767393286455,
+          "selected_slots": [
+            [
+              "s_50"
+            ],
+            [
+              "s_51"
+            ],
+            [
+              "s_53"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 2,
+          "reward": 1.2494646425663256,
+          "selected_slots": [
+            [
+              "s_234"
+            ],
+            [
+              "s_182"
+            ],
+            [
+              "s_233"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 3,
+          "reward": 1.451117497411768,
+          "selected_slots": [
+            [
+              "s_55"
+            ],
+            [
+              "s_54"
+            ],
+            [
+              "s_52"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 4,
+          "reward": 0.9535198820346795,
+          "selected_slots": [
+            [
+              "s_137"
+            ],
+            [
+              "s_138"
+            ],
+            [
+              "s_112"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 5,
+          "reward": 1.4334239807900961,
+          "selected_slots": [
+            [
+              "s_56"
+            ],
+            [
+              "s_16"
+            ],
+            [
+              "s_57"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 6,
+          "reward": 1.0626081423635474,
+          "selected_slots": [
+            [
+              "s_219"
+            ],
+            [
+              "s_217"
+            ],
+            [
+              "s_218"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 7,
+          "reward": 1.3909039627753526,
+          "selected_slots": [
+            [
+              "s_36"
+            ],
+            [
+              "s_39"
+            ],
+            [
+              "s_35"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 8,
+          "reward": 1.203249734179556,
+          "selected_slots": [
+            [
+              "s_168"
+            ],
+            [
+              "s_196"
+            ],
+            [
+              "s_216"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 9,
+          "reward": 1.4627444907966862,
+          "selected_slots": [
+            [
+              "s_32"
+            ],
+            [
+              "s_33"
+            ],
+            [
+              "s_34"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 10,
+          "reward": 1.113143995961634,
+          "selected_slots": [
+            [
+              "s_235"
+            ],
+            [
+              "s_206"
+            ],
+            [
+              "s_158"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 11,
+          "reward": 1.4316918913918242,
+          "selected_slots": [
+            [
+              "s_58"
+            ],
+            [
+              "s_92"
+            ],
+            [
+              "s_40"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 12,
+          "reward": 0.553795475691993,
+          "selected_slots": [
+            [
+              "s_157"
+            ],
+            [
+              "s_118"
+            ],
+            [
+              "s_159"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 13,
+          "reward": 1.2790852112044315,
+          "selected_slots": [
+            [
+              "s_26"
+            ],
+            [
+              "s_28"
+            ],
+            [
+              "s_11"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 14,
+          "reward": 0.22954089113876322,
+          "selected_slots": [
+            [
+              "s_154"
+            ],
+            [
+              "s_152"
+            ],
+            [
+              "s_153"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 15,
+          "reward": 1.3983181282196513,
+          "selected_slots": [
+            [
+              "s_83"
+            ],
+            [
+              "s_80"
+            ],
+            [
+              "s_86"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 16,
+          "reward": 0.459582892042961,
+          "selected_slots": [
+            [
+              "s_125"
+            ],
+            [
+              "s_126"
+            ],
+            [
+              "s_123"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 17,
+          "reward": 1.4619000955657304,
+          "selected_slots": [
+            [
+              "s_12"
+            ],
+            [
+              "s_14"
+            ],
+            [
+              "s_27"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 18,
+          "reward": 0.6265726444786016,
+          "selected_slots": [
+            [
+              "s_195"
+            ],
+            [
+              "s_204"
+            ],
+            [
+              "s_203"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 19,
+          "reward": 1.1089154815560287,
+          "selected_slots": [
+            [
+              "s_67"
+            ],
+            [
+              "s_66"
+            ],
+            [
+              "s_69"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 20,
+          "reward": 0.9606626512465644,
+          "selected_slots": [
+            [
+              "s_128"
+            ],
+            [
+              "s_127"
+            ],
+            [
+              "s_148"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 21,
+          "reward": 1.4337128608974576,
+          "selected_slots": [
+            [
+              "s_84"
+            ],
+            [
+              "s_81"
+            ],
+            [
+              "s_87"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 22,
+          "reward": 0.4432343352306829,
+          "selected_slots": [
+            [
+              "s_202"
+            ],
+            [
+              "s_205"
+            ],
+            [
+              "s_199"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 23,
+          "reward": 1.4355963355320815,
+          "selected_slots": [
+            [
+              "s_68"
+            ],
+            [
+              "s_0"
+            ],
+            [
+              "s_65"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 24,
+          "reward": 0.4354640462492436,
+          "selected_slots": [
+            [
+              "s_121"
+            ],
+            [
+              "s_119"
+            ],
+            [
+              "s_163"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 25,
+          "reward": 1.3597554409553945,
+          "selected_slots": [
+            [
+              "s_59"
+            ],
+            [
+              "s_60"
+            ],
+            [
+              "s_62"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 26,
+          "reward": 0.10174360892833438,
+          "selected_slots": [
+            [
+              "s_170"
+            ],
+            [
+              "s_169"
+            ],
+            [
+              "s_171"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 27,
+          "reward": 1.4814625900801357,
+          "selected_slots": [
+            [
+              "s_15"
+            ],
+            [
+              "s_13"
+            ],
+            [
+              "s_1"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "IND",
+          "month": 28,
+          "reward": 0.8489078957111428,
+          "selected_slots": [
+            [
+              "s_245"
+            ],
+            [
+              "s_246"
+            ],
+            [
+              "s_248"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        },
+        {
+          "agent": "EDU",
+          "month": 29,
+          "reward": 1.3785474157984496,
+          "selected_slots": [
+            [
+              "s_49"
+            ],
+            [
+              "s_48"
+            ],
+            [
+              "s_46"
+            ]
+          ],
+          "action_score": 0.0,
+          "available_actions": 0,
+          "candidate_slots": 0,
+          "timestamp": "2025-10-15T19:05:03.327930"
+        }
+      ],
+      "episode_metrics": {
+        "total_return": 31.57336651568332,
+        "edu_return": 20.47725212230373,
+        "ind_return": 11.096114393379585,
+        "episode_length": 30,
+        "final_kl_divergence": 0.0,
+        "final_clip_fraction": 0.0,
+        "final_policy_loss": 0.0,
+        "final_value_loss": 0.0
+      },
+      "end_time": "2025-10-15T19:05:03.327930"
+    }
+  ],
+  "training_updates": [
+    {
+      "update_id": 0,
+      "total_experiences": 20,
+      "start_time": "2025-10-15T19:03:48.826389",
+      "epochs": [
+        {
+          "epoch_id": 0,
+          "timestamp": "2025-10-15T19:05:03.388137",
+          "metrics": {
+            "policy_loss": -9.81019115447998,
+            "value_loss": 19.745532989501953,
+            "entropy_loss": 3.8705267906188965,
+            "total_loss": 0.0238700732588768,
+            "kl_divergence": 8.87062014953699e-06,
+            "clip_fraction": 0.0,
+            "entropy": 3.8705267906188965,
+            "advantages_mean": 9.808904647827148,
+            "advantages_std": 0.8047252297401428,
+            "ratio_mean": 1.0001311302185059,
+            "ratio_std": 0.0042804270051419735
+          }
+        },
+        {
+          "epoch_id": 1,
+          "timestamp": "2025-10-15T19:05:03.459191",
+          "metrics": {
+            "policy_loss": -9.869155883789062,
+            "value_loss": 19.719778060913086,
+            "entropy_loss": 3.870516538619995,
+            "total_loss": -0.04797201603651047,
+            "kl_divergence": 3.697938518598676e-05,
+            "clip_fraction": 0.0,
+            "entropy": 3.870516538619995,
+            "advantages_mean": 9.808904647827148,
+            "advantages_std": 0.8047252297401428,
+            "ratio_mean": 1.006142497062683,
+            "ratio_std": 0.006175316404551268
+          }
+        },
+        {
+          "epoch_id": 2,
+          "timestamp": "2025-10-15T19:05:03.511742",
+          "metrics": {
+            "policy_loss": -9.930381774902344,
+            "value_loss": 19.697460174560547,
+            "entropy_loss": 3.8704822063446045,
+            "total_loss": -0.12035650759935379,
+            "kl_divergence": 0.00012492742098402232,
+            "clip_fraction": 0.0,
+            "entropy": 3.8704822063446045,
+            "advantages_mean": 9.808904647827148,
+            "advantages_std": 0.8047252297401428,
+            "ratio_mean": 1.0123844146728516,
+            "ratio_std": 0.010188793763518333
+          }
+        },
+        {
+          "epoch_id": 3,
+          "timestamp": "2025-10-15T19:05:03.560095",
+          "metrics": {
+            "policy_loss": -10.009809494018555,
+            "value_loss": 19.673309326171875,
+            "entropy_loss": 3.870403289794922,
+            "total_loss": -0.211858868598938,
+            "kl_divergence": 0.00032172456849366426,
+            "clip_fraction": 0.0,
+            "entropy": 3.870403289794922,
+            "advantages_mean": 9.808904647827148,
+            "advantages_std": 0.8047252297401428,
+            "ratio_mean": 1.020481824874878,
+            "ratio_std": 0.01574990153312683
+          }
+        },
+        {
+          "epoch_id": 4,
+          "timestamp": "2025-10-15T19:05:03.613751",
+          "metrics": {
+            "policy_loss": -10.115484237670898,
+            "value_loss": 19.6455078125,
+            "entropy_loss": 3.8702452182769775,
+            "total_loss": -0.3314327895641327,
+            "kl_divergence": 0.0007169258315116167,
+            "clip_fraction": 0.0,
+            "entropy": 3.8702452182769775,
+            "advantages_mean": 9.808904647827148,
+            "advantages_std": 0.8047252297401428,
+            "ratio_mean": 1.0312552452087402,
+            "ratio_std": 0.0229517612606287
+          }
+        },
+        {
+          "epoch_id": 5,
+          "timestamp": "2025-10-15T19:05:03.672176",
+          "metrics": {
+            "policy_loss": -10.251996994018555,
+            "value_loss": 19.612939834594727,
+            "entropy_loss": 3.869952440261841,
+            "total_loss": -0.4842265844345093,
+            "kl_divergence": 0.0014484779676422477,
+            "clip_fraction": 0.0,
+            "entropy": 3.869952440261841,
+            "advantages_mean": 9.808904647827148,
+            "advantages_std": 0.8047252297401428,
+            "ratio_mean": 1.0451724529266357,
+            "ratio_std": 0.03225872665643692
+          }
+        },
+        {
+          "epoch_id": 6,
+          "timestamp": "2025-10-15T19:05:03.726790",
+          "metrics": {
+            "policy_loss": -10.425342559814453,
+            "value_loss": 19.574716567993164,
+            "entropy_loss": 3.8694465160369873,
+            "total_loss": -0.6766787171363831,
+            "kl_divergence": 0.0027175224386155605,
+            "clip_fraction": 0.0,
+            "entropy": 3.8694465160369873,
+            "advantages_mean": 9.808904647827148,
+            "advantages_std": 0.8047252297401428,
+            "ratio_mean": 1.0628448724746704,
+            "ratio_std": 0.04398031532764435
+          }
+        },
+        {
+          "epoch_id": 7,
+          "timestamp": "2025-10-15T19:05:03.779110",
+          "metrics": {
+            "policy_loss": -10.592391967773438,
+            "value_loss": 19.53048324584961,
+            "entropy_loss": 3.8686177730560303,
+            "total_loss": -0.865836501121521,
+            "kl_divergence": 0.0048065753653645515,
+            "clip_fraction": 0.23333333432674408,
+            "entropy": 3.8686177730560303,
+            "advantages_mean": 9.808904647827148,
+            "advantages_std": 0.8047252297401428,
+            "ratio_mean": 1.0848842859268188,
+            "ratio_std": 0.05855509266257286
+          }
+        }
+      ],
+      "update_summary": {
+        "avg_policy_loss": -10.12559425830841,
+        "avg_value_loss": 19.64996600151062,
+        "avg_kl_divergence": 0.0012727504497433983,
+        "avg_clip_fraction": 0.02916666679084301,
+        "avg_entropy": 3.8700238466262817,
+        "final_advantages_mean": 9.808904647827148,
+        "final_advantages_std": 0.8047252297401428,
+        "final_policy_loss": -10.12559425830841,
+        "final_value_loss": 19.64996600151062,
+        "final_entropy": 3.8700238466262817,
+        "final_total_loss": -0.3393114960193634,
+        "final_kl_divergence": 0.0012727504497433983,
+        "final_clip_fraction": 0.02916666679084301
+      },
+      "end_time": "2025-10-15T19:05:03.781112"
+    }
+  ],
+  "final_summary": {
+    "total_training_updates": 1,
+    "final_model_path": "models/v4_1_rl/final_model_default_99914b93_20251015_190503.pth",
+    "total_episodes_run": 1,
+    "final_avg_return": 31.57336651568332,
+    "best_return": 31.57336651568332,
+    "training_completed": true
+  }
+}
