@@ -150,7 +150,7 @@ class PPOTrainer:
                     occupied=env._get_occupied_slots(),
                     lp_provider=env._create_lp_provider(),
                     agent_types=[current_agent],
-                    sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L', 'A', 'B', 'C']}
+                    sizes={'EDU': ['S', 'M', 'L', 'A', 'B', 'C'], 'IND': ['S', 'M', 'L']}
                 )
                 
                 if selected_sequence is None:

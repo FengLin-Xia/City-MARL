@@ -748,7 +748,7 @@ class V4Planner:
         buildings: Optional[List[Dict]] = None,
     ) -> Tuple[List[Action], Sequence]:
         agent_types = agent_types or ['EDU', 'IND']
-        sizes = sizes or {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L', 'A', 'B', 'C']}
+        sizes = sizes or {'EDU': ['S', 'M', 'L', 'A', 'B', 'C'], 'IND': ['S', 'M', 'L']}
 
         # 设置slots到scorer（用于邻近性奖励计算）
         if self.scorer.slots is None:

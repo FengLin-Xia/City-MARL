@@ -246,7 +246,7 @@ class RLPolicySelector:
         if self.enumerator is None:
             self.enumerator = ActionEnumerator(slots)
         
-        actual_sizes = sizes or {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L', 'A', 'B', 'C']}
+        actual_sizes = sizes or {'EDU': ['S', 'M', 'L', 'A', 'B', 'C'], 'IND': ['S', 'M', 'L']}
         actual_agent_types = agent_types or self.rl_cfg['agents']
         print(f"[DEBUG] Actual sizes parameter: {actual_sizes}")
         print(f"[DEBUG] Actual agent_types parameter: {actual_agent_types}")
