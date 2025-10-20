@@ -148,3 +148,6 @@ plt.savefig('training_trend_analysis.png', dpi=150)
 print(f"\n可视化已保存: training_trend_analysis.png")
 plt.show()
 
+
+
+

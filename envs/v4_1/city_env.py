@@ -304,21 +304,29 @@ class CityEnvironment:
             agent_idx = self.rl_cfg['agents'].index(self.current_agent)
             expected_comp = self.hub_components[agent_idx]
             
-            filtered_candidates = set()
-            for slot_id in all_candidates:
-                slot = self.slots.get(slot_id)
-                if slot is None:
-                    continue
+            # 检查是否为A/B/C类型，如果是则不受河流限制
+            if (self.current_agent == 'IND' and 
+                hasattr(self, 'current_size') and 
+                self.current_size in ['A', 'B', 'C']):
+                print(f"    [River Filter] {self.current_agent} {self.current_size} 类型不受河流限制，返回所有候选槽位: {len(all_candidates)}")
+                # A/B/C类型不受河流限制，保持所有候选槽位
+            else:
+                # S/M/L类型仍受河流限制
+                filtered_candidates = set()
+                for slot_id in all_candidates:
+                    slot = self.slots.get(slot_id)
+                    if slot is None:
+                        continue
+                        
+                    x = float(getattr(slot, 'fx', slot.x))
+                    y = float(getattr(slot, 'fy', slot.y))
+                    slot_comp = self._get_component_of_xy(x, y)
                     
-                x = float(getattr(slot, 'fx', slot.x))
-                y = float(getattr(slot, 'fy', slot.y))
-                slot_comp = self._get_component_of_xy(x, y)
+                    if slot_comp == expected_comp:
+                        filtered_candidates.add(slot_id)
                 
-                if slot_comp == expected_comp:
-                    filtered_candidates.add(slot_id)
-            
-            print(f"    [River Filter] {self.current_agent} agent: {len(all_candidates)} -> {len(filtered_candidates)} candidates (连通域 {expected_comp})")
-            all_candidates = filtered_candidates
+                print(f"    [River Filter] {self.current_agent} agent: {len(all_candidates)} -> {len(filtered_candidates)} candidates (连通域 {expected_comp})")
+                all_candidates = filtered_candidates
         else:
             print(f"    [River Filter] hub_components未设置，返回所有候选槽位: {len(all_candidates)}")
         
@@ -592,7 +600,7 @@ class CityEnvironment:
             candidates=candidates,
             occupied=occupied,
             agent_types=[agent],
-            sizes={agent: ['S', 'M', 'L']},
+            sizes={'EDU': ['S', 'M', 'L', 'A', 'B', 'C'], 'IND': ['S', 'M', 'L']},
             lp_provider=self._create_lp_provider(),
             adjacency='4-neighbor',
             caps=self.v4_cfg.get('enumeration', {}).get('caps', {})

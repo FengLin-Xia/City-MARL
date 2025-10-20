@@ -16,6 +16,7 @@ import datetime
 import json
 import hashlib
 import glob
+from enhanced_training_logger import get_training_logger
 
 # 添加项目根目录到路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -35,16 +36,19 @@ class PPOTrainer:
             cfg: 配置字典，包含RL超参数
         """
         self.cfg = cfg
-        self.rl_cfg = cfg.get('growth_v4_1', {}).get('solver', {}).get('rl', {})
+        # 尝试从两个位置读取RL配置
+        self.rl_cfg = cfg.get('solver', {}).get('rl', {})
+        if not self.rl_cfg:
+            self.rl_cfg = cfg.get('growth_v4_1', {}).get('solver', {}).get('rl', {})
         
         # PPO超参数
         self.gamma = self.rl_cfg.get('gamma', 0.99)  # 折扣因子
         self.gae_lambda = self.rl_cfg.get('gae_lambda', 0.95)  # GAE参数
-        self.clip_ratio = self.rl_cfg.get('clip_ratio', 0.2)  # PPO裁剪率
+        self.clip_ratio = self.rl_cfg.get('clip_ratio', self.rl_cfg.get('clip_eps', 0.2))  # PPO裁剪率
         self.lr = self.rl_cfg.get('lr', 3e-4)  # 学习率
         self.value_loss_coef = self.rl_cfg.get('value_loss_coef', 0.5)  # 价值损失系数
         self.entropy_coef = self.rl_cfg.get('entropy_coef', 0.01)  # 熵损失系数
-        self.max_grad_norm = self.rl_cfg.get('max_grad_norm', 0.5)  # 梯度裁剪
+        self.max_grad_norm = self.rl_cfg.get('max_grad_norm', 1.0)  # 梯度裁剪
         self.num_epochs = self.rl_cfg.get('num_epochs', 4)  # 更新轮数
         
         # 设备配置
@@ -64,6 +68,20 @@ class PPOTrainer:
         # 创建RL选择器（包含策略网络）
         self.selector = RLPolicySelector(cfg)
         print(f"PPO训练器初始化完成 - 超参数: γ={self.gamma}, λ={self.gae_lambda}, clip={self.clip_ratio}")
+        
+        # 按照1013-5.md建议：重新初始化actor网络最后一层
+        self._reinitialize_actor_last_layers()
+    
+    def _reinitialize_actor_last_layers(self):
+        """按照1013-5.md建议：重新初始化actor网络最后一层"""
+        print("重新初始化actor网络最后一层...")
+        for agent, actor in self.selector.actors.items():
+            # 获取最后一层（输出层）
+            last_layer = actor.network[-1]
+            # 按照1013-9.md建议：重初始化最后一层（提高gain）
+            torch.nn.init.orthogonal_(last_layer.weight, gain=0.5)
+            torch.nn.init.zeros_(last_layer.bias)
+            print(f"  {agent} actor最后一层已重新初始化")
     
     def set_seed(self, seed: int):
         """设置随机种子"""
@@ -72,6 +90,27 @@ class PPOTrainer:
         if torch.cuda.is_available():
             torch.cuda.manual_seed(seed)
     
+
+    def _adaptive_kl_adjustment(self, kl_after: float):
+        """自适应KL调整（按照1013-7.md建议）"""
+        target_kl = 0.02
+        
+        if kl_after < 0.2 * target_kl:  # 太保守
+            # 增大学习率
+            for agent in self.selector.actor_optimizers.keys():
+                optimizer = self.selector.actor_optimizers[agent]
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] *= 1.5
+            print(f"[adaptive] KL too low ({kl_after:.4f} < {0.2 * target_kl:.4f}), increased lr")
+            
+        elif kl_after > 2.0 * target_kl:  # 太猛
+            # 减小学习率
+            for agent in self.selector.actor_optimizers.keys():
+                optimizer = self.selector.actor_optimizers[agent]
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] *= 0.5
+            print(f"[adaptive] KL too high ({kl_after:.4f} > {2.0 * target_kl:.4f}), decreased lr")
+
     def collect_experience(self, env: CityEnvironment, num_steps: int) -> List[Dict]:
         """
         收集经验数据
@@ -111,7 +150,7 @@ class PPOTrainer:
                     occupied=env._get_occupied_slots(),
                     lp_provider=env._create_lp_provider(),
                     agent_types=[current_agent],
-                    sizes={current_agent: ['S', 'M', 'L']}
+                    sizes={'EDU': ['S', 'M', 'L', 'A', 'B', 'C'], 'IND': ['S', 'M', 'L']}
                 )
                 
                 if selected_sequence is None:
@@ -145,8 +184,12 @@ class PPOTrainer:
                     # 恢复action_index属性
                     selected_sequence.action_index = original_action_index
                 
-                # 记录旧策略的动作概率（传入真实动作数量）
-                old_log_prob = self._get_action_log_prob(selected_sequence, state, len(actions))
+                # 优先使用采样时保存的log_prob，确保一致性
+                if hasattr(selected_sequence, 'old_log_prob') and selected_sequence.old_log_prob is not None:
+                    old_log_prob = selected_sequence.old_log_prob
+                else:
+                    # 回退到重新计算（兼容性）
+                    old_log_prob = self._get_action_log_prob(selected_sequence, state, len(actions))
                 
                 # 执行动作并收集经验
                 experience = {
@@ -249,8 +292,10 @@ class PPOTrainer:
         returns = torch.FloatTensor(returns).to(self.device)
         advantages = torch.FloatTensor(advantages).to(self.device)
         
-        # 标准化优势函数
-        advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
+        # 注释掉标准化，直接使用原始advantages
+        # advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
+        # === 按照1013-9.md建议：临时放大advantages来"点燃"训练 ===
+        advantages = 2.0 * advantages
         
         return returns, advantages
     
@@ -336,14 +381,15 @@ class PPOTrainer:
                 agent_rewards = [exp['reward'] for exp in exps]
                 print(f"    [{agent}] 经验数: {len(exps)}, 奖励: min={min(agent_rewards):.3f}, max={max(agent_rewards):.3f}, mean={np.mean(agent_rewards):.3f}")
         
+        # 提取数据（修复：重新添加这些定义）
+        rewards = [exp['reward'] for exp in experiences]
+        dones = [exp['done'] for exp in experiences]
+        
         # 计算价值估计（使用价值网络）
         values = self._compute_values(experiences)
         
-        # 计算GAE
-        returns, advantages = self.compute_gae(rewards, values, dones)
-        
         # 实现PPO-Clip更新
-        print(f"PPO-Clip更新开始 - 经验数: {len(experiences)}, 优势范围: [{advantages.min():.3f}, {advantages.max():.3f}]")
+        print(f"PPO-Clip更新开始 - 经验数: {len(experiences)}")
         
         # 初始化损失统计
         policy_losses = []
@@ -360,69 +406,252 @@ class PPOTrainer:
             current_entropies = []
             
             for i, exp in enumerate(experiences):
-                state = exp['state']
-                sequence = exp['action']  # 这是Sequence对象
-                
-                # 【MAPPO】获取该经验对应的agent
+                # —— 取缓存（与采样时一致）——
+                state_embed = exp.get('state_embed', None)
+                if state_embed is None:
+                    # 兼容旧数据的兜底（不推荐）
+                    sequence = exp['action']
+                    first_action = sequence.actions[0] if sequence and sequence.actions else None
+                    state_embed = self.selector._encode_state_for_rl([first_action]) if first_action else self.selector._encode_state_for_rl([])
+                else:
+                    # 从list转换为tensor
+                    state_embed = torch.tensor(state_embed, device=self.device, dtype=torch.float32).unsqueeze(0)
+
+                # 选择 agent 对应的网络
                 agent = exp.get('agent', 'IND')
-                if not agent or agent not in self.selector.actors:
-                    # 尝试从action推断
-                    first_action = sequence.actions[0] if sequence.actions else None
-                    agent = first_action.agent if first_action and hasattr(first_action, 'agent') else 'IND'
-                
-                # 选择该agent的网络
                 actor = self.selector.actors.get(agent, self.selector.actor)
                 critic = self.selector.critics.get(agent, self.selector.critic)
+
+                # === 输入归一化（按照1013-6.md建议） ===
+                # 处理embed.std≈52的问题，避免前层饱和
+                if i == 0:  # 只在第一个样本计算running stats
+                    if not hasattr(self, '_embed_mean'):
+                        self._embed_mean = state_embed.mean()
+                        self._embed_std = state_embed.std()
+                    else:
+                        # 更新running stats
+                        alpha = 0.1
+                        self._embed_mean = alpha * state_embed.mean() + (1-alpha) * self._embed_mean
+                        self._embed_std = alpha * state_embed.std() + (1-alpha) * self._embed_std
                 
-                # 编码状态（使用序列中的第一个动作）
-                first_action = sequence.actions[0] if sequence.actions else None
-                state_embed = self.selector._encode_state_for_rl([first_action]) if first_action else self.selector._encode_state_for_rl([])
+                # 归一化state_embed
+                state_embed_normalized = (state_embed - self._embed_mean) / (self._embed_std + 1e-5)
+                state_embed_normalized = state_embed_normalized.clamp(-5, 5)
                 
-                # 使用该agent的网络获取输出
-                logits = actor(state_embed)
-                value = critic(state_embed)
+                # === BEFORE 测量 ===
+                logits_before = actor(state_embed_normalized)     # [1, A]
+                value  = critic(state_embed_normalized)
                 
-                # 使用真正的概率分布计算动作概率
-                action_idx = getattr(sequence, 'action_index', -1)
-                if action_idx >= 0:
-                    # 使用收集时保存的动作数量，确保与old_log_prob计算时一致
-                    num_actions = exp.get('num_actions', len(exp.get('available_actions', [])))
-                    if num_actions == 0 or num_actions is None:
-                        num_actions = 5  # 回退到默认值
-                    
-                    num_actions = min(num_actions, self.selector.max_actions)
-                    valid_logits = logits[0, :num_actions]
-                    valid_action_idx = min(action_idx, num_actions - 1)
-                    
-                    # 创建动作分布
-                    dist = torch.distributions.Categorical(logits=valid_logits.unsqueeze(0))
-                    log_prob = dist.log_prob(torch.tensor(valid_action_idx).to(self.device))
-                    entropy = dist.entropy()
+                # 诊断关键指标
+                if i == 0:  # 只在第一个样本打印
+                    std_embed = state_embed.std(dim=-1).mean().item()
+                    print(f"[probe] embed.std={std_embed:.4g}")
+                if value.dim() > 1: value = value.squeeze()
+                if value.dim() == 0: value = value.unsqueeze(0)
+
+                # —— 重放"局部分布"与"局部索引" —— 
+                action_idx = int(exp.get('action_index', -1))
+                num_actions = exp.get('num_actions', None)
+                subset_ids = exp.get('subset_indices', None)  # 可能不存在
+
+                # old_logp 也从 exp 读
+                old_logp = exp.get('old_log_prob', None)
+
+                # 统一成张量/基本类型
+                if isinstance(subset_ids, list):
+                    subset_ids = torch.tensor(subset_ids, device=self.device, dtype=torch.long)
+                if old_logp is not None and not torch.is_tensor(old_logp):
+                    old_logp = torch.tensor([float(old_logp)], device=self.device, dtype=torch.float32)
+
+                # —— 有效性判断（subset 可选）——
+                local_logits = None
+                is_valid = True
+                
+                if num_actions is None or action_idx < 0 or old_logp is None:
+                    is_valid = False
                 else:
-                    # 回退到简化计算
-                    action_score = sequence.score if hasattr(sequence, 'score') else 1.0
-                    log_prob = torch.log(torch.clamp(torch.tensor(action_score), min=1e-8))
-                    entropy = -log_prob * torch.exp(log_prob)
+                    if subset_ids is None:
+                        # 没有 subset_ids：使用"前K"切片（与采样一致的前K逻辑）
+                        k = int(num_actions)
+                        if not (0 <= action_idx < k):
+                            is_valid = False
+                        else:
+                            local_logits = logits_before[0, :k]
+                    else:
+                        # 有 subset_ids：严格按保存顺序切局部 logits
+                        k = subset_ids.numel()
+                        if (num_actions is not None) and (k != int(num_actions)):
+                            is_valid = False
+                        elif not (0 <= action_idx < k):
+                            is_valid = False
+                        else:
+                            local_logits = logits_before[0, subset_ids]
+
+                if not is_valid or local_logits is None:
+                    log_prob = torch.tensor([float('-inf')], device=self.device)
+                    entropy = torch.tensor([0.0], device=self.device)
+                else:
+                    # 检查logits是否包含NaN或异常值
+                    if torch.isnan(local_logits).any() or torch.isinf(local_logits).any():
+                        print(f"Warning: Invalid logits detected (NaN or Inf), using fallback")
+                        log_prob = torch.tensor([float('-inf')], device=self.device)
+                        entropy = torch.tensor([0.0], device=self.device)
+                    else:
+                        # === 测量BEFORE指标 ===
+                        if i == 0:  # 只在第一个样本打印
+                            std_logits = local_logits.std().item()
+                            action_idx_tensor = torch.tensor(action_idx, device=self.device)
+                            dist_before = torch.distributions.Categorical(logits=local_logits)
+                            newlp_before = dist_before.log_prob(action_idx_tensor)
+                            kl_before = (old_logp - newlp_before).mean().item()
+                            
+                            # 存储before指标用于后续比较
+                            self._before_metrics = {
+                                'std_logits': std_logits,
+                                'kl_before': kl_before,
+                                'local_logits_before': local_logits.clone()
+                            }
+                            
+                            print(f"[probe] embed.std={std_embed:.4g} | loc.std={std_logits:.4g} | KL_before={kl_before:.3g}")
+                        
+                        # === 按照1013-8.md建议的诊断 ===
+                        print("[chk] local_logits.std(before) =", local_logits.std().item())
+                        
+                        # 温度缩放（如果你要用）
+                        tau = 0.5  # 先 0.5，看到KL动就可以再调
+                        local_logits = local_logits / tau
+                        print("[chk] tau =", tau, " local_logits.std(after) =", local_logits.std().item())
+                        
+                        dist = torch.distributions.Categorical(logits=local_logits)
+                        log_prob = dist.log_prob(torch.tensor(action_idx, device=self.device))
+                        entropy = dist.entropy()
+                        if log_prob.dim() == 0: log_prob = log_prob.unsqueeze(0)
+                        if entropy.dim() == 0: entropy = entropy.unsqueeze(0)
                 
                 current_log_probs.append(log_prob)
                 current_values.append(value)
                 current_entropies.append(entropy)
             
-            # 转换为张量
-            current_log_probs = torch.stack(current_log_probs).to(self.device)
-            current_values = torch.stack(current_values).squeeze().to(self.device)
-            current_entropies = torch.stack(current_entropies).to(self.device)
+            # 转换为张量，确保所有张量形状一致
+            if current_log_probs:
+                # 确保所有log_prob张量都是1维
+                for i, log_prob in enumerate(current_log_probs):
+                    if log_prob.dim() == 0:
+                        current_log_probs[i] = log_prob.unsqueeze(0)
+                    elif log_prob.dim() > 1:
+                        current_log_probs[i] = log_prob.squeeze()
+                
+                # 确保所有value张量都是1维
+                for i, val in enumerate(current_values):
+                    if val.dim() == 0:
+                        current_values[i] = val.unsqueeze(0)
+                    elif val.dim() > 1:
+                        current_values[i] = val.squeeze()
+                
+                # 确保所有entropy张量都是1维
+                for i, entropy in enumerate(current_entropies):
+                    if entropy.dim() == 0:
+                        current_entropies[i] = entropy.unsqueeze(0)
+                    elif entropy.dim() > 1:
+                        current_entropies[i] = entropy.squeeze()
+                
+                current_log_probs = torch.stack(current_log_probs).to(self.device)
+                current_values = torch.stack(current_values).to(self.device)
+                current_entropies = torch.stack(current_entropies).to(self.device)
+            else:
+                print("Warning: No log_probs to stack")
+                continue
             
-            # 获取旧策略的动作概率（从经验中读取）
-            old_log_probs = torch.stack([exp['old_log_prob'] for exp in experiences]).to(self.device)
+            # 聚合 old_log_prob 的判定（放宽subset要求）
+            old_log_probs_list, valid_flags = [], []
+            for exp in experiences:
+                olp = exp.get('old_log_prob', None)
+                aid = exp.get('action_index', -1)
+                k   = exp.get('num_actions', None)
+
+                # subset 可缺省
+                is_valid = (olp is not None) and (aid is not None) and (int(aid) >= 0) and (k is not None)
+                valid_flags.append(is_valid)
+                if is_valid:
+                    if not torch.is_tensor(olp):
+                        olp = torch.tensor([float(olp)], device=self.device, dtype=torch.float32)
+                    elif olp.dim() == 0:
+                        olp = olp.unsqueeze(0)
+                    elif olp.dim() > 1:
+                        olp = olp.squeeze()
+                    old_log_probs_list.append(olp)
+
+            valid_mask = torch.tensor(valid_flags, device=self.device, dtype=torch.bool)
+            if valid_mask.float().mean().item() < 0.5:          # 先放宽阈值，避免全跳过
+                print(f"[skip] valid_ratio={valid_mask.float().mean().item():.2f}, skip this mini-batch")
+                continue
+
+            old_log_probs = torch.stack(old_log_probs_list).to(self.device)
+            
+            # 过滤无效样本
+            current_log_probs = current_log_probs[valid_mask]
+            current_values = current_values[valid_mask]
+            current_entropies = current_entropies[valid_mask]
+            
+            # 为过滤后的样本重新计算advantages和returns
+            valid_rewards = []
+            valid_values_orig = []
+            valid_dones = []
+            
+            for i, is_valid in enumerate(valid_mask):
+                if is_valid:
+                    valid_rewards.append(rewards[i])
+                    valid_values_orig.append(values[i])
+                    valid_dones.append(dones[i])
+            
+            # 计算GAE
+            returns, advantages = self.compute_gae(valid_rewards, valid_values_orig, valid_dones)
+            
+            # Advantage归一化 - 防止空张量/常数张量归出NaN
+            if advantages.numel() == 0:
+                continue
+            # 注释掉标准化，直接使用原始advantages
+            # std = advantages.std(unbiased=False)
+            # if torch.isnan(std) or std < 1e-8:
+            #     std = torch.tensor(1.0, device=advantages.device)
+            # advantages = (advantages - advantages.mean()) / std
+            advantages = 2.0 * advantages  # 临时放大验证链路
+            advantages = torch.clamp(advantages, -10.0, 10.0)
+            
+            print(f"Valid samples: {valid_mask.sum().item()}/{len(valid_mask)}")
+            
+            # 添加调试信息
+            print("advantages.mean()", advantages.mean().item())
+            print("advantages.std()", advantages.std().item())
             
             # 计算策略比率
             ratio = torch.exp(current_log_probs - old_log_probs)
+            
+            # 添加关键调试信息
+            print(f"[debug] current_log_probs range: [{current_log_probs.min().item():.6f}, {current_log_probs.max().item():.6f}]")
+            print(f"[debug] old_log_probs range: [{old_log_probs.min().item():.6f}, {old_log_probs.max().item():.6f}]")
+            print(f"[debug] log_prob_diff range: [{(current_log_probs - old_log_probs).min().item():.6f}, {(current_log_probs - old_log_probs).max().item():.6f}]")
+            print(f"[debug] ratio range: [{ratio.min().item():.6f}, {ratio.max().item():.6f}]")
             
             # 计算裁剪损失
             surr1 = ratio * advantages
             surr2 = torch.clamp(ratio, 1 - self.clip_ratio, 1 + self.clip_ratio) * advantages
             policy_loss = -torch.min(surr1, surr2).mean()
+            
+            # 添加调试信息
+            print("policy_loss", policy_loss.item() if torch.is_tensor(policy_loss) else policy_loss)
+            
+            # 计算KL散度和裁剪比例
+            with torch.no_grad():
+                approx_kl = ((ratio - 1.0) - torch.log(ratio + 1e-8)).mean()
+                clip_fraction = ((ratio - 1.0).abs() > self.clip_ratio).float().mean()
+                
+                # === 按照1013-9.md建议：不被正负抵消的KL估计 ===
+                log_ratio = current_log_probs - old_log_probs
+                approx_kl_sym = 0.5 * ((current_log_probs - old_log_probs).pow(2)).mean()
+                approx_kl_quad = 0.5 * (log_ratio.pow(2)).mean()
+                
+                print(f"[kl_fix] approx_kl_sym={approx_kl_sym.item():.6f}, approx_kl_quad={approx_kl_quad.item():.6f}")
             
             # 计算价值损失
             value_loss = F.mse_loss(current_values, returns)
@@ -435,6 +664,132 @@ class PPOTrainer:
                          self.value_loss_coef * value_loss - 
                          self.entropy_coef * entropy)
             
+            # 详细统计信息打印（按照文档建议的格式）
+            with torch.no_grad():
+                print(f"  Epoch {epoch+1} 详细统计:")
+                print(f"    ratio.mean(): {ratio.mean().item():.6f}, ratio.std(): {ratio.std().item():.6f}")
+                print(f"    clip_fraction: {clip_fraction.item():.4f}, approx_kl: {approx_kl.item():.6f}")
+                print(f"    entropy.mean(): {entropy.item():.6f}")
+                
+                # 按照文档建议的调试信息格式
+                print("old_logp[:5]", old_log_probs[:5].detach().cpu().numpy())
+                print("new_logp[:5]", current_log_probs[:5].detach().cpu().numpy())
+                print("diff[:5]", (current_log_probs - old_log_probs)[:5].detach().cpu().numpy())
+                print("ratio[:5]", ratio[:5].detach().cpu().numpy())
+                print("approx_kl", approx_kl.item())
+                print("entropy", entropy.item())
+                print("valid_ratio", f"{valid_mask.sum().item()}/{len(valid_mask)}")
+                
+                # 健康检查断言（按照文档建议）
+                ratio_mean = ratio.mean().item()
+                approx_kl_val = approx_kl.item()
+                
+                # 断言
+                assert torch.isfinite(current_log_probs).all() and torch.isfinite(old_log_probs).all()
+                assert current_log_probs.max() <= 0.0 and old_log_probs.max() <= 0.0, "log_prob 应 ≤ 0"
+                assert approx_kl < 0.2, f"KL too big {approx_kl.item():.3f}"
+                assert valid_mask.float().mean().item() > 0.5, "有效样本比例过低"
+                
+                # 检查ratio是否在健康范围
+                if abs(ratio_mean - 1.0) > 0.5:
+                    print(f"Warning: ratio.mean()={ratio_mean:.3f} 偏离1.0太远，可能存在分布不一致")
+                
+                # 检查KL散度是否过高
+                if approx_kl_val > 0.1:
+                    print(f"Warning: approx_kl={approx_kl_val:.3f} 过高，可能存在策略更新步长过大")
+                
+                # 检查entropy是否固定不变
+                if abs(entropy.item() - 1.60942) < 1e-5:  # log(5) ≈ 1.60942
+                    print(f"Warning: entropy={entropy.item():.5f} 接近log(5)，可能存在分布问题")
+            
+            # === AFTER 测量 ===
+            with torch.no_grad():
+                # 重新计算logits after更新
+                first_exp = experiences[0]
+                first_state_embed = first_exp.get('state_embed', None)
+                if first_state_embed is not None and len(first_state_embed) > 0 and hasattr(self, '_before_metrics'):
+                    first_agent = first_exp.get('agent', 'IND')
+                    first_actor = self.selector.actors.get(first_agent, self.selector.actor)
+                    
+                    # 使用相同的归一化
+                    first_state_embed_normalized = (first_state_embed - self._embed_mean) / (self._embed_std + 1e-5)
+                    first_state_embed_normalized = first_state_embed_normalized.clamp(-5, 5)
+                    
+                    logits_after = first_actor(first_state_embed_normalized)
+                    
+                    # 计算local_logits after
+                    first_action_idx = int(first_exp.get('action_index', -1))
+                    first_num_actions = first_exp.get('num_actions', None)
+                    first_subset_ids = first_exp.get('subset_indices', None)
+                    
+                    if first_subset_ids is None:
+                        local_logits_after = logits_after[0, :first_num_actions]
+                    else:
+                        if isinstance(first_subset_ids, list):
+                            first_subset_ids = torch.tensor(first_subset_ids, device=self.device, dtype=torch.long)
+                        local_logits_after = logits_after[0, first_subset_ids]
+                    
+                    # 应用温度缩放
+                    tau = 0.25
+                    local_logits_after = local_logits_after / tau
+                    
+                    # 计算KL after
+                    action_idx_tensor = torch.tensor(first_action_idx, device=self.device)
+                    dist_after = torch.distributions.Categorical(logits=local_logits_after)
+                    newlp_after = dist_after.log_prob(action_idx_tensor)
+                    
+                    first_old_logp = first_exp.get('old_log_prob', None)
+                    if first_old_logp is not None and not torch.is_tensor(first_old_logp):
+                        first_old_logp = torch.tensor([float(first_old_logp)], device=self.device, dtype=torch.float32)
+                    
+                    kl_after = (first_old_logp - newlp_after).mean().item()
+                    
+                    # 计算logits变化
+                    local_logits_before = self._before_metrics['local_logits_before']
+                    dL2 = (local_logits_after - local_logits_before).pow(2).mean().sqrt().item()
+                    
+                    # 获取before指标
+                    kl_before = self._before_metrics['kl_before']
+                    
+                    print(f"[probe] Δloc_L2={dL2:.4g} | KL_before={kl_before:.3g} | KL_after={kl_after:.3g}")
+                    
+                    # === 按照1013-8.md建议的AFTER KL诊断 ===
+                    print("[chk] KL_after =", kl_after)
+                    
+                    # === 按照1013-8.md建议：手动扰动参数测试 ===
+                    print("[probe] 手动扰动参数测试...")
+                    old_params = [p.detach().clone() for p in first_actor.parameters()]
+                    with torch.no_grad():
+                        for p in first_actor.parameters():
+                            p.add_(0.01 * torch.randn_like(p))
+                    
+                    # 重新前向→算 KL_after
+                    with torch.no_grad():
+                        logits_jit = first_actor(first_state_embed_normalized)
+                        if first_subset_ids is None:
+                            local_jit = logits_jit[0, :first_num_actions]
+                        else:
+                            local_jit = logits_jit[0, first_subset_ids]
+                        local_jit = local_jit / tau
+                        dist_jit = torch.distributions.Categorical(logits=local_jit)
+                        kl_jit = (first_old_logp - dist_jit.log_prob(action_idx_tensor)).mean().item()
+                    print("[probe] KL after param jitter =", kl_jit)
+                    
+                    # 还原
+                    for p, q in zip(first_actor.parameters(), old_params):
+                        p.copy_(q)
+                    
+                    # === 按照1013-9.md建议：校验最后一层真的在更新 ===
+                    print("[probe] 校验最后一层更新...")
+                    with torch.no_grad():
+                        local1 = first_actor(first_state_embed_normalized)[0, :first_num_actions]
+                    
+                    # 这里应该是在step之后，但我们先记录local1，在step后再比较
+                    # 暂时跳过，因为我们需要在step前后对比
+                    
+                    # 自适应KL调整
+                    self._adaptive_kl_adjustment(kl_after)
+            
             # 【MAPPO】分别更新各agent的Actor和Critic网络
             # 1. 更新所有agent的Actor（策略网络）
             actor_loss = policy_loss - self.entropy_coef * entropy
@@ -442,16 +797,73 @@ class PPOTrainer:
                 optimizer = self.selector.actor_optimizers[agent]
                 actor_net = self.selector.actors[agent]
                 
+                # === 按照1013-8.md建议：检查最后一层梯度 ===
+                print(f"\n[grad] 检查 {agent} actor最后一层梯度:")
+                for name, p in actor_net.named_parameters():
+                    if "network.2" in name:  # 最后一层 (network.2是第三层，即输出层)
+                        g = (p.grad.norm().item() if p.grad is not None else 0.0)
+                        print(f"[grad] {name}: grad_norm={g:.3e}")
+                
+                # 记录step前的权重（只记录最后一层）
+                last_params_before = {}
+                for name, p in actor_net.named_parameters():
+                    if "network.2" in name:  # 最后一层
+                        last_params_before[name] = p.detach().clone()
+                
                 optimizer.zero_grad()
             
             actor_loss.backward(retain_graph=True)
+            
+            # 1) 梯度范数检查
+            total_grad = 0.0
+            nz = 0
+            for agent in self.selector.actors.keys():
+                actor_net = self.selector.actors[agent]
+                for p in actor_net.parameters():
+                    if p.grad is not None:
+                        g = p.grad.data
+                        total_grad += g.norm().item()
+                        nz += (g.abs() > 0).sum().item()
+            print(f"[dbg] actor grad_norm_sum={total_grad:.6f}, grad_nonzero={nz}")
+            
+            # 验证优化器 param group（从共享→MAPPO 常见漏绑）
+            for agent in self.selector.actor_optimizers.keys():
+                optimizer = self.selector.actor_optimizers[agent]
+                actor_net = self.selector.actors[agent]
+                
+                names = set()
+                for i, g in enumerate(optimizer.param_groups):
+                    cnt = sum(p.numel() for p in g['params'])
+                    print(f"[opt] {agent} group#{i} lr={g['lr']} params={cnt}")
+                    for p in g['params']:
+                        names.add(id(p))
+                # 粗暴检查：actor 的任意一个参数 id 是否在 names 里
+                example_param_id = id(next(actor_net.parameters()))
+                print(f"[opt] {agent} actor params bound:", example_param_id in names)
             
             for agent in self.selector.actor_optimizers.keys():
                 optimizer = self.selector.actor_optimizers[agent]
                 actor_net = self.selector.actors[agent]
                 
+                # 2) 参数是否真的在变
+                old_params = [p.detach().clone() for p in actor_net.parameters()]
+                
                 torch.nn.utils.clip_grad_norm_(actor_net.parameters(), self.max_grad_norm)
                 optimizer.step()
+                
+                diff = sum((p.detach() - q).abs().sum().item() for p,q in zip(actor_net.parameters(), old_params))
+                print(f"[dbg] {agent} actor param_diff={diff:.6f}")
+                
+                # === 按照1013-8.md建议：检查最后一层参数更新 ===
+                diff_sum = 0.0
+                for name, p in actor_net.named_parameters():
+                    if name in last_params_before:
+                        diff = (p.detach() - last_params_before[name]).abs().sum().item()
+                        diff_sum += diff
+                print(f"[upd] {agent} last_layer_param_diff={diff_sum:.6f}")
+                
+                # 清除记录，避免跨batch累积
+                last_params_before.clear()
             
             # 2. 更新所有agent的Critic（价值网络）
             for agent in self.selector.critic_optimizers.keys():
@@ -480,6 +892,24 @@ class PPOTrainer:
             entropy_losses.append(entropy.item())  # 记录熵值而不是熵损失
             kl_divergences.append(kl_div.item())
             clip_fractions.append(clip_fraction.item())
+            
+            # 记录详细的训练指标到增强记录器
+            logger = get_training_logger()
+            if logger:
+                epoch_metrics = {
+                    'policy_loss': policy_loss.item(),
+                    'value_loss': value_loss.item(),
+                    'entropy_loss': entropy.item(),
+                    'total_loss': total_loss.item(),
+                    'kl_divergence': kl_div.item(),
+                    'clip_fraction': clip_fraction.item(),
+                    'entropy': entropy.item(),
+                    'advantages_mean': advantages.mean().item(),
+                    'advantages_std': advantages.std().item(),
+                    'ratio_mean': ratio.mean().item(),
+                    'ratio_std': ratio.std().item()
+                }
+                logger.record_epoch(epoch, epoch_metrics)
             
             print(f"  Epoch {epoch+1}/{self.num_epochs}: "
                   f"policy_loss={policy_loss.item():.4f}, "

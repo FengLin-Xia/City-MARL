@@ -1,0 +1,5315 @@
+{
+  "episodes": [
+    {
+      "episode_id": 0,
+      "episode_return": 30.537022940695998,
+      "steps": [
+        {
+          "month": 1,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_196"
+            ],
+            [
+              "s_195"
+            ],
+            [
+              "s_151"
+            ]
+          ],
+          "action_scores": [
+            0.06666666666666667,
+            0.06666666666666667,
+            0.06666666666666667
+          ],
+          "sequence_score": 0.2,
+          "available_actions_count": 8,
+          "candidate_slots_count": 4,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_196",
+              "footprint_slots": [
+                "s_196"
+              ],
+              "cost": 1105.0,
+              "reward": 801.0266666666666,
+              "prestige": -0.03333333333333333,
+              "score": 0.06666666666666667,
+              "slot_positions": [
+                {
+                  "slot_id": "s_196",
+                  "x": 120.920771,
+                  "y": 75.661664,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_195",
+              "footprint_slots": [
+                "s_195"
+              ],
+              "cost": 1086.6666666666667,
+              "reward": 799.6933333333333,
+              "prestige": -0.03333333333333333,
+              "score": 0.06666666666666667,
+              "slot_positions": [
+                {
+                  "slot_id": "s_195",
+                  "x": 125.871348,
+                  "y": 76.836545,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_151",
+              "footprint_slots": [
+                "s_151"
+              ],
+              "cost": 718.6666666666666,
+              "reward": 77.33333333333333,
+              "prestige": 0.06666666666666667,
+              "score": 0.06666666666666667,
+              "slot_positions": [
+                {
+                  "slot_id": "s_151",
+                  "x": 119.499386,
+                  "y": 81.833851,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 2,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_37"
+            ],
+            [
+              "s_41"
+            ],
+            [
+              "s_36"
+            ]
+          ],
+          "action_scores": [
+            0.5047832291418076,
+            0.5047832291418076,
+            0.5047832291418076
+          ],
+          "sequence_score": 1.514349687425423,
+          "available_actions_count": 126,
+          "candidate_slots_count": 21,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_37",
+              "footprint_slots": [
+                "s_37"
+              ],
+              "cost": 986.0,
+              "reward": 889.3426337805296,
+              "prestige": 0.3333333333333333,
+              "score": 0.5047832291418076,
+              "slot_positions": [
+                {
+                  "slot_id": "s_37",
+                  "x": 117.011644,
+                  "y": 122.002713,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_41",
+              "footprint_slots": [
+                "s_41"
+              ],
+              "cost": 978.6666666666666,
+              "reward": 889.7951250518772,
+              "prestige": 0.3333333333333333,
+              "score": 0.5047832291418076,
+              "slot_positions": [
+                {
+                  "slot_id": "s_41",
+                  "x": 117.786167,
+                  "y": 119.675076,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_36",
+              "footprint_slots": [
+                "s_36"
+              ],
+              "cost": 1019.0,
+              "reward": 892.0638585444713,
+              "prestige": 0.3333333333333333,
+              "score": 0.5047832291418076,
+              "slot_positions": [
+                {
+                  "slot_id": "s_36",
+                  "x": 114.768716,
+                  "y": 120.657545,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 3,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_166"
+            ],
+            [
+              "s_165"
+            ],
+            [
+              "s_193"
+            ]
+          ],
+          "action_scores": [
+            0.2415088956707029,
+            0.2415088956707029,
+            0.2415088956707029
+          ],
+          "sequence_score": 0.7245266870121088,
+          "available_actions_count": 16,
+          "candidate_slots_count": 9,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_166",
+              "footprint_slots": [
+                "s_166"
+              ],
+              "cost": 1112.3333333333333,
+              "reward": 1067.5856474923346,
+              "prestige": -0.03333333333333333,
+              "score": 0.2415088956707029,
+              "slot_positions": [
+                {
+                  "slot_id": "s_166",
+                  "x": 129.104547,
+                  "y": 83.299806,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_165",
+              "footprint_slots": [
+                "s_165"
+              ],
+              "cost": 700.3333333333334,
+              "reward": 395.7675964323674,
+              "prestige": 0.06666666666666667,
+              "score": 0.2415088956707029,
+              "slot_positions": [
+                {
+                  "slot_id": "s_165",
+                  "x": 124.323973,
+                  "y": 82.999449,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_193",
+              "footprint_slots": [
+                "s_193"
+              ],
+              "cost": 724.3333333333334,
+              "reward": 769.1463157178565,
+              "prestige": 0.03333333333333333,
+              "score": 0.2415088956707029,
+              "slot_positions": [
+                {
+                  "slot_id": "s_193",
+                  "x": 130.616089,
+                  "y": 77.915564,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 4,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_46"
+            ],
+            [
+              "s_42"
+            ],
+            [
+              "s_45"
+            ]
+          ],
+          "action_scores": [
+            0.5057317324895739,
+            0.5057317324895739,
+            0.5057317324895739
+          ],
+          "sequence_score": 1.517195197468722,
+          "available_actions_count": 186,
+          "candidate_slots_count": 31,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_46",
+              "footprint_slots": [
+                "s_46"
+              ],
+              "cost": 975.0,
+              "reward": 1313.8761520007245,
+              "prestige": 0.3333333333333333,
+              "score": 0.5057317324895739,
+              "slot_positions": [
+                {
+                  "slot_id": "s_46",
+                  "x": 120.261213,
+                  "y": 118.946661,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_42",
+              "footprint_slots": [
+                "s_42"
+              ],
+              "cost": 967.6666666666666,
+              "reward": 1319.63372016455,
+              "prestige": 0.3333333333333333,
+              "score": 0.5057317324895739,
+              "slot_positions": [
+                {
+                  "slot_id": "s_42",
+                  "x": 119.978807,
+                  "y": 121.17582,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_45",
+              "footprint_slots": [
+                "s_45"
+              ],
+              "cost": 997.0,
+              "reward": 1307.153598971679,
+              "prestige": 0.3333333333333333,
+              "score": 0.5057317324895739,
+              "slot_positions": [
+                {
+                  "slot_id": "s_45",
+                  "x": 118.269182,
+                  "y": 117.277081,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 5,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_199"
+            ],
+            [
+              "s_198"
+            ],
+            [
+              "s_197"
+            ]
+          ],
+          "action_scores": [
+            0.39681002525610803,
+            0.39681002525610803,
+            0.39681002525610803
+          ],
+          "sequence_score": 1.1904300757683242,
+          "available_actions_count": 25,
+          "candidate_slots_count": 13,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_199",
+              "footprint_slots": [
+                "s_199"
+              ],
+              "cost": 1009.6666666666666,
+              "reward": 1093.0042252674855,
+              "prestige": -0.03333333333333333,
+              "score": 0.39681002525610803,
+              "slot_positions": [
+                {
+                  "slot_id": "s_199",
+                  "x": 118.216796,
+                  "y": 70.683812,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_198",
+              "footprint_slots": [
+                "s_198"
+              ],
+              "cost": 1039.0,
+              "reward": 1134.1037683034235,
+              "prestige": -0.03333333333333333,
+              "score": 0.39681002525610803,
+              "slot_positions": [
+                {
+                  "slot_id": "s_198",
+                  "x": 116.429011,
+                  "y": 74.415931,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_197",
+              "footprint_slots": [
+                "s_197"
+              ],
+              "cost": 965.6666666666666,
+              "reward": 1111.564540498524,
+              "prestige": -0.03333333333333333,
+              "score": 0.39681002525610803,
+              "slot_positions": [
+                {
+                  "slot_id": "s_197",
+                  "x": 122.447845,
+                  "y": 70.876791,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 6,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_100"
+            ],
+            [
+              "s_101"
+            ],
+            [
+              "s_59"
+            ]
+          ],
+          "action_scores": [
+            0.5046805648818823,
+            0.5046805648818823,
+            0.5046805648818823
+          ],
+          "sequence_score": 1.514041694645647,
+          "available_actions_count": 222,
+          "candidate_slots_count": 37,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_100",
+              "footprint_slots": [
+                "s_100"
+              ],
+              "cost": 938.3333333333334,
+              "reward": 1300.2602294162514,
+              "prestige": 0.3333333333333333,
+              "score": 0.5046805648818823,
+              "slot_positions": [
+                {
+                  "slot_id": "s_100",
+                  "x": 122.764348,
+                  "y": 118.380137,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_101",
+              "footprint_slots": [
+                "s_101"
+              ],
+              "cost": 938.3333333333334,
+              "reward": 1261.6174324077756,
+              "prestige": 0.3333333333333333,
+              "score": 0.5046805648818823,
+              "slot_positions": [
+                {
+                  "slot_id": "s_101",
+                  "x": 122.576825,
+                  "y": 115.950697,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_59",
+              "footprint_slots": [
+                "s_59"
+              ],
+              "cost": 927.3333333333334,
+              "reward": 1297.878985508328,
+              "prestige": 0.3333333333333333,
+              "score": 0.5046805648818823,
+              "slot_positions": [
+                {
+                  "slot_id": "s_59",
+                  "x": 122.842073,
+                  "y": 121.430083,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 7,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_152"
+            ],
+            [
+              "s_104"
+            ],
+            [
+              "s_116"
+            ]
+          ],
+          "action_scores": [
+            0.39999999999999997,
+            0.39999999999999997,
+            0.39999999999999997
+          ],
+          "sequence_score": 1.2,
+          "available_actions_count": 30,
+          "candidate_slots_count": 18,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_152",
+              "footprint_slots": [
+                "s_152"
+              ],
+              "cost": 1149.0,
+              "reward": 1163.1704183213278,
+              "prestige": -0.03333333333333333,
+              "score": 0.39999999999999997,
+              "slot_positions": [
+                {
+                  "slot_id": "s_152",
+                  "x": 115.255188,
+                  "y": 79.978303,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_104",
+              "footprint_slots": [
+                "s_104"
+              ],
+              "cost": 638.0,
+              "reward": 389.67514270906514,
+              "prestige": 0.06666666666666667,
+              "score": 0.39999999999999997,
+              "slot_positions": [
+                {
+                  "slot_id": "s_104",
+                  "x": 114.327521,
+                  "y": 84.919801,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_116",
+              "footprint_slots": [
+                "s_116"
+              ],
+              "cost": 597.6666666666666,
+              "reward": 316.1410357699379,
+              "prestige": 0.06666666666666667,
+              "score": 0.39999999999999997,
+              "slot_positions": [
+                {
+                  "slot_id": "s_116",
+                  "x": 111.474504,
+                  "y": 83.40631,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 8,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_24"
+            ],
+            [
+              "s_23"
+            ],
+            [
+              "s_25"
+            ]
+          ],
+          "action_scores": [
+            0.46477248917731423,
+            0.46477248917731423,
+            0.46477248917731423
+          ],
+          "sequence_score": 1.3943174675319427,
+          "available_actions_count": 240,
+          "candidate_slots_count": 40,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_24",
+              "footprint_slots": [
+                "s_24"
+              ],
+              "cost": 927.3333333333334,
+              "reward": 971.3146860370803,
+              "prestige": 0.3333333333333333,
+              "score": 0.46477248917731423,
+              "slot_positions": [
+                {
+                  "slot_id": "s_24",
+                  "x": 103.3633,
+                  "y": 115.959753,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_23",
+              "footprint_slots": [
+                "s_23"
+              ],
+              "cost": 872.3333333333334,
+              "reward": 970.5409415236436,
+              "prestige": 0.3333333333333333,
+              "score": 0.46477248917731423,
+              "slot_positions": [
+                {
+                  "slot_id": "s_23",
+                  "x": 102.645536,
+                  "y": 118.552459,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_25",
+              "footprint_slots": [
+                "s_25"
+              ],
+              "cost": 945.6666666666666,
+              "reward": 971.1681714150176,
+              "prestige": 0.3333333333333333,
+              "score": 0.46477248917731423,
+              "slot_positions": [
+                {
+                  "slot_id": "s_25",
+                  "x": 104.673293,
+                  "y": 113.580462,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 9,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_139"
+            ],
+            [
+              "s_137"
+            ],
+            [
+              "s_141"
+            ]
+          ],
+          "action_scores": [
+            0.07685133502192563,
+            0.07685133502192563,
+            0.07685133502192563
+          ],
+          "sequence_score": 0.2305540050657769,
+          "available_actions_count": 34,
+          "candidate_slots_count": 20,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_139",
+              "footprint_slots": [
+                "s_139"
+              ],
+              "cost": 671.0,
+              "reward": 391.1035291104954,
+              "prestige": 0.06666666666666667,
+              "score": 0.07685133502192563,
+              "slot_positions": [
+                {
+                  "slot_id": "s_139",
+                  "x": 124.589003,
+                  "y": 88.485362,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_137",
+              "footprint_slots": [
+                "s_137"
+              ],
+              "cost": 656.3333333333334,
+              "reward": 376.29923363336866,
+              "prestige": 0.06666666666666667,
+              "score": 0.07685133502192563,
+              "slot_positions": [
+                {
+                  "slot_id": "s_137",
+                  "x": 127.106777,
+                  "y": 88.631293,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_141",
+              "footprint_slots": [
+                "s_141"
+              ],
+              "cost": 682.0,
+              "reward": 393.82963281832707,
+              "prestige": 0.06666666666666667,
+              "score": 0.07685133502192563,
+              "slot_positions": [
+                {
+                  "slot_id": "s_141",
+                  "x": 122.068936,
+                  "y": 88.091191,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 10,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_16"
+            ],
+            [
+              "s_15"
+            ],
+            [
+              "s_38"
+            ]
+          ],
+          "action_scores": [
+            0.5052746776576117,
+            0.5052746776576117,
+            0.5052746776576117
+          ],
+          "sequence_score": 1.515824032972835,
+          "available_actions_count": 342,
+          "candidate_slots_count": 57,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_16",
+              "footprint_slots": [
+                "s_16"
+              ],
+              "cost": 916.3333333333334,
+              "reward": 1299.3053999998756,
+              "prestige": 0.3333333333333333,
+              "score": 0.5052746776576117,
+              "slot_positions": [
+                {
+                  "slot_id": "s_16",
+                  "x": 116.902328,
+                  "y": 124.809941,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_15",
+              "footprint_slots": [
+                "s_15"
+              ],
+              "cost": 894.3333333333334,
+              "reward": 1233.8306893437518,
+              "prestige": 0.3333333333333333,
+              "score": 0.5052746776576117,
+              "slot_positions": [
+                {
+                  "slot_id": "s_15",
+                  "x": 116.069939,
+                  "y": 126.653854,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_38",
+              "footprint_slots": [
+                "s_38"
+              ],
+              "cost": 927.3333333333334,
+              "reward": 1313.4392773098255,
+              "prestige": 0.3333333333333333,
+              "score": 0.5052746776576117,
+              "slot_positions": [
+                {
+                  "slot_id": "s_38",
+                  "x": 119.261946,
+                  "y": 123.30221,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 11,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_123"
+            ],
+            [
+              "s_126"
+            ],
+            [
+              "s_120"
+            ]
+          ],
+          "action_scores": [
+            0.08035028062300086,
+            0.08035028062300086,
+            0.08035028062300086
+          ],
+          "sequence_score": 0.24105084186900255,
+          "available_actions_count": 40,
+          "candidate_slots_count": 22,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_123",
+              "footprint_slots": [
+                "s_123"
+              ],
+              "cost": 623.3333333333334,
+              "reward": 336.18262521796265,
+              "prestige": 0.06666666666666667,
+              "score": 0.08035028062300086,
+              "slot_positions": [
+                {
+                  "slot_id": "s_123",
+                  "x": 134.094264,
+                  "y": 89.060415,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_126",
+              "footprint_slots": [
+                "s_126"
+              ],
+              "cost": 652.6666666666666,
+              "reward": 439.9990032935034,
+              "prestige": 0.06666666666666667,
+              "score": 0.08035028062300086,
+              "slot_positions": [
+                {
+                  "slot_id": "s_126",
+                  "x": 130.912145,
+                  "y": 88.074926,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_120",
+              "footprint_slots": [
+                "s_120"
+              ],
+              "cost": 601.3333333333334,
+              "reward": 237.32856615409833,
+              "prestige": 0.06666666666666667,
+              "score": 0.08035028062300086,
+              "slot_positions": [
+                {
+                  "slot_id": "s_120",
+                  "x": 136.816766,
+                  "y": 91.057881,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 12,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_3"
+            ],
+            [
+              "s_4"
+            ],
+            [
+              "s_5"
+            ]
+          ],
+          "action_scores": [
+            0.49331266016196723,
+            0.49331266016196723,
+            0.49331266016196723
+          ],
+          "sequence_score": 1.4799379804859016,
+          "available_actions_count": 369,
+          "candidate_slots_count": 63,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_3",
+              "footprint_slots": [
+                "s_3"
+              ],
+              "cost": 909.0,
+              "reward": 1202.4921840181821,
+              "prestige": 0.3333333333333333,
+              "score": 0.49331266016196723,
+              "slot_positions": [
+                {
+                  "slot_id": "s_3",
+                  "x": 105.119518,
+                  "y": 124.29778,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_4",
+              "footprint_slots": [
+                "s_4"
+              ],
+              "cost": 923.6666666666666,
+              "reward": 1272.540156846522,
+              "prestige": 0.3333333333333333,
+              "score": 0.49331266016196723,
+              "slot_positions": [
+                {
+                  "slot_id": "s_4",
+                  "x": 105.516578,
+                  "y": 121.622426,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_5",
+              "footprint_slots": [
+                "s_5"
+              ],
+              "cost": 909.0,
+              "reward": 1255.3666491372853,
+              "prestige": 0.3333333333333333,
+              "score": 0.49331266016196723,
+              "slot_positions": [
+                {
+                  "slot_id": "s_5",
+                  "x": 102.458677,
+                  "y": 123.084082,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 13,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_154"
+            ],
+            [
+              "s_112"
+            ],
+            [
+              "s_153"
+            ]
+          ],
+          "action_scores": [
+            0.26841935001352174,
+            0.26841935001352174,
+            0.26841935001352174
+          ],
+          "sequence_score": 0.8052580500405653,
+          "available_actions_count": 45,
+          "candidate_slots_count": 25,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_154",
+              "footprint_slots": [
+                "s_154"
+              ],
+              "cost": 1152.6666666666667,
+              "reward": 1127.5784777102651,
+              "prestige": -0.03333333333333333,
+              "score": 0.26841935001352174,
+              "slot_positions": [
+                {
+                  "slot_id": "s_154",
+                  "x": 110.207723,
+                  "y": 77.659119,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_112",
+              "footprint_slots": [
+                "s_112"
+              ],
+              "cost": 649.0,
+              "reward": 391.1786737479885,
+              "prestige": 0.06666666666666667,
+              "score": 0.26841935001352174,
+              "slot_positions": [
+                {
+                  "slot_id": "s_112",
+                  "x": 105.921847,
+                  "y": 80.927891,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_153",
+              "footprint_slots": [
+                "s_153"
+              ],
+              "cost": 1105.0,
+              "reward": 979.2179946798616,
+              "prestige": -0.03333333333333333,
+              "score": 0.26841935001352174,
+              "slot_positions": [
+                {
+                  "slot_id": "s_153",
+                  "x": 104.613086,
+                  "y": 75.760382,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 14,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_54"
+            ],
+            [
+              "s_53"
+            ],
+            [
+              "s_56"
+            ]
+          ],
+          "action_scores": [
+            0.4756506395373996,
+            0.4756506395373996,
+            0.4756506395373996
+          ],
+          "sequence_score": 1.4269519186121988,
+          "available_actions_count": 372,
+          "candidate_slots_count": 64,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_54",
+              "footprint_slots": [
+                "s_54"
+              ],
+              "cost": 853.6666666666666,
+              "reward": 1028.0469813378995,
+              "prestige": 0.3333333333333333,
+              "score": 0.4756506395373996,
+              "slot_positions": [
+                {
+                  "slot_id": "s_54",
+                  "x": 131.839017,
+                  "y": 126.497926,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_53",
+              "footprint_slots": [
+                "s_53"
+              ],
+              "cost": 879.3333333333334,
+              "reward": 1061.0620233687803,
+              "prestige": 0.3333333333333333,
+              "score": 0.4756506395373996,
+              "slot_positions": [
+                {
+                  "slot_id": "s_53",
+                  "x": 131.735775,
+                  "y": 124.653361,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_56",
+              "footprint_slots": [
+                "s_56"
+              ],
+              "cost": 898.0,
+              "reward": 1142.948609103549,
+              "prestige": 0.3333333333333333,
+              "score": 0.4756506395373996,
+              "slot_positions": [
+                {
+                  "slot_id": "s_56",
+                  "x": 128.585485,
+                  "y": 125.963693,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 15,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_156"
+            ],
+            [
+              "s_191"
+            ],
+            [
+              "s_190"
+            ]
+          ],
+          "action_scores": [
+            0.2608061245840008,
+            0.2608061245840008,
+            0.2608061245840008
+          ],
+          "sequence_score": 0.7824183737520025,
+          "available_actions_count": 45,
+          "candidate_slots_count": 29,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_156",
+              "footprint_slots": [
+                "s_156"
+              ],
+              "cost": 1130.6666666666667,
+              "reward": 1143.8048681405946,
+              "prestige": -0.03333333333333333,
+              "score": 0.2608061245840008,
+              "slot_positions": [
+                {
+                  "slot_id": "s_156",
+                  "x": 134.811762,
+                  "y": 84.282681,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_191",
+              "footprint_slots": [
+                "s_191"
+              ],
+              "cost": 775.6666666666666,
+              "reward": 782.4390704258361,
+              "prestige": 0.03333333333333333,
+              "score": 0.2608061245840008,
+              "slot_positions": [
+                {
+                  "slot_id": "s_191",
+                  "x": 135.393843,
+                  "y": 78.343222,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_190",
+              "footprint_slots": [
+                "s_190"
+              ],
+              "cost": 750.0,
+              "reward": 622.0379625391298,
+              "prestige": 0.03333333333333333,
+              "score": 0.2608061245840008,
+              "slot_positions": [
+                {
+                  "slot_id": "s_190",
+                  "x": 139.735405,
+                  "y": 80.787122,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 16,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_83"
+            ],
+            [
+              "s_82"
+            ],
+            [
+              "s_84"
+            ]
+          ],
+          "action_scores": [
+            0.49366521737304314,
+            0.49366521737304314,
+            0.49366521737304314
+          ],
+          "sequence_score": 1.4809956521191294,
+          "available_actions_count": 363,
+          "candidate_slots_count": 61,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_83",
+              "footprint_slots": [
+                "s_83"
+              ],
+              "cost": 1011.6666666666666,
+              "reward": 1235.8596574222242,
+              "prestige": 0.3333333333333333,
+              "score": 0.49366521737304314,
+              "slot_positions": [
+                {
+                  "slot_id": "s_83",
+                  "x": 104.707413,
+                  "y": 109.103724,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_82",
+              "footprint_slots": [
+                "s_82"
+              ],
+              "cost": 1015.3333333333334,
+              "reward": 1160.8233031971267,
+              "prestige": 0.3333333333333333,
+              "score": 0.49366521737304314,
+              "slot_positions": [
+                {
+                  "slot_id": "s_82",
+                  "x": 106.060043,
+                  "y": 106.912736,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_84",
+              "footprint_slots": [
+                "s_84"
+              ],
+              "cost": 1004.3333333333334,
+              "reward": 1288.825940315698,
+              "prestige": 0.3333333333333333,
+              "score": 0.49366521737304314,
+              "slot_positions": [
+                {
+                  "slot_id": "s_84",
+                  "x": 103.218798,
+                  "y": 111.214843,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 17,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_155"
+            ],
+            [
+              "s_124"
+            ],
+            [
+              "s_138"
+            ]
+          ],
+          "action_scores": [
+            0.39822304956459337,
+            0.39822304956459337,
+            0.39822304956459337
+          ],
+          "sequence_score": 1.1946691486937802,
+          "available_actions_count": 43,
+          "candidate_slots_count": 31,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_155",
+              "footprint_slots": [
+                "s_155"
+              ],
+              "cost": 1116.0,
+              "reward": 1148.125426346713,
+              "prestige": -0.03333333333333333,
+              "score": 0.39822304956459337,
+              "slot_positions": [
+                {
+                  "slot_id": "s_155",
+                  "x": 140.117231,
+                  "y": 87.580593,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_124",
+              "footprint_slots": [
+                "s_124"
+              ],
+              "cost": 874.6666666666666,
+              "reward": 817.0934874836557,
+              "prestige": 0.03333333333333333,
+              "score": 0.39822304956459337,
+              "slot_positions": [
+                {
+                  "slot_id": "s_124",
+                  "x": 131.914132,
+                  "y": 91.894286,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_138",
+              "footprint_slots": [
+                "s_138"
+              ],
+              "cost": 715.0,
+              "reward": 451.72273687023045,
+              "prestige": 0.06666666666666667,
+              "score": 0.39822304956459337,
+              "slot_positions": [
+                {
+                  "slot_id": "s_138",
+                  "x": 125.144174,
+                  "y": 92.268159,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 18,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_71"
+            ],
+            [
+              "s_68"
+            ],
+            [
+              "s_74"
+            ]
+          ],
+          "action_scores": [
+            0.4739450849799296,
+            0.4739450849799296,
+            0.4739450849799296
+          ],
+          "sequence_score": 1.4218352549397888,
+          "available_actions_count": 363,
+          "candidate_slots_count": 61,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_71",
+              "footprint_slots": [
+                "s_71"
+              ],
+              "cost": 905.0,
+              "reward": 1026.1668723291657,
+              "prestige": 0.3333333333333333,
+              "score": 0.4739450849799296,
+              "slot_positions": [
+                {
+                  "slot_id": "s_71",
+                  "x": 93.898282,
+                  "y": 105.633928,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_68",
+              "footprint_slots": [
+                "s_68"
+              ],
+              "cost": 894.0,
+              "reward": 932.8502025601083,
+              "prestige": 0.3333333333333333,
+              "score": 0.4739450849799296,
+              "slot_positions": [
+                {
+                  "slot_id": "s_68",
+                  "x": 91.170616,
+                  "y": 104.822416,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_74",
+              "footprint_slots": [
+                "s_74"
+              ],
+              "cost": 923.3333333333334,
+              "reward": 1120.7914610644752,
+              "prestige": 0.3333333333333333,
+              "score": 0.4739450849799296,
+              "slot_positions": [
+                {
+                  "slot_id": "s_74",
+                  "x": 96.592912,
+                  "y": 106.609512,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 19,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_201"
+            ],
+            [
+              "s_183"
+            ],
+            [
+              "s_200"
+            ]
+          ],
+          "action_scores": [
+            0.3950467521179224,
+            0.3950467521179224,
+            0.3950467521179224
+          ],
+          "sequence_score": 1.1851402563537672,
+          "available_actions_count": 42,
+          "candidate_slots_count": 32,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_201",
+              "footprint_slots": [
+                "s_201"
+              ],
+              "cost": 1068.3333333333333,
+              "reward": 1129.9811595034614,
+              "prestige": -0.03333333333333333,
+              "score": 0.3950467521179224,
+              "slot_positions": [
+                {
+                  "slot_id": "s_201",
+                  "x": 105.817837,
+                  "y": 71.025414,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_183",
+              "footprint_slots": [
+                "s_183"
+              ],
+              "cost": 516.6666666666666,
+              "reward": 336.2779373863127,
+              "prestige": 0.06666666666666667,
+              "score": 0.3950467521179224,
+              "slot_positions": [
+                {
+                  "slot_id": "s_183",
+                  "x": 100.547117,
+                  "y": 71.317596,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_200",
+              "footprint_slots": [
+                "s_200"
+              ],
+              "cost": 786.6666666666666,
+              "reward": 777.8745055860385,
+              "prestige": 0.03333333333333333,
+              "score": 0.3950467521179224,
+              "slot_positions": [
+                {
+                  "slot_id": "s_200",
+                  "x": 111.906908,
+                  "y": 71.980545,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 20,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_92"
+            ],
+            [
+              "s_95"
+            ],
+            [
+              "s_93"
+            ]
+          ],
+          "action_scores": [
+            0.48777193859362383,
+            0.48777193859362383,
+            0.48777193859362383
+          ],
+          "sequence_score": 1.4633158157808714,
+          "available_actions_count": 381,
+          "candidate_slots_count": 67,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_92",
+              "footprint_slots": [
+                "s_92"
+              ],
+              "cost": 967.6666666666666,
+              "reward": 1180.584140585653,
+              "prestige": 0.3333333333333333,
+              "score": 0.48777193859362383,
+              "slot_positions": [
+                {
+                  "slot_id": "s_92",
+                  "x": 131.292006,
+                  "y": 118.565558,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_95",
+              "footprint_slots": [
+                "s_95"
+              ],
+              "cost": 989.6666666666666,
+              "reward": 1222.3809181460842,
+              "prestige": 0.3333333333333333,
+              "score": 0.48777193859362383,
+              "slot_positions": [
+                {
+                  "slot_id": "s_95",
+                  "x": 128.269348,
+                  "y": 118.016054,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_93",
+              "footprint_slots": [
+                "s_93"
+              ],
+              "cost": 982.3333333333334,
+              "reward": 1126.9610941632732,
+              "prestige": 0.3333333333333333,
+              "score": 0.48777193859362383,
+              "slot_positions": [
+                {
+                  "slot_id": "s_93",
+                  "x": 131.083852,
+                  "y": 115.325205,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 21,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_188"
+            ],
+            [
+              "s_186"
+            ],
+            [
+              "s_179"
+            ]
+          ],
+          "action_scores": [
+            0.08822371371697957,
+            0.08822371371697957,
+            0.08822371371697957
+          ],
+          "sequence_score": 0.2646711411509387,
+          "available_actions_count": 43,
+          "candidate_slots_count": 35,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_188",
+              "footprint_slots": [
+                "s_188"
+              ],
+              "cost": 669.0,
+              "reward": 592.0947427588685,
+              "prestige": 0.03333333333333333,
+              "score": 0.08822371371697957,
+              "slot_positions": [
+                {
+                  "slot_id": "s_188",
+                  "x": 92.776584,
+                  "y": 66.30851,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_186",
+              "footprint_slots": [
+                "s_186"
+              ],
+              "cost": 487.3333333333333,
+              "reward": 333.28283771324624,
+              "prestige": 0.06666666666666667,
+              "score": 0.08822371371697957,
+              "slot_positions": [
+                {
+                  "slot_id": "s_186",
+                  "x": 95.634923,
+                  "y": 67.292426,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_179",
+              "footprint_slots": [
+                "s_179"
+              ],
+              "cost": 406.6666666666667,
+              "reward": 129.25260149448462,
+              "prestige": 0.06666666666666667,
+              "score": 0.08822371371697957,
+              "slot_positions": [
+                {
+                  "slot_id": "s_179",
+                  "x": 90.305858,
+                  "y": 64.427434,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 22,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_52"
+            ],
+            [
+              "s_50"
+            ],
+            [
+              "s_28"
+            ]
+          ],
+          "action_scores": [
+            0.4875557541608137,
+            0.4875557541608137,
+            0.4875557541608137
+          ],
+          "sequence_score": 1.462667262482441,
+          "available_actions_count": 381,
+          "candidate_slots_count": 67,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_52",
+              "footprint_slots": [
+                "s_52"
+              ],
+              "cost": 875.6666666666666,
+              "reward": 1148.7538798104858,
+              "prestige": 0.3333333333333333,
+              "score": 0.4875557541608137,
+              "slot_positions": [
+                {
+                  "slot_id": "s_52",
+                  "x": 88.380723,
+                  "y": 111.316656,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_50",
+              "footprint_slots": [
+                "s_50"
+              ],
+              "cost": 886.6666666666666,
+              "reward": 1145.2199665115043,
+              "prestige": 0.3333333333333333,
+              "score": 0.4875557541608137,
+              "slot_positions": [
+                {
+                  "slot_id": "s_50",
+                  "x": 90.901444,
+                  "y": 112.23691,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_28",
+              "footprint_slots": [
+                "s_28"
+              ],
+              "cost": 868.3333333333334,
+              "reward": 1140.6411008415694,
+              "prestige": 0.3333333333333333,
+              "score": 0.4875557541608137,
+              "slot_positions": [
+                {
+                  "slot_id": "s_28",
+                  "x": 85.598964,
+                  "y": 109.549125,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 23,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_157"
+            ],
+            [
+              "s_158"
+            ],
+            [
+              "s_129"
+            ]
+          ],
+          "action_scores": [
+            0.10939268770145189,
+            0.10939268770145189,
+            0.10939268770145189
+          ],
+          "sequence_score": 0.32817806310435566,
+          "available_actions_count": 48,
+          "candidate_slots_count": 38,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_157",
+              "footprint_slots": [
+                "s_157"
+              ],
+              "cost": 1071.6666666666667,
+              "reward": 1104.4476135075672,
+              "prestige": -0.03333333333333333,
+              "score": 0.10939268770145189,
+              "slot_positions": [
+                {
+                  "slot_id": "s_157",
+                  "x": 99.673984,
+                  "y": 76.477427,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_158",
+              "footprint_slots": [
+                "s_158"
+              ],
+              "cost": 546.0,
+              "reward": 446.73175043963187,
+              "prestige": 0.06666666666666667,
+              "score": 0.10939268770145189,
+              "slot_positions": [
+                {
+                  "slot_id": "s_158",
+                  "x": 99.966195,
+                  "y": 74.005201,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_129",
+              "footprint_slots": [
+                "s_129"
+              ],
+              "cost": 590.0,
+              "reward": 340.56447971773514,
+              "prestige": 0.06666666666666667,
+              "score": 0.10939268770145189,
+              "slot_positions": [
+                {
+                  "slot_id": "s_129",
+                  "x": 99.711292,
+                  "y": 79.795259,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 24,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_55"
+            ],
+            [
+              "s_94"
+            ],
+            [
+              "s_57"
+            ]
+          ],
+          "action_scores": [
+            0.5059843600834656,
+            0.5059843600834656,
+            0.5059843600834656
+          ],
+          "sequence_score": 1.5179530802503969,
+          "available_actions_count": 375,
+          "candidate_slots_count": 65,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_55",
+              "footprint_slots": [
+                "s_55"
+              ],
+              "cost": 971.3333333333334,
+              "reward": 1328.3144797551006,
+              "prestige": 0.3333333333333333,
+              "score": 0.5059843600834656,
+              "slot_positions": [
+                {
+                  "slot_id": "s_55",
+                  "x": 128.609127,
+                  "y": 123.976032,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_94",
+              "footprint_slots": [
+                "s_94"
+              ],
+              "cost": 986.0,
+              "reward": 1293.3482615936857,
+              "prestige": 0.3333333333333333,
+              "score": 0.5059843600834656,
+              "slot_positions": [
+                {
+                  "slot_id": "s_94",
+                  "x": 128.420461,
+                  "y": 121.101986,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_57",
+              "footprint_slots": [
+                "s_57"
+              ],
+              "cost": 982.3333333333334,
+              "reward": 1289.6855705649098,
+              "prestige": 0.3333333333333333,
+              "score": 0.5059843600834656,
+              "slot_positions": [
+                {
+                  "slot_id": "s_57",
+                  "x": 125.6205,
+                  "y": 122.905804,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 25,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_161"
+            ],
+            [
+              "s_162"
+            ],
+            [
+              "s_133"
+            ]
+          ],
+          "action_scores": [
+            0.09635487456267526,
+            0.09635487456267526,
+            0.09635487456267526
+          ],
+          "sequence_score": 0.28906462368802577,
+          "available_actions_count": 48,
+          "candidate_slots_count": 38,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_161",
+              "footprint_slots": [
+                "s_161"
+              ],
+              "cost": 546.0,
+              "reward": 333.53029362629235,
+              "prestige": 0.06666666666666667,
+              "score": 0.09635487456267526,
+              "slot_positions": [
+                {
+                  "slot_id": "s_161",
+                  "x": 93.525556,
+                  "y": 77.140285,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_162",
+              "footprint_slots": [
+                "s_162"
+              ],
+              "cost": 535.0,
+              "reward": 340.32523237477193,
+              "prestige": 0.06666666666666667,
+              "score": 0.09635487456267526,
+              "slot_positions": [
+                {
+                  "slot_id": "s_162",
+                  "x": 93.663083,
+                  "y": 74.544219,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_133",
+              "footprint_slots": [
+                "s_133"
+              ],
+              "cost": 564.3333333333334,
+              "reward": 344.29989112795005,
+              "prestige": 0.06666666666666667,
+              "score": 0.09635487456267526,
+              "slot_positions": [
+                {
+                  "slot_id": "s_133",
+                  "x": 93.741393,
+                  "y": 80.173206,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 26,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_99"
+            ],
+            [
+              "s_98"
+            ],
+            [
+              "s_102"
+            ]
+          ],
+          "action_scores": [
+            0.5002093234518187,
+            0.5002093234518187,
+            0.5002093234518187
+          ],
+          "sequence_score": 1.5006279703554561,
+          "available_actions_count": 366,
+          "candidate_slots_count": 62,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_99",
+              "footprint_slots": [
+                "s_99"
+              ],
+              "cost": 1037.3333333333333,
+              "reward": 1306.126199920759,
+              "prestige": 0.3333333333333333,
+              "score": 0.5002093234518187,
+              "slot_positions": [
+                {
+                  "slot_id": "s_99",
+                  "x": 125.302104,
+                  "y": 114.324946,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_98",
+              "footprint_slots": [
+                "s_98"
+              ],
+              "cost": 1022.6666666666666,
+              "reward": 1316.5723786171868,
+              "prestige": 0.3333333333333333,
+              "score": 0.5002093234518187,
+              "slot_positions": [
+                {
+                  "slot_id": "s_98",
+                  "x": 125.35009,
+                  "y": 117.136731,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_102",
+              "footprint_slots": [
+                "s_102"
+              ],
+              "cost": 1044.6666666666667,
+              "reward": 1317.7419791717848,
+              "prestige": 0.3333333333333333,
+              "score": 0.5002093234518187,
+              "slot_positions": [
+                {
+                  "slot_id": "s_102",
+                  "x": 122.504769,
+                  "y": 113.530629,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 27,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_194"
+            ],
+            [
+              "s_192"
+            ],
+            [
+              "s_108"
+            ]
+          ],
+          "action_scores": [
+            0.27460895788726064,
+            0.27460895788726064,
+            0.27460895788726064
+          ],
+          "sequence_score": 0.823826873661782,
+          "available_actions_count": 50,
+          "candidate_slots_count": 40,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_194",
+              "footprint_slots": [
+                "s_194"
+              ],
+              "cost": 1024.3333333333333,
+              "reward": 1124.875757581774,
+              "prestige": -0.03333333333333333,
+              "score": 0.27460895788726064,
+              "slot_positions": [
+                {
+                  "slot_id": "s_194",
+                  "x": 127.000786,
+                  "y": 71.861955,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_192",
+              "footprint_slots": [
+                "s_192"
+              ],
+              "cost": 1028.0,
+              "reward": 1157.3081712328872,
+              "prestige": -0.03333333333333333,
+              "score": 0.27460895788726064,
+              "slot_positions": [
+                {
+                  "slot_id": "s_192",
+                  "x": 131.062487,
+                  "y": 73.88892,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_108",
+              "footprint_slots": [
+                "s_108"
+              ],
+              "cost": 718.6666666666666,
+              "reward": 482.33626021284175,
+              "prestige": 0.06666666666666667,
+              "score": 0.27460895788726064,
+              "slot_positions": [
+                {
+                  "slot_id": "s_108",
+                  "x": 119.245217,
+                  "y": 87.269815,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 28,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_48"
+            ],
+            [
+              "s_7"
+            ],
+            [
+              "s_47"
+            ]
+          ],
+          "action_scores": [
+            0.5027488014299695,
+            0.5027488014299695,
+            0.5027488014299695
+          ],
+          "sequence_score": 1.5082464042899084,
+          "available_actions_count": 354,
+          "candidate_slots_count": 59,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_48",
+              "footprint_slots": [
+                "s_48"
+              ],
+              "cost": 923.3333333333334,
+              "reward": 1290.2375234774574,
+              "prestige": 0.3333333333333333,
+              "score": 0.5027488014299695,
+              "slot_positions": [
+                {
+                  "slot_id": "s_48",
+                  "x": 93.452888,
+                  "y": 113.063896,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_7",
+              "footprint_slots": [
+                "s_7"
+              ],
+              "cost": 953.0,
+              "reward": 1211.775786217045,
+              "prestige": 0.3333333333333333,
+              "score": 0.5027488014299695,
+              "slot_positions": [
+                {
+                  "slot_id": "s_7",
+                  "x": 96.242628,
+                  "y": 113.719869,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_47",
+              "footprint_slots": [
+                "s_47"
+              ],
+              "cost": 901.3333333333334,
+              "reward": 1240.325645505969,
+              "prestige": 0.3333333333333333,
+              "score": 0.5027488014299695,
+              "slot_positions": [
+                {
+                  "slot_id": "s_47",
+                  "x": 91.713798,
+                  "y": 116.068895,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 29,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_189"
+            ],
+            [
+              "s_180"
+            ],
+            [
+              "s_185"
+            ]
+          ],
+          "action_scores": [
+            0.2900809583727114,
+            0.2900809583727114,
+            0.2900809583727114
+          ],
+          "sequence_score": 0.8702428751181343,
+          "available_actions_count": 43,
+          "candidate_slots_count": 37,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_189",
+              "footprint_slots": [
+                "s_189"
+              ],
+              "cost": 705.6666666666666,
+              "reward": 744.0845508893188,
+              "prestige": 0.03333333333333333,
+              "score": 0.2900809583727114,
+              "slot_positions": [
+                {
+                  "slot_id": "s_189",
+                  "x": 91.221898,
+                  "y": 70.628041,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_180",
+              "footprint_slots": [
+                "s_180"
+              ],
+              "cost": 494.6666666666667,
+              "reward": 439.2746586082337,
+              "prestige": 0.06666666666666667,
+              "score": 0.2900809583727114,
+              "slot_positions": [
+                {
+                  "slot_id": "s_180",
+                  "x": 88.815681,
+                  "y": 67.12486,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_185",
+              "footprint_slots": [
+                "s_185"
+              ],
+              "cost": 524.0,
+              "reward": 432.12113730604113,
+              "prestige": 0.06666666666666667,
+              "score": 0.2900809583727114,
+              "slot_positions": [
+                {
+                  "slot_id": "s_185",
+                  "x": 97.417426,
+                  "y": 71.164875,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 30,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_87"
+            ],
+            [
+              "s_22"
+            ],
+            [
+              "s_88"
+            ]
+          ],
+          "action_scores": [
+            0.5004063854523942,
+            0.5004063854523942,
+            0.5004063854523942
+          ],
+          "sequence_score": 1.5012191563571826,
+          "available_actions_count": 336,
+          "candidate_slots_count": 56,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_87",
+              "footprint_slots": [
+                "s_87"
+              ],
+              "cost": 1030.0,
+              "reward": 1304.1956186610216,
+              "prestige": 0.3333333333333333,
+              "score": 0.5004063854523942,
+              "slot_positions": [
+                {
+                  "slot_id": "s_87",
+                  "x": 107.166209,
+                  "y": 110.92046,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_22",
+              "footprint_slots": [
+                "s_22"
+              ],
+              "cost": 1026.3333333333333,
+              "reward": 1305.0647814781757,
+              "prestige": 0.3333333333333333,
+              "score": 0.5004063854523942,
+              "slot_positions": [
+                {
+                  "slot_id": "s_22",
+                  "x": 107.808667,
+                  "y": 113.466661,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_88",
+              "footprint_slots": [
+                "s_88"
+              ],
+              "cost": 1041.0,
+              "reward": 1293.8439692345473,
+              "prestige": 0.3333333333333333,
+              "score": 0.5004063854523942,
+              "slot_positions": [
+                {
+                  "slot_id": "s_88",
+                  "x": 108.826261,
+                  "y": 108.554341,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "total_selections": 30,
+        "unique_slots_selected": [
+          "s_196",
+          "s_137",
+          "s_141",
+          "s_183",
+          "s_57",
+          "s_162",
+          "s_41",
+          "s_197",
+          "s_104",
+          "s_186",
+          "s_120",
+          "s_16",
+          "s_123",
+          "s_28",
+          "s_152",
+          "s_92",
+          "s_7",
+          "s_3",
+          "s_54",
+          "s_47",
+          "s_4",
+          "s_95",
+          "s_68",
+          "s_188",
+          "s_74",
+          "s_45",
+          "s_185",
+          "s_190",
+          "s_157",
+          "s_161",
+          "s_192",
+          "s_98",
+          "s_99",
+          "s_112",
+          "s_193",
+          "s_194",
+          "s_84",
+          "s_55",
+          "s_156",
+          "s_200",
+          "s_24",
+          "s_124",
+          "s_46",
+          "s_23",
+          "s_82",
+          "s_201",
+          "s_53",
+          "s_126",
+          "s_151",
+          "s_5",
+          "s_100",
+          "s_83",
+          "s_52",
+          "s_158",
+          "s_165",
+          "s_94",
+          "s_38",
+          "s_179",
+          "s_88",
+          "s_22",
+          "s_139",
+          "s_133",
+          "s_189",
+          "s_93",
+          "s_87",
+          "s_59",
+          "s_108",
+          "s_102",
+          "s_25",
+          "s_154",
+          "s_199",
+          "s_56",
+          "s_191",
+          "s_166",
+          "s_153",
+          "s_15",
+          "s_42",
+          "s_138",
+          "s_36",
+          "s_50",
+          "s_180",
+          "s_71",
+          "s_48",
+          "s_129",
+          "s_37",
+          "s_101",
+          "s_195",
+          "s_116",
+          "s_198",
+          "s_155"
+        ],
+        "edu_selections": 45,
+        "ind_selections": 45,
+        "avg_action_score": 0.36166121767773785,
+        "avg_sequence_score": 1.0849836530332138
+      }
+    },
+    {
+      "episode_id": 1,
+      "episode_return": 30.788088898741584,
+      "steps": [
+        {
+          "month": 1,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_196"
+            ],
+            [
+              "s_195"
+            ],
+            [
+              "s_151"
+            ]
+          ],
+          "action_scores": [
+            0.24969364426154547,
+            0.24969364426154547,
+            0.24969364426154547
+          ],
+          "sequence_score": 0.7490809327846364,
+          "available_actions_count": 8,
+          "candidate_slots_count": 4,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_196",
+              "footprint_slots": [
+                "s_196"
+              ],
+              "cost": 1105.0,
+              "reward": 801.0266666666666,
+              "prestige": -0.03333333333333333,
+              "score": 0.24969364426154547,
+              "slot_positions": [
+                {
+                  "slot_id": "s_196",
+                  "x": 120.920771,
+                  "y": 75.661664,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_195",
+              "footprint_slots": [
+                "s_195"
+              ],
+              "cost": 1086.6666666666667,
+              "reward": 799.6933333333333,
+              "prestige": -0.03333333333333333,
+              "score": 0.24969364426154547,
+              "slot_positions": [
+                {
+                  "slot_id": "s_195",
+                  "x": 125.871348,
+                  "y": 76.836545,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_151",
+              "footprint_slots": [
+                "s_151"
+              ],
+              "cost": 718.6666666666666,
+              "reward": 77.33333333333333,
+              "prestige": 0.06666666666666667,
+              "score": 0.24969364426154547,
+              "slot_positions": [
+                {
+                  "slot_id": "s_151",
+                  "x": 119.499386,
+                  "y": 81.833851,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 2,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_1"
+            ],
+            [
+              "s_2"
+            ],
+            [
+              "s_13"
+            ]
+          ],
+          "action_scores": [
+            0.14914605375988554,
+            0.14914605375988554,
+            0.14914605375988554
+          ],
+          "sequence_score": 0.44743816127965663,
+          "available_actions_count": 126,
+          "candidate_slots_count": 21,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_1",
+              "footprint_slots": [
+                "s_1"
+              ],
+              "cost": 890.6666666666666,
+              "reward": 881.4611790236431,
+              "prestige": 0.3333333333333333,
+              "score": 0.14914605375988554,
+              "slot_positions": [
+                {
+                  "slot_id": "s_1",
+                  "x": 107.889041,
+                  "y": 125.293422,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_2",
+              "footprint_slots": [
+                "s_2"
+              ],
+              "cost": 934.6666666666666,
+              "reward": 885.5578179022573,
+              "prestige": 0.3333333333333333,
+              "score": 0.14914605375988554,
+              "slot_positions": [
+                {
+                  "slot_id": "s_2",
+                  "x": 108.534251,
+                  "y": 122.062079,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_13",
+              "footprint_slots": [
+                "s_13"
+              ],
+              "cost": 901.6666666666666,
+              "reward": 882.451204268023,
+              "prestige": 0.3333333333333333,
+              "score": 0.14914605375988554,
+              "slot_positions": [
+                {
+                  "slot_id": "s_13",
+                  "x": 111.744455,
+                  "y": 126.133964,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 3,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_198"
+            ],
+            [
+              "s_152"
+            ],
+            [
+              "s_165"
+            ]
+          ],
+          "action_scores": [
+            0.09396493926424625,
+            0.09396493926424625,
+            0.09396493926424625
+          ],
+          "sequence_score": 0.2818948177927387,
+          "available_actions_count": 16,
+          "candidate_slots_count": 9,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_198",
+              "footprint_slots": [
+                "s_198"
+              ],
+              "cost": 1039.0,
+              "reward": 1134.1037683034235,
+              "prestige": -0.03333333333333333,
+              "score": 0.09396493926424625,
+              "slot_positions": [
+                {
+                  "slot_id": "s_198",
+                  "x": 116.429011,
+                  "y": 74.415931,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_152",
+              "footprint_slots": [
+                "s_152"
+              ],
+              "cost": 1149.0,
+              "reward": 1163.1704183213278,
+              "prestige": -0.03333333333333333,
+              "score": 0.09396493926424625,
+              "slot_positions": [
+                {
+                  "slot_id": "s_152",
+                  "x": 115.255188,
+                  "y": 79.978303,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_165",
+              "footprint_slots": [
+                "s_165"
+              ],
+              "cost": 700.3333333333334,
+              "reward": 395.7675964323674,
+              "prestige": 0.06666666666666667,
+              "score": 0.09396493926424625,
+              "slot_positions": [
+                {
+                  "slot_id": "s_165",
+                  "x": 124.323973,
+                  "y": 82.999449,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 4,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_17"
+            ],
+            [
+              "s_18"
+            ],
+            [
+              "s_35"
+            ]
+          ],
+          "action_scores": [
+            0.503705626668978,
+            0.503705626668978,
+            0.503705626668978
+          ],
+          "sequence_score": 1.511116880006934,
+          "available_actions_count": 186,
+          "candidate_slots_count": 31,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_17",
+              "footprint_slots": [
+                "s_17"
+              ],
+              "cost": 1030.0,
+              "reward": 1294.3463605689951,
+              "prestige": 0.3333333333333333,
+              "score": 0.503705626668978,
+              "slot_positions": [
+                {
+                  "slot_id": "s_17",
+                  "x": 109.240203,
+                  "y": 118.818646,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_18",
+              "footprint_slots": [
+                "s_18"
+              ],
+              "cost": 1004.3333333333334,
+              "reward": 1202.683305044329,
+              "prestige": 0.3333333333333333,
+              "score": 0.503705626668978,
+              "slot_positions": [
+                {
+                  "slot_id": "s_18",
+                  "x": 109.99612,
+                  "y": 116.194538,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_35",
+              "footprint_slots": [
+                "s_35"
+              ],
+              "cost": 1052.0,
+              "reward": 1262.531247907224,
+              "prestige": 0.3333333333333333,
+              "score": 0.503705626668978,
+              "slot_positions": [
+                {
+                  "slot_id": "s_35",
+                  "x": 112.399856,
+                  "y": 119.559907,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 5,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_137"
+            ],
+            [
+              "s_139"
+            ],
+            [
+              "s_166"
+            ]
+          ],
+          "action_scores": [
+            0.050032873109796185,
+            0.050032873109796185,
+            0.050032873109796185
+          ],
+          "sequence_score": 0.15009861932938856,
+          "available_actions_count": 24,
+          "candidate_slots_count": 13,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_137",
+              "footprint_slots": [
+                "s_137"
+              ],
+              "cost": 612.3333333333334,
+              "reward": 357.9517312527393,
+              "prestige": 0.06666666666666667,
+              "score": 0.050032873109796185,
+              "slot_positions": [
+                {
+                  "slot_id": "s_137",
+                  "x": 127.106777,
+                  "y": 88.631293,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_139",
+              "footprint_slots": [
+                "s_139"
+              ],
+              "cost": 645.3333333333334,
+              "reward": 389.7701957771621,
+              "prestige": 0.06666666666666667,
+              "score": 0.050032873109796185,
+              "slot_positions": [
+                {
+                  "slot_id": "s_139",
+                  "x": 124.589003,
+                  "y": 88.485362,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_166",
+              "footprint_slots": [
+                "s_166"
+              ],
+              "cost": 1119.6666666666667,
+              "reward": 1132.2485435989283,
+              "prestige": -0.03333333333333333,
+              "score": 0.050032873109796185,
+              "slot_positions": [
+                {
+                  "slot_id": "s_166",
+                  "x": 129.104547,
+                  "y": 83.299806,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 6,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_22"
+            ],
+            [
+              "s_87"
+            ],
+            [
+              "s_21"
+            ]
+          ],
+          "action_scores": [
+            0.5024653744000845,
+            0.5024653744000845,
+            0.5024653744000845
+          ],
+          "sequence_score": 1.5073961232002535,
+          "available_actions_count": 246,
+          "candidate_slots_count": 41,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_22",
+              "footprint_slots": [
+                "s_22"
+              ],
+              "cost": 967.6666666666666,
+              "reward": 1285.0403649903965,
+              "prestige": 0.3333333333333333,
+              "score": 0.5024653744000845,
+              "slot_positions": [
+                {
+                  "slot_id": "s_22",
+                  "x": 107.808667,
+                  "y": 113.466661,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_87",
+              "footprint_slots": [
+                "s_87"
+              ],
+              "cost": 938.3333333333334,
+              "reward": 1200.8087799308253,
+              "prestige": 0.3333333333333333,
+              "score": 0.5024653744000845,
+              "slot_positions": [
+                {
+                  "slot_id": "s_87",
+                  "x": 107.166209,
+                  "y": 110.92046,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_21",
+              "footprint_slots": [
+                "s_21"
+              ],
+              "cost": 982.3333333333334,
+              "reward": 1286.7938198021702,
+              "prestige": 0.3333333333333333,
+              "score": 0.5024653744000845,
+              "slot_positions": [
+                {
+                  "slot_id": "s_21",
+                  "x": 106.683073,
+                  "y": 115.980316,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 7,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_192"
+            ],
+            [
+              "s_193"
+            ],
+            [
+              "s_194"
+            ]
+          ],
+          "action_scores": [
+            0.3958128307760706,
+            0.3958128307760706,
+            0.3958128307760706
+          ],
+          "sequence_score": 1.1874384923282117,
+          "available_actions_count": 33,
+          "candidate_slots_count": 18,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_192",
+              "footprint_slots": [
+                "s_192"
+              ],
+              "cost": 943.6666666666666,
+              "reward": 1088.9593565825298,
+              "prestige": -0.03333333333333333,
+              "score": 0.3958128307760706,
+              "slot_positions": [
+                {
+                  "slot_id": "s_192",
+                  "x": 131.062487,
+                  "y": 73.88892,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_193",
+              "footprint_slots": [
+                "s_193"
+              ],
+              "cost": 724.3333333333334,
+              "reward": 769.1463157178565,
+              "prestige": 0.03333333333333333,
+              "score": 0.3958128307760706,
+              "slot_positions": [
+                {
+                  "slot_id": "s_193",
+                  "x": 130.616089,
+                  "y": 77.915564,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_194",
+              "footprint_slots": [
+                "s_194"
+              ],
+              "cost": 962.0,
+              "reward": 1113.873199990432,
+              "prestige": -0.03333333333333333,
+              "score": 0.3958128307760706,
+              "slot_positions": [
+                {
+                  "slot_id": "s_194",
+                  "x": 127.000786,
+                  "y": 71.861955,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 8,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_59"
+            ],
+            [
+              "s_60"
+            ],
+            [
+              "s_42"
+            ]
+          ],
+          "action_scores": [
+            0.47382364457543485,
+            0.47382364457543485,
+            0.47382364457543485
+          ],
+          "sequence_score": 1.4214709337263045,
+          "available_actions_count": 294,
+          "candidate_slots_count": 49,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_59",
+              "footprint_slots": [
+                "s_59"
+              ],
+              "cost": 934.6666666666666,
+              "reward": 1029.8272940687275,
+              "prestige": 0.3333333333333333,
+              "score": 0.47382364457543485,
+              "slot_positions": [
+                {
+                  "slot_id": "s_59",
+                  "x": 122.842073,
+                  "y": 121.430083,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_60",
+              "footprint_slots": [
+                "s_60"
+              ],
+              "cost": 876.0,
+              "reward": 1041.2787651348362,
+              "prestige": 0.3333333333333333,
+              "score": 0.47382364457543485,
+              "slot_positions": [
+                {
+                  "slot_id": "s_60",
+                  "x": 122.324838,
+                  "y": 124.189142,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_42",
+              "footprint_slots": [
+                "s_42"
+              ],
+              "cost": 956.6666666666666,
+              "reward": 1127.1939764098431,
+              "prestige": 0.3333333333333333,
+              "score": 0.47382364457543485,
+              "slot_positions": [
+                {
+                  "slot_id": "s_42",
+                  "x": 119.978807,
+                  "y": 121.17582,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 9,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_153"
+            ],
+            [
+              "s_112"
+            ],
+            [
+              "s_154"
+            ]
+          ],
+          "action_scores": [
+            0.3519274823404818,
+            0.3519274823404818,
+            0.3519274823404818
+          ],
+          "sequence_score": 1.0557824470214454,
+          "available_actions_count": 34,
+          "candidate_slots_count": 20,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_153",
+              "footprint_slots": [
+                "s_153"
+              ],
+              "cost": 1072.0,
+              "reward": 924.3987078418705,
+              "prestige": -0.03333333333333333,
+              "score": 0.3519274823404818,
+              "slot_positions": [
+                {
+                  "slot_id": "s_153",
+                  "x": 104.613086,
+                  "y": 75.760382,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_112",
+              "footprint_slots": [
+                "s_112"
+              ],
+              "cost": 608.6666666666666,
+              "reward": 267.8183225634719,
+              "prestige": 0.06666666666666667,
+              "score": 0.3519274823404818,
+              "slot_positions": [
+                {
+                  "slot_id": "s_112",
+                  "x": 105.921847,
+                  "y": 80.927891,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_154",
+              "footprint_slots": [
+                "s_154"
+              ],
+              "cost": 1119.6666666666667,
+              "reward": 1124.9118110435984,
+              "prestige": -0.03333333333333333,
+              "score": 0.3519274823404818,
+              "slot_positions": [
+                {
+                  "slot_id": "s_154",
+                  "x": 110.207723,
+                  "y": 77.659119,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 10,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_45"
+            ],
+            [
+              "s_41"
+            ],
+            [
+              "s_46"
+            ]
+          ],
+          "action_scores": [
+            0.4965051836266601,
+            0.4965051836266601,
+            0.4965051836266601
+          ],
+          "sequence_score": 1.4895155508799802,
+          "available_actions_count": 342,
+          "candidate_slots_count": 57,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_45",
+              "footprint_slots": [
+                "s_45"
+              ],
+              "cost": 1004.3333333333334,
+              "reward": 1262.1737170793042,
+              "prestige": 0.3333333333333333,
+              "score": 0.4965051836266601,
+              "slot_positions": [
+                {
+                  "slot_id": "s_45",
+                  "x": 118.269182,
+                  "y": 117.277081,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_41",
+              "footprint_slots": [
+                "s_41"
+              ],
+              "cost": 1004.3333333333334,
+              "reward": 1313.0261488538524,
+              "prestige": 0.3333333333333333,
+              "score": 0.4965051836266601,
+              "slot_positions": [
+                {
+                  "slot_id": "s_41",
+                  "x": 117.786167,
+                  "y": 119.675076,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_46",
+              "footprint_slots": [
+                "s_46"
+              ],
+              "cost": 1004.3333333333334,
+              "reward": 1329.697091243315,
+              "prestige": 0.3333333333333333,
+              "score": 0.4965051836266601,
+              "slot_positions": [
+                {
+                  "slot_id": "s_46",
+                  "x": 120.261213,
+                  "y": 118.946661,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 11,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_155"
+            ],
+            [
+              "s_120"
+            ],
+            [
+              "s_123"
+            ]
+          ],
+          "action_scores": [
+            0.34561624407447405,
+            0.34561624407447405,
+            0.34561624407447405
+          ],
+          "sequence_score": 1.036848732223422,
+          "available_actions_count": 36,
+          "candidate_slots_count": 22,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_155",
+              "footprint_slots": [
+                "s_155"
+              ],
+              "cost": 1079.3333333333333,
+              "reward": 897.8959928301115,
+              "prestige": -0.03333333333333333,
+              "score": 0.34561624407447405,
+              "slot_positions": [
+                {
+                  "slot_id": "s_155",
+                  "x": 140.117231,
+                  "y": 87.580593,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_120",
+              "footprint_slots": [
+                "s_120"
+              ],
+              "cost": 601.3333333333334,
+              "reward": 237.32856615409833,
+              "prestige": 0.06666666666666667,
+              "score": 0.34561624407447405,
+              "slot_positions": [
+                {
+                  "slot_id": "s_120",
+                  "x": 136.816766,
+                  "y": 91.057881,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_123",
+              "footprint_slots": [
+                "s_123"
+              ],
+              "cost": 623.3333333333334,
+              "reward": 336.18262521796265,
+              "prestige": 0.06666666666666667,
+              "score": 0.34561624407447405,
+              "slot_positions": [
+                {
+                  "slot_id": "s_123",
+                  "x": 134.094264,
+                  "y": 89.060415,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 12,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_55"
+            ],
+            [
+              "s_56"
+            ],
+            [
+              "s_94"
+            ]
+          ],
+          "action_scores": [
+            0.4907666142326317,
+            0.4907666142326317,
+            0.4907666142326317
+          ],
+          "sequence_score": 1.472299842697895,
+          "available_actions_count": 366,
+          "candidate_slots_count": 62,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_55",
+              "footprint_slots": [
+                "s_55"
+              ],
+              "cost": 934.6666666666666,
+              "reward": 1182.702330461156,
+              "prestige": 0.3333333333333333,
+              "score": 0.4907666142326317,
+              "slot_positions": [
+                {
+                  "slot_id": "s_55",
+                  "x": 128.609127,
+                  "y": 123.976032,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_56",
+              "footprint_slots": [
+                "s_56"
+              ],
+              "cost": 894.3333333333334,
+              "reward": 1162.6258932796475,
+              "prestige": 0.3333333333333333,
+              "score": 0.4907666142326317,
+              "slot_positions": [
+                {
+                  "slot_id": "s_56",
+                  "x": 128.585485,
+                  "y": 125.963693,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_94",
+              "footprint_slots": [
+                "s_94"
+              ],
+              "cost": 964.0,
+              "reward": 1215.6459883784544,
+              "prestige": 0.3333333333333333,
+              "score": 0.4907666142326317,
+              "slot_positions": [
+                {
+                  "slot_id": "s_94",
+                  "x": 128.420461,
+                  "y": 121.101986,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 13,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_126"
+            ],
+            [
+              "s_124"
+            ],
+            [
+              "s_156"
+            ]
+          ],
+          "action_scores": [
+            0.08224355870953375,
+            0.08224355870953375,
+            0.08224355870953375
+          ],
+          "sequence_score": 0.24673067612860122,
+          "available_actions_count": 41,
+          "candidate_slots_count": 27,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_126",
+              "footprint_slots": [
+                "s_126"
+              ],
+              "cost": 678.3333333333334,
+              "reward": 467.88510080301234,
+              "prestige": 0.06666666666666667,
+              "score": 0.08224355870953375,
+              "slot_positions": [
+                {
+                  "slot_id": "s_126",
+                  "x": 130.912145,
+                  "y": 88.074926,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_124",
+              "footprint_slots": [
+                "s_124"
+              ],
+              "cost": 874.6666666666666,
+              "reward": 817.0934874836557,
+              "prestige": 0.03333333333333333,
+              "score": 0.08224355870953375,
+              "slot_positions": [
+                {
+                  "slot_id": "s_124",
+                  "x": 131.914132,
+                  "y": 91.894286,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_156",
+              "footprint_slots": [
+                "s_156"
+              ],
+              "cost": 1130.6666666666667,
+              "reward": 1143.8048681405946,
+              "prestige": -0.03333333333333333,
+              "score": 0.08224355870953375,
+              "slot_positions": [
+                {
+                  "slot_id": "s_156",
+                  "x": 134.811762,
+                  "y": 84.282681,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 14,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_96"
+            ],
+            [
+              "s_99"
+            ],
+            [
+              "s_93"
+            ]
+          ],
+          "action_scores": [
+            0.4902162112191903,
+            0.4902162112191903,
+            0.4902162112191903
+          ],
+          "sequence_score": 1.4706486336575708,
+          "available_actions_count": 363,
+          "candidate_slots_count": 61,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_96",
+              "footprint_slots": [
+                "s_96"
+              ],
+              "cost": 1004.3333333333334,
+              "reward": 1196.3538281942836,
+              "prestige": 0.3333333333333333,
+              "score": 0.4902162112191903,
+              "slot_positions": [
+                {
+                  "slot_id": "s_96",
+                  "x": 128.1672,
+                  "y": 114.932118,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_99",
+              "footprint_slots": [
+                "s_99"
+              ],
+              "cost": 1019.0,
+              "reward": 1164.330661107086,
+              "prestige": 0.3333333333333333,
+              "score": 0.4902162112191903,
+              "slot_positions": [
+                {
+                  "slot_id": "s_99",
+                  "x": 125.302104,
+                  "y": 114.324946,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_93",
+              "footprint_slots": [
+                "s_93"
+              ],
+              "cost": 986.0,
+              "reward": 1182.4068537817855,
+              "prestige": 0.3333333333333333,
+              "score": 0.4902162112191903,
+              "slot_positions": [
+                {
+                  "slot_id": "s_93",
+                  "x": 131.083852,
+                  "y": 115.325205,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 15,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_201"
+            ],
+            [
+              "s_183"
+            ],
+            [
+              "s_200"
+            ]
+          ],
+          "action_scores": [
+            0.39472121029556967,
+            0.39472121029556967,
+            0.39472121029556967
+          ],
+          "sequence_score": 1.184163630886709,
+          "available_actions_count": 40,
+          "candidate_slots_count": 29,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_201",
+              "footprint_slots": [
+                "s_201"
+              ],
+              "cost": 1072.0,
+              "reward": 1130.3144928367947,
+              "prestige": -0.03333333333333333,
+              "score": 0.39472121029556967,
+              "slot_positions": [
+                {
+                  "slot_id": "s_201",
+                  "x": 105.817837,
+                  "y": 71.025414,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_183",
+              "footprint_slots": [
+                "s_183"
+              ],
+              "cost": 520.3333333333334,
+              "reward": 336.2779373863127,
+              "prestige": 0.06666666666666667,
+              "score": 0.39472121029556967,
+              "slot_positions": [
+                {
+                  "slot_id": "s_183",
+                  "x": 100.547117,
+                  "y": 71.317596,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_200",
+              "footprint_slots": [
+                "s_200"
+              ],
+              "cost": 790.3333333333334,
+              "reward": 778.2078389193717,
+              "prestige": 0.03333333333333333,
+              "score": 0.39472121029556967,
+              "slot_positions": [
+                {
+                  "slot_id": "s_200",
+                  "x": 111.906908,
+                  "y": 71.980545,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 16,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_7"
+            ],
+            [
+              "s_9"
+            ],
+            [
+              "s_48"
+            ]
+          ],
+          "action_scores": [
+            0.47358961781643855,
+            0.47358961781643855,
+            0.47358961781643855
+          ],
+          "sequence_score": 1.4207688534493157,
+          "available_actions_count": 348,
+          "candidate_slots_count": 58,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_7",
+              "footprint_slots": [
+                "s_7"
+              ],
+              "cost": 934.6666666666666,
+              "reward": 1027.814490132618,
+              "prestige": 0.3333333333333333,
+              "score": 0.47358961781643855,
+              "slot_positions": [
+                {
+                  "slot_id": "s_7",
+                  "x": 96.242628,
+                  "y": 113.719869,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_9",
+              "footprint_slots": [
+                "s_9"
+              ],
+              "cost": 960.3333333333334,
+              "reward": 1110.9886460281057,
+              "prestige": 0.3333333333333333,
+              "score": 0.47358961781643855,
+              "slot_positions": [
+                {
+                  "slot_id": "s_9",
+                  "x": 98.671287,
+                  "y": 114.062335,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_48",
+              "footprint_slots": [
+                "s_48"
+              ],
+              "cost": 886.6666666666666,
+              "reward": 920.2457682538233,
+              "prestige": 0.3333333333333333,
+              "score": 0.47358961781643855,
+              "slot_positions": [
+                {
+                  "slot_id": "s_48",
+                  "x": 93.452888,
+                  "y": 113.063896,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 17,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_199"
+            ],
+            [
+              "s_197"
+            ],
+            [
+              "s_104"
+            ]
+          ],
+          "action_scores": [
+            0.39999999999999997,
+            0.39999999999999997,
+            0.39999999999999997
+          ],
+          "sequence_score": 1.2,
+          "available_actions_count": 39,
+          "candidate_slots_count": 31,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_199",
+              "footprint_slots": [
+                "s_199"
+              ],
+              "cost": 1094.0,
+              "reward": 1167.396816470122,
+              "prestige": -0.03333333333333333,
+              "score": 0.39999999999999997,
+              "slot_positions": [
+                {
+                  "slot_id": "s_199",
+                  "x": 118.216796,
+                  "y": 70.683812,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_197",
+              "footprint_slots": [
+                "s_197"
+              ],
+              "cost": 1031.6666666666667,
+              "reward": 1138.40402324995,
+              "prestige": -0.03333333333333333,
+              "score": 0.39999999999999997,
+              "slot_positions": [
+                {
+                  "slot_id": "s_197",
+                  "x": 122.447845,
+                  "y": 70.876791,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_104",
+              "footprint_slots": [
+                "s_104"
+              ],
+              "cost": 715.0,
+              "reward": 411.48172344943606,
+              "prestige": 0.06666666666666667,
+              "score": 0.39999999999999997,
+              "slot_positions": [
+                {
+                  "slot_id": "s_104",
+                  "x": 114.327521,
+                  "y": 84.919801,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 18,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_25"
+            ],
+            [
+              "s_24"
+            ],
+            [
+              "s_84"
+            ]
+          ],
+          "action_scores": [
+            0.4992965015143153,
+            0.4992965015143153,
+            0.4992965015143153
+          ],
+          "sequence_score": 1.497889504542946,
+          "available_actions_count": 378,
+          "candidate_slots_count": 66,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_25",
+              "footprint_slots": [
+                "s_25"
+              ],
+              "cost": 1019.0,
+              "reward": 1288.1352033973546,
+              "prestige": 0.3333333333333333,
+              "score": 0.4992965015143153,
+              "slot_positions": [
+                {
+                  "slot_id": "s_25",
+                  "x": 104.673293,
+                  "y": 113.580462,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_24",
+              "footprint_slots": [
+                "s_24"
+              ],
+              "cost": 997.0,
+              "reward": 1277.462576734335,
+              "prestige": 0.3333333333333333,
+              "score": 0.4992965015143153,
+              "slot_positions": [
+                {
+                  "slot_id": "s_24",
+                  "x": 103.3633,
+                  "y": 115.959753,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_84",
+              "footprint_slots": [
+                "s_84"
+              ],
+              "cost": 1008.0,
+              "reward": 1272.7833122565216,
+              "prestige": 0.3333333333333333,
+              "score": 0.4992965015143153,
+              "slot_positions": [
+                {
+                  "slot_id": "s_84",
+                  "x": 103.218798,
+                  "y": 111.214843,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 19,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_191"
+            ],
+            [
+              "s_190"
+            ],
+            [
+              "s_141"
+            ]
+          ],
+          "action_scores": [
+            0.2805292710496281,
+            0.2805292710496281,
+            0.2805292710496281
+          ],
+          "sequence_score": 0.8415878131488843,
+          "available_actions_count": 39,
+          "candidate_slots_count": 33,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_191",
+              "footprint_slots": [
+                "s_191"
+              ],
+              "cost": 779.3333333333334,
+              "reward": 782.7724037591694,
+              "prestige": 0.03333333333333333,
+              "score": 0.2805292710496281,
+              "slot_positions": [
+                {
+                  "slot_id": "s_191",
+                  "x": 135.393843,
+                  "y": 78.343222,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_190",
+              "footprint_slots": [
+                "s_190"
+              ],
+              "cost": 764.6666666666666,
+              "reward": 737.9310505142984,
+              "prestige": 0.03333333333333333,
+              "score": 0.2805292710496281,
+              "slot_positions": [
+                {
+                  "slot_id": "s_190",
+                  "x": 139.735405,
+                  "y": 80.787122,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_141",
+              "footprint_slots": [
+                "s_141"
+              ],
+              "cost": 722.3333333333334,
+              "reward": 479.58392600022216,
+              "prestige": 0.06666666666666667,
+              "score": 0.2805292710496281,
+              "slot_positions": [
+                {
+                  "slot_id": "s_141",
+                  "x": 122.068936,
+                  "y": 88.091191,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 20,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_75"
+            ],
+            [
+              "s_72"
+            ],
+            [
+              "s_78"
+            ]
+          ],
+          "action_scores": [
+            0.4984732657025937,
+            0.4984732657025937,
+            0.4984732657025937
+          ],
+          "sequence_score": 1.4954197971077812,
+          "available_actions_count": 381,
+          "candidate_slots_count": 67,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_75",
+              "footprint_slots": [
+                "s_75"
+              ],
+              "cost": 927.0,
+              "reward": 1248.5491985796245,
+              "prestige": 0.3333333333333333,
+              "score": 0.4984732657025937,
+              "slot_positions": [
+                {
+                  "slot_id": "s_75",
+                  "x": 95.171638,
+                  "y": 109.719315,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_72",
+              "footprint_slots": [
+                "s_72"
+              ],
+              "cost": 916.0,
+              "reward": 1241.382667840823,
+              "prestige": 0.3333333333333333,
+              "score": 0.4984732657025937,
+              "slot_positions": [
+                {
+                  "slot_id": "s_72",
+                  "x": 92.596984,
+                  "y": 108.890394,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_78",
+              "footprint_slots": [
+                "s_78"
+              ],
+              "cost": 975.0,
+              "reward": 1275.0456113318683,
+              "prestige": 0.3333333333333333,
+              "score": 0.4984732657025937,
+              "slot_positions": [
+                {
+                  "slot_id": "s_78",
+                  "x": 98.052886,
+                  "y": 110.465256,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 21,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_158"
+            ],
+            [
+              "s_157"
+            ],
+            [
+              "s_185"
+            ]
+          ],
+          "action_scores": [
+            0.12327689719878455,
+            0.12327689719878455,
+            0.12327689719878455
+          ],
+          "sequence_score": 0.3698306915963537,
+          "available_actions_count": 39,
+          "candidate_slots_count": 35,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_158",
+              "footprint_slots": [
+                "s_158"
+              ],
+              "cost": 549.6666666666666,
+              "reward": 446.73175043963187,
+              "prestige": 0.06666666666666667,
+              "score": 0.12327689719878455,
+              "slot_positions": [
+                {
+                  "slot_id": "s_158",
+                  "x": 99.966195,
+                  "y": 74.005201,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "L",
+              "slot_id": "s_157",
+              "footprint_slots": [
+                "s_157"
+              ],
+              "cost": 1071.6666666666667,
+              "reward": 1104.4476135075672,
+              "prestige": -0.03333333333333333,
+              "score": 0.12327689719878455,
+              "slot_positions": [
+                {
+                  "slot_id": "s_157",
+                  "x": 99.673984,
+                  "y": 76.477427,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_185",
+              "footprint_slots": [
+                "s_185"
+              ],
+              "cost": 524.0,
+              "reward": 432.12113730604113,
+              "prestige": 0.06666666666666667,
+              "score": 0.12327689719878455,
+              "slot_positions": [
+                {
+                  "slot_id": "s_185",
+                  "x": 97.417426,
+                  "y": 71.164875,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 22,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_92"
+            ],
+            [
+              "s_95"
+            ],
+            [
+              "s_91"
+            ]
+          ],
+          "action_scores": [
+            0.5001014073151016,
+            0.5001014073151016,
+            0.5001014073151016
+          ],
+          "sequence_score": 1.5003042219453047,
+          "available_actions_count": 381,
+          "candidate_slots_count": 67,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_92",
+              "footprint_slots": [
+                "s_92"
+              ],
+              "cost": 982.3333333333334,
+              "reward": 1278.4434958985503,
+              "prestige": 0.3333333333333333,
+              "score": 0.5001014073151016,
+              "slot_positions": [
+                {
+                  "slot_id": "s_92",
+                  "x": 131.292006,
+                  "y": 118.565558,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_95",
+              "footprint_slots": [
+                "s_95"
+              ],
+              "cost": 1004.3333333333334,
+              "reward": 1299.1574072654096,
+              "prestige": 0.3333333333333333,
+              "score": 0.5001014073151016,
+              "slot_positions": [
+                {
+                  "slot_id": "s_95",
+                  "x": 128.269348,
+                  "y": 118.016054,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_91",
+              "footprint_slots": [
+                "s_91"
+              ],
+              "cost": 960.3333333333334,
+              "reward": 1284.7809006007171,
+              "prestige": 0.3333333333333333,
+              "score": 0.5001014073151016,
+              "slot_positions": [
+                {
+                  "slot_id": "s_91",
+                  "x": 131.516502,
+                  "y": 121.807906,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 23,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_188"
+            ],
+            [
+              "s_186"
+            ],
+            [
+              "s_179"
+            ]
+          ],
+          "action_scores": [
+            0.30281343851182735,
+            0.30281343851182735,
+            0.30281343851182735
+          ],
+          "sequence_score": 0.9084403155354821,
+          "available_actions_count": 44,
+          "candidate_slots_count": 39,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_188",
+              "footprint_slots": [
+                "s_188"
+              ],
+              "cost": 680.0,
+              "reward": 697.5975514760358,
+              "prestige": 0.03333333333333333,
+              "score": 0.30281343851182735,
+              "slot_positions": [
+                {
+                  "slot_id": "s_188",
+                  "x": 92.776584,
+                  "y": 66.30851,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_186",
+              "footprint_slots": [
+                "s_186"
+              ],
+              "cost": 502.0,
+              "reward": 419.30363127673417,
+              "prestige": 0.06666666666666667,
+              "score": 0.30281343851182735,
+              "slot_positions": [
+                {
+                  "slot_id": "s_186",
+                  "x": 95.634923,
+                  "y": 67.292426,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_179",
+              "footprint_slots": [
+                "s_179"
+              ],
+              "cost": 410.3333333333333,
+              "reward": 234.95423053454098,
+              "prestige": 0.06666666666666667,
+              "score": 0.30281343851182735,
+              "slot_positions": [
+                {
+                  "slot_id": "s_179",
+                  "x": 90.305858,
+                  "y": 64.427434,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 24,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_51"
+            ],
+            [
+              "s_49"
+            ],
+            [
+              "s_27"
+            ]
+          ],
+          "action_scores": [
+            0.4904464008090758,
+            0.4904464008090758,
+            0.4904464008090758
+          ],
+          "sequence_score": 1.4713392024272274,
+          "available_actions_count": 372,
+          "candidate_slots_count": 64,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_51",
+              "footprint_slots": [
+                "s_51"
+              ],
+              "cost": 868.3333333333334,
+              "reward": 1157.970378521218,
+              "prestige": 0.3333333333333333,
+              "score": 0.4904464008090758,
+              "slot_positions": [
+                {
+                  "slot_id": "s_51",
+                  "x": 86.5628,
+                  "y": 114.219459,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_49",
+              "footprint_slots": [
+                "s_49"
+              ],
+              "cost": 883.0,
+              "reward": 1230.3117349668375,
+              "prestige": 0.3333333333333333,
+              "score": 0.4904464008090758,
+              "slot_positions": [
+                {
+                  "slot_id": "s_49",
+                  "x": 89.145634,
+                  "y": 115.125231,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_27",
+              "footprint_slots": [
+                "s_27"
+              ],
+              "cost": 853.6666666666666,
+              "reward": 1083.3459121971262,
+              "prestige": 0.3333333333333333,
+              "score": 0.4904464008090758,
+              "slot_positions": [
+                {
+                  "slot_id": "s_27",
+                  "x": 84.348807,
+                  "y": 111.620919,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 25,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_178"
+            ],
+            [
+              "s_175"
+            ],
+            [
+              "s_180"
+            ]
+          ],
+          "action_scores": [
+            0.13119541973157653,
+            0.13119541973157653,
+            0.13119541973157653
+          ],
+          "sequence_score": 0.39358625919472956,
+          "available_actions_count": 44,
+          "candidate_slots_count": 38,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_178",
+              "footprint_slots": [
+                "s_178"
+              ],
+              "cost": 469.0,
+              "reward": 368.78419536240773,
+              "prestige": 0.06666666666666667,
+              "score": 0.13119541973157653,
+              "slot_positions": [
+                {
+                  "slot_id": "s_178",
+                  "x": 85.446018,
+                  "y": 66.969259,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_175",
+              "footprint_slots": [
+                "s_175"
+              ],
+              "cost": 665.3333333333334,
+              "reward": 619.8055329666666,
+              "prestige": 0.03333333333333333,
+              "score": 0.13119541973157653,
+              "slot_positions": [
+                {
+                  "slot_id": "s_175",
+                  "x": 82.994633,
+                  "y": 69.033562,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_180",
+              "footprint_slots": [
+                "s_180"
+              ],
+              "cost": 491.0,
+              "reward": 439.2746586082337,
+              "prestige": 0.06666666666666667,
+              "score": 0.13119541973157653,
+              "slot_positions": [
+                {
+                  "slot_id": "s_180",
+                  "x": 88.815681,
+                  "y": 67.12486,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 26,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_43"
+            ],
+            [
+              "s_44"
+            ],
+            [
+              "s_39"
+            ]
+          ],
+          "action_scores": [
+            0.49441346431380034,
+            0.49441346431380034,
+            0.49441346431380034
+          ],
+          "sequence_score": 1.483240392941401,
+          "available_actions_count": 366,
+          "candidate_slots_count": 62,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_43",
+              "footprint_slots": [
+                "s_43"
+              ],
+              "cost": 1037.3333333333333,
+              "reward": 1259.7504722800643,
+              "prestige": 0.3333333333333333,
+              "score": 0.49441346431380034,
+              "slot_positions": [
+                {
+                  "slot_id": "s_43",
+                  "x": 113.941065,
+                  "y": 114.44081,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_44",
+              "footprint_slots": [
+                "s_44"
+              ],
+              "cost": 1044.6666666666667,
+              "reward": 1327.7408048725774,
+              "prestige": 0.3333333333333333,
+              "score": 0.49441346431380034,
+              "slot_positions": [
+                {
+                  "slot_id": "s_44",
+                  "x": 116.200034,
+                  "y": 115.703003,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_39",
+              "footprint_slots": [
+                "s_39"
+              ],
+              "cost": 1033.6666666666667,
+              "reward": 1293.6451274778883,
+              "prestige": 0.3333333333333333,
+              "score": 0.49441346431380034,
+              "slot_positions": [
+                {
+                  "slot_id": "s_39",
+                  "x": 113.17303,
+                  "y": 116.999714,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 27,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_189"
+            ],
+            [
+              "s_162"
+            ],
+            [
+              "s_161"
+            ]
+          ],
+          "action_scores": [
+            0.13080268329211017,
+            0.13080268329211017,
+            0.13080268329211017
+          ],
+          "sequence_score": 0.3924080498763305,
+          "available_actions_count": 45,
+          "candidate_slots_count": 40,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "M",
+              "slot_id": "s_189",
+              "footprint_slots": [
+                "s_189"
+              ],
+              "cost": 709.3333333333334,
+              "reward": 767.8682616514848,
+              "prestige": 0.03333333333333333,
+              "score": 0.13080268329211017,
+              "slot_positions": [
+                {
+                  "slot_id": "s_189",
+                  "x": 91.221898,
+                  "y": 70.628041,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_162",
+              "footprint_slots": [
+                "s_162"
+              ],
+              "cost": 546.0,
+              "reward": 390.4031519586804,
+              "prestige": 0.06666666666666667,
+              "score": 0.13080268329211017,
+              "slot_positions": [
+                {
+                  "slot_id": "s_162",
+                  "x": 93.663083,
+                  "y": 74.544219,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_161",
+              "footprint_slots": [
+                "s_161"
+              ],
+              "cost": 553.3333333333334,
+              "reward": 333.53029362629235,
+              "prestige": 0.06666666666666667,
+              "score": 0.13080268329211017,
+              "slot_positions": [
+                {
+                  "slot_id": "s_161",
+                  "x": 93.525556,
+                  "y": 77.140285,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 28,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_64"
+            ],
+            [
+              "s_62"
+            ],
+            [
+              "s_66"
+            ]
+          ],
+          "action_scores": [
+            0.4854071243141436,
+            0.4854071243141436,
+            0.4854071243141436
+          ],
+          "sequence_score": 1.456221372942431,
+          "available_actions_count": 354,
+          "candidate_slots_count": 59,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_64",
+              "footprint_slots": [
+                "s_64"
+              ],
+              "cost": 886.6666666666666,
+              "reward": 1149.6252043383695,
+              "prestige": 0.3333333333333333,
+              "score": 0.4854071243141436,
+              "slot_positions": [
+                {
+                  "slot_id": "s_64",
+                  "x": 84.161364,
+                  "y": 105.169862,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_62",
+              "footprint_slots": [
+                "s_62"
+              ],
+              "cost": 879.3333333333334,
+              "reward": 1097.0627166992497,
+              "prestige": 0.3333333333333333,
+              "score": 0.4854071243141436,
+              "slot_positions": [
+                {
+                  "slot_id": "s_62",
+                  "x": 81.178851,
+                  "y": 104.099679,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_66",
+              "footprint_slots": [
+                "s_66"
+              ],
+              "cost": 894.0,
+              "reward": 1163.9254652327202,
+              "prestige": 0.3333333333333333,
+              "score": 0.4854071243141436,
+              "slot_positions": [
+                {
+                  "slot_id": "s_66",
+                  "x": 87.223387,
+                  "y": 106.214722,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 29,
+          "agent": "IND",
+          "selected_slots": [
+            [
+              "s_108"
+            ],
+            [
+              "s_138"
+            ],
+            [
+              "s_118"
+            ]
+          ],
+          "action_scores": [
+            0.11411029734101306,
+            0.11411029734101306,
+            0.11411029734101306
+          ],
+          "sequence_score": 0.3423308920230392,
+          "available_actions_count": 41,
+          "candidate_slots_count": 37,
+          "detailed_actions": [
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_108",
+              "footprint_slots": [
+                "s_108"
+              ],
+              "cost": 722.3333333333334,
+              "reward": 482.33626021284175,
+              "prestige": 0.06666666666666667,
+              "score": 0.11411029734101306,
+              "slot_positions": [
+                {
+                  "slot_id": "s_108",
+                  "x": 119.245217,
+                  "y": 87.269815,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_138",
+              "footprint_slots": [
+                "s_138"
+              ],
+              "cost": 718.6666666666666,
+              "reward": 452.0560702035638,
+              "prestige": 0.06666666666666667,
+              "score": 0.11411029734101306,
+              "slot_positions": [
+                {
+                  "slot_id": "s_138",
+                  "x": 125.144174,
+                  "y": 92.268159,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "IND",
+              "size": "S",
+              "slot_id": "s_118",
+              "footprint_slots": [
+                "s_118"
+              ],
+              "cost": 634.0,
+              "reward": 424.2965845425731,
+              "prestige": 0.06666666666666667,
+              "score": 0.11411029734101306,
+              "slot_positions": [
+                {
+                  "slot_id": "s_118",
+                  "x": 136.974351,
+                  "y": 94.941019,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "month": 30,
+          "agent": "EDU",
+          "selected_slots": [
+            [
+              "s_12"
+            ],
+            [
+              "s_10"
+            ],
+            [
+              "s_0"
+            ]
+          ],
+          "action_scores": [
+            0.49825809115466724,
+            0.49825809115466724,
+            0.49825809115466724
+          ],
+          "sequence_score": 1.4947742734640017,
+          "available_actions_count": 336,
+          "candidate_slots_count": 56,
+          "detailed_actions": [
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_12",
+              "footprint_slots": [
+                "s_12"
+              ],
+              "cost": 978.6666666666666,
+              "reward": 1270.723829952186,
+              "prestige": 0.3333333333333333,
+              "score": 0.49825809115466724,
+              "slot_positions": [
+                {
+                  "slot_id": "s_12",
+                  "x": 99.556225,
+                  "y": 117.758146,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_10",
+              "footprint_slots": [
+                "s_10"
+              ],
+              "cost": 967.6666666666666,
+              "reward": 1277.123727101961,
+              "prestige": 0.3333333333333333,
+              "score": 0.49825809115466724,
+              "slot_positions": [
+                {
+                  "slot_id": "s_10",
+                  "x": 97.019855,
+                  "y": 117.428623,
+                  "angle": 0.0
+                }
+              ]
+            },
+            {
+              "agent": "EDU",
+              "size": "L",
+              "slot_id": "s_0",
+              "footprint_slots": [
+                "s_0"
+              ],
+              "cost": 901.6666666666666,
+              "reward": 1177.275889816405,
+              "prestige": 0.3333333333333333,
+              "score": 0.49825809115466724,
+              "slot_positions": [
+                {
+                  "slot_id": "s_0",
+                  "x": 98.519891,
+                  "y": 120.643671,
+                  "angle": 0.0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "total_selections": 30,
+        "unique_slots_selected": [
+          "s_196",
+          "s_2",
+          "s_13",
+          "s_137",
+          "s_141",
+          "s_183",
+          "s_162",
+          "s_41",
+          "s_197",
+          "s_104",
+          "s_186",
+          "s_178",
+          "s_120",
+          "s_18",
+          "s_123",
+          "s_72",
+          "s_118",
+          "s_27",
+          "s_152",
+          "s_92",
+          "s_7",
+          "s_12",
+          "s_95",
+          "s_188",
+          "s_45",
+          "s_185",
+          "s_190",
+          "s_157",
+          "s_161",
+          "s_192",
+          "s_99",
+          "s_112",
+          "s_193",
+          "s_194",
+          "s_75",
+          "s_84",
+          "s_91",
+          "s_39",
+          "s_55",
+          "s_156",
+          "s_200",
+          "s_24",
+          "s_124",
+          "s_46",
+          "s_35",
+          "s_78",
+          "s_49",
+          "s_201",
+          "s_126",
+          "s_151",
+          "s_158",
+          "s_165",
+          "s_94",
+          "s_179",
+          "s_22",
+          "s_44",
+          "s_139",
+          "s_189",
+          "s_62",
+          "s_87",
+          "s_93",
+          "s_59",
+          "s_108",
+          "s_25",
+          "s_64",
+          "s_51",
+          "s_154",
+          "s_199",
+          "s_0",
+          "s_56",
+          "s_9",
+          "s_191",
+          "s_166",
+          "s_153",
+          "s_42",
+          "s_138",
+          "s_180",
+          "s_48",
+          "s_60",
+          "s_66",
+          "s_175",
+          "s_195",
+          "s_43",
+          "s_21",
+          "s_10",
+          "s_198",
+          "s_17",
+          "s_155",
+          "s_96",
+          "s_1"
+        ],
+        "edu_selections": 45,
+        "ind_selections": 45,
+        "avg_action_score": 0.3497785123793219,
+        "avg_sequence_score": 1.0493355371379658
+      }
+    }
+  ],
+  "total_selections": 60
+}

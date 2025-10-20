@@ -74,12 +74,17 @@ def run_rl_mode(cfg: Dict, eval_only: bool = False, model_path: str = None) -> D
         
         # 导入PPO训练器
         from trainers.v4_1.ppo_trainer import PPOTrainer
+        from enhanced_training_logger import initialize_training_logger, get_training_logger
+        
+        # 初始化增强训练记录器
+        model_save_path = rl_cfg.get('model_save_path', 'models/v4_1_rl/')
+        logger = initialize_training_logger(model_save_path, "ppo_training_v4_1")
         
         # 创建PPO训练器
         trainer = PPOTrainer(cfg)
         
         # 训练模型
-        results = train_rl_model(trainer, cfg)
+        results = train_rl_model(trainer, cfg, logger)
     
     return results
 
@@ -481,17 +486,25 @@ def run_single_episode(env, selector, seed: Optional[int] = None) -> Tuple[List[
             'action': selected_sequence,
             'agent': current_agent,
             'month': env.current_month,
-            'old_log_prob': old_log_prob,  # 添加old_log_prob
-            # 添加槽位选择历史
+            
+            # 业务字段（保持原有）
             'selected_slots': [action.footprint_slots for action in selected_sequence.actions] if selected_sequence and selected_sequence.actions else [],
             'action_scores': [action.score for action in selected_sequence.actions] if selected_sequence and selected_sequence.actions else [],
             'action_costs': [action.cost for action in selected_sequence.actions] if selected_sequence and selected_sequence.actions else [],
             'sequence_score': selected_sequence.score if selected_sequence else 0.0,
             'available_actions_count': len(actions),
             'candidate_slots_count': len(set(actions[i].footprint_slots[0] for i in range(len(actions)) if actions[i].footprint_slots)) if actions else 0,
-            # 添加详细动作信息用于TXT导出
             'detailed_actions': detailed_actions
         }
+        
+        # 确保写入基本类型的关键字段
+        experience.update({
+            'action_index': int(getattr(selected_sequence, 'action_index', -1)),  # 局部索引
+            'num_actions': int(getattr(selected_sequence, 'num_actions', len(actions))),  # 子集大小
+            'old_log_prob': float(getattr(selected_sequence, 'old_log_prob', old_log_prob).detach().cpu().item() if torch.is_tensor(getattr(selected_sequence, 'old_log_prob', old_log_prob)) else getattr(selected_sequence, 'old_log_prob', old_log_prob)),
+            # 'subset_indices': [int(x) for x in subset_indices.detach().cpu().tolist()]  # 可选：暂时不写也行
+            # 'state_embed': state_embed.detach().cpu().numpy(),  # 可选：如果你训练端仍重编码，可先不写
+        })
         
         # 执行动作序列
         next_state, reward, done, info = env.step(current_agent, selected_sequence)
@@ -519,7 +532,7 @@ def run_single_episode(env, selector, seed: Optional[int] = None) -> Tuple[List[
     return experiences, total_return
 
 
-def train_rl_model(trainer, cfg: Dict) -> Dict:
+def train_rl_model(trainer, cfg: Dict, logger=None) -> Dict:
     """训练RL模型"""
     print("开始RL模型训练...")
     
@@ -530,7 +543,7 @@ def train_rl_model(trainer, cfg: Dict) -> Dict:
     from solvers.v4_1.rl_selector import RLPolicySelector
     
     env = CityEnvironment(cfg)
-    selector = RLPolicySelector(cfg)
+    selector = RLPolicySelector(cfg, slots=env.slots)  # 传递槽位信息
     
     # 设置随机种子
     trainer.set_seed(rl_cfg['seed'])
@@ -552,6 +565,14 @@ def train_rl_model(trainer, cfg: Dict) -> Dict:
     # 训练循环
     for update in range(rl_cfg['max_updates']):
         print(f"训练更新 {update + 1}/{rl_cfg['max_updates']}")
+        
+        # 更新探索率（逐步降低）
+        selector.update_exploration(update)
+        print(f"当前探索率: {selector.epsilon:.3f}")
+        
+        # 开始记录训练更新
+        if logger:
+            logger.start_training_update(update, rl_cfg['rollout_steps'])
         
         # 1. 收集经验 (Rollout)
         all_experiences = []
@@ -579,6 +600,32 @@ def train_rl_model(trainer, cfg: Dict) -> Dict:
                 
                 episode_lengths.append(len(experiences))
                 steps_collected += len(experiences)
+                
+                # 记录episode到增强记录器
+                if logger:
+                    episode_id = len(training_metrics['episode_returns'])
+                    logger.start_episode(episode_id)
+                    
+                    # 记录每个step
+                    for i, exp in enumerate(experiences):
+                        logger.record_step(
+                            agent=exp['agent'],
+                            month=i,
+                            reward=exp['reward'],
+                            selected_slots=exp.get('selected_slots', []),
+                            action_score=exp.get('action_score', 0.0),
+                            available_actions=exp.get('available_actions', 0),
+                            candidate_slots=exp.get('candidate_slots', 0)
+                        )
+                    
+                    # 完成episode记录
+                    episode_metrics = {
+                        'total_return': episode_return,
+                        'edu_return': edu_return,
+                        'ind_return': ind_return,
+                        'episode_length': len(experiences)
+                    }
+                    logger.finish_episode(episode_metrics)
                 
                 # 收集槽位选择历史
                 episode_slot_history = {
@@ -662,6 +709,18 @@ def train_rl_model(trainer, cfg: Dict) -> Dict:
             # 使用PPO训练器进行策略更新
             loss_stats = trainer.update_policy(all_experiences)
             
+            # 完成训练更新记录
+            if logger:
+                update_summary = {
+                    'final_policy_loss': loss_stats['policy_loss'],
+                    'final_value_loss': loss_stats['value_loss'],
+                    'final_entropy': loss_stats['entropy'],
+                    'final_total_loss': loss_stats['total_loss'],
+                    'final_kl_divergence': loss_stats['kl_divergence'],
+                    'final_clip_fraction': loss_stats['clip_fraction']
+                }
+                logger.finish_training_update(update_summary)
+            
             # 记录损失统计
             print(f"  训练损失: policy={loss_stats['policy_loss']:.4f}, "
                   f"value={loss_stats['value_loss']:.4f}, "
@@ -698,6 +757,22 @@ def train_rl_model(trainer, cfg: Dict) -> Dict:
         cfg=cfg,
         is_final=True
     )
+    
+    # 保存增强训练日志
+    if logger:
+        final_summary = {
+            'total_training_updates': rl_cfg['max_updates'],
+            'final_model_path': final_model_path,
+            'total_episodes_run': len(training_metrics['episode_returns']),
+            'final_avg_return': training_metrics['episode_returns'][-1] if training_metrics['episode_returns'] else 0.0,
+            'best_return': max(training_metrics['episode_returns']) if training_metrics['episode_returns'] else 0.0,
+            'training_completed': True
+        }
+        logger.set_final_summary(final_summary)
+        detailed_log_path = logger.save_log()
+        logger.save_summary_csv()
+        logger.print_training_summary()
+        print(f"详细训练日志已保存: {detailed_log_path}")
     
     # 保存槽位选择历史
     history_save_path = os.path.join(rl_cfg['model_save_path'], 'slot_selection_history.json')

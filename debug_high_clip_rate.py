@@ -99,3 +99,6 @@ print("\n如果clip率还是>50%:")
 print("  再用方案B或C")
 print("="*80)
 
+
+
+

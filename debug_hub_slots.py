@@ -59,3 +59,6 @@ print(f'Hub1到河流的最小距离: {hub1_river_dist:.1f}')
 print(f'Hub2到河流的最小距离: {hub2_river_dist:.1f}')
 
 
+
+
+

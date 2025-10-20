@@ -1,0 +1,34 @@
+{
+  "mode": "rl_train",
+  "training_updates": 1,
+  "final_model_path": "models/v4_1_rl/final_model_default_99914b93_20251015_190503.pth",
+  "training_metrics": {
+    "episode_returns": [
+      31.57336651568332
+    ],
+    "edu_returns": [
+      20.47725212230373
+    ],
+    "ind_returns": [
+      11.096114393379585
+    ],
+    "episode_lengths": [
+      30.0
+    ]
+  },
+  "total_episodes_run": 1,
+  "final_avg_return": 31.57336651568332,
+  "slot_selection_history_path": "models/v4_1_rl/slot_selection_history.json",
+  "slot_selection_stats": {
+    "total_episodes": 1,
+    "total_selections": 30,
+    "unique_slots_count": 90,
+    "edu_selections": 15,
+    "ind_selections": 15,
+    "avg_action_score": 0.616541813197547
+  },
+  "budget_history": {
+    "IND": [],
+    "EDU": []
+  }
+}
