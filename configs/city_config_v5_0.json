@@ -1,0 +1,263 @@
+{
+  "schema_version": "5.0.0",
+  "scenario_name": "default_city_v5_numeric",
+  "description": "Reinforcement learning city simulation (numeric-action version)",
+
+  "paths": {
+    "slots_txt": "./slots_with_angle.txt",
+    "river_geojson": "./data/river.geojson",
+    "adj_graph": "./data/city.graphml",
+    "outputs_dir": "./outputs",
+    "checkpoints_dir": "./checkpoints",
+    "logs_dir": "./logs"
+  },
+
+  "seeds": { "global": 42, "env": 123, "policy": 456, "dataloader": 789 },
+
+  "land_price": {
+    "gaussian_system": {
+      "meters_per_pixel": 2.0,
+      "hub_sigma_base_m": 32,
+      "road_sigma_base_m": 20,
+      "hub_peak_value": 1.0,
+      "road_peak_value": 0.6,
+      "min_threshold": 0.04,
+      "alpha_inertia": 0.25,
+      "hub_growth_rate": 0.03,
+      "road_growth_rate": 0.02,
+      "max_hub_multiplier": 2.0,
+      "max_road_multiplier": 2.5,
+      "extra_hub_point_peak": 1.2,
+      "extra_hub_point_sigma_px": 6.0,
+      "fusion_mode": "weighted_sum",
+      "fusion_weights": {
+        "hub": 0.8,
+        "road": 0.4,
+        "river": 0.8,
+        "build": 0.2
+      },
+      "component_normalize": true,
+      "fusion_normalize": "minmax"
+    },
+    "evolution": {
+      "enabled": true,
+      "road_activation_month": 0,
+      "hub_activation_month": 7,
+      "hub_growth_duration_months": 6,
+      "hub_initial_peak": 0.7,
+      "hub_final_peak": 1.0
+    }
+  },
+
+  "slots": {
+    "source": "file",
+    "path": "${paths.slots_txt}",
+    "adjacency": "4-neighbor"
+  },
+
+  "city": {
+    "map_size": [200, 200],
+    "transport_hubs": [[122, 80], [112, 121]]
+  },
+
+  "env": {
+    "time_model": { "step_unit": "month", "total_steps": 30 },
+    "land_price": {
+      "base": 1.0,
+      "river_multiplier": 1.2,
+      "hub_multiplier": 1.3
+    },
+    "base_environment": {
+      "import_slots": "${paths.slots_txt}",
+      "import_river": "${paths.river_geojson}"
+    }
+  },
+
+  "agents": {
+    "order": ["IND", "EDU", "COUNCIL"],
+    "defs": {
+      "EDU":     { 
+        "action_ids": [0, 1, 2],             
+        "obs_pack": ["geo","history"],
+        "constraints": {
+          "max_actions_per_turn": 1,
+          "budget_limit": 10000,
+          "budget_sharing": "COUNCIL"
+        }
+      },
+      "IND":     { 
+        "action_ids": [3, 4, 5], 
+        "obs_pack": ["geo","demand","history"],
+        "constraints": {
+          "max_actions_per_turn": 2,
+          "budget_limit": 15000
+        }
+      },
+      "COUNCIL": { 
+        "action_ids": [6, 7, 8],             
+        "obs_pack": ["geo","network"],
+        "constraints": {
+          "max_actions_per_turn": 1,
+          "budget_limit": 0,
+          "budget_sharing": "EDU",
+          "special_rules": {
+            "other_side_bonus": true,
+            "start_after_month": 6
+          }
+        }
+      }
+    }
+  },
+
+  "action_params": {
+    "0": { "desc": "EDU_S", "cost": 650, "reward": 160, "prestige": 0.2 },
+    "1": { "desc": "EDU_M", "cost": 1150, "reward": 530, "prestige": 0.6 },
+    "2": { "desc": "EDU_L", "cost": 2700, "reward": 360, "prestige": 1.0 },
+    "3": { "desc": "IND_S", "cost": 900, "reward": 150, "prestige": 0.2 },
+    "4": { "desc": "IND_M", "cost": 1500, "reward": 280, "prestige": 0.1 },
+    "5": { "desc": "IND_L", "cost": 2400, "reward": 450, "prestige": -0.1 },
+    "6": { "desc": "COUNCIL_A", "cost": 570, "reward": 570, "prestige": 0.3 },
+    "7": { "desc": "COUNCIL_B", "cost": 870, "reward": 870, "prestige": 0.7 },
+    "8": { "desc": "COUNCIL_C", "cost": 1150, "reward": 1150, "prestige": 1.2 }
+  },
+
+  "relations": {
+    "across_river": {
+      "type": "pairs_true",
+      "zones": ["ZoneA","ZoneB","ZoneC","ZoneD"],
+      "pairs_true": [["ZoneA","ZoneC"], ["ZoneB","ZoneD"]]
+    },
+    "adjacency": {
+      "source": "graphml",
+      "path": "${paths.adj_graph}",
+      "distance_threshold": 200.0
+    },
+    "groups": {
+      "hubs": ["Hub1","Hub2"]
+    }
+  },
+
+  "ledger": {
+    "initial_budget": { "IND": 15000, "EDU": 10000, "COUNCIL": 0 },
+    "share_matrix": [["EDU","COUNCIL"]],
+    "carryover": { "enabled": true, "ratio": 1.0 },
+    "overdraft": { "enabled": true, "interest": 0.1, "penalty": 100.0 },
+    "bankruptcy_threshold": -5000,
+    "bankruptcy_policy": "skip_turn"
+  },
+
+  "constraints": {
+    "zoning_rules": { "enabled": true },
+    "sequence": { "max_len": 5, "dedup": true, "max_candidates": 50 },
+    "conflict_policy": "drop_late",
+    "caps": { "max_actions_per_step": 5, "per_zone_month_cap": 3 },
+    "advance_policy": "advance_if_empty"
+  },
+
+  "featurizers": {
+    "enabled": ["geo","demand","history","network"],
+    "norm": { "type": "standard", "stats_path": "./outputs/norm_stats.json" },
+    "history_windows": { "diversity": 12, "demand": 6 }
+  },
+
+  "rules": {
+    "aggregation": { "clip": null, "normalize": false },
+    "terms": [
+      { "name": "revenue",    "fn": "revenue.base",  "weight": 1.0 },
+      { "name": "cost",       "fn": "cost.base",     "weight": -1.0 },
+      { "name": "prestige",   "fn": "prestige.base", "weight": 0.2 },
+      { "name": "cross_river","fn": "spatial.cross_river_bonus", "weight": 0.1 },
+      { "name": "adjacency",  "fn": "spatial.adjacency_score",   "weight": 0.1 },
+      { "name": "diversity",  "fn": "stats.entropy_window",      "weight": 0.05 }
+    ],
+    "term_params": {
+      "spatial.cross_river_bonus": { "bonus": 2.0 },
+      "spatial.adjacency_score":   { "radius": 200.0, "same_type_bonus": 0.2, "mix_bonus": 0.1 },
+      "stats.entropy_window":      { "window": 12, "epsilon": 1e-6 }
+    }
+  },
+
+  "scheduler": {
+    "name": "phase_cycle",
+    "params": {
+      "step_unit": "month",
+      "period": 2,
+      "offset": 0,
+      "phases": [
+        { "agents": ["EDU","COUNCIL"], "mode": "concurrent" },
+        { "agents": ["IND"],           "mode": "sequential" }
+      ]
+    }
+  },
+
+  "action_mw": [
+    "conflict.drop_late",
+    "budget.shared_ledger",
+    "legality.env",
+    "sequence.trim_to_max_len"
+  ],
+
+  "mappo": {
+    "net": {
+      "obs_dim": 512,
+      "share_encoder": true,
+      "actor_hidden": [256,128],
+      "critic_hidden": [256,128],
+      "use_lstm": false
+    },
+    "ppo": {
+      "clip_eps": 0.15,
+      "gamma": 0.99,
+      "gae_lambda": 0.8,
+      "entropy_coef": 0.01,
+      "value_coef": 0.5,
+      "target_kl": 0.02,
+      "max_grad_norm": 0.5,
+      "lr": 3e-4,
+      "lr_schedule": "cosine"
+    },
+    "rollout": {
+      "num_envs": 8,
+      "horizon": 20,
+      "minibatch_size": 32,
+      "updates_per_iter": 8
+    },
+    "exploration": {
+      "temperature": 1.0,
+      "anneal_to": 0.7,
+      "anneal_steps": 200000
+    }
+  },
+
+  "eval": {
+    "frequency_steps": 5000,
+    "episodes": 8,
+    "seeds": [101,102,103,104],
+    "fixed_maps": ["map_A","map_B"]
+  },
+
+  "checkpointing": {
+    "save_best_metric": "eval/return_mean",
+    "save_every_steps": 10000,
+    "max_to_keep": 5
+  },
+
+  "logging": {
+    "level": "INFO",
+    "history_detail": true,
+    "event_sample_rate": 1.0,
+    "exports": { "txt": true, "csv": true, "jsonl": true }
+  },
+
+  "performance": {
+    "device": "cuda",
+    "amp": true,
+    "num_workers": 4,
+    "pin_memory": true
+  },
+
+  "validators": {
+    "unique_action_ids": true,
+    "non_negative_budget": true
+  }
+}
