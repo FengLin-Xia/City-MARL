@@ -21,6 +21,7 @@ from integration.v5_0 import (
     V5ExportPipeline
 )
 from contracts import StepLog, EnvironmentState
+from utils.logger_factory import init_logging
 
 
 def load_config(config_path: str) -> Dict[str, Any]:
@@ -262,6 +263,14 @@ def main():
     if args.eval_only and not args.model_path:
         parser.error("评估模式需要指定 --model_path")
     
+    # 初始化日志（基于配置）
+    try:
+        config_for_logging = load_config(args.config)
+        init_logging(config_for_logging)
+    except Exception:
+        # 日志初始化失败不阻断主流程
+        pass
+
     # 创建输出目录
     os.makedirs(args.output_dir, exist_ok=True)
     

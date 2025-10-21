@@ -41,23 +41,29 @@ class V5PPOTrainer:
         
         # 获取RL配置
         self.rl_config = self.config.get("mappo", {})
+        self.ppo_config = self.rl_config.get("ppo", {})
         
-        # PPO超参数
-        self.gamma = self.rl_config.get("gamma", 0.99)
-        self.gae_lambda = self.rl_config.get("gae_lambda", 0.95)
-        self.clip_ratio = self.rl_config.get("clip_ratio", 0.2)
-        self.lr = self.rl_config.get("lr", 3e-4)
-        self.value_loss_coef = self.rl_config.get("value_loss_coef", 0.5)
-        self.entropy_coef = self.rl_config.get("entropy_coef", 0.01)
-        self.max_grad_norm = self.rl_config.get("max_grad_norm", 0.5)
+        # PPO超参数（从 mappo.ppo 读取）
+        self.gamma = self.ppo_config.get("gamma", 0.99)
+        self.gae_lambda = self.ppo_config.get("gae_lambda", 0.95)
+        self.clip_eps = self.ppo_config.get("clip_eps", 0.2)
+        self.lr = self.ppo_config.get("lr", 3e-4)
+        self.value_loss_coef = self.ppo_config.get("value_coef", 0.5)
+        self.entropy_coef = self.ppo_config.get("entropy_coef", 0.01)
+        self.max_grad_norm = self.ppo_config.get("max_grad_norm", 0.5)
         
         # 训练参数
-        self.rollout_horizon = self.rl_config.get("rollout", {}).get("horizon", 20)
-        self.minibatch_size = self.rl_config.get("rollout", {}).get("minibatch_size", 32)
-        self.updates_per_iter = self.rl_config.get("rollout", {}).get("updates_per_iter", 8)
+        rollout_cfg = self.rl_config.get("rollout", {})
+        self.rollout_horizon = rollout_cfg.get("horizon", 20)
+        self.minibatch_size = rollout_cfg.get("minibatch_size", 32)
+        self.updates_per_iter = rollout_cfg.get("updates_per_iter", 8)
+        self.max_updates = rollout_cfg.get("max_updates", 10)
         
         # 设备
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
+        # 更新计数器
+        self.current_update = 0
         
         # 初始化环境
         self.env = V5CityEnvironment(config_path)
@@ -113,45 +119,59 @@ class V5PPOTrainer:
             max_steps = 1000  # 防止无限循环
             
             while not done and steps_collected < num_steps and step_count < max_steps:
-                # 获取当前智能体
-                current_agent = self.env.current_agent
+                # 获取当前phase的所有智能体
+                phase_agents = self.env.get_phase_agents()
+                execution_mode = self.env.get_phase_execution_mode()
                 
-                # 获取动作候选
-                candidates = self.env.get_action_candidates(current_agent)
+                # 为每个智能体获取动作候选并用策略选择序列（动态更新候选集）
+                phase_sequences = {}
+                phase_candidates = {}
                 
-                if not candidates:
-                    # 没有可用动作，推进到下一步
-                    self.env._update_state()
-                    step_count += 1
-                    # 检查是否结束
-                    done = self.env._is_done()
-                    continue
+                for agent in phase_agents:
+                    # 获取动作候选（考虑已占用槽位）
+                    candidates = self.env.get_action_candidates(agent)
+                    phase_candidates[agent] = candidates
+                    
+                    if candidates:
+                        sel = self.selector.select_action(agent, candidates, state, greedy=False)
+                        if sel is not None:
+                            phase_sequences[agent] = sel['sequence']
+                        else:
+                            phase_sequences[agent] = None
+                    else:
+                        phase_sequences[agent] = None
                 
-                # 选择动作序列
-                sequence = self.selector.choose_sequence(
-                    agent=current_agent,
-                    candidates=candidates,
-                    state=state
-                )
+                # 执行phase
+                next_state, phase_rewards, done, info = self.env.step_phase(phase_agents, phase_sequences)
                 
-                # 执行动作
-                next_state, reward, done, info = self.env.step(current_agent, sequence)
-                
-                # 创建经验记录
-                experience = {
-                    'agent': current_agent,
-                    'state': state,
-                    'candidates': candidates,
-                    'sequence': sequence,
-                    'reward': reward,
-                    'next_state': next_state,
-                    'done': done,
-                    'info': info,
-                    'step_log': info.get('step_log')
-                }
-                
-                episode_experiences.append(experience)
-                all_experiences.append(experience)
+                # 创建经验记录（包含 logprob/value/动作ID 等，并附带 StepLog 与 next_state 用于导出）
+                for agent in phase_agents:
+                    sel = None
+                    if phase_sequences.get(agent) is not None and phase_candidates.get(agent):
+                        sel = self.selector.select_action(agent, phase_candidates[agent], state, greedy=True)
+                    obs_vec = self.env.get_observation(agent)
+                    next_obs_vec = self.env.get_observation(agent)
+                    # 匹配该agent的step_log（来自phase_logs）
+                    agent_log = None
+                    if info.get('phase_logs'):
+                        for lg in info['phase_logs']:
+                            if getattr(lg, 'agent', None) == agent:
+                                agent_log = lg
+                                break
+                    experience = {
+                        'agent': agent,
+                        'obs': obs_vec,
+                        'action_id': sel['action_id'] if sel else -1,
+                        'logprob': sel['logprob'] if sel else 0.0,
+                        'value': sel['value'] if sel else 0.0,
+                        'reward': phase_rewards.get(agent, 0.0),
+                        'next_obs': next_obs_vec,
+                        'done': done,
+                        'step_log': agent_log,
+                        'next_state': next_state,
+                    }
+                    episode_experiences.append(experience)
+                    all_experiences.append(experience)
                 
                 # 更新状态
                 state = next_state
@@ -213,7 +233,7 @@ class V5PPOTrainer:
                 agent_experiences[agent] = []
             agent_experiences[agent].append(exp)
         
-        # 为每个智能体训练
+        # 为每个智能体训练（标准 PPO 近似）
         total_loss = 0.0
         total_actor_loss = 0.0
         total_critic_loss = 0.0
@@ -223,32 +243,21 @@ class V5PPOTrainer:
             if not agent_exps:
                 continue
             
-            # 提取数据
-            states = [exp['state'] for exp in agent_exps]
-            sequences = [exp['sequence'] for exp in agent_exps]
-            rewards = [exp['reward'] for exp in agent_exps]
-            next_states = [exp['next_state'] for exp in agent_exps]
-            dones = [exp['done'] for exp in agent_exps]
+            # 提取张量数据
+            obs = torch.FloatTensor([exp['obs'] for exp in agent_exps])
+            actions = torch.LongTensor([max(0, exp['action_id']) for exp in agent_exps])
+            rewards = torch.FloatTensor([exp['reward'] for exp in agent_exps])
+            dones = torch.FloatTensor([1.0 if exp['done'] else 0.0 for exp in agent_exps])
+            values_old = torch.FloatTensor([exp['value'] for exp in agent_exps])
+            logprobs_old = torch.FloatTensor([exp['logprob'] for exp in agent_exps])
             
-            # 计算价值估计
-            values = []
-            for state in states:
-                obs = self.env.get_observation(agent)
-                with torch.no_grad():
-                    value = self.selector.critic_networks[agent](torch.FloatTensor(obs).unsqueeze(0))
-                    values.append(value.item())
-            
-            # 计算下一个状态的价值
-            if next_states:
-                next_obs = self.env.get_observation(agent)
-                with torch.no_grad():
-                    next_value = self.selector.critic_networks[agent](torch.FloatTensor(next_obs).unsqueeze(0))
-                    next_value = next_value.item()
-            else:
-                next_value = 0.0
+            # 引导值：用最后一个样本的 next_obs 估一个 next_value（简化）
+            with torch.no_grad():
+                last_next = torch.FloatTensor(agent_exps[-1]['next_obs']).unsqueeze(0)
+                next_value = self.selector.critic_networks[agent](last_next).squeeze().item()
             
             # 计算GAE
-            advantages, returns = self.compute_gae(rewards, values, next_value, dones)
+            advantages, returns = self.compute_gae(rewards.tolist(), values_old.tolist(), next_value, dones.tolist())
             
             # 转换为张量
             advantages = torch.FloatTensor(advantages)
@@ -259,22 +268,45 @@ class V5PPOTrainer:
             
             # 训练网络
             for _ in range(self.updates_per_iter):
+                # 检查是否达到最大更新次数
+                if self.current_update >= self.max_updates:
+                    print(f"达到最大更新次数: {self.max_updates}")
+                    break
+                
                 # 随机采样批次
-                batch_indices = torch.randperm(len(agent_exps))[:self.minibatch_size]
+                idx = torch.randperm(len(agent_exps))[:min(self.minibatch_size, len(agent_exps))]
+                batch_obs = obs[idx]
+                batch_actions = actions[idx]
+                batch_adv = advantages[idx]
+                batch_ret = returns[idx]
+                batch_old_logp = logprobs_old[idx]
                 
-                batch_states = [states[i] for i in batch_indices]
-                batch_sequences = [sequences[i] for i in batch_indices]
-                batch_advantages = advantages[batch_indices]
-                batch_returns = returns[batch_indices]
+                # 新分布与 value
+                batch_obs_t = batch_obs
+                logits = self.selector.actor_networks[agent](batch_obs_t)
+                # 掩码（按agent允许动作）
+                allow = torch.zeros((logits.size(0), logits.size(1)))
+                allowed_ids = self.selector._agent_allowed_actions(agent)
+                if allowed_ids:
+                    allow[:, allowed_ids] = 1.0
+                masked_logits = logits + (allow + 1e-45).log()  # 局部近似mask
+                logp_all = torch.log_softmax(masked_logits, dim=-1)
+                new_logp = logp_all.gather(1, batch_actions.view(-1,1)).squeeze(1)
                 
-                # 计算损失
-                actor_loss, critic_loss, entropy_loss = self._compute_losses(
-                    agent, batch_states, batch_sequences, batch_advantages, batch_returns
-                )
+                values_pred = self.selector.critic_networks[agent](batch_obs_t).squeeze(1)
+                
+                # PPO目标
+                ratio = (new_logp - batch_old_logp).exp()
+                surr1 = ratio * batch_adv
+                surr2 = torch.clamp(ratio, 1.0 - self.clip_eps, 1.0 + self.clip_eps) * batch_adv
+                actor_loss = -torch.min(surr1, surr2).mean()
+                critic_loss = F.mse_loss(values_pred, batch_ret)
+                entropy = -(torch.softmax(masked_logits, dim=-1) * logp_all).sum(dim=-1).mean()
+                entropy_loss = -entropy
+                
+                total_loss = actor_loss + self.value_loss_coef * critic_loss - self.entropy_coef * entropy
                 
                 # 反向传播
-                total_loss = actor_loss + self.value_loss_coef * critic_loss - self.entropy_coef * entropy_loss
-                
                 self.optimizers[agent]['actor'].zero_grad()
                 self.optimizers[agent]['critic'].zero_grad()
                 
@@ -293,9 +325,12 @@ class V5PPOTrainer:
                 self.optimizers[agent]['actor'].step()
                 self.optimizers[agent]['critic'].step()
                 
+                # 增加更新计数器
+                self.current_update += 1
+                
                 total_actor_loss += actor_loss.item()
                 total_critic_loss += critic_loss.item()
-                total_entropy_loss += entropy_loss.item()
+                total_entropy_loss += entropy.item()
         
         # 更新训练步数
         self.training_step += 1
@@ -308,54 +343,7 @@ class V5PPOTrainer:
             'training_step': self.training_step
         }
     
-    def _compute_losses(self, agent: str, states: List[EnvironmentState], 
-                       sequences: List[Sequence], advantages: torch.Tensor, 
-                       returns: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        """
-        计算损失函数
-        
-        Args:
-            agent: 智能体名称
-            states: 状态列表
-            sequences: 序列列表
-            advantages: 优势估计
-            returns: 回报
-            
-        Returns:
-            (actor_loss, critic_loss, entropy_loss)
-        """
-        # 计算动作概率
-        action_probs = []
-        values = []
-        
-        for state, sequence in zip(states, sequences):
-            obs = self.env.get_observation(agent)
-            obs_tensor = torch.FloatTensor(obs).unsqueeze(0).to(self.device)
-            
-            # 计算动作概率（需要梯度）
-            action_logits = self.selector.actor_networks[agent](obs_tensor)
-            value = self.selector.critic_networks[agent](obs_tensor)
-            
-            # 简化：使用均匀分布作为动作概率
-            action_prob = torch.softmax(action_logits, dim=-1)
-            action_probs.append(action_prob)
-            values.append(value)
-        
-        # 计算损失
-        action_probs = torch.cat(action_probs, dim=0)
-        values = torch.cat(values, dim=0)
-        
-        # 简化Actor损失计算（避免维度不匹配）
-        # 使用简单的策略梯度损失
-        actor_loss = -(action_probs.mean(dim=-1) * advantages).mean()
-        
-        # Critic损失
-        critic_loss = F.mse_loss(values.squeeze(), returns)
-        
-        # 熵损失
-        entropy_loss = -(action_probs * torch.log(action_probs + 1e-8)).sum(dim=-1).mean()
-        
-        return actor_loss, critic_loss, entropy_loss
+    # 旧的简化损失已删除，改用上方标准 PPO 计算
     
     def train(self, num_episodes: int, save_interval: int = 100) -> Dict[str, Any]:
         """

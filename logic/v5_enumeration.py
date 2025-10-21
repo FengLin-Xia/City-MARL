@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 from contracts import ActionCandidate, Sequence, StepLog
 from config_loader import ConfigLoader
+from utils.logger_factory import get_logger, topic_enabled, sampling_allows
 
 
 @dataclass
@@ -38,6 +39,7 @@ class V5ActionEnumerator:
         self.action_params = config.get("action_params", {})
         self.agents_config = config.get("agents", {})
         self.slots: Dict[str, SlotInfo] = {}
+        self.logger = get_logger("enumeration")
         
     def load_slots(self, slots_data: List[Dict[str, Any]]) -> None:
         """
@@ -58,7 +60,7 @@ class V5ActionEnumerator:
             self.slots[slot.slot_id] = slot
     
     def enumerate_actions(self, agent: str, occupied_slots: Set[str], 
-                         lp_provider, budget: float) -> List[ActionCandidate]:
+                         lp_provider, budget: float, current_month: int = 0) -> List[ActionCandidate]:
         """
         为指定智能体枚举动作
         
@@ -88,7 +90,7 @@ class V5ActionEnumerator:
                 continue
             
             # 枚举该动作的所有可能位置
-            positions = self._enumerate_positions(action_id, occupied_slots, lp_provider)
+            positions = self._enumerate_positions(action_id, occupied_slots, lp_provider, current_month, agent)
             
             for pos in positions:
                 # 创建特征向量
@@ -113,10 +115,13 @@ class V5ActionEnumerator:
                 )
                 candidates.append(candidate)
         
+        # 轻量日志：候选总数
+        if topic_enabled("candidates") and sampling_allows(agent, current_month, None):
+            self.logger.info(f"candidates_total agent={agent} month={current_month} count={len(candidates)}")
         return candidates
     
     def _enumerate_positions(self, action_id: int, occupied_slots: Set[str], 
-                           lp_provider) -> List[Dict[str, Any]]:
+                           lp_provider, current_month: int, agent: str) -> List[Dict[str, Any]]:
         """
         枚举动作的可能位置
         
@@ -146,6 +151,20 @@ class V5ActionEnumerator:
         # 获取可用槽位
         available_slots = [sid for sid, slot in self.slots.items() 
                           if sid not in occupied_slots and not slot.occupied and not slot.reserved]
+        initial_cnt = len(available_slots)
+        
+        # 应用候选范围限制
+        available_slots = self._apply_candidate_range_filter(available_slots, current_month)
+        after_range_cnt = len(available_slots)
+        
+        # 应用河流限制
+        available_slots = self._apply_river_restriction_filter(available_slots, agent)
+        after_river_cnt = len(available_slots)
+
+        # 轻量日志：过滤前后数量
+        if topic_enabled("candidates") and sampling_allows(agent, current_month, None):
+            self.logger.info(
+                f"slots_filter agent={agent} month={current_month} initial={initial_cnt} range={after_range_cnt} river={after_river_cnt}")
         
         if footprint_size == 1:
             # 单槽位动作
@@ -180,6 +199,100 @@ class V5ActionEnumerator:
                     })
         
         return positions
+    
+    def _apply_candidate_range_filter(self, available_slots: List[str], current_month: int) -> List[str]:
+        """应用候选范围过滤"""
+        # 获取Hub配置
+        hubs_config = self.config.get("hubs", {})
+        if not hubs_config.get("mode") == "explicit":
+            return available_slots
+            
+        hub_list = hubs_config.get("list", [])
+        candidate_mode = hubs_config.get("candidate_mode", "cumulative")
+        tolerance = hubs_config.get("tol", 0.5)
+        
+        filtered_slots = []
+        
+        for slot_id in available_slots:
+            slot = self.slots[slot_id]
+            slot_pos = (slot.x, slot.y)
+            
+            # 检查是否在任何Hub的候选范围内
+            in_range = False
+            for hub_config in hub_list:
+                hub_pos = (hub_config["x"], hub_config["y"])
+                R0 = hub_config["R0"]
+                dR = hub_config["dR"]
+                
+                # 计算当前Hub的半径
+                if candidate_mode == "cumulative":
+                    current_radius = R0 + current_month * dR
+                else:
+                    current_radius = R0
+                
+                # 计算距离
+                distance = ((slot_pos[0] - hub_pos[0])**2 + (slot_pos[1] - hub_pos[1])**2)**0.5
+                
+                if distance <= current_radius + tolerance:
+                    in_range = True
+                    break
+            
+            if in_range:
+                filtered_slots.append(slot_id)
+        
+        return filtered_slots
+    
+    def _apply_river_restriction_filter(self, available_slots: List[str], agent: str) -> List[str]:
+        """应用河流限制过滤"""
+        # 获取河流限制配置
+        river_config = self.config.get("env", {}).get("river_restrictions", {})
+        if not river_config.get("enabled", False):
+            return available_slots
+            
+        # 检查智能体是否受河流限制影响
+        affects_agents = river_config.get("affects_agents", [])
+        if agent not in affects_agents:
+            return available_slots
+            
+        # Council特殊处理
+        if agent == "COUNCIL" and river_config.get("council_bypass", True):
+            return available_slots
+            
+        # 获取智能体的河流侧别
+        agent_side = self._get_agent_river_side(agent)
+        if not agent_side:
+            return available_slots
+            
+        # 过滤槽位，只保留同侧的槽位
+        filtered_slots = []
+        for slot_id in available_slots:
+            slot = self.slots[slot_id]
+            slot_side = self._get_slot_river_side(slot.x, slot.y)
+            
+            if slot_side == agent_side:
+                filtered_slots.append(slot_id)
+        
+        return filtered_slots
+    
+    def _get_agent_river_side(self, agent: str) -> str:
+        """获取智能体的河流侧别"""
+        # 简化实现：基于智能体类型分配侧别
+        if agent == "IND":
+            return "north"  # IND在河流北侧
+        elif agent == "EDU":
+            return "south"  # EDU在河流南侧
+        else:
+            return "north"  # 默认北侧
+    
+    def _get_slot_river_side(self, x: float, y: float) -> str:
+        """获取槽位的河流侧别"""
+        # 简化实现：基于Y坐标判断侧别
+        # 假设河流在y=100处，北侧y<100，南侧y>=100
+        river_y = 100
+        if y < river_y:
+            return "north"
+        else:
+            return "south"
     
     def _find_footprint(self, start_slot_id: str, size: int, occupied_slots: Set[str]) -> Optional[List[str]]:
         """

@@ -1,0 +1,82 @@
+{
+  "success": true,
+  "data": {
+    "num_episodes": 100,
+    "output_dir": "outputs",
+    "current_episode": 0,
+    "step_logs": [],
+    "env_states": []
+  },
+  "step_logs": [],
+  "env_states": [],
+  "pipeline_summary": {
+    "total_steps": 7,
+    "execution_history": [
+      {
+        "timestamp": 1761087695.9749627,
+        "duration": 0.796234130859375,
+        "steps_executed": 2,
+        "successful_steps": 2,
+        "step_results": [
+          {
+            "step_name": "initialize_components",
+            "step_index": 0,
+            "success": true,
+            "duration": 0.7922337055206299,
+            "error": null,
+            "retry_count": 0
+          },
+          {
+            "step_name": "reset_environment",
+            "step_index": 1,
+            "success": true,
+            "duration": 0.0,
+            "error": null,
+            "retry_count": 0
+          }
+        ]
+      }
+    ],
+    "state_summary": {
+      "current_episode": 0,
+      "total_steps": 0,
+      "training_phase": "environment_ready",
+      "last_update": 1761087696.7671964
+    },
+    "error_summary": {
+      "total_errors": 1,
+      "error_types": {
+        "NameError": 1
+      },
+      "recent_errors": [
+        {
+          "timestamp": 1761087696.7701967,
+          "step_name": "collect_experience",
+          "error_type": "NameError",
+          "error_message": "name 'probs' is not defined",
+          "context": {
+            "step_index": 2,
+            "step_name": "collect_experience",
+            "data_type": "dict"
+          }
+        }
+      ]
+    },
+    "performance_summary": {
+      "total_time": 0.7972373962402344,
+      "total_steps": 2,
+      "throughput": 2.508663052475944,
+      "average_step_times": {
+        "initialize_components": 0.7922337055206299,
+        "reset_environment": 0.0
+      },
+      "memory_usage": {
+        "initialize_components": 297394176,
+        "reset_environment": 297394176
+      },
+      "recommendations": [
+        "Low throughput detected: 2.51 steps/s"
+      ]
+    }
+  }
+}

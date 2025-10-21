@@ -14,6 +14,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from contracts import StepLog, EnvironmentState
 from config_loader import ConfigLoader
+from utils.logger_factory import get_logger, export_strict_mode, export_error_policy, topic_enabled
 
 
 class V5TXTExporter:
@@ -29,6 +30,7 @@ class V5TXTExporter:
         self.loader = ConfigLoader()
         self.config = self.loader.load_v5_config(config_path)
         self.action_params = self.config.get("action_params", {})
+        self.logger = get_logger("exporter")
         
         # v4.1兼容性映射（保持原有格式）
         self.agent_size_mapping = {
@@ -75,7 +77,8 @@ class V5TXTExporter:
                 f.write(month_output)
             
             exported_files.append(month_file)
-            print(f"Exported month {month}: {len(month_logs)} actions -> {month_file}")
+            if topic_enabled("export_coords"):
+                self.logger.info(f"exported month={month} actions={len(month_logs)} path={month_file}")
         
         return exported_files
     
@@ -113,35 +116,64 @@ class V5TXTExporter:
                                  env_state: EnvironmentState) -> List[Tuple[float, float, float]]:
         """从环境状态获取坐标"""
         coordinates = []
-        
-        for action_id in step_log.chosen:
-            # 根据动作ID找到对应的槽位
-            slot_info = self._find_slot_by_action(action_id, env_state)
-            if slot_info:
-                x, y, angle = slot_info
+        strict = export_strict_mode()
+        policy = export_error_policy()
+
+        # 优先使用StepLog中的槽位位置信息（严格模式只允许此路径）
+        if step_log.slot_positions:
+            for slot_pos in step_log.slot_positions:
+                x = slot_pos.get('x', 0.0)
+                y = slot_pos.get('y', 0.0)
+                angle = slot_pos.get('angle', 0.0)
                 coordinates.append((x, y, angle))
-            else:
-                # 如果找不到槽位，使用默认坐标
-                coordinates.append((0.0, 0.0, 0.0))
+        else:
+            if strict:
+                msg = f"slot_positions missing for step t={getattr(step_log, 't', '?')} agent={getattr(step_log, 'agent', '?')}"
+                if policy == "FAIL_FAST":
+                    raise ValueError(f"EXPORT_STRICT: {msg}")
+                # WARN 模式：记录告警并尝试退回旧路径
+                self.logger.warning(f"EXPORT_STRICT_WARN: {msg}, fallback to legacy mapping")
+            # 回退到旧方法
+            for action_id in step_log.chosen:
+                # 根据动作ID找到对应的槽位
+                slot_info = self._find_slot_by_action(action_id, env_state)
+                if slot_info:
+                    x, y, angle = slot_info
+                    coordinates.append((x, y, angle))
+                else:
+                    # 如果找不到槽位，使用默认坐标
+                    coordinates.append((0.0, 0.0, 0.0))
         
         return coordinates
     
     def _find_slot_by_action(self, action_id: int, 
                             env_state: EnvironmentState) -> Optional[Tuple[float, float, float]]:
         """根据动作ID查找槽位坐标"""
-        # 简化实现：从环境状态的槽位中查找
+        # 从环境状态中查找对应的槽位
+        # 需要根据动作ID找到对应的槽位ID，然后获取坐标
+        
+        # 方法1：通过动作参数获取槽位信息
+        action_params = self.action_params.get(str(action_id), {})
+        if not action_params:
+            return None
+        
+        # 从动作参数中获取槽位信息
         # 这里需要根据实际的槽位数据结构来实现
+        # 暂时使用默认坐标，需要进一步实现
         
-        # 假设槽位数据格式：{"id": "slot_1", "x": 100, "y": 50, "angle": 45}
-        for slot in env_state.slots:
-            if hasattr(slot, 'id') and slot.id:
-                # 这里需要建立动作ID到槽位的映射关系
-                # 简化实现：使用槽位索引作为动作ID
-                if action_id < len(env_state.slots):
-                    slot = env_state.slots[action_id]
-                    return (slot.get('x', 0.0), slot.get('y', 0.0), slot.get('angle', 0.0))
+        # 方法2：通过槽位索引查找（临时方案）
+        if action_id < len(env_state.slots):
+            slot = env_state.slots[action_id]
+            if isinstance(slot, dict):
+                x = slot.get('x', 0.0)
+                y = slot.get('y', 0.0)
+                angle = slot.get('angle', 0.0)
+                return (x, y, angle)
         
-        return None
+        # 方法3：从环境状态中查找已占用的槽位
+        # 这里需要根据实际的槽位数据结构来实现
+        # 暂时返回默认坐标
+        return (0.0, 0.0, 0.0)
     
     def _format_v4_line(self, step_log: StepLog, 
                         coordinates: List[Tuple[float, float, float]]) -> str:

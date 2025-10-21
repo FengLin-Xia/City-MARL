@@ -17,6 +17,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 
 from contracts import ActionCandidate, Sequence, EnvironmentState
 from config_loader import ConfigLoader
+import torch.distributions as D
+from utils.logger_factory import get_logger, topic_enabled, sampling_allows
 
 
 class V5ActorNetwork(nn.Module):
@@ -96,7 +98,76 @@ class V5RLSelector:
         for agent in self.agents:
             self.actor_networks[agent] = self.actor_networks[agent].to(self.device)
             self.critic_networks[agent] = self.critic_networks[agent].to(self.device)
+        self.logger = get_logger("policy")
     
+    def _agent_allowed_actions(self, agent: str) -> List[int]:
+        agent_config = self.config.get("agents", {}).get("defs", {}).get(agent, {})
+        return list(agent_config.get("action_ids", []))
+
+    def _candidate_ids(self, candidates: List[ActionCandidate]) -> List[int]:
+        return [c.id for c in candidates]
+
+    def _masked_logits(self, agent: str, state: EnvironmentState, allowed_ids: List[int]) -> torch.Tensor:
+        obs = self._encode_state(state)
+        logits = self.actor_networks[agent](obs)
+        mask = torch.full((self.action_size,), float('-inf'), device=self.device)
+        if allowed_ids:
+            mask[allowed_ids] = 0.0
+        masked_logits = logits + mask
+        return masked_logits
+
+    def select_action(self, agent: str, candidates: List[ActionCandidate], state: EnvironmentState, greedy: bool = False) -> Optional[Dict[str, Any]]:
+        """基于策略从候选中选择动作，返回包含 logprob/value 的信息"""
+        if not candidates:
+            return None
+        # 候选内索引化：仅对当前候选集合建分布
+        obs = self._encode_state(state)
+        logits_full = self.actor_networks[agent](obs)
+        # 提取对应候选的 logit，按候选顺序组成向量
+        cand_ids_list = [c.id for c in candidates]
+        logits = logits_full[cand_ids_list]
+        # 温度采样（从配置取 mappo.exploration.temperature，若无则1.0）
+        temp = float(self.config.get('mappo', {}).get('exploration', {}).get('temperature', 1.0))
+        logits = logits / max(temp, 1e-6)
+        log_probs_vec = torch.log_softmax(logits, dim=-1)
+        probs_vec = torch.softmax(logits, dim=-1)
+        if greedy:
+            idx = int(torch.argmax(probs_vec).item())
+        else:
+            dist = D.Categorical(probs_vec)
+            idx = int(dist.sample().item())
+        action_id = cand_ids_list[idx]
+        chosen_logprob = log_probs_vec[idx].detach().item()
+        with torch.no_grad():
+            value = self.critic_networks[agent](self._encode_state(state)).squeeze().item()
+
+        # 找到对应候选
+        chosen_cand = candidates[idx] if 0 <= idx < len(candidates) else None
+        if chosen_cand is None:
+            return None
+
+        sequence = Sequence(agent=agent, actions=[action_id])
+
+        # 选择日志（受配置开关与采样控制）
+        if topic_enabled("policy_select") and sampling_allows(agent, getattr(state, 'month', None), None):
+            # 提取允许集合上的 top3 概率
+            topk = []
+            vals, idxs = torch.topk(probs_vec, k=min(3, probs_vec.numel()))
+            for v, ix in zip(vals.tolist(), idxs.tolist()):
+                topk.append((int(cand_ids_list[ix]), round(float(v), 4)))
+            # 计算熵
+            p = probs_vec
+            entropy = float(-(p * (p + 1e-8).log()).sum().item())
+            self.logger.info(
+                f"policy_select agent={agent} month={getattr(state, 'month', '?')} action_id={action_id} logp={round(chosen_logprob,4)} value={round(value,3)} top3={topk} H={round(entropy,4)}")
+        return {
+            'sequence': sequence,
+            'action_id': action_id,
+            'logprob': chosen_logprob,
+            'value': value,
+            'probs': probs_vec.detach().cpu().numpy(),
+        }
+
     def choose_sequence(self, agent: str, candidates: List[ActionCandidate], 
                        state: EnvironmentState, greedy: bool = False) -> Optional[Sequence]:
         """
