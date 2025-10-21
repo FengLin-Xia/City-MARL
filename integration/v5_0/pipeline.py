@@ -370,6 +370,17 @@ class V5Pipeline:
             except Exception as e:
                 step_result["error"] = str(e)
                 step_result["duration"] = time.time() - step_start_time
+                # 打印完整异常栈，便于定位
+                try:
+                    tb = traceback.format_exc()
+                    # 受配置控制的traceback打印
+                    from utils.logger_factory import get_logger, topic_enabled
+                    logger = get_logger("pipeline")
+                    if topic_enabled("pipeline_traceback"):
+                        logger.error(tb)
+                    step_result["traceback"] = tb
+                except Exception:
+                    pass
                 
                 # 错误处理
                 error_context = {

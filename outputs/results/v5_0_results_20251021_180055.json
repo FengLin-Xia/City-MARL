@@ -1,0 +1,87 @@
+{
+  "success": true,
+  "phase": "training_only",
+  "training_result": {
+    "success": true,
+    "data": {
+      "num_episodes": 1,
+      "output_dir": "./outputs",
+      "current_episode": 0,
+      "step_logs": [],
+      "env_states": []
+    },
+    "step_logs": [],
+    "env_states": [],
+    "pipeline_summary": {
+      "total_steps": 7,
+      "execution_history": [
+        {
+          "timestamp": 1761066054.8119795,
+          "duration": 0.8144471645355225,
+          "steps_executed": 2,
+          "successful_steps": 2,
+          "step_results": [
+            {
+              "step_name": "initialize_components",
+              "step_index": 0,
+              "success": true,
+              "duration": 0.8144471645355225,
+              "error": null,
+              "retry_count": 0
+            },
+            {
+              "step_name": "reset_environment",
+              "step_index": 1,
+              "success": true,
+              "duration": 0.0,
+              "error": null,
+              "retry_count": 0
+            }
+          ]
+        }
+      ],
+      "state_summary": {
+        "current_episode": 0,
+        "total_steps": 0,
+        "training_phase": "environment_ready",
+        "last_update": 1761066055.6264267
+      },
+      "error_summary": {
+        "total_errors": 1,
+        "error_types": {
+          "AttributeError": 1
+        },
+        "recent_errors": [
+          {
+            "timestamp": 1761066055.6264267,
+            "step_name": "collect_experience",
+            "error_type": "AttributeError",
+            "error_message": "'V5TrainingPipeline' object has no attribute 'config'",
+            "context": {
+              "step_index": 2,
+              "step_name": "collect_experience",
+              "data_type": "dict"
+            }
+          }
+        ]
+      },
+      "performance_summary": {
+        "total_time": 0.8154482841491699,
+        "total_steps": 2,
+        "throughput": 2.452638676021961,
+        "average_step_times": {
+          "initialize_components": 0.8144471645355225,
+          "reset_environment": 0.0
+        },
+        "memory_usage": {
+          "initialize_components": 297439232,
+          "reset_environment": 297439232
+        },
+        "recommendations": [
+          "Low throughput detected: 2.45 steps/s"
+        ]
+      }
+    }
+  },
+  "export_result": null
+}

@@ -62,36 +62,31 @@ class V5TrainingPipeline:
     
     def run_training(self, num_episodes: int, output_dir: str = "./outputs") -> Dict[str, Any]:
         """
-        运行训练管道
-        
-        Args:
-            num_episodes: 训练轮数
-            output_dir: 输出目录
-            
-        Returns:
-            训练结果
+        运行训练管道（按 episode 循环）
         """
-        initial_data = {
+        data = {
             "num_episodes": num_episodes,
             "output_dir": output_dir,
             "current_episode": 0,
             "step_logs": [],
             "env_states": []
         }
-        
         print(f"[TRAINING] Starting training pipeline for {num_episodes} episodes")
+        last_result = None
+        for ep in range(1, num_episodes + 1):
+            data["current_episode"] = ep - 1  # 当前轮次从0开始计
+            last_result = self.pipeline.run(data)
+            # 下一轮继续沿用返回的数据
+            data = last_result.data if last_result and last_result.data is not None else data
         
-        # 运行管道
-        result = self.pipeline.run(initial_data)
-        
-        if result.success:
+        if last_result and last_result.success:
             print(f"[TRAINING] Training completed successfully")
         else:
             print(f"[TRAINING] Training completed with errors")
         
         return {
-            "success": result.success,
-            "data": result.data,
+            "success": bool(last_result and last_result.success),
+            "data": data,
             "step_logs": self.step_logs,
             "env_states": self.env_states,
             "pipeline_summary": self.pipeline.get_pipeline_summary()
@@ -99,16 +94,16 @@ class V5TrainingPipeline:
     
     def _initialize_components(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """初始化组件"""
+        # 已初始化则跳过
+        if self.env is not None and self.trainer is not None and self.export_system is not None:
+            return data
         print("[TRAINING] Initializing components...")
-        
         # 初始化环境
         self.env = V5CityEnvironment(self.config_path)
         print("  - Environment initialized")
-        
         # 初始化训练器
         self.trainer = V5PPOTrainer(self.config_path)
         print("  - Trainer initialized")
-        
         # 初始化导出系统
         self.export_system = V5ExportSystem(self.config_path)
         print("  - Export system initialized")
@@ -137,18 +132,35 @@ class V5TrainingPipeline:
     def _collect_experience(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """收集经验"""
         print("[TRAINING] Collecting experience...")
-        
-        # 收集经验
-        experiences = self.trainer.collect_experience(20)  # 收集20步经验
+        try:
+            # 收集经验
+            # 从配置中获取total_steps
+            config = self.pipeline.config
+            total_steps = config.get('env', {}).get('time_model', {}).get('total_steps', 30)
+            experiences = self.trainer.collect_experience(total_steps)  # 使用配置的total_steps
+        except Exception as e:
+            import traceback
+            print("[TRAINING][collect_experience] Exception raised:\n" + traceback.format_exc())
+            # 失败时返回原数据，不中断后续步骤（由管道错误策略处理）
+            return data
         
         if experiences:
             # 提取步骤日志和环境状态
             step_logs = [exp.get('step_log') for exp in experiences if exp.get('step_log')]
             env_states = [exp.get('next_state') for exp in experiences if exp.get('next_state')]
             
+            # 初始化数据字典
+            if "step_logs" not in data:
+                data["step_logs"] = []
+            if "env_states" not in data:
+                data["env_states"] = []
+            if "experiences" not in data:
+                data["experiences"] = []
+            
             # 更新数据
             data["step_logs"].extend(step_logs)
             data["env_states"].extend(env_states)
+            data["experiences"].extend(experiences)
             
             # 更新状态
             self.pipeline.state_manager.update_global_state("total_steps", 
@@ -164,21 +176,8 @@ class V5TrainingPipeline:
         """训练步骤"""
         print("[TRAINING] Training step...")
         
-        # 获取经验
-        experiences = []
-        for exp in data.get("step_logs", []):
-            if exp:
-                experiences.append({
-                    'agent': exp.agent,
-                    'state': None,  # 简化实现
-                    'candidates': [],
-                    'sequence': None,
-                    'reward': 0,
-                    'next_state': None,
-                    'done': False,
-                    'info': {},
-                    'step_log': exp
-                })
+        # 获取经验（直接使用采样阶段返回的结构化数据）
+        experiences = data.get("experiences", [])
         
         if experiences:
             # 执行训练
@@ -193,6 +192,8 @@ class V5TrainingPipeline:
             })
             
             print(f"  - Training completed: loss={train_stats.get('total_loss', 0):.4f}")
+            # 训练后清空已消费的经验（避免重复训练）
+            data["experiences"] = []
         else:
             print("  - No experiences to train on")
         
@@ -216,6 +217,15 @@ class V5TrainingPipeline:
     
     def _export_results(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """导出结果"""
+        # 按配置控制是否导出
+        export_cfg = self.pipeline.config.get("export", {"enabled": True, "every_n_episodes": 0})
+        enabled = bool(export_cfg.get("enabled", True))
+        every_n = int(export_cfg.get("every_n_episodes", 0))
+        current_ep = int(data.get("current_episode", 0)) + 1
+        should_export = enabled and (every_n == 0 or (current_ep % every_n == 0) or (current_ep == int(data.get("num_episodes", current_ep))))
+        if not should_export:
+            print("[TRAINING] Export skipped by config")
+            return data
         print("[TRAINING] Exporting results...")
         
         step_logs = data.get("step_logs", [])
@@ -241,6 +251,9 @@ class V5TrainingPipeline:
                 print(f"  - Export failed: {e}")
         else:
             print("  - No data to export")
+        # 为避免重复导出，清空已导出数据缓存
+        data["step_logs"] = []
+        data["env_states"] = []
         
         return data
     

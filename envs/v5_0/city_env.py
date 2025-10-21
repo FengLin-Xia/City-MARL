@@ -18,9 +18,11 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from contracts import ActionCandidate, Sequence, StepLog, EnvironmentState
 from config_loader import ConfigLoader
 from scheduler import PhaseCycleScheduler
+from .budget_pool import BudgetPoolManager
 from logic.v5_enumeration import V5ActionEnumerator
 from logic.v5_scorer import V5ActionScorer
 from logic.v5_selector import V5SequenceSelector
+from utils.logger_factory import get_logger, topic_enabled, sampling_allows
 
 
 class V5CityEnvironment:
@@ -45,6 +47,12 @@ class V5CityEnvironment:
         self.enumerator = V5ActionEnumerator(self.config)
         self.scorer = V5ActionScorer(self.config)
         self.selector = V5SequenceSelector(self.config)
+        self.logger = get_logger("env")
+        # 每个agent最近一次候选快照（用于StepLog和占用更新，不再二次枚举）
+        self._last_candidates: Dict[str, List[ActionCandidate]] = {}
+        
+        # 初始化预算池管理器
+        self.budget_pool_manager = BudgetPoolManager(self.config)
         
         # 环境状态
         self.current_step = 0
@@ -121,8 +129,40 @@ class V5CityEnvironment:
     
     def _load_slots_from_file(self, path: str):
         """从文件加载槽位"""
-        # 简化实现：返回默认槽位
-        return self._create_default_slots()
+        slots = {}
+        
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                for idx, line in enumerate(f):
+                    line = line.strip()
+                    if not line:
+                        continue
+                    
+                    # 解析槽位数据：x, y, angle, building_level
+                    parts = [p.strip() for p in line.split(',')]
+                    if len(parts) >= 3:
+                        x = float(parts[0])
+                        y = float(parts[1])
+                        angle = float(parts[2]) if len(parts) > 2 else 0.0
+                        building_level = int(parts[3]) if len(parts) > 3 else 5
+                        
+                        slot_id = f"slot_{idx}"
+                        slots[slot_id] = {
+                            "id": slot_id,
+                            "x": x,
+                            "y": y,
+                            "angle": angle,
+                            "neighbors": [],
+                            "building_level": building_level
+                        }
+            
+            if topic_enabled("candidates"):
+                self.logger.info(f"slots_loaded count={len(slots)} path={path}")
+            return slots
+        
+        except Exception as e:
+            self.logger.warning(f"slots_load_failed path={path} error={e}")
+            return self._create_default_slots()
     
     def _initialize_budgets(self):
         """初始化预算系统"""
@@ -168,6 +208,9 @@ class V5CityEnvironment:
         # 重置预算
         self._initialize_budgets()
         
+        # 重置预算池
+        self.budget_pool_manager.reset_all_pools()
+        
         # 清空历史记录
         self.step_logs.clear()
         self.episode_history.clear()
@@ -190,6 +233,9 @@ class V5CityEnvironment:
                 action_reward, action_terms = self._execute_action(agent, action_id)
                 reward += action_reward
                 reward_terms.update(action_terms)
+            
+            # 更新已占用槽位（使用候选快照）
+            self._update_occupied_slots_from_snapshot(agent, sequence)
         
         # 创建步骤日志
         step_log = self.selector.create_step_log(
@@ -199,6 +245,10 @@ class V5CityEnvironment:
             reward_terms=reward_terms,
             budget_snapshot=dict(self.budgets)
         )
+        
+        # 添加槽位位置信息（使用候选快照）
+        if sequence and sequence.actions:
+            step_log.slot_positions = self._build_slot_positions_from_snapshot(agent, sequence)
         self.step_logs.append(step_log)
         
         # 更新状态
@@ -212,6 +262,135 @@ class V5CityEnvironment:
         
         return next_state, reward, done, {"step_log": step_log}
     
+    def step_phase(self, phase_agents: List[str], phase_sequences: Dict[str, Optional[Sequence]]) -> Tuple[EnvironmentState, Dict[str, float], bool, Dict[str, Any]]:
+        """执行一个phase（支持并发执行多个agent）"""
+        phase_rewards = {}
+        phase_logs = []
+        
+        # 获取当前phase的执行模式
+        execution_mode = self.scheduler.get_execution_mode(self.current_step)
+        
+        if execution_mode == "concurrent":
+            # 并发执行多个agent - 需要动态更新候选集
+            for agent in phase_agents:
+                if agent in phase_sequences and phase_sequences[agent]:
+                    sequence = phase_sequences[agent]
+                    # 执行单个agent
+                    agent_reward, agent_terms = self._execute_agent_sequence(agent, sequence)
+                    phase_rewards[agent] = agent_reward
+                    
+                    # 更新已占用槽位（防止后续智能体选择同一槽位）
+                    self._update_occupied_slots_from_snapshot(agent, sequence)
+                    
+                    # 创建步骤日志
+                    step_log = self.selector.create_step_log(
+                        step=self.current_step,
+                        agent=agent,
+                        sequence=sequence,
+                        reward_terms=agent_terms,
+                        budget_snapshot=dict(self.budgets)
+                    )
+                    # 使用候选快照填充坐标
+                    step_log.slot_positions = self._build_slot_positions_from_snapshot(agent, sequence)
+                    phase_logs.append(step_log)
+        else:
+            # 顺序执行多个agent - 需要动态更新候选集
+            for agent in phase_agents:
+                if agent in phase_sequences and phase_sequences[agent]:
+                    sequence = phase_sequences[agent]
+                    # 执行单个agent
+                    agent_reward, agent_terms = self._execute_agent_sequence(agent, sequence)
+                    phase_rewards[agent] = agent_reward
+                    
+                    # 更新已占用槽位（防止后续智能体选择同一槽位）
+                    self._update_occupied_slots_from_snapshot(agent, sequence)
+                    
+                    # 创建步骤日志
+                    step_log = self.selector.create_step_log(
+                        step=self.current_step,
+                        agent=agent,
+                        sequence=sequence,
+                        reward_terms=agent_terms,
+                        budget_snapshot=dict(self.budgets)
+                    )
+                    # 使用候选快照填充坐标
+                    step_log.slot_positions = self._build_slot_positions_from_snapshot(agent, sequence)
+                    phase_logs.append(step_log)
+        
+        # 添加所有日志
+        self.step_logs.extend(phase_logs)
+        
+        # 更新状态
+        self._update_state()
+        
+        # 检查是否结束
+        done = self._is_done()
+        
+        # 获取新状态
+        next_state = self._get_current_state()
+        
+        return next_state, phase_rewards, done, {"phase_logs": phase_logs}
+    
+    def _execute_agent_sequence(self, agent: str, sequence: Sequence) -> Tuple[float, Dict[str, float]]:
+        """执行单个agent的序列"""
+        reward = 0.0
+        reward_terms = {}
+        
+        if sequence and sequence.actions:
+            for action_id in sequence.actions:
+                # 执行动作
+                action_reward, action_terms = self._execute_action(agent, action_id)
+                reward += action_reward
+                reward_terms.update(action_terms)
+        
+        return reward, reward_terms
+    
+    def _update_occupied_slots_from_snapshot(self, agent: str, sequence: Sequence) -> None:
+        """使用候选快照更新已占用槽位"""
+        if not sequence or not sequence.actions:
+            return
+        for action_id in sequence.actions:
+            cand = self._get_candidate_from_snapshot(agent, action_id)
+            if not cand:
+                continue
+            for slot_id in cand.meta.get("slots", []):
+                self.occupied_slots.add(slot_id)
+                if topic_enabled("occupied_slots") and sampling_allows(agent, self.current_month, self.current_step):
+                    self.logger.info(f"occupied agent={agent} slot={slot_id} month={self.current_month} step={self.current_step}")
+
+    def _build_slot_positions_from_snapshot(self, agent: str, sequence: Sequence) -> List[Dict[str, Any]]:
+        """根据候选快照构建槽位位置信息"""
+        positions: List[Dict[str, Any]] = []
+        if not sequence or not sequence.actions:
+            return positions
+        for action_id in sequence.actions:
+            cand = self._get_candidate_from_snapshot(agent, action_id)
+            if not cand:
+                continue
+            for slot_id in cand.meta.get("slots", []):
+                if slot_id in self.slots:
+                    slot = self.slots[slot_id]
+                    positions.append({
+                        'slot_id': slot_id,
+                        'x': slot['x'],
+                        'y': slot['y'],
+                        'angle': slot.get('angle', 0.0)
+                    })
+        return positions
+
+    def _get_candidate_from_snapshot(self, agent: str, action_id: int) -> Optional[ActionCandidate]:
+        """从最近候选快照中查找指定动作候选"""
+        snapshot = self._last_candidates.get(agent) or []
+        for cand in snapshot:
+            if cand.id == action_id:
+                return cand
+        # 兜底：尝试刷新一次（并记录）
+        cands = self.get_action_candidates(agent)
+        for cand in cands:
+            if cand.id == action_id:
+                return cand
+        return None
+    
     def _execute_action(self, agent: str, action_id: int) -> Tuple[float, Dict[str, float]]:
         """执行单个动作"""
         # 获取动作参数
@@ -222,12 +401,13 @@ class V5CityEnvironment:
         # 计算成本
         cost = action_params.get("cost", 0.0)
         
-        # 检查预算
-        if cost > self.budgets.get(agent, 0.0):
-            return 0.0, {"cost": 0.0}
+        # 检查预算（使用预算池管理器）
+        if not self.budget_pool_manager.can_afford(agent, cost):
+            return 0.0, {"cost": 0.0, "budget_error": "insufficient_funds"}
         
-        # 扣除成本
-        self.budgets[agent] -= cost
+        # 扣除成本（从预算池扣除）
+        if not self.budget_pool_manager.deduct(agent, cost):
+            return 0.0, {"cost": 0.0, "budget_error": "deduction_failed"}
         
         # 计算奖励
         reward = action_params.get("reward", 0.0)
@@ -268,24 +448,52 @@ class V5CityEnvironment:
     
     def _should_switch_agent(self) -> bool:
         """检查是否需要切换智能体"""
-        # 简化实现：每个智能体执行一步后切换
-        return True
+        # 获取当前阶段的活跃智能体
+        active_agents = self.scheduler.get_active_agents(self.current_step)
+        
+        # 如果当前智能体不在活跃列表中，需要切换
+        if self.current_agent not in active_agents:
+            return True
+        
+        # 如果当前阶段有多个智能体，需要轮换
+        if len(active_agents) > 1:
+            return True
+        
+        # 否则不需要切换
+        return False
+    
+    def get_phase_agents(self) -> List[str]:
+        """获取当前phase的所有智能体"""
+        return self.scheduler.get_active_agents(self.current_step)
+    
+    def get_phase_execution_mode(self) -> str:
+        """获取当前phase的执行模式"""
+        return self.scheduler.get_execution_mode(self.current_step)
     
     def _should_switch_month(self) -> bool:
         """检查是否需要切换月份"""
-        # 简化实现：每12步切换一个月
-        return self.current_step % 12 == 0
+        # 每1步切换一个月 (符合total_steps配置)
+        return True
     
     def _switch_agent(self):
         """切换智能体"""
-        # 获取下一个活跃智能体
+        # 获取当前阶段的活跃智能体
         active_agents = self.scheduler.get_active_agents(self.current_step)
+        
         if not active_agents:
             return
         
-        # 轮换智能体
-        self.agent_turn = (self.agent_turn + 1) % len(active_agents)
-        self.current_agent = active_agents[self.agent_turn]
+        # 如果当前智能体不在活跃列表中，选择第一个
+        if self.current_agent not in active_agents:
+            self.current_agent = active_agents[0]
+            self.agent_turn = 0
+            return
+        
+        # 轮换到下一个活跃智能体
+        current_index = active_agents.index(self.current_agent)
+        next_index = (current_index + 1) % len(active_agents)
+        self.current_agent = active_agents[next_index]
+        self.agent_turn = next_index
     
     def _switch_month(self):
         """切换月份"""
@@ -321,6 +529,22 @@ class V5CityEnvironment:
         if self.land_price_field is not None:
             obs[3:15] = self.land_price_field.flatten()[:12]
         
+        # 追加：候选统计与预算（增强信号）
+        try:
+            cands = self.get_action_candidates(agent)
+        except Exception:
+            cands = []
+        num_cands = float(len(cands))
+        obs[15] = num_cands
+        # 近似的候选质量（使用 meta.lp_norm 均值，若无则0）
+        if cands:
+            lp_vals = [float(ci.meta.get('lp_norm', 0.0)) for ci in cands]
+            obs[16] = float(np.mean(lp_vals))
+            obs[17] = float(np.max(lp_vals))
+        else:
+            obs[16] = 0.0
+            obs[17] = 0.0
+        
         return obs
     
     def get_action_candidates(self, agent: str) -> List[ActionCandidate]:
@@ -337,9 +561,11 @@ class V5CityEnvironment:
             agent=agent,
             occupied_slots=self.occupied_slots,
             lp_provider=lp_provider,
-            budget=budget
+            budget=budget,
+            current_month=self.current_month
         )
-        
+        # 缓存候选快照
+        self._last_candidates[agent] = candidates
         return candidates
     
     def get_available_actions(self, agent: str) -> List[int]:
