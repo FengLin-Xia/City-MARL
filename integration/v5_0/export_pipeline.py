@@ -335,3 +335,4 @@ def run_export_session(config_path: str, step_logs: List[StepLog],
     """
     pipeline = create_export_pipeline(config_path)
     return pipeline.run_export(step_logs, env_states, output_dir)
+

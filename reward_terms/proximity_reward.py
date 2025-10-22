@@ -104,3 +104,4 @@ class ProximityRewardTerm:
         dx = pos1[0] - pos2[0]
         dy = pos1[1] - pos2[1]
         return math.sqrt(dx * dx + dy * dy)
+

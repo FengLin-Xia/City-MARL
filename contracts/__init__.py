@@ -11,7 +11,9 @@ from .contracts import (
     EnvironmentState,
     Action,
     Observation,
-    RewardTerms
+    RewardTerms,
+    AtomicAction,
+    CandidateIndex
 )
 
 __all__ = [
@@ -21,5 +23,9 @@ __all__ = [
     'EnvironmentState',
     'Action',
     'Observation',
-    'RewardTerms'
+    'RewardTerms',
+    'AtomicAction',
+    'CandidateIndex'
 ]
+
+

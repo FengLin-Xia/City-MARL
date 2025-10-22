@@ -1,0 +1,136 @@
+{
+  "success": true,
+  "phase": "training_only",
+  "training_result": {
+    "success": true,
+    "data": {
+      "num_episodes": 5,
+      "output_dir": "./outputs",
+      "current_episode": 4,
+      "step_logs": [],
+      "env_states": []
+    },
+    "step_logs": [],
+    "env_states": [],
+    "pipeline_summary": {
+      "total_steps": 7,
+      "execution_history": [
+        {
+          "timestamp": 1761159125.8348346,
+          "duration": 0.0,
+          "steps_executed": 0,
+          "successful_steps": 0,
+          "step_results": []
+        },
+        {
+          "timestamp": 1761159125.8358362,
+          "duration": 0.0,
+          "steps_executed": 0,
+          "successful_steps": 0,
+          "step_results": []
+        },
+        {
+          "timestamp": 1761159125.8368444,
+          "duration": 0.0010030269622802734,
+          "steps_executed": 0,
+          "successful_steps": 0,
+          "step_results": []
+        },
+        {
+          "timestamp": 1761159125.8378475,
+          "duration": 0.0,
+          "steps_executed": 0,
+          "successful_steps": 0,
+          "step_results": []
+        },
+        {
+          "timestamp": 1761159125.8378475,
+          "duration": 0.001215219497680664,
+          "steps_executed": 0,
+          "successful_steps": 0,
+          "step_results": []
+        }
+      ],
+      "state_summary": {
+        "current_episode": 0,
+        "total_steps": 0,
+        "training_phase": "initialization",
+        "last_update": 1761159125.8334007
+      },
+      "error_summary": {
+        "total_errors": 5,
+        "error_types": {
+          "TypeError": 5
+        },
+        "recent_errors": [
+          {
+            "timestamp": 1761159125.8348346,
+            "step_name": "initialize_components",
+            "error_type": "TypeError",
+            "error_message": "ConfigLoader.__init__() takes 1 positional argument but 2 were given",
+            "context": {
+              "step_index": 0,
+              "step_name": "initialize_components",
+              "data_type": "dict"
+            }
+          },
+          {
+            "timestamp": 1761159125.8358362,
+            "step_name": "initialize_components",
+            "error_type": "TypeError",
+            "error_message": "ConfigLoader.__init__() takes 1 positional argument but 2 were given",
+            "context": {
+              "step_index": 0,
+              "step_name": "initialize_components",
+              "data_type": "dict"
+            }
+          },
+          {
+            "timestamp": 1761159125.8378475,
+            "step_name": "initialize_components",
+            "error_type": "TypeError",
+            "error_message": "ConfigLoader.__init__() takes 1 positional argument but 2 were given",
+            "context": {
+              "step_index": 0,
+              "step_name": "initialize_components",
+              "data_type": "dict"
+            }
+          },
+          {
+            "timestamp": 1761159125.8378475,
+            "step_name": "initialize_components",
+            "error_type": "TypeError",
+            "error_message": "ConfigLoader.__init__() takes 1 positional argument but 2 were given",
+            "context": {
+              "step_index": 0,
+              "step_name": "initialize_components",
+              "data_type": "dict"
+            }
+          },
+          {
+            "timestamp": 1761159125.8390627,
+            "step_name": "initialize_components",
+            "error_type": "TypeError",
+            "error_message": "ConfigLoader.__init__() takes 1 positional argument but 2 were given",
+            "context": {
+              "step_index": 0,
+              "step_name": "initialize_components",
+              "data_type": "dict"
+            }
+          }
+        ]
+      },
+      "performance_summary": {
+        "total_time": 0.005661964416503906,
+        "total_steps": 0,
+        "throughput": 0.0,
+        "average_step_times": {},
+        "memory_usage": {},
+        "recommendations": [
+          "Low throughput detected: 0.00 steps/s"
+        ]
+      }
+    }
+  },
+  "export_result": null
+}

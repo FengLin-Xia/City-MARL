@@ -82,3 +82,4 @@ class NPVRewardTerm:
         present_value = monthly_income * pv_factor
         
         return present_value
+

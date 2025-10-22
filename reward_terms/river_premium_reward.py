@@ -94,3 +94,4 @@ class RiverPremiumRewardTerm:
         # 简化实现：返回固定值
         # 实际实现需要根据action_id获取具体的基础收益
         return 100.0  # 示例值
+

@@ -4,11 +4,11 @@ v5.0 动作枚举器
 基于契约对象和配置的动作枚举系统。
 """
 
-from typing import Dict, List, Any, Optional, Set
+from typing import Dict, List, Any, Optional, Set, Tuple
 import numpy as np
 from dataclasses import dataclass
 
-from contracts import ActionCandidate, Sequence, StepLog
+from contracts import ActionCandidate, Sequence, StepLog, CandidateIndex, AtomicAction
 from config_loader import ConfigLoader
 from utils.logger_factory import get_logger, topic_enabled, sampling_allows
 
@@ -73,6 +73,14 @@ class V5ActionEnumerator:
         Returns:
             动作候选列表
         """
+        # 调试：显示已占用槽位
+        from utils.logger_factory import get_logger, topic_enabled
+        logger = get_logger("enumeration")
+        if topic_enabled("occupied_slots"):
+            logger.info(f"[ENUM_DEBUG] enumerate_actions agent={agent}")
+            logger.info(f"[ENUM_DEBUG]   occupied_slots: {occupied_slots}")
+            logger.info(f"[ENUM_DEBUG]   occupied_slots count: {len(occupied_slots)}")
+        
         agent_config = self.agents_config.get("defs", {}).get(agent, {})
         action_ids = agent_config.get("action_ids", [])
         
@@ -119,6 +127,193 @@ class V5ActionEnumerator:
         if topic_enabled("candidates") and sampling_allows(agent, current_month, None):
             self.logger.info(f"candidates_total agent={agent} month={current_month} count={len(candidates)}")
         return candidates
+    
+    def enumerate_with_index(self, agent: str, occupied_slots: Set[str], 
+                            lp_provider, budget: float, current_month: int = 0) -> Tuple[List[ActionCandidate], CandidateIndex]:
+        """
+        枚举动作并生成候选索引（v5.1 多动作机制）
+        
+        Args:
+            agent: 智能体名称
+            occupied_slots: 已占用的槽位
+            lp_provider: 地价提供函数
+            budget: 预算
+            current_month: 当前月份
+            
+        Returns:
+            (candidates, cand_idx) 元组
+        """
+        # Step 1: 枚举所有可用点
+        available_points = self._enumerate_available_points(occupied_slots, lp_provider, current_month, agent)
+        
+        if not available_points:
+            # 无可用点，返回空
+            return [], CandidateIndex(points=[], types_per_point=[], point_to_slots={})
+        
+        # Step 2: 为每个点枚举可用类型
+        point_ids = list(available_points.keys())
+        types_per_point = []
+        
+        for point_id in point_ids:
+            valid_types = self._get_valid_types_for_point(
+                agent, point_id, available_points[point_id], budget, current_month
+            )
+            types_per_point.append(valid_types)
+        
+        # Step 3: 过滤掉没有可用类型的点
+        filtered_points = []
+        filtered_types = []
+        filtered_point_to_slots = {}
+        
+        for i, point_id in enumerate(point_ids):
+            if len(types_per_point[i]) > 0:
+                filtered_points.append(point_id)
+                filtered_types.append(types_per_point[i])
+                filtered_point_to_slots[point_id] = available_points[point_id]["slots"]
+        
+        # Step 4: 构建候选索引
+        cand_idx = CandidateIndex(
+            points=filtered_points,
+            types_per_point=filtered_types,
+            point_to_slots=filtered_point_to_slots,
+            meta={"agent": agent, "month": current_month}
+        )
+        
+        # Step 5: 生成候选列表（保持与原有接口兼容）
+        candidates = []
+        for p_idx, point_id in enumerate(cand_idx.points):
+            for t_idx, action_id in enumerate(cand_idx.types_per_point[p_idx]):
+                # 获取点信息
+                point_info = available_points[point_id]
+                
+                # 创建特征向量
+                features = self._create_features(action_id, point_info, lp_provider)
+                
+                # 创建元数据（包含点和类型索引）
+                action_params = self.action_params.get(str(action_id), {})
+                meta = {
+                    "agent": agent,
+                    "action_id": action_id,
+                    "point_idx": p_idx,      # 新增：点索引
+                    "type_idx": t_idx,        # 新增：类型索引
+                    "point_id": point_id,     # 新增：点ID
+                    "cost": action_params.get("cost", 0),
+                    "reward": action_params.get("reward", 0),
+                    "prestige": action_params.get("prestige", 0),
+                    "slots": point_info["slots"],
+                    "zone": point_info.get("zone"),
+                    "lp_norm": point_info.get("lp_norm", 0.0)
+                }
+                
+                candidate = ActionCandidate(
+                    id=action_id,
+                    features=features,
+                    meta=meta
+                )
+                candidates.append(candidate)
+        
+        # 轻量日志
+        if topic_enabled("candidates") and sampling_allows(agent, current_month, None):
+            self.logger.info(
+                f"candidates_indexed agent={agent} month={current_month} "
+                f"points={len(cand_idx.points)} total_candidates={len(candidates)}"
+            )
+        
+        return candidates, cand_idx
+    
+    def _enumerate_available_points(self, occupied_slots: Set[str], lp_provider, 
+                                    current_month: int, agent: str) -> Dict[int, Dict[str, Any]]:
+        """
+        枚举所有可用点（槽位或槽位组）
+        
+        Args:
+            occupied_slots: 已占用槽位
+            lp_provider: 地价提供函数
+            current_month: 当前月份
+            agent: 智能体名称
+            
+        Returns:
+            {point_id: {"slots": [...], "zone": ..., "lp_norm": ...}}
+        """
+        # 获取可用槽位
+        available_slots = [sid for sid, slot in self.slots.items() 
+                          if sid not in occupied_slots and not slot.occupied and not slot.reserved]
+        
+        # 应用过滤器
+        available_slots = self._apply_candidate_range_filter(available_slots, current_month)
+        available_slots = self._apply_river_restriction_filter(available_slots, agent)
+        
+        # 为每个槽位创建一个点（简化实现：每个槽位=一个点）
+        available_points = {}
+        for slot_id in available_slots:
+            slot = self.slots[slot_id]
+            point_id = hash(slot_id) % 1000000  # 使用slot_id的哈希作为point_id
+            lp_norm = float(lp_provider(slot_id))
+            zone = self._calculate_zone(slot_id)
+            
+            available_points[point_id] = {
+                "slots": [slot_id],
+                "zone": zone,
+                "lp_norm": lp_norm,
+                "slot_id": slot_id  # 保留原始slot_id
+            }
+        
+        return available_points
+    
+    def _get_valid_types_for_point(self, agent: str, point_id: int, point_info: Dict[str, Any], 
+                                   budget: float, current_month: int) -> List[int]:
+        """
+        获取指定点上的可用动作类型
+        
+        Args:
+            agent: 智能体名称
+            point_id: 点ID
+            point_info: 点信息
+            budget: 预算
+            current_month: 当前月份
+            
+        Returns:
+            可用的action_id列表
+        """
+        agent_config = self.agents_config.get("defs", {}).get(agent, {})
+        action_ids = agent_config.get("action_ids", [])
+        
+        valid_types = []
+        
+        for action_id in action_ids:
+            # 获取动作参数
+            action_params = self.action_params.get(str(action_id), {})
+            if not action_params:
+                continue
+            
+            # 检查预算
+            cost = action_params.get("cost", 0)
+            if cost > budget:
+                continue
+            
+            # 检查槽位是否支持该动作类型
+            desc = action_params.get("desc", "")
+            
+            # 根据动作类型确定占地面积
+            if "S" in desc:
+                footprint_size = 1
+            elif "M" in desc:
+                footprint_size = 2
+            elif "L" in desc:
+                footprint_size = 4
+            else:
+                footprint_size = 1
+            
+            # 检查建筑等级（简化：只检查第一个槽位）
+            slot_id = point_info["slots"][0]
+            slot = self.slots[slot_id]
+            if slot.building_level < footprint_size:
+                continue
+            
+            # 该类型有效
+            valid_types.append(action_id)
+        
+        return valid_types
     
     def _enumerate_positions(self, action_id: int, occupied_slots: Set[str], 
                            lp_provider, current_month: int, agent: str) -> List[Dict[str, Any]]:
@@ -392,3 +587,4 @@ class V5ActionEnumerator:
         allowed_actions = set(agent_config.get("action_ids", []))
         
         return all(action_id in allowed_actions for action_id in sequence.actions)
+    """v5.0动作枚举器"""

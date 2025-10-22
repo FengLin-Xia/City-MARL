@@ -341,3 +341,4 @@ class V5TableGenerator:
         plt.savefig(output_path, dpi=150, bbox_inches='tight',
                     facecolor='black', edgecolor='none')
         plt.close()
+

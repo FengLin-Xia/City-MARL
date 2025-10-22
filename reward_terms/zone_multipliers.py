@@ -59,3 +59,4 @@ class ZoneMultipliersTerm:
         # 简化实现：返回固定值
         # 实际实现需要根据state和action_id判断是否与现有建筑相邻
         return False
+

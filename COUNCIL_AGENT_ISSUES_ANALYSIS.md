@@ -148,3 +148,5 @@ actor = self.selector.actors.get(agent, self.selector.actor)
 虽然已修复了RL选择器中的智能体配置，但训练和评估流程中仍存在多个关键问题。需要系统性地修复这些问题，才能确保Council智能体能够正常执行并产生A/B/C建筑。
 
 **关键问题**：Council智能体可能被创建了，但在训练过程中可能没有被正确调用或处理。需要重新训练模型，并确保训练过程中Council智能体能够被正确调用和执行。
+
+

@@ -1,0 +1,77 @@
+{
+  "success": true,
+  "phase": "training_only",
+  "training_result": {
+    "success": true,
+    "data": {
+      "num_episodes": 1,
+      "output_dir": "./outputs",
+      "current_episode": 0,
+      "step_logs": [],
+      "env_states": []
+    },
+    "step_logs": [],
+    "env_states": [],
+    "pipeline_summary": {
+      "total_steps": 7,
+      "execution_history": [
+        {
+          "timestamp": 1761159316.44917,
+          "duration": 0.9123978614807129,
+          "steps_executed": 1,
+          "successful_steps": 1,
+          "step_results": [
+            {
+              "step_name": "initialize_components",
+              "step_index": 0,
+              "success": true,
+              "duration": 0.9113931655883789,
+              "error": null,
+              "retry_count": 0
+            }
+          ]
+        }
+      ],
+      "state_summary": {
+        "current_episode": 0,
+        "total_steps": 0,
+        "training_phase": "initialization",
+        "last_update": 1761159317.3605633
+      },
+      "error_summary": {
+        "total_errors": 1,
+        "error_types": {
+          "AttributeError": 1
+        },
+        "recent_errors": [
+          {
+            "timestamp": 1761159317.361568,
+            "step_name": "reset_environment",
+            "error_type": "AttributeError",
+            "error_message": "'BudgetPoolManager' object has no attribute 'reset_all'",
+            "context": {
+              "step_index": 1,
+              "step_name": "reset_environment",
+              "data_type": "dict"
+            }
+          }
+        ]
+      },
+      "performance_summary": {
+        "total_time": 0.9135336875915527,
+        "total_steps": 1,
+        "throughput": 1.0946503818993338,
+        "average_step_times": {
+          "initialize_components": 0.9113931655883789
+        },
+        "memory_usage": {
+          "initialize_components": 298196992
+        },
+        "recommendations": [
+          "Low throughput detected: 1.09 steps/s"
+        ]
+      }
+    }
+  },
+  "export_result": null
+}

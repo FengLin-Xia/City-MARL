@@ -72,3 +72,4 @@ class LandPriceMonetizationTerm:
         # 简化实现：返回固定值
         # 实际实现需要根据state和action_id计算具体的地价指数
         return 50.0  # 示例值
+

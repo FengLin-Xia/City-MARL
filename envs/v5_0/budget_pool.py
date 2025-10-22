@@ -111,3 +111,4 @@ class BudgetPoolManager:
                 "allocation_strategy": pool.allocation_strategy
             }
         return status
+
