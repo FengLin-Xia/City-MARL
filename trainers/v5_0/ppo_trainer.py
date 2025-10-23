@@ -23,6 +23,7 @@ from contracts import ActionCandidate, Sequence, StepLog, EnvironmentState
 from config_loader import ConfigLoader
 from envs.v5_0.city_env import V5CityEnvironment
 from solvers.v5_0.rl_selector import V5RLSelector
+from utils.logger_factory import get_logger, topic_enabled
 
 
 class V5PPOTrainer:
@@ -38,6 +39,9 @@ class V5PPOTrainer:
         # 加载配置
         self.loader = ConfigLoader()
         self.config = self.loader.load_v5_config(config_path)
+        
+        # 初始化日志
+        self.logger = get_logger("trainer")
         
         # 获取RL配置
         self.rl_config = self.config.get("mappo", {})
@@ -123,23 +127,42 @@ class V5PPOTrainer:
                 phase_agents = self.env.get_phase_agents()
                 execution_mode = self.env.get_phase_execution_mode()
                 
+                if topic_enabled("experience_collection"):
+                    self.logger.info(f"[EXP_COLLECT] 步骤 {step_count}: phase_agents={phase_agents}, mode={execution_mode}")
+                
                 # 为每个智能体获取动作候选并用策略选择序列（动态更新候选集）
                 phase_sequences = {}
                 phase_candidates = {}
                 
                 for agent in phase_agents:
                     # 获取动作候选（考虑已占用槽位）
-                    candidates = self.env.get_action_candidates(agent)
-                    phase_candidates[agent] = candidates
-                    
-                    if candidates:
-                        sel = self.selector.select_action(agent, candidates, state, greedy=False)
-                        if sel is not None:
-                            phase_sequences[agent] = sel['sequence']
+                    # 检查是否启用多动作模式
+                    multi_enabled = self.config.get("multi_action", {}).get("enabled", False)
+                    if multi_enabled:
+                        candidates, cand_idx = self.env.get_action_candidates_with_index(agent)
+                        phase_candidates[agent] = (candidates, cand_idx)
+                        
+                        if candidates and cand_idx:
+                            max_actions = self.config.get("multi_action", {}).get("max_actions_per_step", 3)
+                            sel = self.selector.select_action_multi(agent, candidates, cand_idx, state, max_k=max_actions, greedy=False)
+                            if sel is not None:
+                                phase_sequences[agent] = sel['sequence']
+                            else:
+                                phase_sequences[agent] = None
                         else:
                             phase_sequences[agent] = None
                     else:
-                        phase_sequences[agent] = None
+                        candidates = self.env.get_action_candidates(agent)
+                        phase_candidates[agent] = candidates
+                        
+                        if candidates:
+                            sel = self.selector.select_action(agent, candidates, state, greedy=False)
+                            if sel is not None:
+                                phase_sequences[agent] = sel['sequence']
+                            else:
+                                phase_sequences[agent] = None
+                        else:
+                            phase_sequences[agent] = None
                 
                 # 执行phase
                 next_state, phase_rewards, done, info = self.env.step_phase(phase_agents, phase_sequences)
@@ -148,7 +171,14 @@ class V5PPOTrainer:
                 for agent in phase_agents:
                     sel = None
                     if phase_sequences.get(agent) is not None and phase_candidates.get(agent):
-                        sel = self.selector.select_action(agent, phase_candidates[agent], state, greedy=True)
+                        # 检查是否是多动作模式
+                        multi_enabled = self.config.get("multi_action", {}).get("enabled", False)
+                        if multi_enabled and isinstance(phase_candidates[agent], tuple):
+                            candidates, cand_idx = phase_candidates[agent]
+                            max_actions = self.config.get("multi_action", {}).get("max_actions_per_step", 3)
+                            sel = self.selector.select_action_multi(agent, candidates, cand_idx, state, max_k=max_actions, greedy=True)
+                        else:
+                            sel = self.selector.select_action(agent, phase_candidates[agent], state, greedy=True)
                     obs_vec = self.env.get_observation(agent)
                     next_obs_vec = self.env.get_observation(agent)
                     # 匹配该agent的step_log（来自phase_logs）
@@ -158,10 +188,20 @@ class V5PPOTrainer:
                             if getattr(lg, 'agent', None) == agent:
                                 agent_log = lg
                                 break
+                    # 处理多动作和单动作的不同返回结构
+                    action_id = -1
+                    if sel:
+                        if 'action_id' in sel:
+                            action_id = sel['action_id']  # 单动作模式
+                        elif 'sequence' in sel and sel['sequence'] and sel['sequence'].actions:
+                            # 多动作模式，从AtomicAction的meta中获取action_id
+                            first_action = sel['sequence'].actions[0]
+                            action_id = first_action.meta.get('action_id', -1)
+                    
                     experience = {
                         'agent': agent,
                         'obs': obs_vec,
-                        'action_id': sel['action_id'] if sel else -1,
+                        'action_id': action_id,
                         'logprob': sel['logprob'] if sel else 0.0,
                         'value': sel['value'] if sel else 0.0,
                         'reward': phase_rewards.get(agent, 0.0),
@@ -241,7 +281,12 @@ class V5PPOTrainer:
         
         for agent, agent_exps in agent_experiences.items():
             if not agent_exps:
+                if topic_enabled("training_step"):
+                    self.logger.info(f"[TRAIN_STEP] 智能体 {agent} 没有经验数据")
                 continue
+            
+            if topic_enabled("training_step"):
+                self.logger.info(f"[TRAIN_STEP] 训练智能体 {agent}: {len(agent_exps)} 个经验")
             
             # 提取张量数据
             obs = torch.FloatTensor([exp['obs'] for exp in agent_exps])
@@ -398,7 +443,9 @@ class V5PPOTrainer:
         return {
             'training_history': self.training_history,
             'episode_rewards': self.episode_rewards,
-            'total_episodes': num_episodes
+            'total_episodes': num_episodes,
+            'step_logs': self.env.step_logs,
+            'env_states': self.env.env_states
         }
     
     def save_model(self, path: str):

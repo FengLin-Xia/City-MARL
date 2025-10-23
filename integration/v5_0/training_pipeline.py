@@ -162,6 +162,10 @@ class V5TrainingPipeline:
             data["env_states"].extend(env_states)
             data["experiences"].extend(experiences)
             
+            # 同时更新实例属性
+            self.step_logs.extend(step_logs)
+            self.env_states.extend(env_states)
+            
             # 更新状态
             self.pipeline.state_manager.update_global_state("total_steps", 
                 self.pipeline.state_manager.get_global_state().get("total_steps", 0) + len(experiences))
@@ -234,6 +238,7 @@ class V5TrainingPipeline:
         
         if step_logs and env_states:
             try:
+                # 直接传递对象，不进行字符串转换
                 # 导出结果
                 results = self.export_system.export_all(step_logs, env_states, output_dir)
                 
@@ -251,9 +256,9 @@ class V5TrainingPipeline:
                 print(f"  - Export failed: {e}")
         else:
             print("  - No data to export")
-        # 为避免重复导出，清空已导出数据缓存
-        data["step_logs"] = []
-        data["env_states"] = []
+        # 保留数据供集成系统使用，不清空
+        # data["step_logs"] = []
+        # data["env_states"] = []
         
         return data
     
@@ -301,3 +306,5 @@ def run_training_session(config_path: str, num_episodes: int, output_dir: str = 
     """
     pipeline = create_training_pipeline(config_path)
     return pipeline.run_training(num_episodes, output_dir)
+
+

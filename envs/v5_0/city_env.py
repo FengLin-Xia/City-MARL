@@ -55,6 +55,12 @@ class V5CityEnvironment:
         self.scorer = V5ActionScorer(self.config)
         self.selector = V5SequenceSelector(self.config)
         
+        # 加载槽位数据
+        self._load_slots_data()
+        
+        # 初始化高斯地价场系统（与v4.1相同）
+        self._initialize_land_price_system()
+        
         # 环境状态
         self.current_month = 0
         self.current_step = 0
@@ -78,17 +84,96 @@ class V5CityEnvironment:
         
         self.logger.info(f"v5.0 环境初始化完成，agents={self.agents}, total_months={self.total_months}")
     
-    def reset(self) -> Dict[str, Any]:
+    def _load_slots_data(self) -> None:
+        """加载槽位数据到枚举器"""
+        try:
+            # 从配置获取槽位数据路径
+            slots_config = self.config.get("slots", {})
+            slots_path = slots_config.get("path", "")
+            
+            # 处理路径变量替换
+            if slots_path.startswith("${paths."):
+                # 从配置中获取路径
+                paths_config = self.config.get("paths", {})
+                path_key = slots_path.replace("${paths.", "").replace("}", "")
+                slots_path = paths_config.get(path_key, "")
+            
+            if not slots_path:
+                self.logger.warning("未找到槽位数据路径，使用默认槽位")
+                # 创建一些默认槽位用于测试
+                default_slots = []
+                for i in range(100):  # 创建100个测试槽位
+                    default_slots.append({
+                        "id": f"slot_{i}",
+                        "x": i % 10,
+                        "y": i // 10,
+                        "neighbors": [],
+                        "building_level": 3
+                    })
+                self.enumerator.load_slots(default_slots)
+                self.logger.info(f"加载了 {len(default_slots)} 个默认槽位")
+            else:
+                # 从文件加载槽位数据
+                import os
+                slots_file = slots_path  # 直接使用路径，不需要expandvars
+                if os.path.exists(slots_file):
+                    with open(slots_file, 'r') as f:
+                        slots_data = []
+                        for i, line in enumerate(f):
+                            if line.strip():
+                                # 解析格式: x, y, angle, building_level
+                                parts = line.strip().split(',')
+                                if len(parts) >= 2:
+                                    x = float(parts[0].strip())
+                                    y = float(parts[1].strip())
+                                    angle = float(parts[2].strip()) if len(parts) > 2 else 0.0  # 解析角度
+                                    building_level = int(parts[3].strip()) if len(parts) > 3 else 3  # 解析建筑等级
+                                    
+                                    # 生成槽位ID
+                                    slot_id = f"slot_{i}"
+                                    
+                                    slots_data.append({
+                                        "id": slot_id,
+                                        "x": x,
+                                        "y": y,
+                                        "angle": angle,  # 添加角度信息
+                                        "neighbors": [],
+                                        "building_level": building_level
+                                    })
+                        self.enumerator.load_slots(slots_data)
+                        self.logger.info(f"从文件加载了 {len(slots_data)} 个槽位")
+                else:
+                    self.logger.warning(f"槽位文件不存在: {slots_file}，使用默认槽位")
+                    # 使用默认槽位
+                    default_slots = []
+                    for i in range(100):
+                        default_slots.append({
+                            "id": f"slot_{i}",
+                            "x": i % 10,
+                            "y": i // 10,
+                            "neighbors": [],
+                            "building_level": 3
+                        })
+                    self.enumerator.load_slots(default_slots)
+                    self.logger.info(f"加载了 {len(default_slots)} 个默认槽位")
+        except Exception as e:
+            self.logger.error(f"加载槽位数据失败: {e}")
+            # 使用最小默认槽位
+            default_slots = [{"id": f"slot_{i}", "x": i, "y": 0, "neighbors": [], "building_level": 3} for i in range(10)]
+            self.enumerator.load_slots(default_slots)
+            self.logger.info(f"使用最小默认槽位: {len(default_slots)} 个")
+    
+    def reset(self) -> EnvironmentState:
         """重置环境到初始状态
         
         Returns:
-            初始观测
+            EnvironmentState: 初始环境状态对象
         """
         self.current_month = 0
         self.current_step = 0
         
-        # 重置预算
-        self.budget_manager.reset_all_pools()
+        # 重置预算（重新初始化预算管理器以读取配置中的初始预算）
+        self.budget_manager = BudgetPoolManager(self.config)
         self.budgets = {agent: self.budget_manager.get_remaining_budget(agent) for agent in self.agents}
         self.budget_history = {agent: [self.budgets[agent]] for agent in self.agents}
         
@@ -105,9 +190,16 @@ class V5CityEnvironment:
         
         self.logger.info(f"环境重置，初始预算: {self.budgets}")
         
-        return self._get_observation()
+        # 返回EnvironmentState对象而不是字典
+        return EnvironmentState(
+            month=self.current_month,
+            land_prices=self._get_actual_land_prices(),
+            buildings=self._get_actual_buildings(),
+            budgets=self.budgets.copy(),
+            slots=self._get_actual_slots()
+        )
     
-    def step(self, sequences: Dict[str, Sequence]) -> Tuple[Dict[str, Any], Dict[str, float], bool, Dict[str, Any]]:
+    def step(self, sequences: Dict[str, Sequence]) -> Tuple[EnvironmentState, Dict[str, float], bool, Dict[str, Any]]:
         """执行一个时间步
         
         Args:
@@ -131,20 +223,9 @@ class V5CityEnvironment:
         for agent in self.agents:
             self.budget_history[agent].append(self.budgets[agent])
         
-        # 记录状态
-        env_state = EnvironmentState(
-            month=self.current_month,
-            step=self.current_step,
-            budgets=self.budgets.copy(),
-            occupied_slots=list(self.occupied_slots),
-            meta={"reward_terms": reward_terms_all}
-        )
-        self.env_states.append(env_state)
-        
         # 检查是否结束
         done = self.current_month >= self.total_months
         
-        obs = self._get_observation()
         info = {
             "month": self.current_month,
             "step": self.current_step,
@@ -152,19 +233,15 @@ class V5CityEnvironment:
             "reward_terms": reward_terms_all
         }
         
-        return obs, rewards, done, info
+        return new_state, rewards, done, info
     
     def advance_month(self) -> None:
         """推进到下一个月"""
         self.current_month += 1
         
-        # 按配置注入预算
-        for agent in self.agents:
-            self.budget_manager.inject_monthly(agent, self.current_month)
-            self.budgets[agent] = self.budget_manager.get_remaining_budget(agent)
-        
+        # 简化版本：暂时不注入月度预算，保持现有预算
         if topic_enabled("budget"):
-            self.logger.info(f"月度推进到 {self.current_month}，新预算: {self.budgets}")
+            self.logger.info(f"月度推进到 {self.current_month}，当前预算: {self.budgets}")
     
     def get_action_candidates(self, agent: str) -> List[ActionCandidate]:
         """获取agent的动作候选（v5.0单动作模式）
@@ -274,7 +351,7 @@ class V5CityEnvironment:
         # 扣除预算
         cost = cand.meta.get("cost", 0)
         if cost > 0:
-            self.budget_manager.spend(agent, cost)
+            self.budget_manager.deduct(agent, cost)
             self.budgets[agent] = self.budget_manager.get_remaining_budget(agent)
         
         # 标记槽位为已占用
@@ -307,7 +384,7 @@ class V5CityEnvironment:
         # 扣除预算
         cost = cand.meta.get("cost", 0)
         if cost > 0:
-            self.budget_manager.spend(agent, cost)
+            self.budget_manager.deduct(agent, cost)
             self.budgets[agent] = self.budget_manager.get_remaining_budget(agent)
         
         # 标记槽位为已占用
@@ -360,24 +437,46 @@ class V5CityEnvironment:
         if not sequence or not sequence.actions:
             return positions
         
-        # 获取legacy IDs（兼容新旧版本）
-        legacy_ids = sequence.get_legacy_ids()
-        
-        for action_id in legacy_ids:
-            cand = self._get_candidate_from_snapshot(agent, action_id)
-            if not cand:
-                continue
+        # 优先使用多动作模式的候选索引（更准确）
+        if agent in self._last_cand_idx and self._last_cand_idx[agent]:
+            cand_idx = self._last_cand_idx[agent]
             
-            for slot_id in cand.meta.get("slots", []):
-                slot_info = self.enumerator.slots.get(slot_id)
-                if slot_info:
-                    positions.append({
-                        "slot_id": slot_id,
-                        "x": slot_info.x,
-                        "y": slot_info.y,
-                        "z": slot_info.z,
-                        "action_id": action_id
-                    })
+            for action in sequence.actions:
+                if hasattr(action, 'point') and action.point < len(cand_idx.points):
+                    point_id = cand_idx.points[action.point]
+                    slots = cand_idx.point_to_slots.get(point_id, [])
+                    
+                    for slot_id in slots:
+                        slot_info = self.enumerator.slots.get(slot_id)
+                        if slot_info:
+                            positions.append({
+                                "slot_id": slot_id,
+                                "x": slot_info.x,
+                                "y": slot_info.y,
+                                "z": 0.0,  # 使用默认z坐标
+                                "angle": getattr(slot_info, 'angle', 0.0),  # 添加角度信息
+                                "action_id": action.meta.get('action_id', -1)
+                            })
+        else:
+            # 回退到单动作模式的方法
+            legacy_ids = sequence.get_legacy_ids()
+            
+            for action_id in legacy_ids:
+                cand = self._get_candidate_from_snapshot(agent, action_id)
+                if not cand:
+                    continue
+                
+                for slot_id in cand.meta.get("slots", []):
+                    slot_info = self.enumerator.slots.get(slot_id)
+                    if slot_info:
+                        positions.append({
+                            "slot_id": slot_id,
+                            "x": slot_info.x,
+                            "y": slot_info.y,
+                            "z": 0.0,  # 使用默认z坐标
+                            "angle": getattr(slot_info, 'angle', 0.0),  # 添加角度信息
+                            "action_id": action_id
+                        })
         
         return positions
     
@@ -393,7 +492,7 @@ class V5CityEnvironment:
         """
         candidates = self._last_candidates.get(agent, [])
         for cand in candidates:
-            if cand.action_id == action_id:
+            if cand.id == action_id:
                 return cand
         return None
     
@@ -407,14 +506,43 @@ class V5CityEnvironment:
         Returns:
             (总奖励, 奖励明细)
         """
+        # 获取当前状态字典
+        current_state = self._get_current_state_dict()
+        
         # 使用scorer计算奖励
-        reward = self.scorer.compute_reward(agent, candidate, self.current_month)
-        reward_terms = candidate.meta.get("reward_terms", {})
+        reward_terms = self.scorer.score_action(candidate, current_state)
+        
+        # 计算总奖励（收入 - 成本 + 其他奖励）
+        total_reward = reward_terms.revenue - reward_terms.cost + reward_terms.prestige + reward_terms.proximity + reward_terms.diversity
+        
+        # 添加其他奖励项
+        if reward_terms.other:
+            total_reward += sum(reward_terms.other.values())
+        
+        # 转换为字典格式
+        reward_dict = reward_terms.to_dict()
         
         if topic_enabled("reward_terms"):
-            self.logger.info(f"奖励计算: agent={agent}, action={candidate.action_id}, reward={reward:.2f}, terms={reward_terms}")
+            self.logger.info(f"奖励计算: agent={agent}, action={candidate.id}, reward={total_reward:.2f}, terms={reward_dict}")
         
-        return reward, reward_terms
+        return total_reward, reward_dict
+    
+    def _get_current_state_dict(self) -> Dict[str, Any]:
+        """获取当前状态字典（用于奖励计算）
+        
+        Returns:
+            状态字典
+        """
+        return {
+            "month": self.current_month,
+            "step": self.current_step,
+            "budgets": self.budgets.copy(),
+            "occupied_slots": list(self.occupied_slots),
+            "agents": self.agents,
+            "land_prices": self._get_actual_land_prices(),
+            "buildings": self._get_actual_buildings(),
+            "slots": self._get_actual_slots()
+        }
     
     def _get_land_price(self, x: float, y: float) -> float:
         """获取指定位置的地价
@@ -463,6 +591,342 @@ class V5CityEnvironment:
     def render(self, mode='human') -> None:
         """渲染环境（当前为占位实现）"""
         pass
+    
+    def get_phase_agents(self) -> List[str]:
+        """获取当前阶段的活跃智能体
+        
+        Returns:
+            当前阶段的智能体列表
+        """
+        return self.scheduler.get_active_agents(self.current_month)
+    
+    def get_phase_execution_mode(self) -> str:
+        """获取当前阶段的执行模式
+        
+        Returns:
+            执行模式："concurrent" 或 "sequential"
+        """
+        return self.scheduler.get_execution_mode(self.current_month)
+    
+    def get_observation(self, agent: str) -> np.ndarray:
+        """获取指定智能体的观察（数值向量）
+        
+        Args:
+            agent: 智能体名称
+            
+        Returns:
+            数值化的观察向量
+        """
+        state = self.get_state_for_agent(agent)
+        return self._vectorize_observation(state)
+    
+    def _get_actual_land_prices(self) -> np.ndarray:
+        """获取实际地价数据"""
+        # 从地价系统获取实际数据
+        # 这里需要根据实际的地价系统实现
+        # 暂时返回一个合理的默认值
+        map_size = self.config.get("city", {}).get("map_size", [200, 200])
+        return np.ones((map_size[0], map_size[1]), dtype=np.float32)
+    
+    def _get_actual_buildings(self) -> List[Dict[str, Any]]:
+        """获取实际建筑数据"""
+        # 从建筑系统获取实际数据
+        # 这里需要根据实际的建筑系统实现
+        buildings = []
+        for slot_id in self.occupied_slots:
+            slot_info = self.enumerator.slots.get(slot_id)
+            if slot_info:
+                buildings.append({
+                    "slot_id": slot_id,
+                    "x": slot_info.x,
+                    "y": slot_info.y,
+                    "z": self._get_default_z_coordinate(),  # 从配置获取z坐标
+                    "type": "building"  # 简化实现
+                })
+        return buildings
+    
+    def _get_default_z_coordinate(self) -> float:
+        """获取默认z坐标（从配置读取）
+        
+        Returns:
+            z坐标值
+        """
+        coordinates_config = self.config.get("env", {}).get("coordinates", {})
+        return coordinates_config.get("default_z", 0.0)
+    
+    def _get_actual_slots(self) -> List[Dict[str, Any]]:
+        """获取实际槽位数据"""
+        # 从槽位系统获取实际数据
+        slots = []
+        for slot_id, slot_info in self.enumerator.slots.items():
+            slots.append({
+                "id": slot_id,
+                "x": slot_info.x,
+                "y": slot_info.y,
+                "z": self._get_default_z_coordinate(),  # 从配置获取z坐标
+                "occupied": slot_id in self.occupied_slots
+            })
+        return slots
+    
+    def _vectorize_observation(self, state: Dict[str, Any]) -> np.ndarray:
+        """将状态字典转换为数值向量"""
+        # 根据网络期望的输入维度创建观察向量
+        obs_dim = 64  # 网络期望的输入维度
+        
+        # 基础特征（前10维）
+        features = []
+        features.append(float(state.get("month", 0)))
+        features.append(float(state.get("step", 0)))
+        features.append(float(state.get("budget", 0)))
+        features.append(float(state.get("occupied_count", 0)))
+        features.append(float(state.get("total_slots", 0)))
+        
+        # 添加预算历史特征（最近5步）
+        agent = "IND"  # 简化实现，实际应该根据agent参数
+        budget_history = self.budget_history.get(agent, [])
+        for i in range(5):
+            if i < len(budget_history):
+                features.append(float(budget_history[-(i+1)]))
+            else:
+                features.append(0.0)
+        
+        # 扩展到目标维度（用零填充）
+        while len(features) < obs_dim:
+            features.append(0.0)
+        
+        # 截断到目标维度
+        features = features[:obs_dim]
+        
+        return np.array(features, dtype=np.float32)
+    
+    def _get_land_price(self, slot_id: str) -> float:
+        """获取槽位的地价
+        
+        Args:
+            slot_id: 槽位ID
+            
+        Returns:
+            地价
+        """
+        # 获取槽位信息
+        if slot_id in self.enumerator.slots:
+            slot = self.enumerator.slots[slot_id]
+            
+            # 使用高斯地价场系统（与v4.1相同）
+            if hasattr(self, 'land_price_system'):
+                price = self.land_price_system.get_land_price([slot.x, slot.y])
+                return max(0.0, min(1.0, float(price)))
+            else:
+                # 如果没有地价系统，使用配置中的基础地价
+                land_price_config = self.config.get("env", {}).get("land_price", {})
+                base_price = land_price_config.get("base", 1.0)
+                return base_price
+        else:
+            # 默认地价
+            return 1.0
+    
+    def _initialize_land_price_system(self) -> None:
+        """初始化高斯地价场系统"""
+        try:
+            from logic.enhanced_sdf_system import GaussianLandPriceSystem
+            
+            # 获取地价系统配置
+            land_price_config = self.config.get("land_price", {}).get("gaussian_system", {})
+            
+            # 创建地价系统
+            self.land_price_system = GaussianLandPriceSystem(self.config)
+            
+            # 获取交通枢纽位置（从配置或使用默认值）
+            hubs = self._get_transport_hubs()
+            map_size = self._get_map_size()
+            
+            # 初始化系统
+            self.land_price_system.initialize_system(hubs, map_size)
+            
+            self.logger.info(f"高斯地价场系统初始化成功，枢纽数量: {len(hubs)}")
+            
+        except Exception as e:
+            self.logger.warning(f"高斯地价场系统初始化失败: {e}，将使用简化地价")
+            self.land_price_system = None
+    
+    def _get_transport_hubs(self) -> List[List[int]]:
+        """获取交通枢纽位置"""
+        # 从配置获取枢纽位置，或使用默认值
+        hubs_config = self.config.get("transport_hubs", [])
+        if hubs_config:
+            return hubs_config
+        
+        # 默认枢纽位置（基于地图中心）
+        map_size = self._get_map_size()
+        center_x, center_y = map_size[0] // 2, map_size[1] // 2
+        return [
+            [center_x - 50, center_y - 50],
+            [center_x + 50, center_y - 50], 
+            [center_x, center_y + 50]
+        ]
+    
+    def _get_map_size(self) -> List[int]:
+        """获取地图尺寸"""
+        # 从配置获取地图尺寸，或使用默认值
+        map_config = self.config.get("map", {})
+        width = map_config.get("width", 256)
+        height = map_config.get("height", 256)
+        return [width, height]
+    
+    def step_phase(self, phase_agents: List[str], phase_sequences: Dict[str, Sequence]) -> Tuple[EnvironmentState, Dict[str, float], bool, Dict[str, Any]]:
+        """执行一个阶段的动作
+        
+        Args:
+            phase_agents: 当前阶段的智能体列表
+            phase_sequences: 各智能体的动作序列
+            
+        Returns:
+            (observation, rewards, done, info)
+        """
+        # 首先推进到下一个月（这是正确的架构）
+        month_advanced = False
+        if self.current_month < self.total_months:
+            old_month = self.current_month
+            self.advance_month()
+            month_advanced = True
+            if topic_enabled("phase_switch"):
+                self.logger.info(f"月份推进: {old_month} -> {self.current_month}")
+        
+        if topic_enabled("environment_step"):
+            self.logger.info(f"[ENV_STEP] 执行阶段动作: agents={phase_agents}, sequences={list(phase_sequences.keys())}")
+            self.logger.info(f"[ENV_STEP] 当前状态: month={self.current_month}, step={self.current_step}")
+        
+        # 执行动作并计算奖励
+        rewards = {}
+        reward_terms_all = {}
+        
+        for agent in phase_agents:
+            if agent in phase_sequences:
+                sequence = phase_sequences[agent]
+                if topic_enabled("action_execution"):
+                    self.logger.info(f"[ACTION_EXEC] 执行智能体 {agent} 的动作序列: {sequence}")
+                reward, reward_terms = self._execute_agent_sequence(agent, sequence)
+                rewards[agent] = reward
+                reward_terms_all[agent] = reward_terms
+                if topic_enabled("action_execution"):
+                    self.logger.info(f"[ACTION_EXEC] 智能体 {agent} 获得奖励: {reward}")
+            else:
+                if topic_enabled("action_execution"):
+                    self.logger.info(f"[ACTION_EXEC] 智能体 {agent} 没有动作序列")
+                rewards[agent] = 0.0
+                reward_terms_all[agent] = {}
+        
+        # 更新预算历史
+        for agent in self.agents:
+            self.budget_history[agent].append(self.budgets[agent])
+        
+        # 删除重复的EnvironmentState创建
+        
+        # 检查是否结束
+        done = self.current_month >= self.total_months
+        
+        # 创建新的环境状态对象（月份级别）
+        new_state = EnvironmentState(
+            month=self.current_month,
+            land_prices=self._get_actual_land_prices(),
+            buildings=self._get_actual_buildings(),
+            budgets=self.budgets.copy(),
+            slots=self._get_actual_slots()
+        )
+        
+        # 只有在月份推进时才记录环境状态
+        if month_advanced:
+            self.env_states.append(new_state)
+        
+        # 为每个agent创建StepLog记录（不管是否有动作）
+        for agent in phase_agents:
+            # 检查是否有动作
+            has_actions = False
+            chosen_actions = []
+            slot_positions = []
+            
+            if agent in phase_sequences and phase_sequences[agent]:
+                sequence = phase_sequences[agent]
+                if sequence.actions:
+                    has_actions = True
+                    chosen_actions = sequence.get_legacy_ids()
+                    slot_positions = self._build_slot_positions_from_snapshot(agent, sequence)
+            
+            # 为无动作的agent提供默认的slot_positions（避免export严格模式错误）
+            if not slot_positions:
+                slot_positions = [{
+                    "slot_id": "default",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "angle": 0.0,
+                    "action_id": -1
+                }]
+            
+            # 创建StepLog（有动作或无动作都记录）
+            step_log = StepLog(
+                t=self.current_month,
+                agent=agent,
+                chosen=chosen_actions,  # 有动作时记录动作ID，无动作时为空列表
+                reward_terms=reward_terms_all.get(agent, {}),
+                budget_snapshot=self.budgets.copy(),
+                slot_positions=slot_positions
+            )
+            
+            if topic_enabled("candidates") and has_actions:
+                self.logger.info(f"[SLOT_POSITIONS] agent={agent}, found={len(slot_positions)} positions")
+            
+            # 存储StepLog
+            self.step_logs.append(step_log)
+        
+        # 收集所有StepLog用于info（为所有智能体创建）
+        phase_logs = []
+        for agent in phase_agents:
+            # 检查是否有动作
+            has_actions = False
+            chosen_actions = []
+            slot_positions = []
+            
+            if agent in phase_sequences and phase_sequences[agent]:
+                sequence = phase_sequences[agent]
+                if sequence.actions:
+                    has_actions = True
+                    chosen_actions = sequence.get_legacy_ids()
+                    slot_positions = self._build_slot_positions_from_snapshot(agent, sequence)
+            
+            # 为无动作的agent提供默认的slot_positions（避免export严格模式错误）
+            if not slot_positions:
+                slot_positions = [{
+                    "slot_id": "default",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "angle": 0.0,
+                    "action_id": -1
+                }]
+            
+            # 创建StepLog（有动作或无动作都记录）
+            step_log = StepLog(
+                t=self.current_month,
+                agent=agent,
+                chosen=chosen_actions,
+                reward_terms=reward_terms_all.get(agent, {}),
+                budget_snapshot=self.budgets.copy(),
+                slot_positions=slot_positions
+            )
+            phase_logs.append(step_log)
+        
+        
+        info = {
+            "month": self.current_month,
+            "step": self.current_step,
+            "budgets": self.budgets.copy(),
+            "reward_terms": reward_terms_all,
+            "step_log": phase_logs[0] if phase_logs else None,
+            "phase_logs": phase_logs
+        }
+        
+        return new_state, rewards, done, info
     
     def close(self) -> None:
         """关闭环境"""

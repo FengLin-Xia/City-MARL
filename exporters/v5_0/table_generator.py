@@ -170,6 +170,7 @@ class V5TableGenerator:
             return budget_info
         
         # 获取初始预算
+        
         initial_budget = env_states[0].budgets.get(step_logs[0].agent, 0)
         current_budget = initial_budget
         

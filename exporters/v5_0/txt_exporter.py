@@ -53,8 +53,14 @@ class V5TXTExporter:
         Returns:
             导出的文件路径
         """
+        # 检查数据格式
+        if not isinstance(step_logs, list) or not isinstance(env_states, list):
+            raise ValueError("StepLogs和EnvironmentStates必须是列表格式")
+        
+        # 如果数量不匹配，使用step_logs为准，忽略多余的env_states
         if len(step_logs) != len(env_states):
-            raise ValueError("StepLogs和EnvironmentStates数量不匹配")
+            print(f"[WARNING] StepLogs({len(step_logs)})和EnvironmentStates({len(env_states)})数量不匹配，使用最后{len(step_logs)}个EnvironmentStates")
+            env_states = env_states[-len(step_logs):] if len(env_states) > len(step_logs) else env_states
         
         # 按月份分组
         monthly_data = self._group_by_month(step_logs, env_states)

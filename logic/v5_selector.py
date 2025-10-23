@@ -98,7 +98,9 @@ class V5SequenceSelector:
         agent_budget = budgets.get(agent, 0.0)
         
         total_cost = 0.0
-        for action_id in sequence.actions:
+        # 使用get_legacy_ids()兼容AtomicAction
+        legacy_ids = sequence.get_legacy_ids()
+        for action_id in legacy_ids:
             action_params = self.config.get("action_params", {}).get(str(action_id), {})
             cost = action_params.get("cost", 0.0)
             total_cost += cost
@@ -166,7 +168,9 @@ class V5SequenceSelector:
         """计算序列得分"""
         total_score = 0.0
         
-        for action_id in sequence.actions:
+        # 使用get_legacy_ids()兼容AtomicAction
+        legacy_ids = sequence.get_legacy_ids()
+        for action_id in legacy_ids:
             # 获取动作参数
             action_params = self.config.get("action_params", {}).get(str(action_id), {})
             
@@ -204,3 +208,4 @@ class V5SequenceSelector:
             reward_terms=reward_terms,
             budget_snapshot=budget_snapshot
         )
+

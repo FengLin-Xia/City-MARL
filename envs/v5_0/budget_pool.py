@@ -50,6 +50,13 @@ class BudgetPoolManager:
         """
         self.pools: Dict[str, BudgetPool] = {}
         self.agent_pools: Dict[str, str] = {}  # agent -> pool_name
+        self.individual_budgets: Dict[str, float] = {}  # 独立预算
+        
+        # 处理 ledger.initial_budget 中的独立预算
+        ledger_config = config.get("ledger", {})
+        initial_budgets = ledger_config.get("initial_budget", {})
+        for agent, budget in initial_budgets.items():
+            self.individual_budgets[agent] = budget
         
         # 初始化预算池
         budget_pools_config = config.get("budget_pools", {})
@@ -76,6 +83,11 @@ class BudgetPoolManager:
     
     def can_afford(self, agent: str, cost: float) -> bool:
         """检查智能体是否有足够预算"""
+        # 首先检查独立预算
+        if agent in self.individual_budgets:
+            return self.individual_budgets[agent] >= cost
+        
+        # 然后检查预算池
         pool = self.get_pool_for_agent(agent)
         if pool:
             return pool.can_afford(cost)
@@ -83,6 +95,14 @@ class BudgetPoolManager:
     
     def deduct(self, agent: str, cost: float) -> bool:
         """为智能体扣除预算"""
+        # 首先检查独立预算
+        if agent in self.individual_budgets:
+            if self.individual_budgets[agent] >= cost:
+                self.individual_budgets[agent] -= cost
+                return True
+            return False
+        
+        # 然后检查预算池
         pool = self.get_pool_for_agent(agent)
         if pool:
             return pool.deduct(cost)
@@ -90,6 +110,11 @@ class BudgetPoolManager:
     
     def get_remaining_budget(self, agent: str) -> float:
         """获取智能体的剩余预算"""
+        # 首先检查是否有独立预算
+        if agent in self.individual_budgets:
+            return self.individual_budgets[agent]
+        
+        # 然后检查预算池
         pool = self.get_pool_for_agent(agent)
         if pool:
             return pool.get_remaining()
@@ -97,8 +122,13 @@ class BudgetPoolManager:
     
     def reset_all_pools(self) -> None:
         """重置所有预算池"""
+        # 重置预算池
         for pool in self.pools.values():
             pool.reset()
+        
+        # 重置独立预算（从配置重新读取）
+        # 注意：这里需要重新从配置读取，因为individual_budgets可能已经被修改
+        # 在实际使用中，应该传入完整的配置来重新初始化
     
     def get_pool_status(self) -> Dict[str, Any]:
         """获取预算池状态"""

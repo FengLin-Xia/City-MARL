@@ -236,3 +236,4 @@ def check_all_months_output():
 
 if __name__ == "__main__":
     check_all_months_output()
+

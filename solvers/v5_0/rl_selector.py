@@ -384,8 +384,15 @@ class V5RLSelector:
             
             # 掩码：只保留有效点
             p_logits_masked = p_logits.clone()
-            p_logits_masked[len(cand_idx.points):] = float('-inf')  # 超出部分设为-inf
-            p_logits_masked[:len(cand_idx.points)] = p_logits_masked[:len(cand_idx.points)] + \
+            num_points = len(cand_idx.points)
+            
+            # 如果候选点数量超过网络输出大小，截断
+            if num_points > p_logits_masked.shape[0]:
+                num_points = p_logits_masked.shape[0]
+                point_mask = point_mask[:num_points]
+            
+            p_logits_masked[num_points:] = float('-inf')  # 超出部分设为-inf
+            p_logits_masked[:num_points] = p_logits_masked[:num_points] + \
                 torch.where(point_mask > 0, torch.zeros_like(point_mask), 
                            torch.full_like(point_mask, float('-inf')))
             
@@ -413,15 +420,17 @@ class V5RLSelector:
             # Step 2: 在选定的点上选类型
             t_logits = network.forward_type(feat, torch.tensor([p_idx], device=self.device))
             
-            # 类型掩码
-            t_logits_masked = t_logits.clone()
-            t_logits_masked[len(cand_idx.types_per_point[p_idx]):] = float('-inf')
-            t_logits_masked[:len(cand_idx.types_per_point[p_idx])] = \
-                t_logits_masked[:len(cand_idx.types_per_point[p_idx])] + \
-                torch.where(type_masks[p_idx] > 0, torch.zeros_like(type_masks[p_idx]),
-                           torch.full_like(type_masks[p_idx], float('-inf')))
+            # 类型掩码 - 只处理该点实际可用的类型
+            available_types = len(cand_idx.types_per_point[p_idx])
+            t_logits_masked = t_logits[0, :available_types].clone()  # 只取可用的类型，并去掉batch维度
             
-            t_probs = F.softmax(t_logits_masked[:len(cand_idx.types_per_point[p_idx])], dim=-1)
+            # 应用类型掩码
+            current_type_mask = type_masks[p_idx]
+            t_logits_masked = t_logits_masked + \
+                torch.where(current_type_mask > 0, torch.zeros_like(current_type_mask),
+                           torch.full_like(current_type_mask, float('-inf')))
+            
+            t_probs = F.softmax(t_logits_masked, dim=-1)
             
             # 采样类型
             if greedy:
@@ -503,6 +512,19 @@ class V5RLSelector:
         dup_policy = self.config.get("multi_action", {}).get("dup_policy", "no_repeat_point")
         if dup_policy in ['no_repeat_point', 'both']:
             point_mask[p_idx] = 0
+            
+            # 槽位级别去重：禁用所有使用相同槽位坐标的点
+            selected_point_id = cand_idx.points[p_idx]
+            selected_slots = set(cand_idx.point_to_slots.get(selected_point_id, []))
+            
+            # 检查所有其他点，如果有槽位重叠则禁用
+            for i in range(min(len(cand_idx.points), point_mask.shape[0])):
+                if i != p_idx and point_mask[i] > 0:  # 只检查未禁用的点
+                    point_id = cand_idx.points[i]
+                    point_slots = set(cand_idx.point_to_slots.get(point_id, []))
+                    # 如果有槽位重叠，禁用该点
+                    if selected_slots & point_slots:
+                        point_mask[i] = 0
         
         # 2. 更新预算约束（简化：不在这里更新，因为需要实际执行才知道）
         # 实际执行会检查预算，这里只是选择阶段
@@ -584,5 +606,7 @@ class V5RLSelector:
                 net.load_state_dict(checkpoint['critic_networks'][agent])
         
         print(f"网络权重已从 {path} 加载")
+
+
 
 

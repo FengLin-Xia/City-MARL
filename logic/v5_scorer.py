@@ -200,7 +200,9 @@ class V5ActionScorer:
         for sequence in sequences:
             total_score = 0.0
             
-            for action_id in sequence.actions:
+            # 使用get_legacy_ids()兼容AtomicAction
+            legacy_ids = sequence.get_legacy_ids()
+            for action_id in legacy_ids:
                 # 获取动作参数
                 action_params = self.action_params.get(str(action_id), {})
                 

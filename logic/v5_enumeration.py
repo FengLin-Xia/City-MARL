@@ -6,7 +6,7 @@ v5.0 动作枚举器
 
 from typing import Dict, List, Any, Optional, Set, Tuple
 import numpy as np
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from contracts import ActionCandidate, Sequence, StepLog, CandidateIndex, AtomicAction
 from config_loader import ConfigLoader
@@ -17,9 +17,10 @@ from utils.logger_factory import get_logger, topic_enabled, sampling_allows
 class SlotInfo:
     """槽位信息"""
     slot_id: str
-    x: int
-    y: int
-    neighbors: List[str]
+    x: float
+    y: float
+    angle: float = 0.0  # 角度信息
+    neighbors: List[str] = field(default_factory=list)
     building_level: int = 3  # 建筑等级：3=只能建S, 4=可建S/M, 5=可建S/M/L
     occupied: bool = False
     reserved: bool = False
@@ -54,6 +55,7 @@ class V5ActionEnumerator:
                 slot_id=slot_data["id"],
                 x=slot_data["x"],
                 y=slot_data["y"],
+                angle=slot_data.get("angle", 0.0),  # 添加角度信息
                 neighbors=slot_data.get("neighbors", []),
                 building_level=slot_data.get("building_level", 3)
             )
@@ -73,16 +75,27 @@ class V5ActionEnumerator:
         Returns:
             动作候选列表
         """
+        agent_config = self.agents_config.get("defs", {}).get(agent, {})
+        action_ids = agent_config.get("action_ids", [])
+        
         # 调试：显示已占用槽位
         from utils.logger_factory import get_logger, topic_enabled
+        
+        # 检查特殊规则：start_after_month
+        special_rules = agent_config.get("constraints", {}).get("special_rules", {})
+        start_after_month = special_rules.get("start_after_month")
+        if start_after_month is not None and current_month < start_after_month:
+            if topic_enabled("candidates"):
+                self.logger.info(f"[ENUM_DEBUG] Agent {agent} not active until month {start_after_month}, current={current_month}")
+            return []
         logger = get_logger("enumeration")
         if topic_enabled("occupied_slots"):
             logger.info(f"[ENUM_DEBUG] enumerate_actions agent={agent}")
             logger.info(f"[ENUM_DEBUG]   occupied_slots: {occupied_slots}")
             logger.info(f"[ENUM_DEBUG]   occupied_slots count: {len(occupied_slots)}")
-        
-        agent_config = self.agents_config.get("defs", {}).get(agent, {})
-        action_ids = agent_config.get("action_ids", [])
+            logger.info(f"[ENUM_DEBUG]   total_slots: {len(self.slots)}")
+            logger.info(f"[ENUM_DEBUG]   agent_config: {agent_config}")
+            logger.info(f"[ENUM_DEBUG]   action_ids: {action_ids}")
         
         candidates = []
         
@@ -586,5 +599,7 @@ class V5ActionEnumerator:
         agent_config = self.agents_config.get("defs", {}).get(sequence.agent, {})
         allowed_actions = set(agent_config.get("action_ids", []))
         
-        return all(action_id in allowed_actions for action_id in sequence.actions)
+        # 使用get_legacy_ids()兼容AtomicAction
+        legacy_ids = sequence.get_legacy_ids()
+        return all(action_id in allowed_actions for action_id in legacy_ids)
     """v5.0动作枚举器"""
