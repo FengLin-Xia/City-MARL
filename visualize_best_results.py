@@ -58,7 +58,7 @@ def simulate_best_episode():
             occupied=env._get_occupied_slots(),
             lp_provider=env._create_lp_provider(),
             agent_types=[current_agent],
-            sizes={current_agent: ['S', 'M', 'L']}
+            sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']}
         )
         
         if selected_action is None:

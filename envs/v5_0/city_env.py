@@ -928,6 +928,143 @@ class V5CityEnvironment:
         
         return new_state, rewards, done, info
     
+    def _execute_agent_sequence(self, agent: str, sequence: Sequence) -> Tuple[float, Dict[str, float]]:
+        """
+        执行智能体动作序列并计算奖励
+        
+        Args:
+            agent: 智能体名称
+            sequence: 动作序列
+            
+        Returns:
+            (reward, reward_terms): 总奖励和奖励分项
+        """
+        if not sequence or not sequence.actions:
+            return 0.0, {}
+        
+        total_reward = 0.0
+        reward_terms = {}
+        
+        # 获取智能体配置
+        agent_config = self.agents_config.get("defs", {}).get(agent, {})
+        action_ids = agent_config.get("action_ids", [])
+        
+        # 处理每个动作
+        for action in sequence.actions:
+            if hasattr(action, 'meta') and 'action_id' in action.meta:
+                action_id = action.meta['action_id']
+            else:
+                # 兼容旧版本
+                action_id = action if isinstance(action, int) else action.atype
+            
+            if action_id in action_ids:
+                # 计算单个动作的奖励
+                action_reward, action_terms = self._calculate_action_reward(
+                    agent, action_id, action
+                )
+                total_reward += action_reward
+                
+                # 合并奖励分项
+                for key, value in action_terms.items():
+                    if key in reward_terms:
+                        reward_terms[key] += value
+                    else:
+                        reward_terms[key] = value
+        
+        return total_reward, reward_terms
+    
+    def _calculate_action_reward(self, agent: str, action_id: int, action: Any) -> Tuple[float, Dict[str, float]]:
+        """
+        计算单个动作的奖励
+        
+        Args:
+            agent: 智能体名称
+            action_id: 动作ID
+            action: 动作对象
+            
+        Returns:
+            (reward, reward_terms): 奖励和奖励分项
+        """
+        # 获取动作参数
+        action_params = self.config.get("action_params", {}).get(str(action_id), {})
+        
+        # 基础奖励计算
+        base_reward = action_params.get("base_reward", 0.0)
+        cost = action_params.get("cost", 0.0)
+        prestige = action_params.get("prestige", 0.0)
+        
+        # 计算地价奖励
+        land_price_reward = self._calculate_land_price_reward(action, agent)
+        
+        # 计算邻近性奖励
+        proximity_reward = self._calculate_proximity_reward(action, agent)
+        
+        # 计算总奖励
+        total_reward = base_reward + land_price_reward + proximity_reward - cost
+        
+        # 构建奖励分项
+        reward_terms = {
+            "base_reward": base_reward,
+            "land_price_reward": land_price_reward,
+            "proximity_reward": proximity_reward,
+            "cost": -cost,
+            "prestige": prestige,
+            "total": total_reward
+        }
+        
+        return total_reward, reward_terms
+    
+    def _calculate_land_price_reward(self, action: Any, agent: str) -> float:
+        """计算地价奖励"""
+        try:
+            # 获取动作的槽位信息
+            if hasattr(action, 'meta') and 'slots' in action.meta:
+                slots = action.meta['slots']
+            else:
+                return 0.0
+            
+            if not slots:
+                return 0.0
+            
+            # 计算槽位的地价
+            total_land_price = 0.0
+            for slot_id in slots:
+                if slot_id in self.enumerator.slots:
+                    slot = self.enumerator.slots[slot_id]
+                    # 获取地价（简化计算）
+                    land_price = self.land_price_system.get_land_price_at_position(
+                        slot.x, slot.y
+                    )
+                    total_land_price += land_price
+            
+            # 地价奖励 = 地价 * 系数
+            land_price_coeff = self.config.get("reward_terms", {}).get("land_price_coeff", 0.01)
+            return total_land_price * land_price_coeff
+            
+        except Exception as e:
+            self.logger.warning(f"计算地价奖励失败: {e}")
+            return 0.0
+    
+    def _calculate_proximity_reward(self, action: Any, agent: str) -> float:
+        """计算邻近性奖励"""
+        try:
+            # 获取动作的槽位信息
+            if hasattr(action, 'meta') and 'slots' in action.meta:
+                slots = action.meta['slots']
+            else:
+                return 0.0
+            
+            if not slots:
+                return 0.0
+            
+            # 计算邻近性奖励（简化实现）
+            proximity_coeff = self.config.get("reward_terms", {}).get("proximity_coeff", 0.1)
+            return len(slots) * proximity_coeff
+            
+        except Exception as e:
+            self.logger.warning(f"计算邻近性奖励失败: {e}")
+            return 0.0
+    
     def close(self) -> None:
         """关闭环境"""
         self.logger.info("环境关闭")
