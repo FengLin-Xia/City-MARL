@@ -1,0 +1,122 @@
+{
+  "success": true,
+  "phase": "training_only",
+  "training_result": {
+    "success": true,
+    "data": {
+      "num_episodes": 1,
+      "output_dir": "./test_outputs",
+      "current_episode": 1,
+      "step_logs": [],
+      "env_states": [],
+      "experiences": []
+    },
+    "step_logs": [],
+    "env_states": [],
+    "pipeline_summary": {
+      "total_steps": 7,
+      "execution_history": [
+        {
+          "timestamp": 1761165296.8333983,
+          "duration": 7.531677007675171,
+          "steps_executed": 7,
+          "successful_steps": 7,
+          "step_results": [
+            {
+              "step_name": "initialize_components",
+              "step_index": 0,
+              "success": true,
+              "duration": 7.345832109451294,
+              "error": null,
+              "retry_count": 0
+            },
+            {
+              "step_name": "reset_environment",
+              "step_index": 1,
+              "success": true,
+              "duration": 0.00099945068359375,
+              "error": null,
+              "retry_count": 0
+            },
+            {
+              "step_name": "collect_experience",
+              "step_index": 2,
+              "success": true,
+              "duration": 0.17149615287780762,
+              "error": null,
+              "retry_count": 0
+            },
+            {
+              "step_name": "train_step",
+              "step_index": 3,
+              "success": true,
+              "duration": 0.013349294662475586,
+              "error": null,
+              "retry_count": 0
+            },
+            {
+              "step_name": "update_state",
+              "step_index": 4,
+              "success": true,
+              "duration": 0.0,
+              "error": null,
+              "retry_count": 0
+            },
+            {
+              "step_name": "export_results",
+              "step_index": 5,
+              "success": true,
+              "duration": 0.0,
+              "error": null,
+              "retry_count": 0
+            },
+            {
+              "step_name": "cleanup",
+              "step_index": 6,
+              "success": true,
+              "duration": 0.0,
+              "error": null,
+              "retry_count": 0
+            }
+          ]
+        }
+      ],
+      "state_summary": {
+        "current_episode": 1,
+        "total_steps": 30,
+        "training_phase": "completed",
+        "last_update": 1761165304.3650753
+      },
+      "error_summary": {
+        "total_errors": 0
+      },
+      "performance_summary": {
+        "total_time": 7.531677007675171,
+        "total_steps": 7,
+        "throughput": 0.9294078852381263,
+        "average_step_times": {
+          "initialize_components": 7.345832109451294,
+          "reset_environment": 0.00099945068359375,
+          "collect_experience": 0.17149615287780762,
+          "train_step": 0.013349294662475586,
+          "update_state": 0.0,
+          "export_results": 0.0,
+          "cleanup": 0.0
+        },
+        "memory_usage": {
+          "initialize_components": 302931968,
+          "reset_environment": 303095808,
+          "collect_experience": 308105216,
+          "train_step": 313495552,
+          "update_state": 313495552,
+          "export_results": 313495552,
+          "cleanup": 313495552
+        },
+        "recommendations": [
+          "Low throughput detected: 0.93 steps/s"
+        ]
+      }
+    }
+  },
+  "export_result": null
+}

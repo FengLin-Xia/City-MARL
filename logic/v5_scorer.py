@@ -7,8 +7,9 @@ v5.0 动作打分器
 from typing import Dict, List, Any, Callable
 import numpy as np
 
-from contracts import ActionCandidate, RewardTerms, Sequence
+from contracts import ActionCandidate, RewardTerms, Sequence, EnvironmentState
 from config_loader import ConfigLoader
+from .v5_reward_calculator import V5RewardCalculator
 
 
 class V5ActionScorer:
@@ -24,6 +25,9 @@ class V5ActionScorer:
         self.config = config
         self.action_params = config.get("action_params", {})
         self.rules_config = config.get("rules", {})
+        
+        # 初始化新的奖励计算器
+        self.reward_calculator = V5RewardCalculator(config)
         
     def score_action(self, candidate: ActionCandidate, 
                     state: Dict[str, Any]) -> RewardTerms:
@@ -63,6 +67,19 @@ class V5ActionScorer:
             diversity=diversity_reward,
             other=other_rewards
         )
+    
+    def calculate_reward_terms(self, candidate: ActionCandidate, state: EnvironmentState) -> RewardTerms:
+        """
+        使用新的V5RewardCalculator计算奖励分项
+        
+        Args:
+            candidate: 动作候选
+            state: 环境状态
+            
+        Returns:
+            RewardTerms: 奖励分项
+        """
+        return self.reward_calculator.calculate_reward(candidate, state)
     
     def _calculate_base_reward(self, action_params: Dict[str, Any], 
                               meta: Dict[str, Any], state: Dict[str, Any]) -> float:

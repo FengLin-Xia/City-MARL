@@ -1,0 +1,1330 @@
+{
+  "success": true,
+  "phase": "training_only",
+  "training_result": {
+    "success": true,
+    "data": {
+      "num_episodes": 1,
+      "output_dir": "./test_outputs",
+      "current_episode": 0,
+      "step_logs": [],
+      "env_states": [
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        },
+        {
+          "month": 0,
+          "step": 0,
+          "budgets": {
+            "EDU": 0.0,
+            "IND": 0.0,
+            "COUNCIL": 0.0
+          },
+          "occupied_count": 0,
+          "agents": [
+            "EDU",
+            "IND",
+            "COUNCIL"
+          ]
+        }
+      ],
+      "experiences": [
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        },
+        {
+          "agent": "IND",
+          "obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "action_id": -1,
+          "logprob": 0.0,
+          "value": 0.0,
+          "reward": 0.0,
+          "next_obs": "[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]",
+          "done": false,
+          "step_log": null,
+          "next_state": {
+            "month": 0,
+            "step": 0,
+            "budgets": {
+              "EDU": 0.0,
+              "IND": 0.0,
+              "COUNCIL": 0.0
+            },
+            "occupied_count": 0,
+            "agents": [
+              "EDU",
+              "IND",
+              "COUNCIL"
+            ]
+          }
+        }
+      ]
+    },
+    "step_logs": [],
+    "env_states": [],
+    "pipeline_summary": {
+      "total_steps": 7,
+      "execution_history": [
+        {
+          "timestamp": 1761160040.912298,
+          "duration": 0.9039566516876221,
+          "steps_executed": 3,
+          "successful_steps": 3,
+          "step_results": [
+            {
+              "step_name": "initialize_components",
+              "step_index": 0,
+              "success": true,
+              "duration": 0.8479595184326172,
+              "error": null,
+              "retry_count": 0
+            },
+            {
+              "step_name": "reset_environment",
+              "step_index": 1,
+              "success": true,
+              "duration": 0.0,
+              "error": null,
+              "retry_count": 0
+            },
+            {
+              "step_name": "collect_experience",
+              "step_index": 2,
+              "success": true,
+              "duration": 0.001348733901977539,
+              "error": null,
+              "retry_count": 0
+            }
+          ]
+        }
+      ],
+      "state_summary": {
+        "current_episode": 0,
+        "total_steps": 30,
+        "training_phase": "environment_ready",
+        "last_update": 1761160041.7616062
+      },
+      "error_summary": {
+        "total_errors": 1,
+        "error_types": {
+          "RuntimeError": 1
+        },
+        "recent_errors": [
+          {
+            "timestamp": 1761160041.8162546,
+            "step_name": "train_step",
+            "error_type": "RuntimeError",
+            "error_message": "mat1 and mat2 shapes cannot be multiplied (1x10 and 64x128)",
+            "context": {
+              "step_index": 3,
+              "step_name": "train_step",
+              "data_type": "dict"
+            }
+          }
+        ]
+      },
+      "performance_summary": {
+        "total_time": 0.9049632549285889,
+        "total_steps": 3,
+        "throughput": 3.315051725759552,
+        "average_step_times": {
+          "initialize_components": 0.8479595184326172,
+          "reset_environment": 0.0,
+          "collect_experience": 0.001348733901977539
+        },
+        "memory_usage": {
+          "initialize_components": 298029056,
+          "reset_environment": 298033152,
+          "collect_experience": 300412928
+        },
+        "recommendations": [
+          "Low throughput detected: 3.32 steps/s"
+        ]
+      }
+    }
+  },
+  "export_result": null
+}
