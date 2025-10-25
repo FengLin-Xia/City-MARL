@@ -178,3 +178,4 @@ def debug_export_coordinates():
 
 if __name__ == "__main__":
     debug_export_coordinates()
+

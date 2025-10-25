@@ -235,3 +235,4 @@ def debug_duplicate_buildings():
 
 if __name__ == "__main__":
     debug_duplicate_buildings()
+
