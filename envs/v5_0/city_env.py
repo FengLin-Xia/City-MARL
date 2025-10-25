@@ -360,11 +360,18 @@ class V5CityEnvironment:
         
         # 新增：过滤全局已占用的槽位
         filtered_candidates = []
+        print(f"[CANDIDATE_FILTER] Agent {agent}, total candidates before filtering: {len(candidates)}")
+        print(f"[CANDIDATE_FILTER] Global occupied slot_ids: {len(self._global_occupied_slot_ids)}")
+        
         for candidate in candidates:
             slots = candidate.meta.get("slots", [])
             # 检查是否有槽位已被占用（使用我们的去重机制）
             if not any(self._is_slot_id_occupied(slot_id) for slot_id in slots):
                 filtered_candidates.append(candidate)
+            else:
+                print(f"[CANDIDATE_FILTER] Filtered out candidate {candidate.id} with slots {slots}")
+        
+        print(f"[CANDIDATE_FILTER] Agent {agent}, filtered candidates: {len(filtered_candidates)}")
         
         # 缓存过滤后的候选
         self._last_candidates[agent] = filtered_candidates
@@ -395,7 +402,8 @@ class V5CityEnvironment:
         
         # 修复：过滤全局已占用的槽位，包括当前智能体已选择的槽位
         filtered_candidates = []
-        print(f"[CANDIDATE_FILTER] Agent {agent}, total candidates: {len(candidates)}, global_occupied_slots: {len(self.global_occupied_slots)}, global_occupied_slot_ids: {len(self._global_occupied_slot_ids)}")
+        print(f"[CANDIDATE_FILTER] Agent {agent}, total candidates before filtering: {len(candidates)}")
+        print(f"[CANDIDATE_FILTER] Global occupied slot_ids: {len(self._global_occupied_slot_ids)}")
         
         # 获取当前智能体已选择的槽位
         current_agent_occupied = set()
@@ -429,7 +437,7 @@ class V5CityEnvironment:
             if slots_available:
                 filtered_candidates.append(candidate)
         
-        print(f"[CANDIDATE_FILTER] After filtering: {len(filtered_candidates)} candidates")
+        print(f"[CANDIDATE_FILTER] Agent {agent}, filtered candidates: {len(filtered_candidates)}")
         
         # 缓存过滤后的候选和索引
         self._last_candidates[agent] = filtered_candidates
@@ -1102,11 +1110,7 @@ class V5CityEnvironment:
                 sequence = phase_sequences[agent]
                 print(f"[STEP_PHASE_DEBUG] Agent {agent} has sequence: {sequence}")
                 
-                # 修复：在执行动作之前，重新获取候选动作并应用去重过滤
-                print(f"[STEP_PHASE_DEBUG] Re-fetching candidates for {agent} with dedup")
-                fresh_candidates, fresh_cand_idx = self.get_action_candidates_with_index(agent)
-                print(f"[STEP_PHASE_DEBUG] Fresh candidates count for {agent}: {len(fresh_candidates)}")
-                
+                # 注意：动作序列生成时已经应用了去重过滤，无需重新获取
                 if topic_enabled("action_execution"):
                     self.logger.info(f"[ACTION_EXEC] 执行智能体 {agent} 的动作序列: {sequence}")
                 reward, reward_terms = self._execute_agent_sequence(agent, sequence)

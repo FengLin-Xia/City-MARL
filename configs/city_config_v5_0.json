@@ -44,10 +44,11 @@
         "evolution": {
             "enabled": true,
             "road_activation_month": 0,
-            "hub_activation_month": 7,
+            "hub_activation_month": 2,
             "hub_growth_duration_months": 6,
             "hub_initial_peak": 0.7,
-            "hub_final_peak": 1.0
+            "hub_final_peak": 1.0,
+            "hub3_activation_month": 15
         }
     },
     "slots": {
@@ -68,6 +69,10 @@
             [
                 112,
                 121
+            ],
+            [
+                89,
+                73
             ]
         ]
     },
@@ -91,6 +96,15 @@
                 "R0": 2,
                 "dR": 1.5,
                 "weight": 0.5
+            },
+            {
+                "id": "hub3",
+                "x": 89,
+                "y": 73,
+                "R0": 3,
+                "dR": 1.5,
+                "weight": 0.5,
+                "activation_month": 15
             }
         ]
     },
@@ -174,7 +188,10 @@
                 "action_ids": [
                     3,
                     4,
-                    5
+                    5,
+                    9,
+                    10,
+                    11
                 ],
                 "obs_pack": [
                     "geo",
@@ -227,7 +244,10 @@
         "5": {"desc": "IND_L", "base_cost": 2400, "cost": 2400, "base_reward": 520, "reward": 520, "opex": 300, "rent": 70, "prestige_base": -0.1, "pollution": 1.2, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 2000, "prestige": -0.1},
         "6": {"desc": "COUNCIL_A", "base_cost": 570, "cost": 570, "base_reward": 570, "reward": 570, "opex": 50, "rent": 0, "prestige_base": 0.3, "pollution": 0.1, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 0, "prestige": 0.3},
         "7": {"desc": "COUNCIL_B", "base_cost": 870, "cost": 870, "base_reward": 870, "reward": 870, "opex": 80, "rent": 0, "prestige_base": 0.7, "pollution": 0.2, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 1000, "prestige": 0.7},
-        "8": {"desc": "COUNCIL_C", "base_cost": 1150, "cost": 1150, "base_reward": 1150, "reward": 1150, "opex": 120, "rent": 0, "prestige_base": 1.2, "pollution": 0.3, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 2000, "prestige": 1.2}
+        "8": {"desc": "COUNCIL_C", "base_cost": 1150, "cost": 1150, "base_reward": 1150, "reward": 1150, "opex": 120, "rent": 0, "prestige_base": 1.2, "pollution": 0.3, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 2000, "prestige": 1.2},
+        "9": {"desc": "IND_A", "base_cost": 1100, "cost": 1100, "base_reward": 220, "reward": 220, "opex": 120, "rent": 30, "prestige_base": 0.3, "pollution": 0.7, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 0, "prestige": 0.3, "hub3_only": true},
+        "10": {"desc": "IND_B", "base_cost": 1800, "cost": 1800, "base_reward": 380, "reward": 380, "opex": 200, "rent": 50, "prestige_base": 0.2, "pollution": 1.0, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 1000, "prestige": 0.2, "hub3_only": true},
+        "11": {"desc": "IND_C", "base_cost": 2800, "cost": 2800, "base_reward": 600, "reward": 600, "opex": 350, "rent": 80, "prestige_base": 0.0, "pollution": 1.4, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 2000, "prestige": 0.0, "hub3_only": true}
     },
     "relations": {
         "across_river": {
@@ -672,19 +692,19 @@
             "budget": "INFO"
         },
         "topics": {
-            "candidates": false,
-            "river_filter": false,
-            "occupied_slots": false,
+            "candidates": true,
+            "river_filter": true,
+            "occupied_slots": true,
             "export_coords": true,
-            "reward_terms": false,
+            "reward_terms": true,
             "policy_select": true,
-            "pipeline_traceback": false,
-            "phase_switch": false,
+            "pipeline_traceback": true,
+            "phase_switch": true,
             "budget_flow": true,
-            "experience_collection": false,
-            "training_step": false,
-            "environment_step": false,
-            "action_execution": false
+            "experience_collection": true,
+            "training_step": true,
+            "environment_step": true,
+            "action_execution": true
         },
         "sampling": {
             "every_n_steps": 1,
@@ -710,6 +730,14 @@
         "unique_action_ids": true,
         "non_negative_budget": true
     },
+    "debug": {
+        "slot_duplicate_check": {
+            "enabled": true,
+            "mask_update": true,
+            "sampling": true,
+            "point_selection": true
+        }
+    },
     "multi_action": {
         "enabled": true,
         "max_actions_per_step": 3,
@@ -717,6 +745,8 @@
         "candidate_topP": 64,
         "dup_policy": "no_repeat_point",
         "stop_bias": -0.2,
+        "temperature": 2.0,
+        "entropy_bonus": 0.1,
         "penalty_k": 0.05,
         "curriculum": {
             "enabled": true,
