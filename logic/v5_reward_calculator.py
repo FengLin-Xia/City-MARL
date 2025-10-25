@@ -48,16 +48,9 @@ class V5RewardCalculator:
         })
     
     def calculate_reward(self, action: ActionCandidate, state: EnvironmentState) -> RewardTerms:
-        """
-        计算完整的reward - 参照v4.1的_calc_crp方法
+        """v5.0 完整 CRP 计算 (cost / reward / prestige)"""
+        print(f"[V5RewardCalculator] 被调用了！action_id={action.id}, state_month={state.month}")
         
-        Args:
-            action: 动作候选
-            state: 环境状态
-            
-        Returns:
-            RewardTerms: 奖励分项
-        """
         if not self.enabled:
             return RewardTerms(
                 base_reward=0.0,
@@ -68,76 +61,93 @@ class V5RewardCalculator:
                 cost=0.0,
                 total=0.0
             )
-        
-        # 1. 基础成本计算
-        base_cost = self._calculate_base_cost(action, state)
-        
-        # 2. 基础收入计算
-        base_reward = self._calculate_base_reward(action, state)
-        
-        # 3. 地价敏感度计算
-        land_price_reward = 0.0
-        if self.components.get("land_price", True):
-            land_price_reward = self.land_price_calculator.calculate_land_price_sensitivity(action, state)
-        
-        # 4. 邻近性奖励计算
-        proximity_reward = 0.0
-        if self.components.get("proximity", True):
-            proximity_reward = self.proximity_calculator.calculate_proximity_reward(action, state)
-        
-        # 5. 河流溢价计算
+
+        # ==== 读取动作与环境元数据 ====
+        meta: Dict[str, Any] = getattr(action, "meta", {}) or {}
+        zone = meta.get("zone", "far")               # near / mid / far
+        land_price_norm = float(meta.get("land_price_norm", 0.0))  # 0~1
+        river_dist_m = float(meta.get("river_dist_m", 1e9))        # 米
+        adj = int(meta.get("adj", 0))                # 0/1 是否邻接
+
+        # ==== 读取静态动作参数 ====
+        ap = self.config.get("action_params", {}).get(str(action.id), {})
+        base_cost = ap.get("base_cost", 0.0)
+        base_reward = ap.get("base_reward", 0.0)
+        opex = ap.get("opex", 0.0)
+        rent = ap.get("rent", 0.0)
+        land_price_k = ap.get("land_price_k", 0.0)
+        river_pct = ap.get("river_pct", 0.0)
+        size_bonus_cfg = ap.get("size_bonus", 0.0)
+
+        # ==== 区位常数 ====
+        zone_cost_tbl = self.reward_config.get("zone_cost", {"near": 200, "mid": 100, "far": 0})
+        zone_reward_tbl = self.reward_config.get("zone_reward", {"near": 80, "mid": 40, "far": 0})
+        zone_cost = zone_cost_tbl.get(zone, 0.0)
+        zone_reward = zone_reward_tbl.get(zone, 0.0)
+
+        # ==== 成本计算 ====
+        land_price_cost = land_price_norm * 1000.0
+        cost = base_cost + zone_cost + land_price_cost
+
+        # ==== 收益各项 ====
+        # 河流溢价
         river_premium = 0.0
         if self.components.get("river", True):
             river_premium = self.river_calculator.calculate_river_premium(action, state)
-        
-        # 6. 规模奖励计算
+        # 基础 reward_base
+        reward_base = base_reward + zone_reward - opex + river_premium
+        # 租金逻辑
+        if action.id in [3, 4, 5]:  # IND pays rent
+            reward_base -= rent
+        elif action.id in [0, 1, 2]:  # EDU receives rent
+            reward_base += rent
+        # land_price 放大
+        reward_lp_factor = 1.0 + land_price_k * land_price_norm
+        reward = reward_base * reward_lp_factor
+
+        # ==== 规模/邻近奖励 ====
+        proximity_bonus = 0.0
+        if self.components.get("proximity", True):
+            proximity_bonus = self.proximity_calculator.calculate_proximity_reward(action, state)
         size_bonus = 0.0
         if self.components.get("size_bonus", True):
-            size_bonus = self.size_calculator.calculate_size_bonus(action, state)
-        
-        # 计算总奖励 - 采用 budget - cost + reward 公式
-        # 获取智能体预算
-        agent_budget = self._get_agent_budget(action, state)
-        
-        # 计算剩余预算
-        remaining_budget = agent_budget - base_cost
-        
-        # 计算总奖励: 剩余预算 + 各种奖励
-        total_reward = remaining_budget + base_reward + land_price_reward + proximity_reward + river_premium + size_bonus
-        
-        # 应用舍入
-        if self.rounding_mode == "nearest":
-            total_reward = round(total_reward)
-            base_reward = round(base_reward)
-            land_price_reward = round(land_price_reward)
-            proximity_reward = round(proximity_reward)
-            river_premium = round(river_premium)
-            size_bonus = round(size_bonus)
-            base_cost = round(base_cost)
-        
-        # 创建奖励分项
-        reward_terms = RewardTerms(
-            revenue=base_reward,
-            cost=-base_cost,  # 成本为负值
-            prestige=0.0,  # 声望暂时设为0
-            proximity=proximity_reward,
-            diversity=0.0,  # 多样性暂时设为0
+            size_bonus = size_bonus_cfg  # 已由表给定
+
+        total_reward = reward + proximity_bonus + size_bonus
+
+        # ==== prestige 计算（简要） ====
+        prestige = ap.get("prestige_base", 0.0)
+        if zone == "near":
+            prestige += 1.0
+        prestige += adj * 1.0
+        pollution_penalty = ap.get("pollution", 0.0)
+        prestige -= pollution_penalty
+
+        # ==== 构造返回 ====
+        return RewardTerms(
+            revenue=total_reward,
+            cost=-cost,
+            prestige=prestige,
+            proximity=proximity_bonus,
+            diversity=0.0,
             other={
-                "land_price_reward": land_price_reward,
                 "river_premium": river_premium,
+                "land_price_cost": land_price_cost,
+                "zone_cost": zone_cost,
+                "zone_reward": zone_reward,
                 "size_bonus": size_bonus,
-                "remaining_budget": remaining_budget,
-                "agent_budget": agent_budget,
+                "base_reward": base_reward,
+                "opex": opex,
+                "rent": rent,
+                "land_price_k": land_price_k,
+                "river_pct": river_pct,
+                "zone": zone,
+                "land_price_norm": land_price_norm,
+                "river_dist_m": river_dist_m,
+                "adj": adj,
                 "total": total_reward
             }
         )
-        
-        if self.debug_mode:
-            print(f"[REWARD_DEBUG] Action {action.id}: base={base_reward}, land_price={land_price_reward}, "
-                  f"proximity={proximity_reward}, river={river_premium}, size={size_bonus}, "
-                  f"cost={base_cost}, total={total_reward}")
-        
-        return reward_terms
     
     def _calculate_base_cost(self, action: ActionCandidate, state: EnvironmentState) -> float:
         """计算基础成本"""

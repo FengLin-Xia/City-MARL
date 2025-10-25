@@ -120,6 +120,15 @@ class BudgetPoolManager:
             return pool.get_remaining()
         return 0.0
     
+    def set_budget(self, agent: str, budget: float) -> None:
+        """设置智能体的预算"""
+        # 更新独立预算
+        if agent in self.individual_budgets:
+            self.individual_budgets[agent] = budget
+        else:
+            # 如果智能体不在独立预算中，添加到独立预算
+            self.individual_budgets[agent] = budget
+    
     def reset_all_pools(self) -> None:
         """重置所有预算池"""
         # 重置预算池

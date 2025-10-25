@@ -22,6 +22,7 @@ from .budget_pool import BudgetPoolManager
 from logic.v5_enumeration import V5ActionEnumerator
 from logic.v5_scorer import V5ActionScorer
 from logic.v5_selector import V5SequenceSelector
+from logic.v5_reward_calculator import V5RewardCalculator
 from utils.logger_factory import get_logger, topic_enabled, sampling_allows
 
 
@@ -50,10 +51,11 @@ class V5CityEnvironment:
         # 初始化预算管理器
         self.budget_manager = BudgetPoolManager(self.budget_config)
         
-        # 初始化动作枚举器、评分器、选择器
+        # 初始化动作枚举器、评分器、选择器、奖励计算器
         self.enumerator = V5ActionEnumerator(self.config)
         self.scorer = V5ActionScorer(self.config)
         self.selector = V5SequenceSelector(self.config)
+        self.reward_calculator = V5RewardCalculator(self.config)
         
         # 加载槽位数据
         self._load_slots_data()
@@ -172,7 +174,7 @@ class V5CityEnvironment:
         self.current_month = 0
         self.current_step = 0
         
-        # 重置预算（重新初始化预算管理器以读取配置中的初始预算）
+        # 重置预算（每个episode都重新初始化预算）
         self.budget_manager = BudgetPoolManager(self.config)
         self.budgets = {agent: self.budget_manager.get_remaining_budget(agent) for agent in self.agents}
         self.budget_history = {agent: [self.budgets[agent]] for agent in self.agents}
@@ -232,6 +234,15 @@ class V5CityEnvironment:
             "budgets": self.budgets.copy(),
             "reward_terms": reward_terms_all
         }
+        
+        # 创建新的环境状态
+        new_state = EnvironmentState(
+            month=self.current_month,
+            step=self.current_step,
+            budgets=self.budgets.copy(),
+            occupied_slots=list(self.occupied_slots),
+            land_price_field=self.land_price_system.get_land_price_field() if self.land_price_system else None
+        )
         
         return new_state, rewards, done, info
     
@@ -348,11 +359,34 @@ class V5CityEnvironment:
             self.logger.warning(f"未找到action_id={action_id}的候选")
             return 0.0, {}
         
-        # 扣除预算
-        cost = cand.meta.get("cost", 0)
+        # 使用V5RewardCalculator动态计算成本和奖励
+        print(f"[DEBUG] 准备调用V5RewardCalculator，action_id={action_id}")
+        current_state = self._get_current_environment_state()
+        print(f"[DEBUG] 环境状态: month={current_state.month}, budgets={current_state.budgets}")
+        
+        reward_terms = self.reward_calculator.calculate_reward(
+            action=cand,
+            state=current_state
+        )
+        
+        print(f"[DEBUG] V5RewardCalculator返回: cost={reward_terms.cost}, revenue={reward_terms.revenue}")
+        
+        cost = reward_terms.cost
+        reward = reward_terms.revenue
+        
+        # 直接更新预算：先扣除成本，再增加奖励
+        old_budget = self.budgets[agent]
         if cost > 0:
-            self.budget_manager.deduct(agent, cost)
-            self.budgets[agent] = self.budget_manager.get_remaining_budget(agent)
+            self.budgets[agent] -= cost
+        if reward > 0:
+            self.budgets[agent] += reward
+            
+        # 同步到预算管理器
+        self.budget_manager.set_budget(agent, self.budgets[agent])
+        
+        # 预算流调试日志
+        if topic_enabled("budget_flow"):
+            self.logger.info(f"[BUDGET_FLOW] {agent}: {old_budget:.1f} -> {self.budgets[agent]:.1f} (cost: {cost:.1f}, reward: {reward:.1f})")
         
         # 标记槽位为已占用
         for slot_id in cand.meta.get("slots", []):
@@ -381,11 +415,34 @@ class V5CityEnvironment:
             self.logger.warning(f"未找到action_id={action_id}的候选")
             return 0.0, {}
         
-        # 扣除预算
-        cost = cand.meta.get("cost", 0)
+        # 使用V5RewardCalculator动态计算成本和奖励
+        print(f"[DEBUG] 准备调用V5RewardCalculator，action_id={action_id}")
+        current_state = self._get_current_environment_state()
+        print(f"[DEBUG] 环境状态: month={current_state.month}, budgets={current_state.budgets}")
+        
+        reward_terms = self.reward_calculator.calculate_reward(
+            action=cand,
+            state=current_state
+        )
+        
+        print(f"[DEBUG] V5RewardCalculator返回: cost={reward_terms.cost}, revenue={reward_terms.revenue}")
+        
+        cost = reward_terms.cost
+        reward = reward_terms.revenue
+        
+        # 直接更新预算：先扣除成本，再增加奖励
+        old_budget = self.budgets[agent]
         if cost > 0:
-            self.budget_manager.deduct(agent, cost)
-            self.budgets[agent] = self.budget_manager.get_remaining_budget(agent)
+            self.budgets[agent] -= cost
+        if reward > 0:
+            self.budgets[agent] += reward
+            
+        # 同步到预算管理器
+        self.budget_manager.set_budget(agent, self.budgets[agent])
+        
+        # 预算流调试日志
+        if topic_enabled("budget_flow"):
+            self.logger.info(f"[BUDGET_FLOW] {agent}: {old_budget:.1f} -> {self.budgets[agent]:.1f} (cost: {cost:.1f}, reward: {reward:.1f})")
         
         # 标记槽位为已占用
         for slot_id in cand.meta.get("slots", []):
@@ -479,6 +536,27 @@ class V5CityEnvironment:
                         })
         
         return positions
+    
+    def _get_current_state_dict(self) -> Dict[str, Any]:
+        """获取当前状态字典，用于V5RewardCalculator"""
+        return {
+            "month": self.current_month,
+            "step": self.current_step,
+            "budgets": self.budgets.copy(),
+            "occupied_slots": self.occupied_slots.copy(),
+            "land_price_field": self.land_price_system.get_land_price_field() if self.land_price_system else None,
+            "agents": self.agents
+        }
+    
+    def _get_current_environment_state(self) -> EnvironmentState:
+        """获取当前环境状态，用于V5RewardCalculator"""
+        return EnvironmentState(
+            month=self.current_month,
+            land_prices=self._get_actual_land_prices(),
+            buildings=self._get_actual_buildings(),
+            budgets=self.budgets.copy(),
+            slots=self._get_actual_slots()
+        )
     
     def _get_candidate_from_snapshot(self, agent: str, action_id: int) -> Optional[ActionCandidate]:
         """从快照中获取候选
@@ -928,50 +1006,6 @@ class V5CityEnvironment:
         
         return new_state, rewards, done, info
     
-    def _execute_agent_sequence(self, agent: str, sequence: Sequence) -> Tuple[float, Dict[str, float]]:
-        """
-        执行智能体动作序列并计算奖励
-        
-        Args:
-            agent: 智能体名称
-            sequence: 动作序列
-            
-        Returns:
-            (reward, reward_terms): 总奖励和奖励分项
-        """
-        if not sequence or not sequence.actions:
-            return 0.0, {}
-        
-        total_reward = 0.0
-        reward_terms = {}
-        
-        # 获取智能体配置
-        agent_config = self.agents_config.get("defs", {}).get(agent, {})
-        action_ids = agent_config.get("action_ids", [])
-        
-        # 处理每个动作
-        for action in sequence.actions:
-            if hasattr(action, 'meta') and 'action_id' in action.meta:
-                action_id = action.meta['action_id']
-            else:
-                # 兼容旧版本
-                action_id = action if isinstance(action, int) else action.atype
-            
-            if action_id in action_ids:
-                # 计算单个动作的奖励
-                action_reward, action_terms = self._calculate_action_reward(
-                    agent, action_id, action
-                )
-                total_reward += action_reward
-                
-                # 合并奖励分项
-                for key, value in action_terms.items():
-                    if key in reward_terms:
-                        reward_terms[key] += value
-                    else:
-                        reward_terms[key] = value
-        
-        return total_reward, reward_terms
     
     def _calculate_action_reward(self, agent: str, action_id: int, action: Any) -> Tuple[float, Dict[str, float]]:
         """

@@ -93,6 +93,20 @@ class V5TXTExporter:
         """按月份分组数据"""
         monthly_data = {}
         
+        # 如果数据超过30个月，说明有多个episode，需要找到最后一个episode的起始位置
+        if len(step_logs) > 30:
+            print(f"[TXT_EXPORTER] 检测到多个episode数据({len(step_logs)}条)，寻找最后一个episode")
+            
+            # 找到最后一个episode的起始位置（从month=1开始的数据）
+            last_episode_start = 0
+            for i, state in enumerate(env_states):
+                if state.month == 1 and i > 0:  # 找到新的episode开始
+                    last_episode_start = i
+            
+            print(f"[TXT_EXPORTER] 最后一个episode从索引{last_episode_start}开始")
+            step_logs = step_logs[last_episode_start:]
+            env_states = env_states[last_episode_start:]
+        
         for log, state in zip(step_logs, env_states):
             month = state.month
             if month not in monthly_data:

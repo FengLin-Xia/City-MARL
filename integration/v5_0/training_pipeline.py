@@ -78,6 +78,12 @@ class V5TrainingPipeline:
             last_result = self.pipeline.run(data)
             # 下一轮继续沿用返回的数据
             data = last_result.data if last_result and last_result.data is not None else data
+            
+            # 如果不是最后一个episode，清空数据以避免累积
+            if ep < num_episodes:
+                print(f"[TRAINING] Episode {ep} completed, clearing data for next episode")
+                data["step_logs"] = []
+                data["env_states"] = []
         
         if last_result and last_result.success:
             print(f"[TRAINING] Training completed successfully")
@@ -227,6 +233,9 @@ class V5TrainingPipeline:
         every_n = int(export_cfg.get("every_n_episodes", 0))
         current_ep = int(data.get("current_episode", 0)) + 1
         should_export = enabled and (every_n == 0 or (current_ep % every_n == 0) or (current_ep == int(data.get("num_episodes", current_ep))))
+        # 强制只在最后一个episode导出
+        if every_n == 1:
+            should_export = should_export and (current_ep == int(data.get("num_episodes", current_ep)))
         if not should_export:
             print("[TRAINING] Export skipped by config")
             return data

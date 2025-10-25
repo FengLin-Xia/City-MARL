@@ -219,60 +219,15 @@
         }
     },
     "action_params": {
-        "0": {
-            "desc": "EDU_S",
-            "cost": 650,
-            "reward": 160,
-            "prestige": 0.2
-        },
-        "1": {
-            "desc": "EDU_M",
-            "cost": 1150,
-            "reward": 530,
-            "prestige": 0.6
-        },
-        "2": {
-            "desc": "EDU_L",
-            "cost": 2700,
-            "reward": 360,
-            "prestige": 1.0
-        },
-        "3": {
-            "desc": "IND_S",
-            "cost": 900,
-            "reward": 150,
-            "prestige": 0.2
-        },
-        "4": {
-            "desc": "IND_M",
-            "cost": 1500,
-            "reward": 280,
-            "prestige": 0.1
-        },
-        "5": {
-            "desc": "IND_L",
-            "cost": 2400,
-            "reward": 450,
-            "prestige": -0.1
-        },
-        "6": {
-            "desc": "COUNCIL_A",
-            "cost": 570,
-            "reward": 570,
-            "prestige": 0.3
-        },
-        "7": {
-            "desc": "COUNCIL_B",
-            "cost": 870,
-            "reward": 870,
-            "prestige": 0.7
-        },
-        "8": {
-            "desc": "COUNCIL_C",
-            "cost": 1150,
-            "reward": 1150,
-            "prestige": 1.2
-        }
+        "0": {"desc": "EDU_S", "base_cost": 700, "cost": 700, "base_reward": 140, "reward": 140, "opex": 70, "rent": 25, "prestige_base": 0.2, "pollution": 0.2, "land_price_k": 0.10, "river_pct": 15.0, "size_bonus": 0, "prestige": 0.2},
+        "1": {"desc": "EDU_M", "base_cost": 1200, "cost": 1200, "base_reward": 260, "reward": 260, "opex": 120, "rent": 45, "prestige_base": 0.6, "pollution": 0.4, "land_price_k": 0.10, "river_pct": 15.0, "size_bonus": 1000, "prestige": 0.6},
+        "2": {"desc": "EDU_L", "base_cost": 1900, "cost": 1900, "base_reward": 420, "reward": 420, "opex": 190, "rent": 70, "prestige_base": 1.0, "pollution": 0.6, "land_price_k": 0.10, "river_pct": 15.0, "size_bonus": 2000, "prestige": 1.0},
+        "3": {"desc": "IND_S", "base_cost": 900, "cost": 900, "base_reward": 180, "reward": 180, "opex": 100, "rent": 25, "prestige_base": 0.2, "pollution": 0.6, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 0, "prestige": 0.2},
+        "4": {"desc": "IND_M", "base_cost": 1500, "cost": 1500, "base_reward": 320, "reward": 320, "opex": 180, "rent": 45, "prestige_base": 0.1, "pollution": 0.9, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 1000, "prestige": 0.1},
+        "5": {"desc": "IND_L", "base_cost": 2400, "cost": 2400, "base_reward": 520, "reward": 520, "opex": 300, "rent": 70, "prestige_base": -0.1, "pollution": 1.2, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 2000, "prestige": -0.1},
+        "6": {"desc": "COUNCIL_A", "base_cost": 570, "cost": 570, "base_reward": 570, "reward": 570, "opex": 50, "rent": 0, "prestige_base": 0.3, "pollution": 0.1, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 0, "prestige": 0.3},
+        "7": {"desc": "COUNCIL_B", "base_cost": 870, "cost": 870, "base_reward": 870, "reward": 870, "opex": 80, "rent": 0, "prestige_base": 0.7, "pollution": 0.2, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 1000, "prestige": 0.7},
+        "8": {"desc": "COUNCIL_C", "base_cost": 1150, "cost": 1150, "base_reward": 1150, "reward": 1150, "opex": 120, "rent": 0, "prestige_base": 1.2, "pollution": 0.3, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 2000, "prestige": 1.2}
     },
     "relations": {
         "across_river": {
@@ -649,7 +604,7 @@
     },
     "export": {
         "enabled": true,
-        "every_n_episodes": 0
+        "every_n_episodes": 1
     },
     "reward_terms": {
         "enabled": true,
@@ -667,7 +622,7 @@
             "LP_idx_min": 10,
             "LP_idx_max": 100,
             "LandPriceBase": 11.0,
-            "RewardLP_k": {"IND": 0.25, "EDU": 0.10, "COUNCIL": 0.10}
+            "RewardLP_k": {"IND": 0.25, "EDU": 0.10, "COUNCIL": 0.15}
         },
         "proximity": {
             "proximity_threshold": 10.0,
@@ -681,10 +636,12 @@
             "RiverPremiumCap_kGBP": 10000.0
         },
         "size_bonus": {
-            "0": 0, "1": 50, "2": 100,
-            "3": 0, "4": 50, "5": 100,
-            "6": 0, "7": 50, "8": 100
-        }
+            "0": 0, "1": 1000, "2": 2000,
+            "3": 0, "4": 1000, "5": 2000,
+            "6": 0, "7": 1000, "8": 2000
+        },
+        "zone_cost": {"near": 200, "mid": 100, "far": 0},
+        "zone_reward": {"near": 80, "mid": 40, "far": 0}
     },
     "checkpointing": {
         "save_best_metric": "eval/return_mean",
@@ -718,12 +675,12 @@
             "candidates": false,
             "river_filter": false,
             "occupied_slots": false,
-            "export_coords": false,
+            "export_coords": true,
             "reward_terms": false,
             "policy_select": true,
             "pipeline_traceback": false,
             "phase_switch": false,
-            "budget_flow": false,
+            "budget_flow": true,
             "experience_collection": false,
             "training_step": false,
             "environment_step": false,
