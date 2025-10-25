@@ -256,11 +256,11 @@ class V5ActionEnumerator:
         available_slots = self._apply_candidate_range_filter(available_slots, current_month)
         available_slots = self._apply_river_restriction_filter(available_slots, agent)
         
-        # 为每个槽位创建一个点（简化实现：每个槽位=一个点）
+        # 为每个槽位创建一个点（修复：使用slot_id作为point_id，避免哈希冲突）
         available_points = {}
         for slot_id in available_slots:
             slot = self.slots[slot_id]
-            point_id = hash(slot_id) % 1000000  # 使用slot_id的哈希作为point_id
+            point_id = slot_id  # 直接使用slot_id作为point_id，避免哈希冲突
             lp_norm = float(lp_provider(slot_id))
             zone = self._calculate_zone(slot_id)
             

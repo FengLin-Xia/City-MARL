@@ -400,16 +400,53 @@ class V5RLSelector:
             stop_logit = network.forward_stop(feat).squeeze()
             stop_prob = self._compute_stop_prob(stop_logit, point_mask, k, max_k)
             
-            # 合并点分布和STOP
-            p_probs = F.softmax(p_logits_masked[:len(cand_idx.points)], dim=-1)
-            probs_with_stop = torch.cat([p_probs * (1 - stop_prob), stop_prob.unsqueeze(0)])
+            # 添加调试信息（可配置）
+            if self.config.get("debug", {}).get("slot_duplicate_check", {}).get("sampling", False):
+                print(f"[SAMPLE_DEBUG] Agent {agent}, step {k}")
+                print(f"[SAMPLE_DEBUG] Point mask: {point_mask}")
+                print(f"[SAMPLE_DEBUG] Available points: {torch.where(point_mask > 0)[0].tolist()}")
+                print(f"[SAMPLE_DEBUG] P_logits shape: {p_logits_masked.shape}")
+            
+            # 合并点分布和STOP，应用点掩码
+            # 修复：添加温度参数控制概率分布，避免过于集中
+            temperature = self.config.get("multi_action", {}).get("temperature", 1.0)
+            p_probs = F.softmax(p_logits_masked[:len(cand_idx.points)] / temperature, dim=-1)
+            # 修复：应用点掩码，禁用已选择的点
+            p_probs_masked = p_probs * point_mask[:len(p_probs)]
+            probs_with_stop = torch.cat([p_probs_masked * (1 - stop_prob), stop_prob.unsqueeze(0)])
             probs_with_stop = probs_with_stop / (probs_with_stop.sum() + 1e-8)
             
-            # 采样点
+            # 修复：采样点，强制排除已选择的点，添加熵正则化
             if greedy:
-                choice_idx = torch.argmax(probs_with_stop).item()
+                # 贪心选择：选择概率最高的未选择点
+                valid_indices = torch.where(point_mask[:len(p_probs)] > 0)[0]
+                if len(valid_indices) == 0:
+                    # 没有可用点，选择STOP
+                    choice_idx = len(p_probs)
+                else:
+                    valid_probs = p_probs[valid_indices]
+                    # 添加熵正则化，避免过于集中
+                    entropy_bonus = self.config.get("multi_action", {}).get("entropy_bonus", 0.1)
+                    valid_probs = valid_probs + entropy_bonus * torch.log(valid_probs + 1e-8)
+                    best_idx = torch.argmax(valid_probs).item()
+                    choice_idx = valid_indices[best_idx].item()
             else:
-                choice_idx = torch.multinomial(probs_with_stop + 1e-8, 1).item()
+                # 随机采样：只从可用点中采样
+                valid_indices = torch.where(point_mask[:len(p_probs)] > 0)[0]
+                if len(valid_indices) == 0:
+                    # 没有可用点，选择STOP
+                    choice_idx = len(p_probs)
+                else:
+                    valid_probs = p_probs[valid_indices]
+                    valid_probs = valid_probs / valid_probs.sum()
+                    sampled_idx = torch.multinomial(valid_probs + 1e-8, 1).item()
+                    choice_idx = valid_indices[sampled_idx].item()
+            
+            # 添加调试信息（可配置）
+            if self.config.get("debug", {}).get("slot_duplicate_check", {}).get("point_selection", False):
+                print(f"[POINT_DEBUG] Agent {agent}, step {k}, selected point {choice_idx}")
+                print(f"[POINT_DEBUG] Valid indices: {valid_indices.tolist()}")
+                print(f"[POINT_DEBUG] Point probabilities: {p_probs}")
             
             # 检查STOP
             if choice_idx == len(p_probs):
@@ -441,10 +478,13 @@ class V5RLSelector:
             action_type = cand_idx.types_per_point[p_idx][t_idx]
             
             # 记录
+            # 修复：添加槽位ID信息到meta中，用于槽位占用更新
+            point_id = cand_idx.points[p_idx]
+            slots = cand_idx.point_to_slots.get(point_id, [])
             selected_actions.append(AtomicAction(
                 point=p_idx, 
                 atype=action_type,
-                meta={"action_id": action_type, "point_id": cand_idx.points[p_idx]}
+                meta={"action_id": action_type, "point_id": point_id, "slots": slots}
             ))
             total_logprob += torch.log(probs_with_stop[p_idx] + 1e-8).item()
             total_logprob += torch.log(t_probs[t_idx] + 1e-8).item()
@@ -532,6 +572,13 @@ class V5RLSelector:
         # 3. 槽位冲突检查（简化版本）
         # 后续如果需要更复杂的约束，可以在这里添加
         pass
+        
+        # 添加调试信息（可配置）
+        if self.config.get("debug", {}).get("slot_duplicate_check", {}).get("mask_update", False):
+            print(f"[MASK_DEBUG] Agent {agent}, selected point {p_idx}")
+            print(f"[MASK_DEBUG] Point mask after update: {point_mask}")
+            print(f"[MASK_DEBUG] Available points: {torch.where(point_mask > 0)[0].tolist()}")
+            print(f"[MASK_DEBUG] Selected slots: {selected_slots}")
     
     def _prune_candidates(self, cand_idx: CandidateIndex, topP: int = 128) -> CandidateIndex:
         """裁剪候选（保留Top-P个点）"""
@@ -606,6 +653,7 @@ class V5RLSelector:
                 net.load_state_dict(checkpoint['critic_networks'][agent])
         
         print(f"网络权重已从 {path} 加载")
+
 
 
 

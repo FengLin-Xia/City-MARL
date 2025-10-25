@@ -76,15 +76,69 @@ class V5CityEnvironment:
         # 占用槽位追踪
         self.occupied_slots: Set[str] = set()
         
+        # 全局槽位占用追踪（跨月管理）
+        self.global_occupied_slots: Set[str] = set()
+        
         # 候选快照（用于执行时回溯）
         self._last_candidates: Dict[str, List[ActionCandidate]] = {}
         self._last_cand_idx: Dict[str, CandidateIndex] = {}
+        
+        # 当前智能体槽位占用跟踪
+        self._current_agent_occupied_slots: Dict[str, Set[str]] = {}
+        
+        # 全局槽位ID占用跟踪（基于slot_id去重）
+        self._global_occupied_slot_ids: Set[str] = set()
+        
+        # 全局坐标占用跟踪（基于浮点坐标去重）
+        self._global_occupied_coordinates: Set[Tuple[float, float]] = set()
         
         # 历史记录
         self.step_logs: List[StepLog] = []
         self.env_states: List[EnvironmentState] = []
         
         self.logger.info(f"v5.0 环境初始化完成，agents={self.agents}, total_months={self.total_months}")
+    
+    def _is_slot_id_occupied(self, slot_id: str) -> bool:
+        """检查槽位ID是否已被占用
+        
+        Args:
+            slot_id: 要检查的槽位ID
+            
+        Returns:
+            是否已被占用
+        """
+        return slot_id in self._global_occupied_slot_ids
+    
+    def _mark_slot_id_occupied(self, slot_id: str) -> None:
+        """标记槽位ID为已占用
+        
+        Args:
+            slot_id: 要标记的槽位ID
+        """
+        self._global_occupied_slot_ids.add(slot_id)
+        print(f"[SLOT_ID_MARK] 标记槽位 {slot_id} 为已占用")
+    
+    def _is_coordinate_occupied(self, x: float, y: float) -> bool:
+        """检查坐标是否已被占用（基于浮点坐标）
+        
+        Args:
+            x, y: 要检查的坐标
+            
+        Returns:
+            是否已被占用
+        """
+        coord = (round(x, 1), round(y, 1))  # 保留1位小数精度
+        return coord in self._global_occupied_coordinates
+    
+    def _mark_coordinate_occupied(self, x: float, y: float) -> None:
+        """标记坐标为已占用（基于浮点坐标）
+        
+        Args:
+            x, y: 要标记的坐标
+        """
+        coord = (round(x, 1), round(y, 1))  # 保留1位小数精度
+        self._global_occupied_coordinates.add(coord)
+        print(f"[COORDINATE_MARK] 标记坐标 {coord} 为已占用")
     
     def _load_slots_data(self) -> None:
         """加载槽位数据到枚举器"""
@@ -181,6 +235,7 @@ class V5CityEnvironment:
         
         # 清空槽位
         self.occupied_slots.clear()
+        self.global_occupied_slots.clear()
         
         # 清空历史
         self.step_logs.clear()
@@ -189,6 +244,15 @@ class V5CityEnvironment:
         # 清空快照
         self._last_candidates.clear()
         self._last_cand_idx.clear()
+        
+        # 清空当前智能体槽位占用
+        self._current_agent_occupied_slots.clear()
+        
+        # 清空全局槽位ID占用
+        self._global_occupied_slot_ids.clear()
+        
+        # 清空全局坐标占用
+        self._global_occupied_coordinates.clear()
         
         self.logger.info(f"环境重置，初始预算: {self.budgets}")
         
@@ -217,6 +281,9 @@ class V5CityEnvironment:
         reward_terms_all = {}
         
         for agent, sequence in sequences.items():
+            # 修复：在动作执行前更新槽位状态，防止重复选择
+            self._update_occupied_slots_for_agent(agent, sequence)
+            
             reward, reward_terms = self._execute_agent_sequence(agent, sequence)
             rewards[agent] = reward
             reward_terms_all[agent] = reward_terms
@@ -250,9 +317,27 @@ class V5CityEnvironment:
         """推进到下一个月"""
         self.current_month += 1
         
+        # 修复：清空当前月份的槽位占用
+        self.occupied_slots.clear()
+        
+        # 清空当前智能体槽位占用
+        self._current_agent_occupied_slots.clear()
+        
+        # 保持全局槽位ID占用（禁止跨月重复选择）
+        # self._global_occupied_slot_ids.clear()  # 注释掉，禁止跨月重复选择
+        # self._global_occupied_coordinates.clear()  # 注释掉，禁止跨月重复选择
+        print(f"[CROSS_MONTH_DEDUP] 跨月推进，保持全局槽位占用: {len(self._global_occupied_slot_ids)} 个槽位, {len(self._global_occupied_coordinates)} 个坐标")
+        
+        # 修复：保持全局槽位占用，禁止跨月重复选择
+        # 注意：如果希望槽位跨月保持占用，应该注释掉下面这行
+        # self.global_occupied_slots.clear()  # 注释掉，禁止跨月重复选择
+        
         # 简化版本：暂时不注入月度预算，保持现有预算
         if topic_enabled("budget"):
             self.logger.info(f"月度推进到 {self.current_month}，当前预算: {self.budgets}")
+        
+        if topic_enabled("occupied_slots"):
+            self.logger.info(f"月度重置：清空槽位占用状态，occupied_slots={len(self.occupied_slots)}, global_occupied_slots={len(self.global_occupied_slots)}")
     
     def get_action_candidates(self, agent: str) -> List[ActionCandidate]:
         """获取agent的动作候选（v5.0单动作模式）
@@ -263,21 +348,31 @@ class V5CityEnvironment:
         Returns:
             候选动作列表
         """
+        # 修复：使用全局去重状态而不是当前月份的occupied_slots
+        global_occupied = self._global_occupied_slot_ids.union(self.occupied_slots)
         candidates = self.enumerator.enumerate_actions(
             agent=agent,
-            occupied_slots=self.occupied_slots,
+            occupied_slots=global_occupied,
             lp_provider=self._get_land_price,
             budget=self.budgets.get(agent, 0),
             current_month=self.current_month
         )
         
-        # 缓存候选
-        self._last_candidates[agent] = candidates
+        # 新增：过滤全局已占用的槽位
+        filtered_candidates = []
+        for candidate in candidates:
+            slots = candidate.meta.get("slots", [])
+            # 检查是否有槽位已被占用（使用我们的去重机制）
+            if not any(self._is_slot_id_occupied(slot_id) for slot_id in slots):
+                filtered_candidates.append(candidate)
+        
+        # 缓存过滤后的候选
+        self._last_candidates[agent] = filtered_candidates
         
         if topic_enabled("candidates"):
-            self.logger.info(f"枚举候选: agent={agent}, count={len(candidates)}")
+            self.logger.info(f"枚举候选: agent={agent}, count={len(filtered_candidates)}")
         
-        return candidates
+        return filtered_candidates
     
     def get_action_candidates_with_index(self, agent: str) -> Tuple[List[ActionCandidate], CandidateIndex]:
         """获取agent的动作候选和索引（v5.1多动作模式）
@@ -288,22 +383,62 @@ class V5CityEnvironment:
         Returns:
             (候选动作列表, 候选索引)
         """
+        # 修复：使用全局去重状态而不是当前月份的occupied_slots
+        global_occupied = self._global_occupied_slot_ids.union(self.occupied_slots)
         candidates, cand_idx = self.enumerator.enumerate_with_index(
             agent=agent,
-            occupied_slots=self.occupied_slots,
+            occupied_slots=global_occupied,
             lp_provider=self._get_land_price,
             budget=self.budgets.get(agent, 0),
             current_month=self.current_month
         )
         
-        # 缓存候选和索引
-        self._last_candidates[agent] = candidates
+        # 修复：过滤全局已占用的槽位，包括当前智能体已选择的槽位
+        filtered_candidates = []
+        print(f"[CANDIDATE_FILTER] Agent {agent}, total candidates: {len(candidates)}, global_occupied_slots: {len(self.global_occupied_slots)}, global_occupied_slot_ids: {len(self._global_occupied_slot_ids)}")
+        
+        # 获取当前智能体已选择的槽位
+        current_agent_occupied = set()
+        for other_agent in self.agents:
+            if other_agent != agent:
+                # 从其他智能体的历史记录中获取已占用的槽位
+                if hasattr(self, '_agent_occupied_slots') and other_agent in self._agent_occupied_slots:
+                    current_agent_occupied.update(self._agent_occupied_slots[other_agent])
+        
+        # 修复：添加当前智能体在当前月份已选择的槽位
+        if hasattr(self, '_current_agent_occupied_slots') and agent in self._current_agent_occupied_slots:
+            current_agent_occupied.update(self._current_agent_occupied_slots[agent])
+        
+        for candidate in candidates:
+            slots = candidate.meta.get("slots", [])
+            
+            # 检查槽位是否可用（使用统一的slot_id检查）
+            slots_available = True
+            for slot_id in slots:
+                print(f"[SLOT_ID_CHECK] Checking candidate {candidate.id} slot {slot_id}")
+                print(f"[SLOT_ID_CHECK] Global occupied slot_ids: {self._global_occupied_slot_ids}")
+                
+                # 检查是否被全局占用或当前智能体占用
+                if (self._is_slot_id_occupied(slot_id) or 
+                    slot_id in current_agent_occupied):
+                    slots_available = False
+                    print(f"[SLOT_ID_FILTER] Filtered out candidate {candidate.id} with slot_id {slot_id}")
+                    print(f"[SLOT_ID_FILTER] Reason: slot_id_occupied={self._is_slot_id_occupied(slot_id)}, current_agent_occupied={slot_id in current_agent_occupied}")
+                    break
+            
+            if slots_available:
+                filtered_candidates.append(candidate)
+        
+        print(f"[CANDIDATE_FILTER] After filtering: {len(filtered_candidates)} candidates")
+        
+        # 缓存过滤后的候选和索引
+        self._last_candidates[agent] = filtered_candidates
         self._last_cand_idx[agent] = cand_idx
         
         if topic_enabled("candidates"):
-            self.logger.info(f"枚举候选(多动作): agent={agent}, points={len(cand_idx.points)}, total_candidates={len(candidates)}")
+            self.logger.info(f"枚举候选(多动作): agent={agent}, points={len(cand_idx.points)}, total_candidates={len(filtered_candidates)}")
         
-        return candidates, cand_idx
+        return filtered_candidates, cand_idx
     
     def _execute_agent_sequence(self, agent: str, sequence: Sequence) -> Tuple[float, Dict[str, float]]:
         """执行agent的动作序列并计算奖励
@@ -391,6 +526,15 @@ class V5CityEnvironment:
         # 标记槽位为已占用
         for slot_id in cand.meta.get("slots", []):
             self.occupied_slots.add(slot_id)
+            # 修复：添加到当前智能体槽位占用
+            if agent not in self._current_agent_occupied_slots:
+                self._current_agent_occupied_slots[agent] = set()
+            self._current_agent_occupied_slots[agent].add(slot_id)
+            
+            # 修复：添加到全局槽位ID占用
+            self._mark_slot_id_occupied(slot_id)
+            print(f"[SLOT_ID_MARK] agent={agent} slot_id={slot_id}")
+            
             if topic_enabled("occupied_slots"):
                 self.logger.info(f"[SLOT_MARK] agent={agent} slot={slot_id} action_id={action_id}")
         
@@ -447,6 +591,15 @@ class V5CityEnvironment:
         # 标记槽位为已占用
         for slot_id in cand.meta.get("slots", []):
             self.occupied_slots.add(slot_id)
+            # 修复：添加到当前智能体槽位占用
+            if agent not in self._current_agent_occupied_slots:
+                self._current_agent_occupied_slots[agent] = set()
+            self._current_agent_occupied_slots[agent].add(slot_id)
+            
+            # 修复：添加到全局槽位ID占用
+            self._mark_slot_id_occupied(slot_id)
+            print(f"[SLOT_ID_MARK] agent={agent} slot_id={slot_id}")
+            
             if topic_enabled("occupied_slots"):
                 self.logger.info(f"[SLOT_MARK] agent={agent} slot={slot_id} action_id={action_id}")
         
@@ -454,6 +607,60 @@ class V5CityEnvironment:
         reward, reward_terms = self._compute_reward(agent, cand)
         
         return reward, reward_terms
+    
+    def _update_occupied_slots_for_agent(self, agent: str, sequence: Sequence) -> None:
+        """更新槽位占用状态，供后续智能体使用（修复方法）"""
+        print(f"[SLOT_UPDATE_DEBUG] Called for agent {agent}, sequence: {sequence}")
+        if not sequence or not sequence.actions:
+            print(f"[SLOT_UPDATE_DEBUG] No sequence or actions for agent {agent}")
+            return
+        
+        # 从AtomicAction.meta中获取槽位ID信息
+        for i, action in enumerate(sequence.actions):
+            print(f"[SLOT_UPDATE_DEBUG] Action {i}: {action}")
+            print(f"[SLOT_UPDATE_DEBUG] Action meta: {action.meta}")
+            slots = action.meta.get("slots", [])
+            print(f"[SLOT_UPDATE_DEBUG] Slots from meta: {slots}")
+            if slots:
+                print(f"[SLOT_UPDATE_DEBUG] Agent {agent} selected slots: {slots}")
+                for slot_id in slots:
+                    # 更新当前月份的槽位占用
+                    self.occupied_slots.add(slot_id)
+                    # 更新全局槽位占用
+                    self.global_occupied_slots.add(slot_id)
+                    # 更新全局槽位ID占用
+                    self._mark_slot_id_occupied(slot_id)
+                    print(f"[SLOT_UPDATE_DEBUG] Added slot {slot_id} to occupied_slots (total: {len(self.occupied_slots)})")
+                    if topic_enabled("occupied_slots"):
+                        self.logger.info(f"[SLOT_UPDATE] {agent}占用槽位 {slot_id}")
+            else:
+                print(f"[SLOT_UPDATE_DEBUG] No slots found in action {i} for agent {agent}")
+    
+    def _update_global_occupied_slots(self, agent: str, sequence: Sequence) -> None:
+        """更新全局已占用槽位状态（新增方法）"""
+        if not sequence or not sequence.actions:
+            return
+        
+        # 获取动作的legacy IDs
+        legacy_ids = sequence.get_legacy_ids()
+        
+        print(f"[GLOBAL_SLOT_DEBUG] Agent {agent}, legacy_ids={legacy_ids}, month={self.current_month}")
+        
+        for action_id in legacy_ids:
+            cand = self._get_candidate_from_snapshot(agent, action_id)
+            if not cand:
+                print(f"[GLOBAL_SLOT_DEBUG] No candidate found for action_id={action_id}")
+                continue
+            
+            slots = cand.meta.get("slots", [])
+            print(f"[GLOBAL_SLOT_DEBUG] Action {action_id} has slots: {slots}")
+            for slot_id in slots:
+                self.global_occupied_slots.add(slot_id)
+                # 修复：添加到全局槽位ID占用
+                self._mark_slot_id_occupied(slot_id)
+                print(f"[GLOBAL_SLOT_DEBUG] Added slot {slot_id} to global_occupied_slots (total: {len(self.global_occupied_slots)})")
+                if topic_enabled("occupied_slots"):
+                    self.logger.info(f"[GLOBAL_SLOT] {agent}占用槽位 {slot_id}")
     
     def _update_occupied_slots_from_snapshot(self, agent: str, sequence: Sequence) -> None:
         """使用候选快照更新已占用槽位（兼容AtomicAction）"""
@@ -484,6 +691,8 @@ class V5CityEnvironment:
                 self.logger.info(f"[SLOT_DEBUG]     slots to occupy: {slots}")
             for slot_id in slots:
                 self.occupied_slots.add(slot_id)
+                # 修复：添加到全局槽位ID占用
+                self._mark_slot_id_occupied(slot_id)
                 if topic_enabled("occupied_slots"):
                     self.logger.info(f"[SLOT_DEBUG]     Added slot {slot_id} to occupied_slots")
                     self.logger.info(f"occupied agent={agent} slot={slot_id} month={self.current_month} step={self.current_step}")
@@ -861,6 +1070,12 @@ class V5CityEnvironment:
         Returns:
             (observation, rewards, done, info)
         """
+        print("=== STEP_PHASE_CALLED ===")
+        print(f"phase_agents: {phase_agents}")
+        print(f"phase_sequences: {phase_sequences}")
+        
+        # 测试：添加一个简单的print语句，不受topic控制
+        print("TEST: This should always print")
         # 首先推进到下一个月（这是正确的架构）
         month_advanced = False
         if self.current_month < self.total_months:
@@ -878,14 +1093,30 @@ class V5CityEnvironment:
         rewards = {}
         reward_terms_all = {}
         
+        print(f"[STEP_PHASE_DEBUG] phase_agents: {phase_agents}")
+        print(f"[STEP_PHASE_DEBUG] phase_sequences keys: {list(phase_sequences.keys())}")
+        
         for agent in phase_agents:
+            print(f"[STEP_PHASE_DEBUG] Processing agent: {agent}")
             if agent in phase_sequences:
                 sequence = phase_sequences[agent]
+                print(f"[STEP_PHASE_DEBUG] Agent {agent} has sequence: {sequence}")
+                
+                # 修复：在执行动作之前，重新获取候选动作并应用去重过滤
+                print(f"[STEP_PHASE_DEBUG] Re-fetching candidates for {agent} with dedup")
+                fresh_candidates, fresh_cand_idx = self.get_action_candidates_with_index(agent)
+                print(f"[STEP_PHASE_DEBUG] Fresh candidates count for {agent}: {len(fresh_candidates)}")
+                
                 if topic_enabled("action_execution"):
                     self.logger.info(f"[ACTION_EXEC] 执行智能体 {agent} 的动作序列: {sequence}")
                 reward, reward_terms = self._execute_agent_sequence(agent, sequence)
                 rewards[agent] = reward
                 reward_terms_all[agent] = reward_terms
+                
+                # 修复：立即更新槽位占用状态，供后续智能体使用
+                print(f"[STEP_PHASE_DEBUG] Calling _update_occupied_slots_for_agent for {agent}")
+                self._update_occupied_slots_for_agent(agent, sequence)
+                
                 if topic_enabled("action_execution"):
                     self.logger.info(f"[ACTION_EXEC] 智能体 {agent} 获得奖励: {reward}")
             else:
