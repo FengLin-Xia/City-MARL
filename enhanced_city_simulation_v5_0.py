@@ -74,17 +74,15 @@ def run_export_mode(args) -> Dict[str, Any]:
     if not args.input_data:
         raise ValueError("导出模式需要指定输入数据路径 (--input_data)")
     
-    # 加载数据
-    step_logs, env_states = load_training_data(args.input_data)
-    
     # 创建导出管道
     export_pipeline = V5ExportPipeline(args.config)
     
-    # 运行导出
+    # 运行导出（传递input_data_path让管道自己加载）
     result = export_pipeline.run_export(
-        step_logs=step_logs,
-        env_states=env_states,
-        output_dir=args.output_dir
+        step_logs=[],  # 空列表，让管道从JSON文件加载
+        env_states=[],  # 空列表，让管道从JSON文件加载
+        output_dir=args.output_dir,
+        input_data_path=args.input_data  # 传递JSON文件路径
     )
     
     return result
