@@ -15,6 +15,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from contracts import StepLog, EnvironmentState
 from .txt_exporter import V5TXTExporter
 from .table_generator import V5TableGenerator
+from .monthly_summary_png import V5MonthlySummaryPNGExporter
 
 
 @dataclass
@@ -23,6 +24,7 @@ class ExportConfig:
     txt_format: str = "v4"  # v4, v5, json
     include_tables: bool = True
     include_summary: bool = True
+    include_monthly_png: bool = True  # 新增：月度汇总PNG
     output_encoding: str = "utf-8"
     table_style: str = "modern"  # classic, modern, minimal
 
@@ -44,6 +46,7 @@ class V5ExportSystem:
         # 初始化导出器
         self.txt_exporter = V5TXTExporter(config_path)
         self.table_generator = V5TableGenerator(config_path)
+        self.monthly_png_exporter = V5MonthlySummaryPNGExporter(config_path)
     
     def export_all(self, step_logs: List[StepLog], 
                    env_states: List[EnvironmentState], 
@@ -68,7 +71,8 @@ class V5ExportSystem:
         results = {
             "txt_files": [],
             "table_files": [],
-            "summary_files": []
+            "summary_files": [],
+            "monthly_png_files": []
         }
         
         # 导出TXT格式
@@ -103,6 +107,14 @@ class V5ExportSystem:
                 os.path.join(output_dir, "summary.png")
             )
             results["summary_files"].append(summary_file)
+        
+        # 生成月度汇总PNG
+        if self.export_config.include_monthly_png:
+            monthly_png_files = self.monthly_png_exporter.export_monthly_summary_png(
+                step_logs, env_states,
+                os.path.join(output_dir, "monthly_summary")
+            )
+            results["monthly_png_files"].extend(monthly_png_files)
         
         return results
     

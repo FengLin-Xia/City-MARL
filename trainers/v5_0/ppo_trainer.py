@@ -69,6 +69,12 @@ class V5PPOTrainer:
         # 更新计数器
         self.current_update = 0
         
+        # 温度退火参数（从 mappo.exploration 读取）
+        exploration_cfg = self.rl_config.get("exploration", {})
+        self.initial_temperature = exploration_cfg.get("temperature", 3.0)
+        self.final_temperature = exploration_cfg.get("anneal_to", 1.0)
+        self.anneal_steps = exploration_cfg.get("anneal_steps", 300000)
+        
         # 初始化环境
         self.env = V5CityEnvironment(config_path)
         
@@ -80,12 +86,34 @@ class V5PPOTrainer:
         self.episode_count = 0
         self.total_steps = 0
         
+        # 当前温度（用于退火）
+        self.current_temperature = self.initial_temperature
+        
         # 历史记录
         self.training_history = []
         self.episode_rewards = {agent: [] for agent in self.config.get("agents", {}).get("order", [])}
         
         # 优化器
         self._setup_optimizers()
+    
+    def _compute_current_temperature(self) -> float:
+        """
+        计算当前温度（线性退火）
+        
+        Returns:
+            当前温度值
+        """
+        progress = min(1.0, self.total_steps / self.anneal_steps)
+        current_temp = self.initial_temperature * (1 - progress) + self.final_temperature * progress
+        return current_temp
+    
+    def _update_temperature(self):
+        """更新当前温度并同步到配置"""
+        self.current_temperature = self._compute_current_temperature()
+        # 同步到 multi_action 和 exploration 配置
+        if "multi_action" in self.config:
+            self.config["multi_action"]["temperature"] = self.current_temperature
+        self.config["mappo"]["exploration"]["temperature"] = self.current_temperature
     
     def _setup_optimizers(self):
         """设置优化器"""
@@ -312,7 +340,12 @@ class V5PPOTrainer:
             advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
             
             # 训练网络
-            for _ in range(self.updates_per_iter):
+            agent_kl_divergences = []
+            agent_clip_fractions = []
+            agent_entropy_values = []
+            agent_ratio_values = []
+            
+            for epoch in range(self.updates_per_iter):
                 # 检查是否达到最大更新次数
                 if self.current_update >= self.max_updates:
                     print(f"达到最大更新次数: {self.max_updates}")
@@ -376,16 +409,56 @@ class V5PPOTrainer:
                 total_actor_loss += actor_loss.item()
                 total_critic_loss += critic_loss.item()
                 total_entropy_loss += entropy.item()
+                
+                # 记录详细的训练指标
+                with torch.no_grad():
+                    # KL散度计算
+                    kl_div = ((ratio - 1.0) - torch.log(ratio + 1e-8)).mean()
+                    agent_kl_divergences.append(kl_div.item())
+                    
+                    # 裁剪比例
+                    clip_fraction = ((ratio - 1.0).abs() > self.clip_eps).float().mean()
+                    agent_clip_fractions.append(clip_fraction.item())
+                    
+                    # 熵值
+                    agent_entropy_values.append(entropy.item())
+                    
+                    # 比率统计
+                    agent_ratio_values.append(ratio.mean().item())
+            
+            # 记录智能体级别的训练指标
+            if topic_enabled("training_step"):
+                avg_kl = np.mean(agent_kl_divergences) if agent_kl_divergences else 0.0
+                avg_clip = np.mean(agent_clip_fractions) if agent_clip_fractions else 0.0
+                avg_entropy = np.mean(agent_entropy_values) if agent_entropy_values else 0.0
+                avg_ratio = np.mean(agent_ratio_values) if agent_ratio_values else 0.0
+                
+                self.logger.info(f"[TRAIN_METRICS] {agent}: "
+                               f"actor_loss={total_actor_loss:.4f}, "
+                               f"critic_loss={total_critic_loss:.4f}, "
+                               f"entropy={avg_entropy:.4f}, "
+                               f"kl_div={avg_kl:.4f}, "
+                               f"clip_frac={avg_clip:.4f}, "
+                               f"ratio_mean={avg_ratio:.4f}")
         
         # 更新训练步数
         self.training_step += 1
         
+        # 计算平均指标
+        num_agents = len(agent_experiences) if agent_experiences else 1
+        
         return {
             'total_loss': total_loss.item() if hasattr(total_loss, 'item') else total_loss,
-            'actor_loss': total_actor_loss / len(agent_experiences),
-            'critic_loss': total_critic_loss / len(agent_experiences),
-            'entropy_loss': total_entropy_loss / len(agent_experiences),
-            'training_step': self.training_step
+            'actor_loss': total_actor_loss / num_agents,
+            'critic_loss': total_critic_loss / num_agents,
+            'entropy_loss': total_entropy_loss / num_agents,
+            'training_step': self.training_step,
+            # 新增：详细的训练指标
+            'temperature': self.current_temperature,
+            'total_steps': self.total_steps,
+            'current_update': self.current_update,
+            'num_agents': num_agents,
+            'total_experiences': len(experiences)
         }
     
     # 旧的简化损失已删除，改用上方标准 PPO 计算
@@ -402,14 +475,21 @@ class V5PPOTrainer:
             训练结果
         """
         print(f"开始训练 {num_episodes} 轮...")
+        print(f"温度退火: {self.initial_temperature} -> {self.final_temperature} (steps={self.anneal_steps})")
         
         for episode in range(num_episodes):
+            # 更新温度（线性退火）
+            self._update_temperature()
+            
             # 收集经验
             experiences = self.collect_experience(self.rollout_horizon)
             
             if not experiences:
                 print(f"Episode {episode}: 没有收集到经验")
                 continue
+            
+            # 更新总步数
+            self.total_steps += len(experiences)
             
             # 训练
             train_stats = self.train_step(experiences)
@@ -429,10 +509,18 @@ class V5PPOTrainer:
                 print(f"Episode {episode}: "
                       f"Total Loss: {train_stats['total_loss']:.4f}, "
                       f"Actor Loss: {train_stats['actor_loss']:.4f}, "
-                      f"Critic Loss: {train_stats['critic_loss']:.4f}")
+                      f"Critic Loss: {train_stats['critic_loss']:.4f}, "
+                      f"Entropy: {train_stats['entropy_loss']:.4f}, "
+                      f"Temp: {self.current_temperature:.3f}, "
+                      f"Updates: {train_stats['current_update']}")
                 
                 for agent, reward in episode_rewards.items():
                     print(f"  {agent} Reward: {reward:.2f}")
+                
+                # 打印训练统计摘要
+                print(f"  训练统计: 总步数={train_stats['total_steps']}, "
+                      f"智能体数={train_stats['num_agents']}, "
+                      f"经验数={train_stats['total_experiences']}")
             
             # 保存模型
             if episode % save_interval == 0 and episode > 0:

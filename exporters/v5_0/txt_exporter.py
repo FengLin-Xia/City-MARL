@@ -35,7 +35,7 @@ class V5TXTExporter:
         # v4.1兼容性映射（保持原有格式）
         self.agent_size_mapping = {
             "EDU": {"S": 0, "M": 1, "L": 2},
-            "IND": {"S": 3, "M": 4, "L": 5},
+            "IND": {"S": 3, "M": 4, "L": 5, "A": 9, "B": 10, "C": 11},
             "COUNCIL": {"A": 6, "B": 7, "C": 8}
         }
     
@@ -201,19 +201,23 @@ class V5TXTExporter:
         if not step_log.chosen or not coordinates:
             return ""
         
-        # 获取动作参数
-        action_params = self.action_params.get(str(step_log.chosen[0]), {})
-        desc = action_params.get("desc", f"ACTION_{step_log.chosen[0]}")
-        
-        # 解析动作描述获取智能体和尺寸
-        agent, size = self._parse_action_desc(desc)
-        
-        # 获取v4.1格式的动作编号
-        v4_action_id = self._get_v4_action_id(agent, size)
-        
         # 生成v4.1格式输出
         parts = []
         for i, (action_id, (x, y, angle)) in enumerate(zip(step_log.chosen, coordinates)):
+            # 获取动作参数
+            action_params = self.action_params.get(str(action_id), {})
+            desc = action_params.get("desc", f"ACTION_{action_id}")
+            
+            # 解析动作描述获取智能体和尺寸
+            agent, size = self._parse_action_desc(desc)
+            
+            # 获取v4.1格式的动作编号
+            v4_action_id = self._get_v4_action_id(agent, size)
+            
+            # 调试信息
+            if action_id in [9, 10, 11]:
+                print(f"[EXPORT_DEBUG] Action {action_id}: desc={desc}, agent={agent}, size={size}, v4_id={v4_action_id}")
+            
             # v4.1格式：a(x,y,z)angle
             part = f"{v4_action_id}({x:.1f},{y:.1f},0){angle:.1f}"
             parts.append(part)
