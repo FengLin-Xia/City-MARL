@@ -55,11 +55,19 @@ class CandidateRangeMiddleware:
         return Sequence(agent=seq.agent, actions=filtered_actions)
     
     def _get_available_slots(self, month: int, state: EnvironmentState) -> Set[str]:
-        """获取当前月份可用的槽位"""
+        """获取当前月份可用的槽位（支持Hub延迟激活）"""
         available_slots = set()
+        
+        # 获取演化配置
+        evolution_config = self.config.get("land_price", {}).get("evolution", {})
         
         for hub_config in self.hub_list:
             hub_id = hub_config["id"]
+            
+            # 检查Hub是否已激活
+            if not self._is_hub_active(hub_id, month, evolution_config):
+                continue
+            
             R0 = hub_config["R0"]
             dR = hub_config["dR"]
             
@@ -81,6 +89,18 @@ class CandidateRangeMiddleware:
             available_slots.update(hub_slots)
             
         return available_slots
+    
+    def _is_hub_active(self, hub_id: str, current_month: int, evolution_config: Dict) -> bool:
+        """检查Hub是否在当前月份激活"""
+        # 检查是否有hub特定的激活时间配置
+        if hub_id == "hub3":
+            hub3_activation_month = evolution_config.get("hub3_activation_month")
+            if hub3_activation_month is not None:
+                return current_month >= hub3_activation_month
+        
+        # 对于hub1和hub2，使用默认的hub_activation_month
+        hub_activation_month = evolution_config.get("hub_activation_month", 7)
+        return current_month >= hub_activation_month
     
     def _get_hub_position(self, hub_id: str, state: EnvironmentState) -> Tuple[float, float]:
         """获取Hub位置"""

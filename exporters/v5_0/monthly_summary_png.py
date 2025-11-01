@@ -114,7 +114,7 @@ class V5MonthlySummaryPNGExporter:
         total_reward = 0.0
         total_budget = 0.0
         
-        # 聚合所有agent的数据
+        # 聚合所有agent的数据（cost和reward累加）
         for log, state in zip(step_logs, env_states):
             # 从reward_terms获取cost和reward
             if log.reward_terms:
@@ -129,17 +129,22 @@ class V5MonthlySummaryPNGExporter:
             else:
                 print(f"  - {log.agent}: no reward_terms")
             
-            # 从budget_snapshot获取预算信息
-            if log.budget_snapshot:
-                if isinstance(log.budget_snapshot, dict):
+        # 修复：预算只取最后一个StepLog的budget_snapshot总和（避免重复累加）
+        if step_logs:
+            last_log = step_logs[-1]
+            if last_log.budget_snapshot:
+                if isinstance(last_log.budget_snapshot, dict):
                     # 如果是字典，累加所有agent的预算
-                    for agent_budget in log.budget_snapshot.values():
-                        if isinstance(agent_budget, dict):
-                            total_budget += sum(agent_budget.values())
-                        else:
-                            total_budget += float(agent_budget)
+                    total_budget = sum(
+                        sum(agent_budget.values()) if isinstance(agent_budget, dict)
+                        else float(agent_budget)
+                        for agent_budget in last_log.budget_snapshot.values()
+                    )
                 else:
-                    total_budget += float(log.budget_snapshot)
+                    total_budget = float(last_log.budget_snapshot)
+                print(f"  - Budget from last step_log: {total_budget:.1f}")
+            else:
+                print(f"  - Warning: last step_log has no budget_snapshot")
         
         print(f"  - Monthly totals: cost={total_cost:.1f}, reward={total_reward:.1f}, budget={total_budget:.1f}")
         

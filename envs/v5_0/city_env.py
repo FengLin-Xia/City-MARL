@@ -15,15 +15,18 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from contracts import ActionCandidate, Sequence, StepLog, EnvironmentState, CandidateIndex, AtomicAction
+from contracts import ActionCandidate, Sequence, StepLog, EnvironmentState, CandidateIndex, AtomicAction, BuildingRegistry
 from config_loader import ConfigLoader
 from scheduler import PhaseCycleScheduler
 from .budget_pool import BudgetPoolManager
 from logic.v5_enumeration import V5ActionEnumerator
-from logic.v5_scorer import V5ActionScorer
 from logic.v5_selector import V5SequenceSelector
 from logic.v5_reward_calculator import V5RewardCalculator
 from utils.logger_factory import get_logger, topic_enabled, sampling_allows
+
+# 导入中间件
+from action_mw.unlock_gate import UnlockGateMW
+from envs.land_price_evo import LandPriceEvo
 
 
 class V5CityEnvironment:
@@ -51,22 +54,33 @@ class V5CityEnvironment:
         # 初始化预算管理器
         self.budget_manager = BudgetPoolManager(self.budget_config)
         
-        # 初始化动作枚举器、评分器、选择器、奖励计算器
+        # 初始化动作枚举器、选择器、奖励计算器
         self.enumerator = V5ActionEnumerator(self.config)
-        self.scorer = V5ActionScorer(self.config)
         self.selector = V5SequenceSelector(self.config)
         self.reward_calculator = V5RewardCalculator(self.config)
+        
+        # 初始化持续奖励系统
+        from logic.continuous_reward_system import ContinuousRewardSystem
+        self.continuous_reward_system = ContinuousRewardSystem(self.config)
         
         # 加载槽位数据
         self._load_slots_data()
         
-        # 初始化高斯地价场系统（与v4.1相同）
-        self._initialize_land_price_system()
+        # 初始化地价演化系统（整合原有高斯地价系统）
+        self._initialize_land_price_evolution()
+        
+        # 初始化解锁中间件
+        self.unlock_middleware = UnlockGateMW()
         
         # 环境状态
         self.current_month = 0
         self.current_step = 0
-        self.total_months = self.config.get("simulation", {}).get("total_months", 30)
+        # 优先读取 env.time_model.total_steps，回退到 simulation.total_months（保持兼容）
+        time_model_cfg = self.config.get("env", {}).get("time_model", {})
+        self.total_months = int(time_model_cfg.get(
+            "total_steps",
+            self.config.get("simulation", {}).get("total_months", 30)
+        ))
         self.agents = list(self.agents_config.get("defs", {}).keys())
         
         # 预算状态
@@ -76,7 +90,8 @@ class V5CityEnvironment:
         # 占用槽位追踪
         self.occupied_slots: Set[str] = set()
         
-        # 全局槽位占用追踪（跨月管理）
+        # 建筑注册表
+        self.building_registry = BuildingRegistry()
         self.global_occupied_slots: Set[str] = set()
         
         # 候选快照（用于执行时回溯）
@@ -91,6 +106,9 @@ class V5CityEnvironment:
         
         # 全局坐标占用跟踪（基于浮点坐标去重）
         self._global_occupied_coordinates: Set[Tuple[float, float]] = set()
+
+        # 新增：已建设（执行期真正落地）的槽位集合，用于区分“执行占位”与“非执行占位”
+        self._built_slot_ids: Set[str] = set()
         
         # 历史记录
         self.step_logs: List[StepLog] = []
@@ -117,6 +135,10 @@ class V5CityEnvironment:
         """
         self._global_occupied_slot_ids.add(slot_id)
         print(f"[SLOT_ID_MARK] 标记槽位 {slot_id} 为已占用")
+        try:
+            self.logger.warning(f"[OCCUPY_MARK] slot_id={slot_id} month={self.current_month}")
+        except Exception:
+            pass
     
     def _is_coordinate_occupied(self, x: float, y: float) -> bool:
         """检查坐标是否已被占用（基于浮点坐标）
@@ -253,6 +275,9 @@ class V5CityEnvironment:
         
         # 清空全局坐标占用
         self._global_occupied_coordinates.clear()
+
+        # 清空已建设槽位集合
+        self._built_slot_ids.clear()
         
         self.logger.info(f"环境重置，初始预算: {self.budgets}")
         
@@ -281,10 +306,13 @@ class V5CityEnvironment:
         reward_terms_all = {}
         
         for agent, sequence in sequences.items():
-            # 修复：在动作执行前更新槽位状态，防止重复选择
-            self._update_occupied_slots_for_agent(agent, sequence)
+            # 应用中间件处理序列（包括解锁中间件）
+            processed_sequence = self._apply_middleware(agent, sequence)
             
-            reward, reward_terms = self._execute_agent_sequence(agent, sequence)
+            # 修复：在动作执行前更新槽位状态，防止重复选择
+            self._update_occupied_slots_for_agent(agent, processed_sequence)
+            
+            reward, reward_terms = self._execute_agent_sequence(agent, processed_sequence)
             rewards[agent] = reward
             reward_terms_all[agent] = reward_terms
         
@@ -308,7 +336,7 @@ class V5CityEnvironment:
             step=self.current_step,
             budgets=self.budgets.copy(),
             occupied_slots=list(self.occupied_slots),
-            land_price_field=self.land_price_system.get_land_price_field() if self.land_price_system else None
+            land_price_field=self.land_price_evo.get_land_price_field() if hasattr(self, 'land_price_evo') and self.land_price_evo else (self.land_price_system.get_land_price_field() if self.land_price_system else None)
         )
         
         return new_state, rewards, done, info
@@ -336,8 +364,39 @@ class V5CityEnvironment:
         if topic_enabled("budget"):
             self.logger.info(f"月度推进到 {self.current_month}，当前预算: {self.budgets}")
         
+        # 新增：计算月度总收益并更新budget
+        self._update_monthly_rewards()
+        
         if topic_enabled("occupied_slots"):
             self.logger.info(f"月度重置：清空槽位占用状态，occupied_slots={len(self.occupied_slots)}, global_occupied_slots={len(self.global_occupied_slots)}")
+        
+        # 更新地价演化系统
+        self._update_land_price_evolution()
+    
+    def _update_monthly_rewards(self):
+        """更新月度奖励并更新budget"""
+        # 获取当前环境状态
+        current_state = self._get_current_environment_state()
+        
+        # 计算月度总收益
+        monthly_totals = self.continuous_reward_system.calculate_monthly_total_rewards(current_state)
+        
+        # 更新budget（包含持续收益）
+        for agent in self.agents:
+            monthly_income = monthly_totals.get(agent, 0.0)
+            self.budgets[agent] += monthly_income
+            
+            if topic_enabled("budget_flow"):
+                self.logger.info(f"[BUDGET_FLOW] {agent}: 持续收益 +{monthly_income:.1f}")
+        
+        # 更新环境状态中的月度奖励
+        current_state.monthly_rewards = monthly_totals.copy()
+        
+        # 记录历史
+        for agent in self.agents:
+            if agent not in current_state.monthly_totals_history:
+                current_state.monthly_totals_history[agent] = []
+            current_state.monthly_totals_history[agent].append(monthly_totals.get(agent, 0.0))
     
     def get_action_candidates(self, agent: str) -> List[ActionCandidate]:
         """获取agent的动作候选（v5.0单动作模式）
@@ -350,12 +409,18 @@ class V5CityEnvironment:
         """
         # 修复：使用全局去重状态而不是当前月份的occupied_slots
         global_occupied = self._global_occupied_slot_ids.union(self.occupied_slots)
+        # 获取解锁状态
+        print(f"[DEBUG] Before _get_unlocked_actions for agent {agent}, month {self.current_month}")
+        unlocked_actions = self._get_unlocked_actions(agent)
+        print(f"[DEBUG] After _get_unlocked_actions, unlocked_actions={unlocked_actions}")
+        
         candidates = self.enumerator.enumerate_actions(
             agent=agent,
             occupied_slots=global_occupied,
             lp_provider=self._get_land_price,
             budget=self.budgets.get(agent, 0),
-            current_month=self.current_month
+            current_month=self.current_month,
+            unlocked_actions=unlocked_actions
         )
         
         # 新增：过滤全局已占用的槽位
@@ -392,12 +457,18 @@ class V5CityEnvironment:
         """
         # 修复：使用全局去重状态而不是当前月份的occupied_slots
         global_occupied = self._global_occupied_slot_ids.union(self.occupied_slots)
+        # 获取解锁状态
+        print(f"[DEBUG] get_action_candidates_with_index: Before _get_unlocked_actions for agent {agent}, month {self.current_month}")
+        unlocked_actions = self._get_unlocked_actions(agent)
+        print(f"[DEBUG] get_action_candidates_with_index: After _get_unlocked_actions, unlocked_actions={unlocked_actions}")
+        
         candidates, cand_idx = self.enumerator.enumerate_with_index(
             agent=agent,
             occupied_slots=global_occupied,
             lp_provider=self._get_land_price,
             budget=self.budgets.get(agent, 0),
-            current_month=self.current_month
+            current_month=self.current_month,
+            unlocked_actions=unlocked_actions
         )
         
         # 修复：过滤全局已占用的槽位，包括当前智能体已选择的槽位
@@ -471,7 +542,11 @@ class V5CityEnvironment:
                 action_reward, action_terms = self._execute_action_atomic(agent, atomic_action)
                 reward += action_reward
                 for key, val in action_terms.items():
-                    reward_terms[key] = reward_terms.get(key, 0) + val
+                    if isinstance(val, (int, float)):
+                        reward_terms[key] = reward_terms.get(key, 0) + val
+                    else:
+                        # 对于非数值类型，直接赋值（不累加）
+                        reward_terms[key] = val
         else:
             # 旧版单动作模式（通过compatibility layer转换）
             legacy_ids = sequence.get_legacy_ids()
@@ -479,7 +554,11 @@ class V5CityEnvironment:
                 action_reward, action_terms = self._execute_action_legacy(agent, action_id)
                 reward += action_reward
                 for key, val in action_terms.items():
-                    reward_terms[key] = reward_terms.get(key, 0) + val
+                    if isinstance(val, (int, float)):
+                        reward_terms[key] = reward_terms.get(key, 0) + val
+                    else:
+                        # 对于非数值类型，直接赋值（不累加）
+                        reward_terms[key] = val
         
         return reward, reward_terms
     
@@ -518,9 +597,10 @@ class V5CityEnvironment:
         reward = reward_terms.revenue
         
         # 直接更新预算：先扣除成本，再增加奖励
+        # 注意：V5RewardCalculator返回的cost是负数，需要直接加（负数相加等于减法）
         old_budget = self.budgets[agent]
-        if cost > 0:
-            self.budgets[agent] -= cost
+        if cost != 0:
+            self.budgets[agent] += cost  # cost已经是负数，直接加就等于减法
         if reward > 0:
             self.budgets[agent] += reward
             
@@ -531,8 +611,33 @@ class V5CityEnvironment:
         if topic_enabled("budget_flow"):
             self.logger.info(f"[BUDGET_FLOW] {agent}: {old_budget:.1f} -> {self.budgets[agent]:.1f} (cost: {cost:.1f}, reward: {reward:.1f})")
         
-        # 标记槽位为已占用
-        for slot_id in cand.meta.get("slots", []):
+        # 标记槽位为已占用（执行成功后才写入全局集）
+        # 日志：记录EXEC标记时使用的数据源
+        slots_from_meta = cand.meta.get("slots", [])
+        point_id_from_meta = cand.meta.get("point_id", None)
+        slots_from_idx = []
+        
+        # 尝试从cand_idx获取slots
+        if agent in self._last_cand_idx and self._last_cand_idx[agent]:
+            cand_idx = self._last_cand_idx[agent]
+            if hasattr(atomic_action, 'point') and atomic_action.point < len(cand_idx.points):
+                point_id_from_action = cand_idx.points[atomic_action.point]
+                slots_from_idx = cand_idx.point_to_slots.get(point_id_from_action, [])
+                try:
+                    self.logger.warning(f"[EXEC_SLOTS] agent={agent} action_id={action_id} month={self.current_month} point={atomic_action.point} point_id_from_action={point_id_from_action} point_id_from_meta={point_id_from_meta} slots_from_meta={slots_from_meta} slots_from_idx={slots_from_idx}")
+                except Exception:
+                    pass
+        
+        # 修复：优先使用slots_from_idx（来自action.point），而不是slots_from_meta（来自cand.meta）
+        # 这样可以确保EXEC标记的槽位与实际执行的槽位一致，与slot_positions构建使用同一数据源
+        if slots_from_idx:
+            # 优先使用slots_from_idx（从cand_idx.point_to_slots获取，与slot_positions构建一致）
+            slots_to_mark = slots_from_idx
+        else:
+            # 回退到使用slots_from_meta（如果没有cand_idx，比如单动作模式）
+            slots_to_mark = slots_from_meta
+        
+        for slot_id in slots_to_mark:
             self.occupied_slots.add(slot_id)
             # 修复：添加到当前智能体槽位占用
             if agent not in self._current_agent_occupied_slots:
@@ -542,14 +647,77 @@ class V5CityEnvironment:
             # 修复：添加到全局槽位ID占用
             self._mark_slot_id_occupied(slot_id)
             print(f"[SLOT_ID_MARK] agent={agent} slot_id={slot_id}")
+            try:
+                self.logger.warning(f"[OCCUPY_FROM_EXEC] agent={agent} slot_id={slot_id} month={self.current_month}")
+            except Exception:
+                pass
+
+            # 新增：记录为"已建设"占位，用于与非执行占位区分
+            self._built_slot_ids.add(slot_id)
             
             if topic_enabled("occupied_slots"):
                 self.logger.info(f"[SLOT_MARK] agent={agent} slot={slot_id} action_id={action_id}")
+        
+        # 更新建筑注册表
+        self._update_building_registry(agent, action_id, cand, reward)
         
         # 计算奖励
         reward, reward_terms = self._compute_reward(agent, cand)
         
         return reward, reward_terms
+    
+    def _update_building_registry(self, agent: str, action_id: int, candidate: ActionCandidate, reward: float) -> None:
+        """更新建筑注册表"""
+        # 生成建筑ID
+        building_id = f"{agent}_{action_id}_{self.current_month}_{len(self.building_registry.buildings)}"
+        
+        # 获取位置信息
+        position = (0.0, 0.0)  # 简化实现，实际可以从candidate.meta中获取
+        if "slots" in candidate.meta and candidate.meta["slots"]:
+            slot_id = candidate.meta["slots"][0]
+            # 从枚举器的槽位数据中获取位置
+            if hasattr(self.enumerator, 'slots') and self.enumerator.slots:
+                for slot in self.enumerator.slots:
+                    # 检查slot是字典还是字符串
+                    if isinstance(slot, dict) and slot.get("id") == slot_id:
+                        position = (slot.get("x", 0.0), slot.get("y", 0.0))
+                        break
+                    elif isinstance(slot, str) and slot == slot_id:
+                        # 如果是字符串，使用默认位置
+                        position = (0.0, 0.0)
+                        break
+        
+        # 创建建筑信息
+        from contracts import BuildingInfo
+        building_info = BuildingInfo(
+            building_id=building_id,
+            action_id=action_id,
+            agent=agent,
+            month=self.current_month,
+            position=position,
+            cost=abs(candidate.meta.get("cost", 0)),  # 成本（正值）
+            reward=reward
+        )
+        
+        # 更新注册表
+        self.building_registry.buildings[building_id] = building_info
+        self.building_registry.action_counts[action_id] = self.building_registry.action_counts.get(action_id, 0) + 1
+        
+        # 新增：按agent和动作类型分组
+        if agent not in self.building_registry.buildings_by_agent:
+            self.building_registry.buildings_by_agent[agent] = []
+        self.building_registry.buildings_by_agent[agent].append(building_id)
+        
+        if action_id not in self.building_registry.buildings_by_action:
+            self.building_registry.buildings_by_action[action_id] = []
+        self.building_registry.buildings_by_action[action_id].append(building_id)
+        
+        # 激活协同效应
+        self.continuous_reward_system.activate_synergy(action_id, self._get_current_environment_state())
+        
+        # 调试日志
+        if topic_enabled("building_registry"):
+            self.logger.info(f"[BUILDING_REGISTRY] Added building: {building_id}, action_id={action_id}, count={self.building_registry.action_counts[action_id]}")
     
     def _execute_action_legacy(self, agent: str, action_id: int) -> Tuple[float, Dict[str, float]]:
         """执行单个动作（v5.0兼容）
@@ -583,9 +751,10 @@ class V5CityEnvironment:
         reward = reward_terms.revenue
         
         # 直接更新预算：先扣除成本，再增加奖励
+        # 注意：V5RewardCalculator返回的cost是负数，需要直接加（负数相加等于减法）
         old_budget = self.budgets[agent]
-        if cost > 0:
-            self.budgets[agent] -= cost
+        if cost != 0:
+            self.budgets[agent] += cost  # cost已经是负数，直接加就等于减法
         if reward > 0:
             self.budgets[agent] += reward
             
@@ -596,7 +765,7 @@ class V5CityEnvironment:
         if topic_enabled("budget_flow"):
             self.logger.info(f"[BUDGET_FLOW] {agent}: {old_budget:.1f} -> {self.budgets[agent]:.1f} (cost: {cost:.1f}, reward: {reward:.1f})")
         
-        # 标记槽位为已占用
+        # 标记槽位为已占用（执行成功后才写入全局集）
         for slot_id in cand.meta.get("slots", []):
             self.occupied_slots.add(slot_id)
             # 修复：添加到当前智能体槽位占用
@@ -607,6 +776,13 @@ class V5CityEnvironment:
             # 修复：添加到全局槽位ID占用
             self._mark_slot_id_occupied(slot_id)
             print(f"[SLOT_ID_MARK] agent={agent} slot_id={slot_id}")
+            try:
+                self.logger.warning(f"[OCCUPY_FROM_EXEC] agent={agent} slot_id={slot_id} month={self.current_month}")
+            except Exception:
+                pass
+
+            # 新增：记录为“已建设”占位，用于与非执行占位区分
+            self._built_slot_ids.add(slot_id)
             
             if topic_enabled("occupied_slots"):
                 self.logger.info(f"[SLOT_MARK] agent={agent} slot={slot_id} action_id={action_id}")
@@ -617,7 +793,7 @@ class V5CityEnvironment:
         return reward, reward_terms
     
     def _update_occupied_slots_for_agent(self, agent: str, sequence: Sequence) -> None:
-        """更新槽位占用状态，供后续智能体使用（修复方法）"""
+        """更新槽位占用状态，供后续智能体使用（修复：只写入临时集，不写入全局集）"""
         print(f"[SLOT_UPDATE_DEBUG] Called for agent {agent}, sequence: {sequence}")
         if not sequence or not sequence.actions:
             print(f"[SLOT_UPDATE_DEBUG] No sequence or actions for agent {agent}")
@@ -639,6 +815,10 @@ class V5CityEnvironment:
                     # 更新全局槽位ID占用
                     self._mark_slot_id_occupied(slot_id)
                     print(f"[SLOT_UPDATE_DEBUG] Added slot {slot_id} to occupied_slots (total: {len(self.occupied_slots)})")
+                    try:
+                        self.logger.warning(f"[OCCUPY_FROM_SEQUENCE] agent={agent} slot_id={slot_id} month={self.current_month}")
+                    except Exception:
+                        pass
                     if topic_enabled("occupied_slots"):
                         self.logger.info(f"[SLOT_UPDATE] {agent}占用槽位 {slot_id}")
             else:
@@ -720,6 +900,13 @@ class V5CityEnvironment:
                     point_id = cand_idx.points[action.point]
                     slots = cand_idx.point_to_slots.get(point_id, [])
                     
+                    # 日志：记录slot_positions构建时使用的数据源
+                    action_id = action.meta.get('action_id', action.atype if hasattr(action, 'atype') else -1)
+                    try:
+                        self.logger.warning(f"[SLOT_POS_BUILD] agent={agent} action_id={action_id} point={action.point} point_id={point_id} slots={slots}")
+                    except Exception:
+                        pass
+                    
                     for slot_id in slots:
                         slot_info = self.enumerator.slots.get(slot_id)
                         if slot_info:
@@ -761,7 +948,7 @@ class V5CityEnvironment:
             "step": self.current_step,
             "budgets": self.budgets.copy(),
             "occupied_slots": self.occupied_slots.copy(),
-            "land_price_field": self.land_price_system.get_land_price_field() if self.land_price_system else None,
+            "land_price_field": self.land_price_evo.get_land_price_field() if hasattr(self, 'land_price_evo') and self.land_price_evo else (self.land_price_system.get_land_price_field() if self.land_price_system else None),
             "agents": self.agents
         }
     
@@ -772,7 +959,8 @@ class V5CityEnvironment:
             land_prices=self._get_actual_land_prices(),
             buildings=self._get_actual_buildings(),
             budgets=self.budgets.copy(),
-            slots=self._get_actual_slots()
+            slots=self._get_actual_slots(),
+            building_registry=self.building_registry
         )
     
     def _get_candidate_from_snapshot(self, agent: str, action_id: int) -> Optional[ActionCandidate]:
@@ -792,7 +980,7 @@ class V5CityEnvironment:
         return None
     
     def _compute_reward(self, agent: str, candidate: ActionCandidate) -> Tuple[float, Dict[str, float]]:
-        """计算动作奖励
+        """计算动作奖励 - 使用新的持续奖励系统
         
         Args:
             agent: 智能体名称
@@ -801,24 +989,59 @@ class V5CityEnvironment:
         Returns:
             (总奖励, 奖励明细)
         """
-        # 获取当前状态字典
-        current_state = self._get_current_state_dict()
+        # 获取当前环境状态
+        current_state = self._get_current_environment_state()
         
-        # 使用scorer计算奖励
-        reward_terms = self.scorer.score_action(candidate, current_state)
+        # 现有动作奖励计算
+        reward_terms = self.reward_calculator.calculate_reward(candidate, current_state)
+        action_reward = reward_terms.revenue + reward_terms.cost + reward_terms.prestige + reward_terms.proximity + reward_terms.diversity
         
-        # 计算总奖励（收入 - 成本 + 其他奖励）
-        total_reward = reward_terms.revenue - reward_terms.cost + reward_terms.prestige + reward_terms.proximity + reward_terms.diversity
-        
-        # 添加其他奖励项
+        # 添加其他奖励项（只计算数值类型，排除非奖励项）
         if reward_terms.other:
-            total_reward += sum(reward_terms.other.values())
+            # 排除不应该累加到奖励中的值
+            exclude_keys = {
+                'river_dist_m',      # 距离值，不是奖励
+                'land_price_k',      # 系数，不是奖励
+                'river_pct',         # 百分比，不是奖励
+                'zone',              # 字符串，不是数值
+                'land_price_norm',   # 归一化值，不是奖励
+                'adj'                # 标志位，不是奖励
+            }
+            
+            numeric_values = [v for k, v in reward_terms.other.items() 
+                             if isinstance(v, (int, float)) and k not in exclude_keys]
+            action_reward += sum(numeric_values)
+        
+        # 计算月度总收益
+        monthly_totals = self.continuous_reward_system.calculate_monthly_total_rewards(current_state)
+        monthly_total_t = monthly_totals.get(agent, 0.0)
+        
+        # 计算增量奖励
+        delta_reward = self.continuous_reward_system.calculate_delta_reward(agent, monthly_total_t)
+        
+        # 计算潜势塑形
+        shaping_reward = self.continuous_reward_system.calculate_potential_shaping(agent, monthly_total_t)
+        
+        # 总训练奖励
+        total_reward = action_reward + delta_reward + shaping_reward
         
         # 转换为字典格式
         reward_dict = reward_terms.to_dict()
+        reward_dict.update({
+            "action_reward": action_reward,
+            "delta_reward": delta_reward,
+            "shaping_reward": shaping_reward,
+            "monthly_total": monthly_total_t
+        })
         
+        # 日志输出
         if topic_enabled("reward_terms"):
-            self.logger.info(f"奖励计算: agent={agent}, action={candidate.id}, reward={total_reward:.2f}, terms={reward_dict}")
+            self.logger.info(f"奖励计算: agent={agent}, action={candidate.id}, "
+                            f"action_reward={action_reward:.2f}, "
+                            f"delta_reward={delta_reward:.2f}, "
+                            f"shaping_reward={shaping_reward:.2f}, "
+                            f"monthly_total={monthly_total_t:.2f}, "
+                            f"total={total_reward:.2f}")
         
         return total_reward, reward_dict
     
@@ -994,6 +1217,123 @@ class V5CityEnvironment:
         
         return np.array(features, dtype=np.float32)
     
+    def _get_unlocked_actions(self, agent: str) -> Set[int]:
+        """
+        获取智能体已解锁的动作
+        
+        Args:
+            agent: 智能体名称
+            
+        Returns:
+            已解锁的动作集合
+        """
+        print(f"[DEBUG] _get_unlocked_actions called for agent {agent}, month {self.current_month}")
+        print(f"[DEBUG] config keys: {self.config.keys()}")
+        print(f"[DEBUG] action_unlocks in config: {'action_unlocks' in self.config}")
+        try:
+            # 直接检查解锁配置，而不是依赖中间件
+            unlock_config = self.config.get("action_unlocks", {})
+            rules = unlock_config.get("rules", [])
+            print(f"[DEBUG] rules: {rules}")
+            
+            self.logger.info(f"[UNLOCK_DEBUG] Agent {agent}, month {self.current_month}, rules: {rules}")
+            
+            unlocked_actions = set()
+
+            for rule in rules:
+                # 检查智能体匹配
+                rule_agent = rule.get("agent")
+                if rule_agent and rule_agent != agent:
+                    continue
+
+                # 检查时间条件
+                after_month = rule.get("after_month", 0)
+                if self.current_month < after_month:
+                    continue
+
+                # 检查预算条件（如果存在）
+                passed = True
+
+                if "budget_threshold" in rule:
+                    agent_budget = self.budgets.get(agent, 0)
+                    budget_threshold = rule["budget_threshold"]
+                    passed &= (agent_budget >= budget_threshold)
+
+                if "total_budget_threshold" in rule:
+                    total_budget = sum(self.budgets.values())
+                    total_threshold = rule["total_budget_threshold"]
+                    passed &= (total_budget >= total_threshold)
+
+                # 如果条件满足，收集解锁动作
+                if passed:
+                    unlock_actions = rule.get("unlock_action_ids", [])
+                    unlocked_actions.update(unlock_actions)
+            
+            # 检查是否有针对该智能体的解锁规则
+            has_agent_rules = any(
+                rule.get("agent") == agent for rule in rules
+            )
+            
+            # 计算并返回 基础动作 ∪ 解锁动作
+            agent_config = self.agents_config.get("defs", {}).get(agent, {})
+            all_actions = set(agent_config.get("action_ids", []))
+
+            # 被规则标记为“需要解锁”的动作集合（视为非基础动作）
+            locked_actions = set()
+            for rule in rules:
+                rule_agent = rule.get("agent")
+                if rule_agent and rule_agent != agent:
+                    continue
+                unlock_actions = rule.get("unlock_action_ids", [])
+                locked_actions.update(unlock_actions)
+
+            basic_actions = all_actions - locked_actions
+
+            if has_agent_rules:
+                # 调试模式：如果解锁了动作，只返回解锁的动作（替换而不是合并）
+                # 这样可以验证解锁机制是否生效：解锁后应该无法执行基础动作
+                if unlocked_actions:
+                    # 解锁后，只返回解锁的动作
+                    self.logger.info(
+                        f"[UNLOCK_DEBUG] Has rules for {agent}. month={self.current_month} basic={sorted(list(basic_actions))} "
+                        f"unlocked={sorted(list(unlocked_actions))} [DEBUG MODE] returning only unlocked actions"
+                    )
+                    print(
+                        f"[DEBUG] _get_unlocked_actions [DEBUG MODE] returning only unlocked: {unlocked_actions}"
+                    )
+                    return unlocked_actions
+                else:
+                    # 未解锁时，返回基础动作
+                    self.logger.info(
+                        f"[UNLOCK_DEBUG] Has rules for {agent}. month={self.current_month} basic={sorted(list(basic_actions))} "
+                        f"unlocked={sorted(list(unlocked_actions))} returning basic actions only"
+                    )
+                    print(
+                        f"[DEBUG] _get_unlocked_actions returning basic: {basic_actions}"
+                    )
+                    return basic_actions
+            
+            # 如果没有针对该智能体的解锁规则，返回所有动作
+            if not has_agent_rules:
+                agent_config = self.agents_config.get("defs", {}).get(agent, {})
+                all_actions = set(agent_config.get("action_ids", []))
+                self.logger.info(f"[UNLOCK_DEBUG] No rules for agent, returning all: {all_actions}")
+                print(f"[DEBUG] _get_unlocked_actions returning all actions: {all_actions}")
+                return all_actions
+            
+            print(f"[DEBUG] _get_unlocked_actions returning unlocked_actions: {unlocked_actions}")
+            return unlocked_actions
+            
+        except Exception as e:
+            import traceback
+            self.logger.error(f"获取解锁状态失败: {e}")
+            self.logger.error(f"Traceback: {traceback.format_exc()}")
+            print(f"[ERROR] 获取解锁状态失败: {e}")
+            print(f"[ERROR] Traceback: {traceback.format_exc()}")
+            # 如果获取失败，返回所有动作（不进行解锁过滤）
+            agent_config = self.agents_config.get("defs", {}).get(agent, {})
+            return set(agent_config.get("action_ids", []))
+    
     def _get_land_price(self, slot_id: str) -> float:
         """获取槽位的地价
         
@@ -1007,8 +1347,11 @@ class V5CityEnvironment:
         if slot_id in self.enumerator.slots:
             slot = self.enumerator.slots[slot_id]
             
-            # 使用高斯地价场系统（与v4.1相同）
-            if hasattr(self, 'land_price_system'):
+            # 使用地价演化系统（整合原有系统）
+            if hasattr(self, 'land_price_evo') and self.land_price_evo:
+                price = self.land_price_evo.get_land_price([slot.x, slot.y])
+                return max(0.0, min(1.0, float(price)))
+            elif hasattr(self, 'land_price_system'):
                 price = self.land_price_system.get_land_price([slot.x, slot.y])
                 return max(0.0, min(1.0, float(price)))
             else:
@@ -1043,6 +1386,117 @@ class V5CityEnvironment:
         except Exception as e:
             self.logger.warning(f"高斯地价场系统初始化失败: {e}，将使用简化地价")
             self.land_price_system = None
+    
+    def _initialize_land_price_evolution(self) -> None:
+        """初始化地价演化系统"""
+        try:
+            from envs.land_price_evo import LandPriceEvo
+            
+            # 获取地图尺寸，使用与原有系统一致的200x200
+            map_size = self._get_map_size()
+            # 使用200x200与原有系统保持一致
+            grid_shape = (200, 200)  # (height, width)
+            
+            # 创建地价演化系统
+            self.land_price_evo = LandPriceEvo(self.config, grid_shape)
+            
+            self.logger.info(f"地价演化系统初始化成功，网格尺寸: {grid_shape}")
+            
+        except Exception as e:
+            self.logger.error(f"地价演化系统初始化失败: {e}")
+            # 不抛出异常，允许系统在没有演化功能的情况下运行
+            self.land_price_evo = None
+    
+    def _update_land_price_evolution(self) -> None:
+        """更新地价演化系统"""
+        if self.land_price_evo is None:
+            return
+        
+        try:
+            # 更新地价场
+            updated_land_price = self.land_price_evo.update_if_needed(self.current_month)
+            
+            # 更新环境状态中的地价场
+            if hasattr(self, 'land_price_grid'):
+                self.land_price_grid = updated_land_price
+            
+            # 记录激活的Hub
+            active_hubs = self.land_price_evo.get_active_hubs()
+            if active_hubs:
+                self.logger.info(f"月份 {self.current_month}: 激活Hub数量 {len(active_hubs)}")
+                
+        except Exception as e:
+            self.logger.error(f"地价演化更新失败: {e}")
+    
+    def _apply_middleware(self, agent: str, sequence: Sequence) -> Sequence:
+        """
+        应用中间件处理序列
+        
+        Args:
+            agent: 智能体名称
+            sequence: 原始序列
+            
+        Returns:
+            处理后的序列
+        """
+        if not hasattr(self, 'config'):
+            return sequence
+        
+        # 获取中间件配置
+        middleware_config = self.config.get("action_mw", [])
+        if not middleware_config:
+            return sequence
+        
+        # 创建环境状态对象（用于中间件）
+        state = EnvironmentState(
+            month=self.current_month,
+            land_prices=self._get_actual_land_prices(),
+            buildings=self._get_actual_buildings(),
+            budgets=self.budgets.copy(),
+            slots=self._get_actual_slots()
+        )
+        # 添加配置到状态对象
+        state.cfg = self.config
+        state.t = self.current_month  # 添加时间信息
+        state.month = self.current_month  # 添加月份信息
+        state.agents = self.agents  # 添加智能体列表
+        
+        processed_sequence = sequence
+        
+        # 应用每个中间件
+        for middleware_name in middleware_config:
+            try:
+                if middleware_name == "unlock.gate":
+                    # 使用预先初始化的解锁中间件
+                    if hasattr(self, 'unlock_middleware'):
+                        processed_sequence = self.unlock_middleware.apply(processed_sequence, state)
+                        self.logger.debug(f"应用解锁中间件: {len(sequence.actions)} -> {len(processed_sequence.actions)}")
+                    else:
+                        # 备用：动态创建
+                        from action_mw.unlock_gate import UnlockGateMW
+                        middleware = UnlockGateMW()
+                        processed_sequence = middleware.apply(processed_sequence, state)
+                        self.logger.debug(f"应用解锁中间件（动态创建）: {len(sequence.actions)} -> {len(processed_sequence.actions)}")
+                
+                elif middleware_name == "candidate_range":
+                    from action_mw.candidate_range import CandidateRangeMiddleware
+                    middleware = CandidateRangeMiddleware(self.config)
+                    processed_sequence = middleware.apply(processed_sequence, state)
+                    self.logger.debug(f"应用候选范围中间件: {sequence} -> {processed_sequence}")
+                
+                elif middleware_name == "river_restriction":
+                    from action_mw.river_restriction import RiverRestrictionMiddleware
+                    middleware = RiverRestrictionMiddleware(self.config)
+                    processed_sequence = middleware.apply(processed_sequence, state)
+                    self.logger.debug(f"应用河流限制中间件: {sequence} -> {processed_sequence}")
+                
+                # 可以添加更多中间件...
+                
+            except Exception as e:
+                self.logger.error(f"中间件 {middleware_name} 应用失败: {e}")
+                # 继续处理其他中间件
+        
+        return processed_sequence
     
     def _get_transport_hubs(self) -> List[List[int]]:
         """获取交通枢纽位置"""
@@ -1108,18 +1562,29 @@ class V5CityEnvironment:
             print(f"[STEP_PHASE_DEBUG] Processing agent: {agent}")
             if agent in phase_sequences:
                 sequence = phase_sequences[agent]
+                # 空序列保护：当选择器未产出序列时，跳过中间件与执行
+                if sequence is None or (hasattr(sequence, 'actions') and not sequence.actions):
+                    self.logger.warning(f"[PIPELINE_SKIP] agent={agent} month={self.current_month} reason=no_sequence")
+                    rewards[agent] = 0.0
+                    reward_terms_all[agent] = {}
+                    continue
                 print(f"[STEP_PHASE_DEBUG] Agent {agent} has sequence: {sequence}")
+                
+                # 应用中间件处理序列
+                processed_sequence = self._apply_middleware(agent, sequence)
+                print(f"[STEP_PHASE_DEBUG] Agent {agent} processed sequence: {processed_sequence}")
                 
                 # 注意：动作序列生成时已经应用了去重过滤，无需重新获取
                 if topic_enabled("action_execution"):
-                    self.logger.info(f"[ACTION_EXEC] 执行智能体 {agent} 的动作序列: {sequence}")
-                reward, reward_terms = self._execute_agent_sequence(agent, sequence)
+                    self.logger.info(f"[ACTION_EXEC] 执行智能体 {agent} 的动作序列: {processed_sequence}")
+                reward, reward_terms = self._execute_agent_sequence(agent, processed_sequence)
                 rewards[agent] = reward
                 reward_terms_all[agent] = reward_terms
                 
                 # 修复：立即更新槽位占用状态，供后续智能体使用
+                # 使用processed_sequence而不是原始sequence，确保只有实际执行的槽位被标记
                 print(f"[STEP_PHASE_DEBUG] Calling _update_occupied_slots_for_agent for {agent}")
-                self._update_occupied_slots_for_agent(agent, sequence)
+                self._update_occupied_slots_for_agent(agent, processed_sequence)
                 
                 if topic_enabled("action_execution"):
                     self.logger.info(f"[ACTION_EXEC] 智能体 {agent} 获得奖励: {reward}")
@@ -1238,6 +1703,19 @@ class V5CityEnvironment:
             "step_log": phase_logs[0] if phase_logs else None,
             "phase_logs": phase_logs
         }
+
+        # 月度占位汇总：高优先级，用于观察占位规模是否逼近阈值，并区分执行/非执行占位
+        try:
+            total_occ = len(self._global_occupied_slot_ids)
+            built_occ = len(self._built_slot_ids)
+            non_exec_set = list(self._global_occupied_slot_ids - self._built_slot_ids)
+            sample_non_exec = non_exec_set[:5]
+            self.logger.warning(
+                f"[OCCUPIED_SUMMARY] month={self.current_month} occupied_ids={total_occ} built_ids={built_occ} "
+                f"non_exec_ids={total_occ - built_occ} sample_non_exec={sample_non_exec}"
+            )
+        except Exception:
+            pass
         
         return new_state, rewards, done, info
     

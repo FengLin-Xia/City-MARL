@@ -43,12 +43,19 @@
         },
         "evolution": {
             "enabled": true,
+            "recompute_mode": "incremental",
+            "cache": true,
             "road_activation_month": 0,
-            "hub_activation_month": 2,
+            "hub_activation_month": 0,
             "hub_growth_duration_months": 6,
             "hub_initial_peak": 0.7,
             "hub_final_peak": 1.0,
-            "hub3_activation_month": 15
+            "hub3_activation_month": 15,
+            "hubs_schedule": [
+                { "id": "hub1", "activation_month": 0, "x": 122, "y": 80, "sigma_m": 32, "peak": 1.0 },
+                { "id": "hub2", "activation_month": 2, "x": 112, "y": 121, "sigma_m": 28, "peak": 0.9 },
+                { "id": "hub3", "activation_month": 15, "x": 89, "y": 73, "sigma_m": 30, "peak": 1.1, "fade_in_months": 3 }
+            ]
         }
     },
     "slots": {
@@ -111,7 +118,7 @@
     "env": {
         "time_model": {
             "step_unit": "month",
-            "total_steps": 30
+            "total_steps": 50
         },
         "land_price": {
             "base": 1.0,
@@ -200,7 +207,7 @@
                 ],
                 "constraints": {
                     "max_actions_per_turn": 2,
-                    "budget_limit": 15000
+                    "budget_limit": 50000
                 }
             },
             "COUNCIL": {
@@ -291,9 +298,30 @@
             "allocation_strategy": "dynamic"
         }
     },
+    "continuous_rewards": {
+        "enabled": true,
+        "gamma": 0.99,
+        "action_reward_rates": {
+            "3": 100.0,
+            "4": 150.0,
+            "5": 200.0,
+            "9": 120.0,
+            "10": 180.0,
+            "11": 250.0
+        }
+    },
+    "synergy_effects": {
+        "industrial_cluster": {
+            "enabled": true,
+            "bonus_rate": 0.15,
+            "affects_actions": [3, 4, 5],
+            "trigger_actions": [9, 10, 11],
+            "global_effect": true
+        }
+    },
     "ledger": {
         "initial_budget": {
-            "IND": 15000,
+            "IND": 50000,
             "EDU": 20000,
             "COUNCIL": 20000
         },
@@ -324,7 +352,11 @@
             "max_actions_per_step": 5,
             "per_zone_month_cap": 3
         },
-        "advance_policy": "advance_if_empty"
+        "advance_policy": "advance_if_empty",
+        "building_level_restriction": {
+            "enabled": true,
+            "apply_to_agents": ["IND"]
+        }
     },
     "evaluation": {
         "proximity_threshold": 15.0,
@@ -520,8 +552,13 @@
             },
             {
                 "name": "diversity",
-                "fn": "stats.entropy_window",
-                "weight": 0.05
+                "fn": "action_diversity",
+                "weight": 0.2
+            },
+            {
+                "name": "industrial_cluster",
+                "fn": "industrial_cluster",
+                "weight": 0.1
             }
         ],
         "term_params": {
@@ -533,9 +570,16 @@
                 "same_type_bonus": 0.2,
                 "mix_bonus": 0.1
             },
-            "stats.entropy_window": {
+            "action_diversity": {
                 "window": 12,
                 "epsilon": 1e-06
+            },
+            "industrial_cluster": {
+                "enabled": true,
+                "bonus_rate": 0.15,
+                "affects_actions": [3, 4, 5],
+                "trigger_actions": [9, 10, 11],
+                "global_effect": true
             }
         }
     },
@@ -564,12 +608,24 @@
     },
     "action_mw": [
         "conflict.drop_late",
+        "unlock.gate",
         "budget.shared_ledger",
         "legality.env",
         "river_restriction",
         "candidate_range",
         "sequence.trim_to_max_len"
     ],
+    "action_unlocks": {
+        "persistence": "sticky",
+        "rules": [
+            {
+                "id": "IND_hub3_unlock",
+                "agent": "IND",
+                "after_month": 15,
+                "unlock_action_ids": [9, 10, 11]
+            }
+        ]
+    },
     "mappo": {
         "net": {
             "obs_dim": 512,
@@ -588,7 +644,7 @@
             "clip_eps": 0.25,
             "gamma": 0.99,
             "gae_lambda": 0.8,
-            "entropy_coef": 0.1,
+            "entropy_coef": 0.8,
             "value_coef": 0.5,
             "target_kl": 0.02,
             "max_grad_norm": 0.5,
@@ -597,15 +653,15 @@
         },
         "rollout": {
             "num_envs": 8,
-            "horizon": 20,
+            "horizon": 50,
             "minibatch_size": 32,
-            "updates_per_iter": 4,
+            "updates_per_iter": 6,
             "max_updates": 999999
         },
         "exploration": {
-            "temperature": 2.0,
-            "anneal_to": 0.7,
-            "anneal_steps": 200000
+            "temperature": 4.0,
+            "anneal_to": 1.5,
+            "anneal_steps": 500000
         }
     },
     "eval": {
@@ -684,12 +740,13 @@
         },
         "modules": {
             "env": "INFO",
-            "enumeration": "WARN",
+            "enumeration": "INFO",
             "trainer": "INFO",
             "exporter": "INFO",
             "reward": "WARN",
             "scheduler": "INFO",
-            "budget": "INFO"
+            "budget": "INFO",
+            "policy": "INFO"
         },
         "topics": {
             "candidates": true,
@@ -704,7 +761,11 @@
             "experience_collection": true,
             "training_step": true,
             "environment_step": true,
-            "action_execution": true
+            "action_execution": true,
+            "continuous_rewards": true,
+            "synergy_activation": true,
+            "monthly_rewards": true,
+            "building_registry": true
         },
         "sampling": {
             "every_n_steps": 1,
@@ -738,14 +799,14 @@
             "point_selection": true
         }
     },
-    "multi_action": {
+        "multi_action": {
         "enabled": true,
         "max_actions_per_step": 3,
         "mode": "two_stage",
         "candidate_topP": 64,
         "dup_policy": "no_repeat_point",
-        "stop_bias": -0.2,
-        "temperature": 2.0,
+        "stop_bias": -0.05,
+        "temperature": 4.5,
         "entropy_bonus": 0.1,
         "penalty_k": 0.05,
         "curriculum": {
@@ -753,6 +814,15 @@
             "initial_max_k": 1,
             "final_max_k": 3,
             "increment_every_n_episodes": 50
+        }
+    },
+    "reward_mechanisms": {
+        "industrial_cluster_bonus": {
+            "enabled": true,
+            "bonus_rate": 0.15,
+            "affects_actions": [3, 4, 5],
+            "trigger_actions": [9, 10, 11],
+            "global_effect": true
         }
     }
 }

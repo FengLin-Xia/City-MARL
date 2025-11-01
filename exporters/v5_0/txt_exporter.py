@@ -31,6 +31,12 @@ class V5TXTExporter:
         self.config = self.loader.load_v5_config(config_path)
         self.action_params = self.config.get("action_params", {})
         self.logger = get_logger("exporter")
+        # 读取episode步数（用于切分多episode导出），默认30
+        self.episode_steps = (
+            self.config.get("env", {})
+            .get("time_model", {})
+            .get("total_steps", 30)
+        )
         
         # v4.1兼容性映射（保持原有格式）
         self.agent_size_mapping = {
@@ -93,9 +99,9 @@ class V5TXTExporter:
         """按月份分组数据"""
         monthly_data = {}
         
-        # 如果数据超过30个月，说明有多个episode，需要找到最后一个episode的起始位置
-        if len(step_logs) > 30:
-            print(f"[TXT_EXPORTER] 检测到多个episode数据({len(step_logs)}条)，寻找最后一个episode")
+        # 如果数据长度超过单个episode步数，说明有多个episode，需要找到最后一个episode的起始位置
+        if len(step_logs) > self.episode_steps:
+            print(f"[TXT_EXPORTER] 检测到多个episode数据({len(step_logs)}条，单集步数≈{self.episode_steps})，寻找最后一个episode")
             
             # 找到最后一个episode的起始位置（从month=1开始的数据）
             last_episode_start = 0
@@ -201,6 +207,10 @@ class V5TXTExporter:
         if not step_log.chosen or not coordinates:
             return ""
         
+        # 调试信息：记录当前处理的step_log
+        if hasattr(step_log, 't'):
+            print(f"[EXPORT_DEBUG] Processing step_log t={step_log.t}, agent={getattr(step_log, 'agent', 'unknown')}, chosen={step_log.chosen}")
+        
         # 生成v4.1格式输出
         parts = []
         for i, (action_id, (x, y, angle)) in enumerate(zip(step_log.chosen, coordinates)):
@@ -214,9 +224,16 @@ class V5TXTExporter:
             # 获取v4.1格式的动作编号
             v4_action_id = self._get_v4_action_id(agent, size)
             
-            # 调试信息
+            # 调试信息 - 修复重复打印问题
             if action_id in [9, 10, 11]:
-                print(f"[EXPORT_DEBUG] Action {action_id}: desc={desc}, agent={agent}, size={size}, v4_id={v4_action_id}")
+                # 添加唯一标识符避免重复打印
+                debug_key = f"{action_id}_{i}_{x}_{y}"
+                if not hasattr(self, '_debug_printed'):
+                    self._debug_printed = set()
+                
+                if debug_key not in self._debug_printed:
+                    print(f"[EXPORT_DEBUG] Action {action_id}: desc={desc}, agent={agent}, size={size}, v4_id={v4_action_id}")
+                    self._debug_printed.add(debug_key)
             
             # v4.1格式：a(x,y,z)angle
             part = f"{v4_action_id}({x:.1f},{y:.1f},0){angle:.1f}"
