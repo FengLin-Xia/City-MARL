@@ -36,9 +36,13 @@ class V5TrainingPipeline:
         self.trainer = None
         self.export_system = None
         
-        # 训练数据
+        # 训练数据（临时，用于每个episode）
         self.step_logs = []
         self.env_states = []
+        
+        # 最终保存的数据（累积所有episode）
+        self.final_step_logs = []
+        self.final_env_states = []
         
         # 设置管道步骤
         self._setup_pipeline_steps()
@@ -78,6 +82,23 @@ class V5TrainingPipeline:
             last_result = self.pipeline.run(data)
             # 下一轮继续沿用返回的数据
             data = last_result.data if last_result and last_result.data is not None else data
+            
+            # 如果不是最后一个episode，保存数据后清空以避免累积
+            if ep < num_episodes:
+                print(f"[TRAINING] Episode {ep} completed, saving and clearing data for next episode")
+                # 修复：保存当前episode的数据到final列表（用于最终导出）
+                self.final_step_logs.extend(self.step_logs)
+                self.final_env_states.extend(self.env_states)
+                # 清空用于下一轮（避免内存泄漏）
+                data["step_logs"] = []
+                data["env_states"] = []
+                self.step_logs = []
+                self.env_states = []
+            else:
+                # 最后一个episode也保存到final列表
+                print(f"[TRAINING] Episode {ep} completed, saving final data")
+                self.final_step_logs.extend(self.step_logs)
+                self.final_env_states.extend(self.env_states)
         
         if last_result and last_result.success:
             print(f"[TRAINING] Training completed successfully")
@@ -87,8 +108,8 @@ class V5TrainingPipeline:
         return {
             "success": bool(last_result and last_result.success),
             "data": data,
-            "step_logs": self.step_logs,
-            "env_states": self.env_states,
+            "step_logs": self.final_step_logs,  # 修复：返回所有episode的数据
+            "env_states": self.final_env_states,  # 修复：返回所有episode的数据
             "pipeline_summary": self.pipeline.get_pipeline_summary()
         }
     
@@ -162,6 +183,10 @@ class V5TrainingPipeline:
             data["env_states"].extend(env_states)
             data["experiences"].extend(experiences)
             
+            # 同时更新实例属性
+            self.step_logs.extend(step_logs)
+            self.env_states.extend(env_states)
+            
             # 更新状态
             self.pipeline.state_manager.update_global_state("total_steps", 
                 self.pipeline.state_manager.get_global_state().get("total_steps", 0) + len(experiences))
@@ -194,6 +219,9 @@ class V5TrainingPipeline:
             print(f"  - Training completed: loss={train_stats.get('total_loss', 0):.4f}")
             # 训练后清空已消费的经验（避免重复训练）
             data["experiences"] = []
+            # 修复：强制内存清理
+            import gc
+            gc.collect()
         else:
             print("  - No experiences to train on")
         
@@ -223,6 +251,9 @@ class V5TrainingPipeline:
         every_n = int(export_cfg.get("every_n_episodes", 0))
         current_ep = int(data.get("current_episode", 0)) + 1
         should_export = enabled and (every_n == 0 or (current_ep % every_n == 0) or (current_ep == int(data.get("num_episodes", current_ep))))
+        # 强制只在最后一个episode导出
+        if every_n == 1:
+            should_export = should_export and (current_ep == int(data.get("num_episodes", current_ep)))
         if not should_export:
             print("[TRAINING] Export skipped by config")
             return data
@@ -234,6 +265,7 @@ class V5TrainingPipeline:
         
         if step_logs and env_states:
             try:
+                # 直接传递对象，不进行字符串转换
                 # 导出结果
                 results = self.export_system.export_all(step_logs, env_states, output_dir)
                 
@@ -251,9 +283,9 @@ class V5TrainingPipeline:
                 print(f"  - Export failed: {e}")
         else:
             print("  - No data to export")
-        # 为避免重复导出，清空已导出数据缓存
-        data["step_logs"] = []
-        data["env_states"] = []
+        # 保留数据供集成系统使用，不清空
+        # data["step_logs"] = []
+        # data["env_states"] = []
         
         return data
     
@@ -301,3 +333,15 @@ def run_training_session(config_path: str, num_episodes: int, output_dir: str = 
     """
     pipeline = create_training_pipeline(config_path)
     return pipeline.run_training(num_episodes, output_dir)
+
+
+
+
+
+
+
+
+
+
+
+

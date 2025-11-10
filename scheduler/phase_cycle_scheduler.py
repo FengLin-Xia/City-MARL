@@ -154,3 +154,4 @@ class PhaseCycleScheduler:
         remaining_in_period = self.period - (adjusted_step % self.period)
         
         return current_step + remaining_in_period
+

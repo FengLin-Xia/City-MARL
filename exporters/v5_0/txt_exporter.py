@@ -31,11 +31,17 @@ class V5TXTExporter:
         self.config = self.loader.load_v5_config(config_path)
         self.action_params = self.config.get("action_params", {})
         self.logger = get_logger("exporter")
+        # 读取episode步数（用于切分多episode导出），默认30
+        self.episode_steps = (
+            self.config.get("env", {})
+            .get("time_model", {})
+            .get("total_steps", 30)
+        )
         
         # v4.1兼容性映射（保持原有格式）
         self.agent_size_mapping = {
             "EDU": {"S": 0, "M": 1, "L": 2},
-            "IND": {"S": 3, "M": 4, "L": 5},
+            "IND": {"S": 3, "M": 4, "L": 5, "A": 9, "B": 10, "C": 11},
             "COUNCIL": {"A": 6, "B": 7, "C": 8}
         }
     
@@ -53,8 +59,14 @@ class V5TXTExporter:
         Returns:
             导出的文件路径
         """
+        # 检查数据格式
+        if not isinstance(step_logs, list) or not isinstance(env_states, list):
+            raise ValueError("StepLogs和EnvironmentStates必须是列表格式")
+        
+        # 如果数量不匹配，使用step_logs为准，忽略多余的env_states
         if len(step_logs) != len(env_states):
-            raise ValueError("StepLogs和EnvironmentStates数量不匹配")
+            print(f"[WARNING] StepLogs({len(step_logs)})和EnvironmentStates({len(env_states)})数量不匹配，使用最后{len(step_logs)}个EnvironmentStates")
+            env_states = env_states[-len(step_logs):] if len(env_states) > len(step_logs) else env_states
         
         # 按月份分组
         monthly_data = self._group_by_month(step_logs, env_states)
@@ -86,6 +98,20 @@ class V5TXTExporter:
                        env_states: List[EnvironmentState]) -> Dict[int, Tuple[List[StepLog], List[EnvironmentState]]]:
         """按月份分组数据"""
         monthly_data = {}
+        
+        # 如果数据长度超过单个episode步数，说明有多个episode，需要找到最后一个episode的起始位置
+        if len(step_logs) > self.episode_steps:
+            print(f"[TXT_EXPORTER] 检测到多个episode数据({len(step_logs)}条，单集步数≈{self.episode_steps})，寻找最后一个episode")
+            
+            # 找到最后一个episode的起始位置（从month=1开始的数据）
+            last_episode_start = 0
+            for i, state in enumerate(env_states):
+                if state.month == 1 and i > 0:  # 找到新的episode开始
+                    last_episode_start = i
+            
+            print(f"[TXT_EXPORTER] 最后一个episode从索引{last_episode_start}开始")
+            step_logs = step_logs[last_episode_start:]
+            env_states = env_states[last_episode_start:]
         
         for log, state in zip(step_logs, env_states):
             month = state.month
@@ -181,19 +207,34 @@ class V5TXTExporter:
         if not step_log.chosen or not coordinates:
             return ""
         
-        # 获取动作参数
-        action_params = self.action_params.get(str(step_log.chosen[0]), {})
-        desc = action_params.get("desc", f"ACTION_{step_log.chosen[0]}")
-        
-        # 解析动作描述获取智能体和尺寸
-        agent, size = self._parse_action_desc(desc)
-        
-        # 获取v4.1格式的动作编号
-        v4_action_id = self._get_v4_action_id(agent, size)
+        # 调试信息：记录当前处理的step_log
+        if hasattr(step_log, 't'):
+            print(f"[EXPORT_DEBUG] Processing step_log t={step_log.t}, agent={getattr(step_log, 'agent', 'unknown')}, chosen={step_log.chosen}")
         
         # 生成v4.1格式输出
         parts = []
         for i, (action_id, (x, y, angle)) in enumerate(zip(step_log.chosen, coordinates)):
+            # 获取动作参数
+            action_params = self.action_params.get(str(action_id), {})
+            desc = action_params.get("desc", f"ACTION_{action_id}")
+            
+            # 解析动作描述获取智能体和尺寸
+            agent, size = self._parse_action_desc(desc)
+            
+            # 获取v4.1格式的动作编号
+            v4_action_id = self._get_v4_action_id(agent, size)
+            
+            # 调试信息 - 修复重复打印问题
+            if action_id in [9, 10, 11]:
+                # 添加唯一标识符避免重复打印
+                debug_key = f"{action_id}_{i}_{x}_{y}"
+                if not hasattr(self, '_debug_printed'):
+                    self._debug_printed = set()
+                
+                if debug_key not in self._debug_printed:
+                    print(f"[EXPORT_DEBUG] Action {action_id}: desc={desc}, agent={agent}, size={size}, v4_id={v4_action_id}")
+                    self._debug_printed.add(debug_key)
+            
             # v4.1格式：a(x,y,z)angle
             part = f"{v4_action_id}({x:.1f},{y:.1f},0){angle:.1f}"
             parts.append(part)

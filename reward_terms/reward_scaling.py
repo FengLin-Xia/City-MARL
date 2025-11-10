@@ -50,3 +50,4 @@ class RewardScalingTerm:
         # 简化实现：返回固定值
         # 实际实现需要根据state和action_id计算原始奖励
         return 1000.0  # 示例值
+

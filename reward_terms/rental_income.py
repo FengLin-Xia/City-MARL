@@ -72,3 +72,4 @@ class RentalIncomeTerm:
             return "L"
         else:
             return None
+

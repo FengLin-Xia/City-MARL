@@ -55,21 +55,21 @@ class CandidateRangeMiddleware:
         return Sequence(agent=seq.agent, actions=filtered_actions)
     
     def _get_available_slots(self, month: int, state: EnvironmentState) -> Set[str]:
-        """获取当前月份可用的槽位"""
+        """获取当前月份可用的槽位（支持Hub延迟激活）"""
         available_slots = set()
+        
+        # 获取演化配置
+        evolution_config = self.config.get("land_price", {}).get("evolution", {})
         
         for hub_config in self.hub_list:
             hub_id = hub_config["id"]
-            R0 = hub_config["R0"]
-            dR = hub_config["dR"]
+            
+            # 检查Hub是否已激活
+            if not self._is_hub_active(hub_id, month, evolution_config):
+                continue
             
             # 计算当前Hub的半径
-            if self.candidate_mode == "cumulative":
-                # 累积模式：R = R0 + month * dR
-                current_radius = R0 + month * dR
-            else:
-                # 固定模式：R = R0
-                current_radius = R0
+            current_radius = self._compute_radius(hub_config, month)
                 
             # 获取Hub位置
             hub_pos = self._get_hub_position(hub_id, state)
@@ -81,6 +81,18 @@ class CandidateRangeMiddleware:
             available_slots.update(hub_slots)
             
         return available_slots
+    
+    def _is_hub_active(self, hub_id: str, current_month: int, evolution_config: Dict) -> bool:
+        """检查Hub是否在当前月份激活"""
+        # 检查是否有hub特定的激活时间配置
+        if hub_id == "hub3":
+            hub3_activation_month = evolution_config.get("hub3_activation_month")
+            if hub3_activation_month is not None:
+                return current_month >= hub3_activation_month
+        
+        # 对于hub1和hub2，使用默认的hub_activation_month
+        hub_activation_month = evolution_config.get("hub_activation_month", 7)
+        return current_month >= hub_activation_month
     
     def _get_hub_position(self, hub_id: str, state: EnvironmentState) -> Tuple[float, float]:
         """获取Hub位置"""
@@ -137,13 +149,7 @@ class CandidateRangeMiddleware:
         radii = {}
         for hub_config in self.hub_list:
             hub_id = hub_config["id"]
-            R0 = hub_config["R0"]
-            dR = hub_config["dR"]
-            
-            if self.candidate_mode == "cumulative":
-                radii[hub_id] = R0 + month * dR
-            else:
-                radii[hub_id] = R0
+            radii[hub_id] = self._compute_radius(hub_config, month)
                 
         return radii
     
@@ -151,3 +157,54 @@ class CandidateRangeMiddleware:
         """重置中间件状态"""
         self._hub_positions.clear()
         self._current_radii.clear()
+
+    # ------------------------------------------------------------------
+    # 内部辅助方法
+    # ------------------------------------------------------------------
+
+    def _compute_radius(self, hub_config: Dict[str, Any], month: int) -> float:
+        """根据配置计算当前 Hub 的候选半径（支持减速曲线）"""
+        R0 = float(hub_config.get("R0", 0.0))
+        if self.candidate_mode != "cumulative":
+            return R0
+
+        month = max(0, int(month))
+        schedule = hub_config.get("growth_schedule") or []
+        default_dR = float(hub_config.get("dR", 0.0))
+
+        if not schedule:
+            return R0 + month * default_dR
+
+        radius = R0
+        prev_month = 0
+        last_dR = default_dR
+
+        for segment in schedule:
+            seg_dR = float(segment.get("dR", last_dR))
+            until = segment.get("until_month")
+
+            if until is None:
+                duration = max(0, month - prev_month)
+                radius += duration * seg_dR
+                return radius
+
+            until = int(until)
+            if month <= prev_month:
+                return radius
+
+            duration = max(0, min(month, until) - prev_month)
+            if duration > 0:
+                radius += duration * seg_dR
+                prev_month += duration
+
+            last_dR = seg_dR
+
+            if month <= until:
+                return radius
+
+            prev_month = max(prev_month, until)
+
+        if month > prev_month:
+            radius += (month - prev_month) * last_dR
+
+        return radius

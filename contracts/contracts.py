@@ -4,9 +4,40 @@ v5.0 核心契约定义
 统一系统各模块间的数据结构和接口契约。
 """
 
-from dataclasses import dataclass
-from typing import Dict, List, Any, Optional
+from dataclasses import dataclass, field
+from typing import Dict, List, Any, Optional, Union
 import numpy as np
+
+
+@dataclass
+class AtomicAction:
+    """原子动作：点×类型组合（v5.1 多动作机制）"""
+    point: int                            # 候选点索引（在 CandidateIndex.points 中的位置）
+    atype: int                            # 动作类型索引（在 types_per_point[point] 中的位置）
+    meta: Dict[str, Any] = field(default_factory=dict)  # 额外信息（action_id, slots等）
+    
+    def __post_init__(self):
+        """验证数据完整性"""
+        assert self.point >= 0, f"Point index must be non-negative, got {self.point}"
+        assert self.atype >= 0, f"Action type index must be non-negative, got {self.atype}"
+        assert isinstance(self.meta, dict), "Meta must be a dictionary"
+
+
+@dataclass
+class CandidateIndex:
+    """候选索引：组织点×类型的二级结构（v5.1 多动作机制）"""
+    points: List[int]                     # 可用点列表（点ID或槽位组ID）
+    types_per_point: List[List[int]]      # 每个点可用的类型列表（action_id）
+    point_to_slots: Dict[int, List[str]]  # 点到槽位的映射
+    meta: Dict[str, Any] = field(default_factory=dict)  # 额外信息
+    
+    def __post_init__(self):
+        """验证数据完整性"""
+        assert len(self.points) == len(self.types_per_point), \
+            "Points and types_per_point must have same length"
+        assert all(len(types) > 0 for types in self.types_per_point), \
+            "Each point must have at least one valid type"
+        assert isinstance(self.point_to_slots, dict), "point_to_slots must be a dictionary"
 
 
 @dataclass(frozen=True)
@@ -23,17 +54,50 @@ class ActionCandidate:
         assert isinstance(self.meta, dict), "Meta must be a dictionary"
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=False)
 class Sequence:
-    """统一动作序列（每个 agent 在一个阶段内的选择）"""
-    agent: str                # "IND" / "EDU" / "COUNCIL"
-    actions: List[int]        # 例如 [0,3,5]：全是编号
+    """统一动作序列（每个 agent 在一个阶段内的选择）
+    
+    v5.1 扩展: 支持 Union[int, AtomicAction] 以兼容多动作机制
+    """
+    agent: str                                    # "IND" / "EDU" / "COUNCIL"
+    actions: List[Union[int, AtomicAction]]       # 支持旧版int和新版AtomicAction
     
     def __post_init__(self):
-        """验证数据完整性"""
+        """验证数据完整性并实现兼容层"""
         assert self.agent in ["IND", "EDU", "COUNCIL"], f"Invalid agent: {self.agent}"
-        assert all(a >= 0 for a in self.actions), "All action IDs must be non-negative"
-        assert len(self.actions) > 0, "Actions list cannot be empty"
+        # 允许空动作列表（用于多动作STOP情况）
+        # assert len(self.actions) > 0, "Actions list cannot be empty"
+        
+        # 兼容层：自动转换旧版int为AtomicAction（用于向后兼容）
+        # 注意：这里的转换是保守的，point=0 表示使用默认点索引
+        converted = []
+        for a in self.actions:
+            if isinstance(a, int):
+                # 旧版：int action_id → AtomicAction(point=0, atype=action_id)
+                # meta中保留原始action_id方便后续查找
+                converted.append(AtomicAction(point=0, atype=a, meta={'legacy_id': a}))
+            elif isinstance(a, AtomicAction):
+                # 新版：直接使用
+                converted.append(a)
+            else:
+                raise TypeError(f"Action must be int or AtomicAction, got {type(a)}")
+        
+        # 更新actions为转换后的列表
+        object.__setattr__(self, 'actions', converted)
+    
+    def get_legacy_ids(self) -> List[int]:
+        """获取旧版动作ID列表（用于兼容v5.0日志）"""
+        legacy_ids = []
+        for a in self.actions:
+            if 'legacy_id' in a.meta:
+                legacy_ids.append(a.meta['legacy_id'])
+            elif 'action_id' in a.meta:
+                legacy_ids.append(a.meta['action_id'])
+            else:
+                # 降级：使用atype作为action_id
+                legacy_ids.append(a.atype)
+        return legacy_ids
 
 
 @dataclass
@@ -44,12 +108,24 @@ class StepLog:
     chosen: List[int]                     # 实际执行的动作编号
     reward_terms: Dict[str, float]        # {"revenue":..., "cost":..., ...}
     budget_snapshot: Optional[Dict[str, float]] = None
+    slot_positions: Optional[List[Dict[str, Any]]] = None  # 槽位位置信息
     
     def __post_init__(self):
         """验证数据完整性"""
         assert self.t >= 0, f"Time step must be non-negative, got {self.t}"
         assert self.agent in ["IND", "EDU", "COUNCIL"], f"Invalid agent: {self.agent}"
-        assert all(a >= 0 for a in self.chosen), "All chosen action IDs must be non-negative"
+        
+        # 验证chosen字段（兼容int和AtomicAction）
+        for a in self.chosen:
+            if isinstance(a, int):
+                assert a >= 0, f"Action ID must be non-negative, got {a}"
+            elif isinstance(a, AtomicAction):
+                # 如果是AtomicAction，提取action_id进行验证
+                action_id = a.meta.get('action_id', a.atype)
+                assert action_id >= 0, f"Action ID must be non-negative, got {action_id}"
+            else:
+                raise TypeError(f"chosen must contain int or AtomicAction, got {type(a)}")
+        
         assert isinstance(self.reward_terms, dict), "Reward terms must be a dictionary"
         if self.budget_snapshot:
             assert isinstance(self.budget_snapshot, dict), "Budget snapshot must be a dictionary"
@@ -140,3 +216,5 @@ class RewardTerms:
             diversity=data.get('diversity', 0.0),
             other=other
         )
+
+

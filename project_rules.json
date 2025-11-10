@@ -1,0 +1,160 @@
+{
+  "project_name": "Rain's RL City v5",
+  "version": "5.0",
+  "description": "城市强化学习系统 v5 架构规则",
+  "rules": [
+    {
+      "selector": "project",
+      "description": "整个项目遵循 v5 架构的配置驱动与模块化结构。所有参数、逻辑、奖励、调度顺序等必须通过 city_config_v5.json 配置，而不是硬编码。",
+      "priority": "critical",
+      "examples": [
+        "❌ 错误：reward = 100 * land_price",
+        "✅ 正确：reward = config['reward']['base'] * land_price"
+      ]
+    },
+    {
+      "selector": "contracts/**/*.py",
+      "description": "契约层只包含数据结构定义，用于模块间通信。已固定为 ActionCandidate、Sequence、StepLog 三个类。不要修改字段或方法，若需要传递额外信息，请使用 meta 字段。",
+      "priority": "critical",
+      "examples": [
+        "❌ 错误：@dataclass class ActionCandidate: new_field: str",
+        "✅ 正确：ActionCandidate(meta={'new_field': value})"
+      ]
+    },
+    {
+      "selector": "enhanced_city_simulation_v5*.py",
+      "description": "控制层只负责调度（pipeline、scheduler、env、ledger），不直接包含业务逻辑或奖励计算。控制层应通过注册模块执行逻辑，不写复杂 if-else。",
+      "priority": "high",
+      "examples": [
+        "❌ 错误：if agent == 'IND': reward *= 1.2",
+        "✅ 正确：reward = self.reward_modules['ind_bonus'].compute(state)"
+      ]
+    },
+    {
+      "selector": "action_mw/**/*.py",
+      "description": "中间件模块必须实现 apply(seq, state) -> Sequence 接口。用于冲突、预算、合法性、裁剪等规则。中间件从配置读取参数，不应硬编码。",
+      "priority": "high",
+      "interface": "apply(seq: Sequence, state: EnvironmentState) -> Sequence",
+      "examples": [
+        "class BudgetMiddleware:",
+        "  def apply(self, seq, state):",
+        "    max_cost = self.config['budget']['max_cost']",
+        "    return self._filter_by_budget(seq, max_cost)"
+      ]
+    },
+    {
+      "selector": "reward_terms/**/*.py",
+      "description": "奖励模块必须实现 compute(prev_state, state, action_id) -> float 接口。所有奖励项通过配置启用并赋权重，不在主循环中直接调用。",
+      "priority": "high",
+      "interface": "compute(prev_state: EnvironmentState, state: EnvironmentState, action_id: int) -> float",
+      "examples": [
+        "class RiverPremiumReward:",
+        "  def compute(self, prev_state, state, action_id):",
+        "    weight = self.config['reward']['river_premium']['weight']",
+        "    return self._calculate_premium(state) * weight"
+      ]
+    },
+    {
+      "selector": "scheduler/**/*.py",
+      "description": "调度模块必须实现 who_acts(t, state) -> List[str] 接口。phase_cycle 调度为默认实现。调度逻辑可配置，不应写死在控制层。",
+      "priority": "high",
+      "interface": "who_acts(t: int, state: EnvironmentState) -> List[str]",
+      "examples": [
+        "class PhaseCycleScheduler:",
+        "  def who_acts(self, t, state):",
+        "    phase = self.config['scheduler']['phases'][t % len(self.phases)]",
+        "    return phase['agents']"
+      ]
+    },
+    {
+      "selector": "utils/**/*.py",
+      "description": "工具层（导出、日志、计算器）只负责通用逻辑，不修改主流程。所有导出函数统一读取 StepLog，不解析自定义结构。",
+      "priority": "medium",
+      "examples": [
+        "❌ 错误：def export_custom_format(buildings, agents):",
+        "✅ 正确：def export_txt(step_logs: List[StepLog]):"
+      ]
+    },
+    {
+      "selector": "project",
+      "description": "新增功能必须遵循 '先查配置 → 再用契约 → 新功能建模块 → 控制层只调度 → 不动基石' 的开发原则。",
+      "priority": "critical",
+      "workflow": [
+        "1. 检查是否可通过配置实现",
+        "2. 使用现有契约类传递数据",
+        "3. 创建新模块文件并注册",
+        "4. 在控制层调用注册模块",
+        "5. 不修改核心契约类"
+      ]
+    },
+    {
+      "selector": "project",
+      "description": "模块协作模式为 Pipeline（流水线）。状态管理采用混合式（核心集中，agent 分散）。错误处理策略为可配置（WARN / FAIL_FAST）。性能目标为可扩展，兼容性保持与 v4.1 核心接口一致。",
+      "priority": "high",
+      "architecture": {
+        "collaboration": "Pipeline",
+        "state_management": "Hybrid (centralized core, distributed agents)",
+        "error_handling": "Configurable (WARN / FAIL_FAST)",
+        "performance": "Scalable",
+        "compatibility": "v4.1 core interface"
+      }
+    },
+    {
+      "selector": "project",
+      "description": "添加调试信息要保持配置可调节。所有调试输出、日志级别、详细程度等必须通过配置文件控制，不允许硬编码调试信息。调试信息应支持运行时开关，便于生产环境关闭。",
+      "priority": "high",
+      "examples": [
+        "❌ 错误：print(f'Debug: {value}')",
+        "✅ 正确：if self.config['debug']['enabled']: self.logger.debug(f'Debug: {value}')",
+        "✅ 正确：debug_level = self.config['debug']['level']"
+      ],
+      "config_keys": [
+        "debug.enabled",
+        "debug.level", 
+        "debug.verbose",
+        "debug.output_file"
+      ]
+    },
+    {
+      "selector": "project", 
+      "description": "不要在命令栏写python，需要测试就写测试脚本并运行脚本测试，调试完成后删除该脚本。所有测试和调试工作必须通过独立的测试脚本完成，测试脚本应包含完整的测试逻辑和清理机制。",
+      "priority": "high",
+      "workflow": [
+        "1. 创建独立的测试脚本文件",
+        "2. 在脚本中编写完整的测试逻辑",
+        "3. 运行测试脚本验证功能",
+        "4. 调试完成后立即删除测试脚本",
+        "5. 不在命令行直接执行python代码"
+      ],
+      "examples": [
+        "❌ 错误：在命令行执行 python -c 'import xxx; print(xxx.func())'",
+        "✅ 正确：创建 test_debug_feature.py，运行后删除"
+      ],
+      "naming_convention": "test_*.py 或 debug_*.py"
+    }
+  ],
+  "development_guidelines": {
+    "configuration_first": "所有参数必须通过配置文件控制",
+    "contract_constraints": "只使用三个核心契约类，额外信息用 meta 字段",
+    "modular_development": "新功能创建独立模块并注册",
+    "control_layer_responsibility": "只负责调度，不包含业务逻辑",
+    "standardized_interfaces": "所有模块必须实现标准接口",
+    "configurable_error_handling": "错误处理策略可配置",
+    "performance_requirements": "优先功能正确性，支持可扩展架构",
+    "backward_compatibility": "保持与 v4.1 的兼容性",
+    "debug_configuration": "调试信息必须通过配置控制，支持运行时开关",
+    "test_script_workflow": "测试和调试必须使用独立脚本，完成后立即删除"
+  },
+  "code_review_checklist": [
+    "✓ 是否通过配置文件控制行为？",
+    "✓ 是否使用了正确的契约类？",
+    "✓ 新模块是否正确注册？",
+    "✓ 控制层是否只负责调度？",
+    "✓ 接口是否符合标准？",
+    "✓ 错误处理是否可配置？",
+    "✓ 是否保持了向后兼容性？",
+    "✓ 调试信息是否通过配置控制？",
+    "✓ 测试是否使用独立脚本而非命令行？"
+  ]
+}
+

@@ -70,3 +70,4 @@ class ProgressRewardTerm:
         
         buildings = state.buildings.get(building_type, [])
         return len(buildings)
+

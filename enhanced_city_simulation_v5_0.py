@@ -9,6 +9,7 @@ import json
 import time
 import os
 import sys
+import dataclasses
 from typing import Dict, List, Any, Optional
 
 # 添加项目根目录到路径
@@ -74,17 +75,15 @@ def run_export_mode(args) -> Dict[str, Any]:
     if not args.input_data:
         raise ValueError("导出模式需要指定输入数据路径 (--input_data)")
     
-    # 加载数据
-    step_logs, env_states = load_training_data(args.input_data)
-    
     # 创建导出管道
     export_pipeline = V5ExportPipeline(args.config)
     
-    # 运行导出
+    # 运行导出（传递input_data_path让管道自己加载）
     result = export_pipeline.run_export(
-        step_logs=step_logs,
-        env_states=env_states,
-        output_dir=args.output_dir
+        step_logs=[],  # 空列表，让管道从JSON文件加载
+        env_states=[],  # 空列表，让管道从JSON文件加载
+        output_dir=args.output_dir,
+        input_data_path=args.input_data  # 传递JSON文件路径
     )
     
     return result
@@ -185,8 +184,16 @@ def save_results(result: Dict[str, Any], args) -> str:
     
     # 保存JSON结果
     results_file = os.path.join(results_dir, f"v5_0_results_{timestamp}.json")
+    
+    # 修复：使用dataclass.asdict代替default=str，避免JSON文件异常巨大
+    def serialize_for_json(obj):
+        """为JSON序列化转换对象"""
+        if dataclasses.is_dataclass(obj):
+            return dataclasses.asdict(obj)
+        return str(obj)
+    
     with open(results_file, 'w', encoding='utf-8') as f:
-        json.dump(result, f, indent=2, ensure_ascii=False, default=str)
+        json.dump(result, f, indent=2, ensure_ascii=False, default=serialize_for_json)
     
     print(f"结果已保存: {results_file}")
     return results_file
