@@ -66,3 +66,4 @@ class ActionDiversityRewardTerm:
             normalized_entropy = 0.0
         
         return normalized_entropy
+

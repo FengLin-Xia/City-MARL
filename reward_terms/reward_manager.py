@@ -19,7 +19,7 @@ from .proximity_reward import ProximityRewardTerm
 from .zone_multipliers import ZoneMultipliersTerm
 from .land_price_sensitivity import LandPriceSensitivityTerm
 from .building_size_bonus import BuildingSizeBonusTerm
-from .reward_scaling import RewardScalingTerm
+from .industrial_cluster_reward import IndustrialClusterRewardTerm
 
 
 class RewardManager:
@@ -41,7 +41,7 @@ class RewardManager:
             "zone_multipliers": ZoneMultipliersTerm(config),
             "land_price_sensitivity": LandPriceSensitivityTerm(config),
             "building_size_bonus": BuildingSizeBonusTerm(config),
-            "reward_scaling": RewardScalingTerm(config)
+            "industrial_cluster": IndustrialClusterRewardTerm(config)
         }
     
     def compute_total_reward(self, prev_state: EnvironmentState, state: EnvironmentState, action_id: int) -> float:

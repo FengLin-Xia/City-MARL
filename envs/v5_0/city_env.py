@@ -1136,7 +1136,7 @@ class V5CityEnvironment:
             数值化的观察向量
         """
         state = self.get_state_for_agent(agent)
-        return self._vectorize_observation(state)
+        return self._vectorize_observation(state, agent)
     
     def _get_actual_land_prices(self) -> np.ndarray:
         """获取实际地价数据"""
@@ -1186,25 +1186,82 @@ class V5CityEnvironment:
             })
         return slots
     
-    def _vectorize_observation(self, state: Dict[str, Any]) -> np.ndarray:
-        """将状态字典转换为数值向量"""
+    def _vectorize_observation(self, state: Dict[str, Any], agent: str) -> np.ndarray:
+        """将状态字典转换为数值向量
+        
+        Args:
+            state: 状态字典
+            agent: 智能体名称（用于获取预算历史）
+            
+        Returns:
+            数值化的观察向量
+        """
         # 根据网络期望的输入维度创建观察向量
         obs_dim = 64  # 网络期望的输入维度
         
+        # 预算归一化参数：使用对数归一化 log(budget + 1) / log(max_budget + 1)
+        # max_budget设置为100万，覆盖配置中的初始预算（5万）以及运行中的增长
+        max_budget = 1000000.0
+        log_max = np.log(max_budget + 1.0)
+        
+        # 槽位归一化参数：使用对数归一化
+        # max_slots设置为1000，覆盖实际槽位数（203）以及可能的增长
+        max_slots = 1000.0
+        log_max_slots = np.log(max_slots + 1.0)
+        
+        # 月份归一化参数：线性归一化到[0, 1]
+        max_months = float(self.total_months)
+        
         # 基础特征（前10维）
         features = []
-        features.append(float(state.get("month", 0)))
+        
+        # 修复：对month进行归一化（线性归一化）
+        raw_month = float(state.get("month", 0))
+        normalized_month = raw_month / max_months if max_months > 0 else 0.0
+        features.append(normalized_month)
+        
+        # step通常较小，暂时不归一化
         features.append(float(state.get("step", 0)))
-        features.append(float(state.get("budget", 0)))
-        features.append(float(state.get("occupied_count", 0)))
-        features.append(float(state.get("total_slots", 0)))
+        
+        # 修复：对budget进行归一化（对数归一化），并clip到[0, 1]
+        raw_budget = float(state.get("budget", 0))
+        if raw_budget > 0:
+            normalized_budget = np.log(raw_budget + 1.0) / log_max
+            normalized_budget = min(normalized_budget, 1.0)  # clip到[0, 1]
+        else:
+            normalized_budget = 0.0
+        features.append(normalized_budget)
+        
+        # 修复：对occupied_count进行归一化（归一化为占用率）
+        raw_occupied = float(state.get("occupied_count", 0))
+        raw_total_slots = float(state.get("total_slots", 0))
+        if raw_total_slots > 0:
+            normalized_occupied = raw_occupied / raw_total_slots  # 占用率[0, 1]
+        else:
+            normalized_occupied = 0.0
+        features.append(normalized_occupied)
+        
+        # 修复：对total_slots进行归一化（对数归一化）
+        raw_total_slots = float(state.get("total_slots", 0))
+        if raw_total_slots > 0:
+            normalized_total_slots = np.log(raw_total_slots + 1.0) / log_max_slots
+        else:
+            normalized_total_slots = 0.0
+        features.append(normalized_total_slots)
         
         # 添加预算历史特征（最近5步）
-        agent = "IND"  # 简化实现，实际应该根据agent参数
+        # 修复：使用传入的agent参数，而不是硬编码
         budget_history = self.budget_history.get(agent, [])
         for i in range(5):
             if i < len(budget_history):
-                features.append(float(budget_history[-(i+1)]))
+                # 修复：对预算历史也进行归一化，并clip到[0, 1]
+                raw_budget_hist = float(budget_history[-(i+1)])
+                if raw_budget_hist > 0:
+                    normalized_budget_hist = np.log(raw_budget_hist + 1.0) / log_max
+                    normalized_budget_hist = min(normalized_budget_hist, 1.0)  # clip到[0, 1]
+                else:
+                    normalized_budget_hist = 0.0
+                features.append(normalized_budget_hist)
             else:
                 features.append(0.0)
         
@@ -1215,7 +1272,18 @@ class V5CityEnvironment:
         # 截断到目标维度
         features = features[:obs_dim]
         
-        return np.array(features, dtype=np.float32)
+        # 调试：检查各维度的值（仅在第一次或异常时输出）
+        obs_array = np.array(features, dtype=np.float32)
+        if obs_array.max() > 100:
+            # 输出前15个维度的值（基础特征 + 预算历史）
+            dim_names = ["month", "step", "budget(norm)", "occupied_count", "total_slots", 
+                        "budget_hist_1", "budget_hist_2", "budget_hist_3", "budget_hist_4", "budget_hist_5"]
+            self.logger.warning(f"[OBS_DIM_CHECK] agent={agent} obs_max={obs_array.max():.2f}")
+            for i, dim_name in enumerate(dim_names):
+                if i < len(features):
+                    self.logger.warning(f"[OBS_DIM_CHECK]   dim_{i}({dim_name})={features[i]:.2f}")
+        
+        return obs_array
     
     def _get_unlocked_actions(self, agent: str) -> Set[int]:
         """

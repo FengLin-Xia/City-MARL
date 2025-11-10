@@ -36,9 +36,13 @@ class V5TrainingPipeline:
         self.trainer = None
         self.export_system = None
         
-        # 训练数据
+        # 训练数据（临时，用于每个episode）
         self.step_logs = []
         self.env_states = []
+        
+        # 最终保存的数据（累积所有episode）
+        self.final_step_logs = []
+        self.final_env_states = []
         
         # 设置管道步骤
         self._setup_pipeline_steps()
@@ -79,11 +83,22 @@ class V5TrainingPipeline:
             # 下一轮继续沿用返回的数据
             data = last_result.data if last_result and last_result.data is not None else data
             
-            # 如果不是最后一个episode，清空数据以避免累积
+            # 如果不是最后一个episode，保存数据后清空以避免累积
             if ep < num_episodes:
-                print(f"[TRAINING] Episode {ep} completed, clearing data for next episode")
+                print(f"[TRAINING] Episode {ep} completed, saving and clearing data for next episode")
+                # 修复：保存当前episode的数据到final列表（用于最终导出）
+                self.final_step_logs.extend(self.step_logs)
+                self.final_env_states.extend(self.env_states)
+                # 清空用于下一轮（避免内存泄漏）
                 data["step_logs"] = []
                 data["env_states"] = []
+                self.step_logs = []
+                self.env_states = []
+            else:
+                # 最后一个episode也保存到final列表
+                print(f"[TRAINING] Episode {ep} completed, saving final data")
+                self.final_step_logs.extend(self.step_logs)
+                self.final_env_states.extend(self.env_states)
         
         if last_result and last_result.success:
             print(f"[TRAINING] Training completed successfully")
@@ -93,8 +108,8 @@ class V5TrainingPipeline:
         return {
             "success": bool(last_result and last_result.success),
             "data": data,
-            "step_logs": self.step_logs,
-            "env_states": self.env_states,
+            "step_logs": self.final_step_logs,  # 修复：返回所有episode的数据
+            "env_states": self.final_env_states,  # 修复：返回所有episode的数据
             "pipeline_summary": self.pipeline.get_pipeline_summary()
         }
     
@@ -204,6 +219,9 @@ class V5TrainingPipeline:
             print(f"  - Training completed: loss={train_stats.get('total_loss', 0):.4f}")
             # 训练后清空已消费的经验（避免重复训练）
             data["experiences"] = []
+            # 修复：强制内存清理
+            import gc
+            gc.collect()
         else:
             print("  - No experiences to train on")
         

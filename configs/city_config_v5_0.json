@@ -52,9 +52,9 @@
             "hub_final_peak": 1.0,
             "hub3_activation_month": 15,
             "hubs_schedule": [
-                { "id": "hub1", "activation_month": 0, "x": 122, "y": 80, "sigma_m": 32, "peak": 1.0 },
+                { "id": "hub1", "activation_month": 0, "x": 122, "y": 78, "sigma_m": 32, "peak": 1.0 },
                 { "id": "hub2", "activation_month": 2, "x": 112, "y": 121, "sigma_m": 28, "peak": 0.9 },
-                { "id": "hub3", "activation_month": 15, "x": 89, "y": 73, "sigma_m": 30, "peak": 1.1, "fade_in_months": 3 }
+                { "id": "hub3", "activation_month": 15, "x": 77, "y": 72, "sigma_m": 30, "peak": 1.1, "fade_in_months": 3 }
             ]
         }
     },
@@ -71,15 +71,15 @@
         "transport_hubs": [
             [
                 122,
-                80
+                78
             ],
             [
                 112,
                 121
             ],
             [
-                89,
-                73
+                77,
+                72
             ]
         ]
     },
@@ -91,9 +91,13 @@
             {
                 "id": "hub1",
                 "x": 122,
-                "y": 80,
+                "y": 78,
                 "R0": 5,
                 "dR": 1.5,
+                "growth_schedule": [
+                    { "until_month": 3, "dR": 1.5 },
+                    { "until_month": null, "dR": 0.05 }
+                ],
                 "weight": 0.5
             },
             {
@@ -102,23 +106,31 @@
                 "y": 121,
                 "R0": 2,
                 "dR": 1.5,
+                "growth_schedule": [
+                    { "until_month": 3, "dR": 1.5 },
+                    { "until_month": null, "dR": 0.05 }
+                ],
                 "weight": 0.5
             },
             {
                 "id": "hub3",
-                "x": 89,
-                "y": 73,
+                "x": 77,
+                "y": 72,
                 "R0": 3,
                 "dR": 1.5,
+                "growth_schedule": [
+                    { "until_month": 3, "dR": 1.5 },
+                    { "until_month": null, "dR": 0.05 }
+                ],
                 "weight": 0.5,
-                "activation_month": 15
+                "activation_month": 30
             }
         ]
     },
     "env": {
         "time_model": {
             "step_unit": "month",
-            "total_steps": 50
+            "total_steps": 60
         },
         "land_price": {
             "base": 1.0,
@@ -621,7 +633,7 @@
             {
                 "id": "IND_hub3_unlock",
                 "agent": "IND",
-                "after_month": 15,
+                "after_month": 30,
                 "unlock_action_ids": [9, 10, 11]
             }
         ]
@@ -641,21 +653,21 @@
             "use_lstm": false
         },
         "ppo": {
-            "clip_eps": 0.25,
+            "clip_eps": 0.15,
             "gamma": 0.99,
             "gae_lambda": 0.8,
-            "entropy_coef": 0.8,
+            "entropy_coef": 0.01,
             "value_coef": 0.5,
             "target_kl": 0.02,
-            "max_grad_norm": 0.5,
-            "lr": 0.0003,
+            "max_grad_norm": 0.3,
+            "lr": 0.0001,
             "lr_schedule": "cosine"
         },
         "rollout": {
             "num_envs": 8,
             "horizon": 50,
             "minibatch_size": 32,
-            "updates_per_iter": 6,
+            "updates_per_iter": 4,
             "max_updates": 999999
         },
         "exploration": {
@@ -806,7 +818,7 @@
         "candidate_topP": 64,
         "dup_policy": "no_repeat_point",
         "stop_bias": -0.05,
-        "temperature": 4.5,
+        "temperature": 4.0,
         "entropy_bonus": 0.1,
         "penalty_k": 0.05,
         "curriculum": {
