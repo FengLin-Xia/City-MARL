@@ -6,6 +6,7 @@ v5.0 动作枚举器
 
 from typing import Dict, List, Any, Optional, Set, Tuple
 import numpy as np
+import math
 from dataclasses import dataclass, field
 
 from contracts import ActionCandidate, Sequence, StepLog, CandidateIndex, AtomicAction
@@ -20,6 +21,7 @@ class SlotInfo:
     x: float
     y: float
     angle: float = 0.0  # 角度信息
+    z: int = 0  # z坐标（整数）
     neighbors: List[str] = field(default_factory=list)
     building_level: int = 3  # 建筑等级：3=只能建S, 4=可建S/M, 5=可建S/M/L
     occupied: bool = False
@@ -61,6 +63,7 @@ class V5ActionEnumerator:
                 x=slot_data["x"],
                 y=slot_data["y"],
                 angle=slot_data.get("angle", 0.0),  # 添加角度信息
+                z=slot_data.get("z", 0),  # z坐标（整数）
                 neighbors=slot_data.get("neighbors", []),
                 building_level=slot_data.get("building_level", 3)
             )
@@ -267,6 +270,12 @@ class V5ActionEnumerator:
                 
                 # 创建元数据（包含点和类型索引）
                 action_params = self.action_params.get(str(action_id), {})
+                
+                # 计算到Hub3的距离（如果是动作9、10、11）
+                hub3_distance = float('inf')
+                if action_id in [9, 10, 11]:
+                    hub3_distance = self._calculate_hub3_distance(point_info["slots"])
+                
                 meta = {
                     "agent": agent,
                     "action_id": action_id,
@@ -278,7 +287,8 @@ class V5ActionEnumerator:
                     "prestige": action_params.get("prestige", 0),
                     "slots": point_info["slots"],
                     "zone": point_info.get("zone"),
-                    "lp_norm": point_info.get("lp_norm", 0.0)
+                    "lp_norm": point_info.get("lp_norm", 0.0),
+                    "hub3_distance": hub3_distance  # 新增：到Hub3的距离
                 }
                 
                 # 日志：记录cand.meta["slots"]的值和对应的point_id
@@ -567,19 +577,21 @@ class V5ActionEnumerator:
                 if is_hub3_only and hub_id != "hub3":
                     continue
                 
-                # 检查Hub是否已激活
-                if not self._is_hub_active(hub_id, current_month, evolution_config):
-                    continue
+                # 检查Hub是否已激活（优先使用 hub_config 中的 activation_month）
+                activation_month = hub_config.get("activation_month")
+                if activation_month is None:
+                    # 如果没有配置，使用 evolution_config 中的值
+                    if not self._is_hub_active(hub_id, current_month, evolution_config):
+                        continue
+                else:
+                    # 使用 hub_config 中的 activation_month
+                    if current_month < activation_month:
+                        continue
                 
                 hub_pos = (hub_config["x"], hub_config["y"])
-                R0 = hub_config["R0"]
-                dR = hub_config["dR"]
                 
-                # 计算当前Hub的半径
-                if candidate_mode == "cumulative":
-                    current_radius = R0 + current_month * dR
-                else:
-                    current_radius = R0
+                # 计算当前Hub的半径（支持 growth_schedule，从激活月份开始计算）
+                current_radius = self._compute_hub_radius(hub_config, current_month, candidate_mode, activation_month)
                 
                 # 计算距离
                 distance = ((slot_pos[0] - hub_pos[0])**2 + (slot_pos[1] - hub_pos[1])**2)**0.5
@@ -592,6 +604,60 @@ class V5ActionEnumerator:
                 filtered_slots.append(slot_id)
         
         return filtered_slots
+    
+    def _compute_hub_radius(self, hub_config: Dict[str, Any], month: int, candidate_mode: str, activation_month: int = None) -> float:
+        """根据配置计算当前 Hub 的候选半径（支持 growth_schedule 减速曲线，从激活月份开始计算）"""
+        R0 = float(hub_config.get("R0", 0.0))
+        if candidate_mode != "cumulative":
+            return R0
+
+        month = max(0, int(month))
+        
+        # 如果 hub 有激活月份，从激活月份开始计算生长时间
+        if activation_month is not None:
+            growth_months = max(0, month - activation_month)
+        else:
+            growth_months = month
+        
+        schedule = hub_config.get("growth_schedule") or []
+        default_dR = float(hub_config.get("dR", 0.0))
+
+        if not schedule:
+            return R0 + growth_months * default_dR
+
+        radius = R0
+        prev_month = 0
+        last_dR = default_dR
+
+        for segment in schedule:
+            seg_dR = float(segment.get("dR", last_dR))
+            until = segment.get("until_month")
+
+            if until is None:
+                duration = max(0, growth_months - prev_month)
+                radius += duration * seg_dR
+                return radius
+
+            until = int(until)
+            if growth_months <= prev_month:
+                return radius
+
+            duration = max(0, min(growth_months, until) - prev_month)
+            if duration > 0:
+                radius += duration * seg_dR
+                prev_month += duration
+
+            last_dR = seg_dR
+
+            if growth_months <= until:
+                return radius
+
+            prev_month = max(prev_month, until)
+
+        if growth_months > prev_month:
+            radius += (growth_months - prev_month) * last_dR
+
+        return radius
     
     def _is_hub_active(self, hub_id: str, current_month: int, evolution_config: Dict) -> bool:
         """检查Hub是否在当前月份激活"""
@@ -758,6 +824,53 @@ class V5ActionEnumerator:
         legacy_ids = sequence.get_legacy_ids()
         return all(action_id in allowed_actions for action_id in legacy_ids)
     
+    def _calculate_hub3_distance(self, slots: List[str]) -> float:
+        """
+        计算槽位到Hub3的最小距离
+        
+        Args:
+            slots: 槽位ID列表
+            
+        Returns:
+            到Hub3的最小距离（如果Hub3不存在或槽位为空，返回inf）
+        """
+        # 获取Hub3位置
+        hubs_config = self.config.get("hubs", {})
+        hub_list = hubs_config.get("list", [])
+        hub3_config = None
+        for hub in hub_list:
+            if hub.get("id") == "hub3":
+                hub3_config = hub
+                break
+        
+        if not hub3_config:
+            self.logger.warning(f"[Hub3Distance] Hub3配置不存在")
+            return float('inf')
+        
+        hub3_pos = (hub3_config["x"], hub3_config["y"])
+        
+        # 计算最小距离
+        min_distance = float('inf')
+        for slot_id in slots:
+            slot = self.slots.get(slot_id)
+            if slot:
+                slot_pos = (slot.x, slot.y)
+                distance = math.sqrt(
+                    (slot_pos[0] - hub3_pos[0])**2 + 
+                    (slot_pos[1] - hub3_pos[1])**2
+                )
+                min_distance = min(min_distance, distance)
+            else:
+                self.logger.warning(f"[Hub3Distance] 槽位不存在: slot_id={slot_id}")
+        
+        # 调试日志
+        if min_distance == float('inf'):
+            self.logger.warning(f"[Hub3Distance] 距离计算失败: slots={slots}, hub3_pos={hub3_pos}")
+        else:
+            self.logger.info(f"[Hub3Distance] 计算成功: slots={slots}, hub3_pos={hub3_pos}, distance={min_distance:.2f}")
+        
+        return min_distance
+    
     def _is_hub_active(self, hub_id: str, current_month: int, evolution_config: Dict) -> bool:
         """检查Hub是否在当前月份激活"""
         # 检查是否有hub特定的激活时间配置
@@ -765,11 +878,11 @@ class V5ActionEnumerator:
             hub3_activation_month = evolution_config.get("hub3_activation_month")
             if hub3_activation_month is not None:
                 is_active = current_month >= hub3_activation_month
-                print(f"[HUB_DEBUG] Hub3激活检查: month={current_month}, threshold={hub3_activation_month}, active={is_active}")
+                # print(f"[HUB_DEBUG] Hub3激活检查: month={current_month}, threshold={hub3_activation_month}, active={is_active}")
                 return is_active
         
         # 对于hub1和hub2，使用默认的hub_activation_month
         hub_activation_month = evolution_config.get("hub_activation_month", 7)
         is_active = current_month >= hub_activation_month
-        print(f"[HUB_DEBUG] {hub_id}激活检查: month={current_month}, threshold={hub_activation_month}, active={is_active}")
+        # print(f"[HUB_DEBUG] {hub_id}激活检查: month={current_month}, threshold={hub_activation_month}, active={is_active}")
         return is_active

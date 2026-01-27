@@ -37,3 +37,4 @@ for i, (slot, occurrences) in enumerate(list(conflicts.items())[:10]):
     print(f"Conflict {i+1}: Slot ({slot[0]:.1f},{slot[1]:.1f})")
     for month, agent_id, line in occurrences:
         print(f"  Month {month}, Agent {agent_id}: {line[:50]}...")
+

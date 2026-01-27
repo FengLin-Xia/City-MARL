@@ -92,11 +92,11 @@
                 "id": "hub1",
                 "x": 122,
                 "y": 78,
-                "R0": 5,
+                "R0": 2,
                 "dR": 1.5,
                 "growth_schedule": [
                     { "until_month": 3, "dR": 1.5 },
-                    { "until_month": null, "dR": 0.05 }
+                    { "until_month": null, "dR": 0.5 }
                 ],
                 "weight": 0.5
             },
@@ -108,7 +108,7 @@
                 "dR": 1.5,
                 "growth_schedule": [
                     { "until_month": 3, "dR": 1.5 },
-                    { "until_month": null, "dR": 0.05 }
+                    { "until_month": null, "dR": 0.5 }
                 ],
                 "weight": 0.5
             },
@@ -120,17 +120,17 @@
                 "dR": 1.5,
                 "growth_schedule": [
                     { "until_month": 3, "dR": 1.5 },
-                    { "until_month": null, "dR": 0.05 }
+                    { "until_month": null, "dR": 0.5 }
                 ],
                 "weight": 0.5,
-                "activation_month": 30
+                "activation_month": 35
             }
         ]
     },
     "env": {
         "time_model": {
             "step_unit": "month",
-            "total_steps": 60
+            "total_steps": 70
         },
         "land_price": {
             "base": 1.0,
@@ -263,10 +263,10 @@
         "5": {"desc": "IND_L", "base_cost": 2400, "cost": 2400, "base_reward": 520, "reward": 520, "opex": 300, "rent": 70, "prestige_base": -0.1, "pollution": 1.2, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 2000, "prestige": -0.1},
         "6": {"desc": "COUNCIL_A", "base_cost": 570, "cost": 570, "base_reward": 570, "reward": 570, "opex": 50, "rent": 0, "prestige_base": 0.3, "pollution": 0.1, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 0, "prestige": 0.3},
         "7": {"desc": "COUNCIL_B", "base_cost": 870, "cost": 870, "base_reward": 870, "reward": 870, "opex": 80, "rent": 0, "prestige_base": 0.7, "pollution": 0.2, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 1000, "prestige": 0.7},
-        "8": {"desc": "COUNCIL_C", "base_cost": 1150, "cost": 1150, "base_reward": 1150, "reward": 1150, "opex": 120, "rent": 0, "prestige_base": 1.2, "pollution": 0.3, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 2000, "prestige": 1.2},
+        "8": {"desc": "COUNCIL_C", "base_cost": 1150, "cost": 1150, "base_reward": 1150, "reward": 1150, "opex": 120, "rent": 0, "prestige_base": 1.2, "pollution": 0.3, "land_price_k": 0.15, "river_pct": 10.0, "size_bonus": 1000, "prestige": 1.2},
         "9": {"desc": "IND_A", "base_cost": 1100, "cost": 1100, "base_reward": 220, "reward": 220, "opex": 120, "rent": 30, "prestige_base": 0.3, "pollution": 0.7, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 0, "prestige": 0.3, "hub3_only": true},
-        "10": {"desc": "IND_B", "base_cost": 1800, "cost": 1800, "base_reward": 380, "reward": 380, "opex": 200, "rent": 50, "prestige_base": 0.2, "pollution": 1.0, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 1000, "prestige": 0.2, "hub3_only": true},
-        "11": {"desc": "IND_C", "base_cost": 2800, "cost": 2800, "base_reward": 600, "reward": 600, "opex": 350, "rent": 80, "prestige_base": 0.0, "pollution": 1.4, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 2000, "prestige": 0.0, "hub3_only": true}
+        "10": {"desc": "IND_B", "base_cost": 1800, "cost": 1800, "base_reward": 380, "reward": 380, "opex": 200, "rent": 50, "prestige_base": 0.2, "pollution": 1.0, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 0, "prestige": 0.2, "hub3_only": true},
+        "11": {"desc": "IND_C", "base_cost": 2800, "cost": 2800, "base_reward": 600, "reward": 600, "opex": 350, "rent": 80, "prestige_base": 0.0, "pollution": 1.4, "land_price_k": 0.25, "river_pct": 20.0, "size_bonus": 0, "prestige": 0.0, "hub3_only": true}
     },
     "relations": {
         "across_river": {
@@ -329,6 +329,23 @@
             "affects_actions": [3, 4, 5],
             "trigger_actions": [9, 10, 11],
             "global_effect": true
+        },
+        "hub_distance_reward": {
+            "enabled": true,
+            "action9": {
+                "far_bonus_scale": 100.0,
+                "near_penalty_scale": -300.0,
+                "threshold": 10.0
+            },
+            "action10": {
+                "bonus_scale": 0.0,
+                "threshold": 10.0
+            },
+            "action11": {
+                "near_bonus_scale": 500.0,
+                "far_penalty_scale": -100.0,
+                "threshold": 10.0
+            }
         }
     },
     "ledger": {
@@ -565,7 +582,7 @@
             {
                 "name": "diversity",
                 "fn": "action_diversity",
-                "weight": 0.2
+                "weight": 1.5
             },
             {
                 "name": "industrial_cluster",
@@ -583,8 +600,19 @@
                 "mix_bonus": 0.1
             },
             "action_diversity": {
-                "window": 12,
-                "epsilon": 1e-06
+                "enabled": true,
+                "window": 60,
+                "epsilon": 1e-06,
+                "reward_scale": 50.0,
+                "novelty_bonus": 10.0,
+                "repetition_penalty": -5.0,
+                "frequency_enabled": true,
+                "frequency_scale": 150.0,
+                "middle_action_bonus": 30.0,
+                "unlock_action_bonus": 50.0,
+                "first_time_bonus": 30.0,
+                "action9_bonus": 50.0,
+                "action10_bonus": 100.0
             },
             "industrial_cluster": {
                 "enabled": true,
@@ -620,6 +648,7 @@
     },
     "action_mw": [
         "conflict.drop_late",
+        "slot_dedup",
         "unlock.gate",
         "budget.shared_ledger",
         "legality.env",
@@ -633,7 +662,7 @@
             {
                 "id": "IND_hub3_unlock",
                 "agent": "IND",
-                "after_month": 30,
+                "after_month": 35,
                 "unlock_action_ids": [9, 10, 11]
             }
         ]
@@ -653,27 +682,31 @@
             "use_lstm": false
         },
         "ppo": {
-            "clip_eps": 0.15,
+            "clip_eps": 0.3,
             "gamma": 0.99,
             "gae_lambda": 0.8,
-            "entropy_coef": 0.01,
+            "entropy_coef": 0.05,
             "value_coef": 0.5,
-            "target_kl": 0.02,
-            "max_grad_norm": 0.3,
-            "lr": 0.0001,
-            "lr_schedule": "cosine"
+            "target_kl": 0.05,
+            "max_grad_norm": 0.5,
+            "lr": 0.000005,
+            "lr_schedule": "cosine",
+            "per_agent_lr": {
+                "COUNCIL": 0.000001,
+                "EDU": 0.000001
+            }
         },
         "rollout": {
             "num_envs": 8,
             "horizon": 50,
             "minibatch_size": 32,
-            "updates_per_iter": 4,
+            "updates_per_iter": 2,
             "max_updates": 999999
         },
         "exploration": {
-            "temperature": 4.0,
-            "anneal_to": 1.5,
-            "anneal_steps": 500000
+            "temperature": 3.0,
+            "anneal_to": 2.5,
+            "anneal_steps": 1000000
         }
     },
     "eval": {
@@ -738,10 +771,10 @@
     },
     "logging": {
         "enabled": true,
-        "level": "INFO",
+        "level": "WARN",
         "format": "plain",
         "sinks": {
-            "console": true,
+            "console": false,
             "file": "${paths.logs_dir}/v5_0.log",
             "jsonl": false,
             "rotate": {
@@ -751,33 +784,33 @@
             }
         },
         "modules": {
-            "env": "INFO",
-            "enumeration": "INFO",
-            "trainer": "INFO",
+            "env": "WARN",
+            "enumeration": "WARN",
+            "trainer": "WARN",
             "exporter": "INFO",
             "reward": "WARN",
-            "scheduler": "INFO",
-            "budget": "INFO",
-            "policy": "INFO"
+            "scheduler": "WARN",
+            "budget": "WARN",
+            "policy": "WARN"
         },
         "topics": {
-            "candidates": true,
-            "river_filter": true,
-            "occupied_slots": true,
+            "candidates": false,
+            "river_filter": false,
+            "occupied_slots": false,
             "export_coords": true,
-            "reward_terms": true,
-            "policy_select": true,
+            "reward_terms": false,
+            "policy_select": false,
             "pipeline_traceback": true,
-            "phase_switch": true,
-            "budget_flow": true,
-            "experience_collection": true,
-            "training_step": true,
-            "environment_step": true,
-            "action_execution": true,
-            "continuous_rewards": true,
-            "synergy_activation": true,
-            "monthly_rewards": true,
-            "building_registry": true
+            "phase_switch": false,
+            "budget_flow": false,
+            "experience_collection": false,
+            "training_step": false,
+            "environment_step": false,
+            "action_execution": false,
+            "continuous_rewards": false,
+            "synergy_activation": false,
+            "monthly_rewards": false,
+            "building_registry": false
         },
         "sampling": {
             "every_n_steps": 1,
@@ -818,23 +851,14 @@
         "candidate_topP": 64,
         "dup_policy": "no_repeat_point",
         "stop_bias": -0.05,
-        "temperature": 4.0,
-        "entropy_bonus": 0.1,
+        "temperature": 5.0,
+        "entropy_bonus": 0.15,
         "penalty_k": 0.05,
         "curriculum": {
             "enabled": true,
             "initial_max_k": 1,
             "final_max_k": 3,
             "increment_every_n_episodes": 50
-        }
-    },
-    "reward_mechanisms": {
-        "industrial_cluster_bonus": {
-            "enabled": true,
-            "bonus_rate": 0.15,
-            "affects_actions": [3, 4, 5],
-            "trigger_actions": [9, 10, 11],
-            "global_effect": true
         }
     }
 }

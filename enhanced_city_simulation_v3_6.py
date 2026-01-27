@@ -269,7 +269,7 @@ class CityV36:
                 occupied=occupied_ids,
                 lp_provider=lp_provider,
                 agent_types=['EDU', 'IND'],
-                sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L']},
+                sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']},
             )
         except Exception as e:
             print(f"[v4] 规划失败: {e}")

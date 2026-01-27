@@ -139,7 +139,7 @@ class V5TXTExporter:
         return '\n'.join(output_lines)
     
     def _get_coordinates_from_env(self, step_log: StepLog, 
-                                 env_state: EnvironmentState) -> List[Tuple[float, float, float]]:
+                                 env_state: EnvironmentState) -> List[Tuple[float, float, int, float]]:
         """从环境状态获取坐标"""
         coordinates = []
         strict = export_strict_mode()
@@ -150,8 +150,9 @@ class V5TXTExporter:
             for slot_pos in step_log.slot_positions:
                 x = slot_pos.get('x', 0.0)
                 y = slot_pos.get('y', 0.0)
+                z = int(slot_pos.get('z', 0))  # z坐标（整数）
                 angle = slot_pos.get('angle', 0.0)
-                coordinates.append((x, y, angle))
+                coordinates.append((x, y, z, angle))
         else:
             if strict:
                 msg = f"slot_positions missing for step t={getattr(step_log, 't', '?')} agent={getattr(step_log, 'agent', '?')}"
@@ -164,16 +165,20 @@ class V5TXTExporter:
                 # 根据动作ID找到对应的槽位
                 slot_info = self._find_slot_by_action(action_id, env_state)
                 if slot_info:
-                    x, y, angle = slot_info
-                    coordinates.append((x, y, angle))
+                    if len(slot_info) == 4:
+                        x, y, z, angle = slot_info
+                    else:
+                        x, y, angle = slot_info
+                        z = 0
+                    coordinates.append((x, y, z, angle))
                 else:
                     # 如果找不到槽位，使用默认坐标
-                    coordinates.append((0.0, 0.0, 0.0))
+                    coordinates.append((0.0, 0.0, 0, 0.0))
         
         return coordinates
     
     def _find_slot_by_action(self, action_id: int, 
-                            env_state: EnvironmentState) -> Optional[Tuple[float, float, float]]:
+                            env_state: EnvironmentState) -> Optional[Tuple[float, float, int, float]]:
         """根据动作ID查找槽位坐标"""
         # 从环境状态中查找对应的槽位
         # 需要根据动作ID找到对应的槽位ID，然后获取坐标
@@ -193,16 +198,17 @@ class V5TXTExporter:
             if isinstance(slot, dict):
                 x = slot.get('x', 0.0)
                 y = slot.get('y', 0.0)
+                z = int(slot.get('z', 0))  # z坐标（整数）
                 angle = slot.get('angle', 0.0)
-                return (x, y, angle)
+                return (x, y, z, angle)
         
         # 方法3：从环境状态中查找已占用的槽位
         # 这里需要根据实际的槽位数据结构来实现
         # 暂时返回默认坐标
-        return (0.0, 0.0, 0.0)
+        return (0.0, 0.0, 0, 0.0)
     
     def _format_v4_line(self, step_log: StepLog, 
-                        coordinates: List[Tuple[float, float, float]]) -> str:
+                        coordinates: List[Tuple[float, float, int, float]]) -> str:
         """格式化为v4.1格式"""
         if not step_log.chosen or not coordinates:
             return ""
@@ -213,7 +219,14 @@ class V5TXTExporter:
         
         # 生成v4.1格式输出
         parts = []
-        for i, (action_id, (x, y, angle)) in enumerate(zip(step_log.chosen, coordinates)):
+        for i, (action_id, coord) in enumerate(zip(step_log.chosen, coordinates)):
+            # 解包坐标（兼容旧格式）
+            if len(coord) == 4:
+                x, y, z, angle = coord
+            else:
+                x, y, angle = coord
+                z = 0
+            
             # 获取动作参数
             action_params = self.action_params.get(str(action_id), {})
             desc = action_params.get("desc", f"ACTION_{action_id}")
@@ -236,7 +249,7 @@ class V5TXTExporter:
                     self._debug_printed.add(debug_key)
             
             # v4.1格式：a(x,y,z)angle
-            part = f"{v4_action_id}({x:.1f},{y:.1f},0){angle:.1f}"
+            part = f"{v4_action_id}({x:.1f},{y:.1f},{z}){angle:.1f}"
             parts.append(part)
         
         return ', '.join(parts)

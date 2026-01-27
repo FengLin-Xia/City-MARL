@@ -226,7 +226,7 @@ def main():
     # 基础参数
     parser.add_argument('--config', type=str, default='configs/city_config_v5_0.json',
                        help='配置文件路径')
-    parser.add_argument('--episodes', type=int, default=2,
+    parser.add_argument('--episodes', type=int, default=5,
                        help='训练轮数')
     parser.add_argument('--output_dir', type=str, default='./outputs',
                        help='输出目录')

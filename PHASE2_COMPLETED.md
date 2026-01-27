@@ -351,3 +351,13 @@ if any(sid in self.occupied_slots for sid in slot_ids):
 
 
 
+
+
+
+
+
+
+
+
+
+

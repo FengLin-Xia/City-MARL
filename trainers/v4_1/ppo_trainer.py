@@ -53,7 +53,7 @@ class PPOTrainer:
         
         # 设备配置
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        print(f"PPO训练器使用设备: {self.device}")
+        # print(f"PPO训练器使用设备: {self.device}")
         
         # 初始化统计信息
         self.training_stats = {
@@ -66,22 +66,23 @@ class PPOTrainer:
         }
         
         # 创建RL选择器（包含策略网络）
+        # 注意：slots参数将在训练过程中通过set_slots方法设置
         self.selector = RLPolicySelector(cfg)
-        print(f"PPO训练器初始化完成 - 超参数: γ={self.gamma}, λ={self.gae_lambda}, clip={self.clip_ratio}")
+        # print(f"PPO训练器初始化完成 - 超参数: γ={self.gamma}, λ={self.gae_lambda}, clip={self.clip_ratio}")
         
         # 按照1013-5.md建议：重新初始化actor网络最后一层
         self._reinitialize_actor_last_layers()
     
     def _reinitialize_actor_last_layers(self):
         """按照1013-5.md建议：重新初始化actor网络最后一层"""
-        print("重新初始化actor网络最后一层...")
+        # print("重新初始化actor网络最后一层...")
         for agent, actor in self.selector.actors.items():
             # 获取最后一层（输出层）
             last_layer = actor.network[-1]
             # 按照1013-9.md建议：重初始化最后一层（提高gain）
             torch.nn.init.orthogonal_(last_layer.weight, gain=0.5)
             torch.nn.init.zeros_(last_layer.bias)
-            print(f"  {agent} actor最后一层已重新初始化")
+            # print(f"  {agent} actor最后一层已重新初始化")
     
     def set_seed(self, seed: int):
         """设置随机种子"""
@@ -101,7 +102,7 @@ class PPOTrainer:
                 optimizer = self.selector.actor_optimizers[agent]
                 for param_group in optimizer.param_groups:
                     param_group['lr'] *= 1.5
-            print(f"[adaptive] KL too low ({kl_after:.4f} < {0.2 * target_kl:.4f}), increased lr")
+            # print(f"[adaptive] KL too low ({kl_after:.4f} < {0.2 * target_kl:.4f}), increased lr")
             
         elif kl_after > 2.0 * target_kl:  # 太猛
             # 减小学习率
@@ -109,7 +110,7 @@ class PPOTrainer:
                 optimizer = self.selector.actor_optimizers[agent]
                 for param_group in optimizer.param_groups:
                     param_group['lr'] *= 0.5
-            print(f"[adaptive] KL too high ({kl_after:.4f} > {2.0 * target_kl:.4f}), decreased lr")
+            # print(f"[adaptive] KL too high ({kl_after:.4f} > {2.0 * target_kl:.4f}), decreased lr")
 
     def collect_experience(self, env: CityEnvironment, num_steps: int) -> List[Dict]:
         """
@@ -122,6 +123,9 @@ class PPOTrainer:
         Returns:
             经验列表
         """
+        # 设置RL选择器的slots，用于对岸检测
+        self.selector.slots = env.slots
+        
         all_experiences = []
         steps_collected = 0
         
@@ -140,8 +144,30 @@ class PPOTrainer:
                 actions, action_feats, mask = env.get_action_pool(current_agent)
                 
                 if not actions:
-                    print(f"    No available actions, ending episode")
-                    break
+                    # 当没有可用动作时，连续推进月份直到找到有动作的智能体或达到最大月份
+                    max_advance_attempts = 10  # 防止无限循环
+                    advance_count = 0
+                    while advance_count < max_advance_attempts:
+                        if not env.advance_to_next_month():
+                            # 如果无法推进到下一月（达到最大月份），则结束episode
+                            print(f"    No available actions and reached max month, ending episode")
+                            break
+                        advance_count += 1
+                        # 检查新月份是否有可用动作
+                        new_actions, _, _ = env.get_action_pool(env.current_agent)
+                        if new_actions:
+                            # 找到有动作的月份，跳出循环继续处理
+                            actions = new_actions
+                            break
+                        print(f"    No actions in month {env.current_month}, advancing to next month")
+                    else:
+                        # 连续推进多次仍无动作，结束episode
+                        print(f"    No available actions after {max_advance_attempts} month advances, ending episode")
+                        break
+                    
+                    if not actions:
+                        # 如果最终还是没有动作，结束episode
+                        break
                 
                 # 使用RL选择器选择动作序列
                 _, selected_sequence = self.selector.choose_action_sequence(
@@ -150,19 +176,89 @@ class PPOTrainer:
                     occupied=env._get_occupied_slots(),
                     lp_provider=env._create_lp_provider(),
                     agent_types=[current_agent],
-                    sizes={'EDU': ['S', 'M', 'L', 'A', 'B', 'C'], 'IND': ['S', 'M', 'L']}
+                    sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']}
                 )
                 
                 if selected_sequence is None:
-                    print(f"    No sequence selected, ending episode")
-                    break
+                    # 当没有选择序列时，连续推进月份直到找到有序列的智能体或达到最大月份
+                    max_advance_attempts = 10  # 防止无限循环
+                    advance_count = 0
+                    while advance_count < max_advance_attempts:
+                        if not env.advance_to_next_month():
+                            # 如果无法推进到下一月（达到最大月份），则结束episode
+                            print(f"    No sequence selected and reached max month, ending episode")
+                            break
+                        advance_count += 1
+                        # 检查新月份是否有可用动作和序列
+                        new_actions, _, _ = env.get_action_pool(env.current_agent)
+                        if new_actions:
+                            # 重新尝试选择序列
+                            _, new_sequence = self.selector.choose_action_sequence(
+                                slots=env.slots,
+                                candidates=set(a.footprint_slots[0] for a in new_actions if a.footprint_slots),
+                                occupied=env._get_occupied_slots(),
+                                lp_provider=env._create_lp_provider(),
+                                agent_types=[env.current_agent],
+                                sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']}
+                            )
+                            if new_sequence is not None:
+                                # 找到有序列的月份，跳出循环继续处理
+                                selected_sequence = new_sequence
+                                actions = new_actions
+                                break
+                        print(f"    No sequence in month {env.current_month}, advancing to next month")
+                    else:
+                        # 连续推进多次仍无序列，结束episode
+                        print(f"    No sequence selected after {max_advance_attempts} month advances, ending episode")
+                        break
+                    
+                    if selected_sequence is None:
+                        # 如果最终还是没有序列，结束episode
+                        break
                 
                 # 过滤不允许的动作
                 if selected_sequence and selected_sequence.actions:
                     filtered_actions = [a for a in selected_sequence.actions if env.action_allowed(a)]
                     if not filtered_actions:
-                        print(f"    All actions filtered out, ending episode")
-                        break
+                        # 当所有动作被过滤掉时，连续推进月份直到找到有效动作或达到最大月份
+                        max_advance_attempts = 10  # 防止无限循环
+                        advance_count = 0
+                        while advance_count < max_advance_attempts:
+                            if not env.advance_to_next_month():
+                                # 如果无法推进到下一月（达到最大月份），则结束episode
+                                print(f"    All actions filtered and reached max month, ending episode")
+                                break
+                            advance_count += 1
+                            # 检查新月份是否有可用动作和有效序列
+                            new_actions, _, _ = env.get_action_pool(env.current_agent)
+                            if new_actions:
+                                # 重新尝试选择序列
+                                _, new_sequence = self.selector.choose_action_sequence(
+                                    slots=env.slots,
+                                    candidates=set(a.footprint_slots[0] for a in new_actions if a.footprint_slots),
+                                    occupied=env._get_occupied_slots(),
+                                    lp_provider=env._create_lp_provider(),
+                                    agent_types=[env.current_agent],
+                                    sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']}
+                                )
+                                if new_sequence and new_sequence.actions:
+                                    # 重新过滤动作
+                                    new_filtered_actions = [a for a in new_sequence.actions if env.action_allowed(a)]
+                                    if new_filtered_actions:
+                                        # 找到有效动作的月份，跳出循环继续处理
+                                        selected_sequence = new_sequence
+                                        actions = new_actions
+                                        filtered_actions = new_filtered_actions
+                                        break
+                            print(f"    All actions filtered in month {env.current_month}, advancing to next month")
+                        else:
+                            # 连续推进多次仍无有效动作，结束episode
+                            print(f"    All actions filtered after {max_advance_attempts} month advances, ending episode")
+                            break
+                        
+                        if not filtered_actions:
+                            # 如果最终还是没有有效动作，结束episode
+                            break
                     
                     from logic.v4_enumeration import Sequence
                     # 保存原始的action_index
@@ -212,6 +308,11 @@ class PPOTrainer:
                 
                 episode_experiences.append(experience)
                 all_experiences.append(experience)
+                
+                # 【交替模式】检查是否需要在同一月内切换到Council
+                if env.switch_to_council_in_same_month():
+                    current_agent = env.current_agent
+                    continue
                 
                 # 更新状态
                 state = next_state
@@ -419,8 +520,11 @@ class PPOTrainer:
 
                 # 选择 agent 对应的网络
                 agent = exp.get('agent', 'IND')
-                actor = self.selector.actors.get(agent, self.selector.actor)
-                critic = self.selector.critics.get(agent, self.selector.critic)
+                if agent not in self.selector.actors:
+                    print(f"警告：智能体 {agent} 不存在，跳过此经验")
+                    continue
+                actor = self.selector.actors[agent]
+                critic = self.selector.critics[agent]
 
                 # === 输入归一化（按照1013-6.md建议） ===
                 # 处理embed.std≈52的问题，避免前层饱和
@@ -709,7 +813,10 @@ class PPOTrainer:
                 first_state_embed = first_exp.get('state_embed', None)
                 if first_state_embed is not None and len(first_state_embed) > 0 and hasattr(self, '_before_metrics'):
                     first_agent = first_exp.get('agent', 'IND')
-                    first_actor = self.selector.actors.get(first_agent, self.selector.actor)
+                    if first_agent not in self.selector.actors:
+                        print(f"警告：智能体 {first_agent} 不存在，跳过此经验")
+                        continue
+                    first_actor = self.selector.actors[first_agent]
                     
                     # 使用相同的归一化
                     first_state_embed_normalized = (first_state_embed - self._embed_mean) / (self._embed_std + 1e-5)
@@ -923,6 +1030,13 @@ class PPOTrainer:
         self.training_stats['entropy_losses'].extend(entropy_losses)
         self.training_stats['kl_divergences'].extend(kl_divergences)
         self.training_stats['clip_fractions'].extend(clip_fractions)
+        
+        # 课程学习：更新对岸探索率
+        if hasattr(self.selector, '_update_other_side_exploration'):
+            # 假设训练步数从经验中获取或使用全局计数器
+            training_step = getattr(self, 'global_training_step', 0)
+            self.selector._update_other_side_exploration(training_step)
+            self.global_training_step = training_step + 1
         
         # 返回平均损失
         return {

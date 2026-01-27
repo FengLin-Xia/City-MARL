@@ -1,47 +1,62 @@
 {
   "month": 19,
-  "score": 2.336427031981569,
+  "score": 3.937443342706448,
   "actions": [
     {
-      "agent": "IND",
-      "size": "S",
+      "agent": "EDU",
+      "size": "L",
       "footprint_slots": [
-        "s_183"
+        "s_33"
       ],
-      "score": 0.4673780563331433
+      "cost": 2848.0,
+      "reward": 711.7435876387073,
+      "prestige": 1.0,
+      "score": 0.7880193675394948
     },
     {
-      "agent": "IND",
-      "size": "S",
+      "agent": "EDU",
+      "size": "L",
       "footprint_slots": [
-        "s_225"
+        "s_39"
       ],
-      "score": 0.46733594272549356
+      "cost": 2925.0,
+      "reward": 715.8245514120676,
+      "prestige": 1.0,
+      "score": 0.7876533169285891
     },
     {
-      "agent": "IND",
-      "size": "S",
+      "agent": "EDU",
+      "size": "L",
       "footprint_slots": [
-        "s_219"
+        "s_53"
       ],
-      "score": 0.46727277231401887
+      "cost": 3002.0,
+      "reward": 719.6632772641984,
+      "prestige": 1.0,
+      "score": 0.7870809221314878
     },
     {
-      "agent": "IND",
-      "size": "S",
+      "agent": "EDU",
+      "size": "L",
       "footprint_slots": [
-        "s_239"
+        "s_36"
       ],
-      "score": 0.46725171551019395
+      "cost": 2892.0,
+      "reward": 714.2287659268476,
+      "prestige": 1.0,
+      "score": 0.7879406944078212
     },
     {
-      "agent": "IND",
-      "size": "S",
+      "agent": "EDU",
+      "size": "L",
       "footprint_slots": [
-        "s_241"
+        "s_31"
       ],
-      "score": 0.46718854509871927
+      "cost": 2804.0,
+      "reward": 707.6747509360969,
+      "prestige": 1.0,
+      "score": 0.7867490416990547
     }
   ],
-  "active_agent": "IND"
+  "active_agent": "EDU"
 }

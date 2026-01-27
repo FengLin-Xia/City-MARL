@@ -7,7 +7,7 @@
   "city": {
     "map_size": [200, 200],
     "trunk_road": [],
-    "transport_hubs": [[125, 75], [112, 121]]
+    "transport_hubs": [[122, 80], [112, 121]]
   },
   "gaussian_land_price_system": {
     "meters_per_pixel": 2.0,
@@ -45,8 +45,8 @@
     "hubs": {
       "mode": "explicit",
       "list": [
-        {"id": "hub1", "x": 122, "y": 80, "R0": 15, "dR": 2.0, "weight": 0.5},
-        {"id": "hub2", "x": 112, "y": 121, "R0": 15, "dR": 2.0, "weight": 0.5}
+        {"id": "hub1", "x": 122, "y": 80, "R0": 8, "dR": 1.5, "weight": 0.5},
+        {"id": "hub2", "x": 112, "y": 121, "R0": 8, "dR": 1.5, "weight": 0.5}
       ]
     },
     "slots": {
@@ -56,6 +56,8 @@
       "filters": {"respect_terrain": true, "respect_roads": true}
     },
     "enumeration": {
+      "turn_based": true,
+      "first_agent": "IND",
       "length_max": 5,
       "use_skip": true,
       "search_mode": "exhaustive",
@@ -75,7 +77,16 @@
       "lock_period": 3,
       "hysteresis_delta": 0.04
     },
+    "proximity_constraint": {
+      "enabled": true,
+      "max_distance": 10.0,
+      "apply_after_month": 1,
+      "min_candidates": 5
+    },
     "evaluation": {
+      "proximity_threshold": 10.0,
+      "proximity_reward": 50.0,
+      "distance_penalty_coef": 2.0,
       "ZoneAdd": {"near": 0.8, "mid": 0.3, "far": 0.0},
       "s_zone":  {"near": 0.5, "mid": 0.2, "far": 0.0},
       "m_zone":  {"near": 1.15, "mid": 1.00, "far": 0.90},
@@ -108,8 +119,8 @@
             "enabled": true,
             "peak_value": 1.0,
             "decay_mode": "lorentzian",
-            "gamma_px": 8.0,
-            "max_influence_distance": 40.0
+            "gamma_px": 4.0,
+            "max_influence_distance": 20.0
           }
         }
       ]

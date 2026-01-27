@@ -26,9 +26,14 @@ class ConfigLoader:
         Returns:
             解析后的配置字典
         """
-        # 加载原始配置
-        with open(path, 'r', encoding='utf-8') as f:
-            config = json.load(f)
+        # 加载原始配置（支持UTF-16编码）
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+        except UnicodeDecodeError:
+            # 如果UTF-8失败，尝试UTF-16
+            with open(path, 'r', encoding='utf-16') as f:
+                config = json.load(f)
         
         # 解析路径引用
         self.resolved_config = self.resolve_paths(config)
@@ -249,3 +254,5 @@ class ConfigLoader:
     def get_paths_config(self) -> Dict[str, str]:
         """获取路径配置"""
         return self.resolved_config.get("paths", {})
+
+

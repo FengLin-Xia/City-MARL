@@ -44,6 +44,10 @@ class V5TrainingPipeline:
         self.final_step_logs = []
         self.final_env_states = []
         
+        # 限制保存的episode数量（避免内存溢出）
+        # 如果训练episode数超过max_saved_episodes，只保存最后N个episode的数据
+        self.max_saved_episodes = 50  # 默认保存最后50个episode
+        
         # 设置管道步骤
         self._setup_pipeline_steps()
     
@@ -76,6 +80,16 @@ class V5TrainingPipeline:
             "env_states": []
         }
         print(f"[TRAINING] Starting training pipeline for {num_episodes} episodes")
+        
+        # 根据episode数量决定是否保存所有数据
+        # 如果episode数 <= max_saved_episodes，保存所有数据
+        # 如果episode数 > max_saved_episodes，只保存最后N个episode的数据
+        save_all_episodes = num_episodes <= self.max_saved_episodes
+        keep_last_n = self.max_saved_episodes
+        
+        if not save_all_episodes:
+            print(f"[TRAINING] Memory optimization: Only keeping last {keep_last_n} episodes' data to prevent OOM")
+        
         last_result = None
         for ep in range(1, num_episodes + 1):
             data["current_episode"] = ep - 1  # 当前轮次从0开始计
@@ -83,22 +97,26 @@ class V5TrainingPipeline:
             # 下一轮继续沿用返回的数据
             data = last_result.data if last_result and last_result.data is not None else data
             
-            # 如果不是最后一个episode，保存数据后清空以避免累积
-            if ep < num_episodes:
-                print(f"[TRAINING] Episode {ep} completed, saving and clearing data for next episode")
-                # 修复：保存当前episode的数据到final列表（用于最终导出）
+            # 决定是否保存当前episode的数据
+            should_save_data = save_all_episodes or ep > num_episodes - keep_last_n
+            
+            # 保存数据到final列表（如果应该保存）
+            if should_save_data:
+                if ep < num_episodes:
+                    current_count = len(self.step_logs)
+                    print(f"[TRAINING] Episode {ep} completed, saving data ({current_count} step_logs)")
+                else:
+                    print(f"[TRAINING] Episode {ep} completed, saving final data")
                 self.final_step_logs.extend(self.step_logs)
                 self.final_env_states.extend(self.env_states)
-                # 清空用于下一轮（避免内存泄漏）
-                data["step_logs"] = []
-                data["env_states"] = []
-                self.step_logs = []
-                self.env_states = []
             else:
-                # 最后一个episode也保存到final列表
-                print(f"[TRAINING] Episode {ep} completed, saving final data")
-                self.final_step_logs.extend(self.step_logs)
-                self.final_env_states.extend(self.env_states)
+                print(f"[TRAINING] Episode {ep} completed, discarding data to save memory (only keeping last {keep_last_n} episodes)")
+            
+            # 清空临时数据（避免内存泄漏）
+            data["step_logs"] = []
+            data["env_states"] = []
+            self.step_logs = []
+            self.env_states = []
         
         if last_result and last_result.success:
             print(f"[TRAINING] Training completed successfully")

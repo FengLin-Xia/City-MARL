@@ -98,10 +98,14 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
     # 初始化环境
     env = CityEnvironment(cfg)
     
+    # 设置RL选择器的slots，用于对岸检测
+    selector.slots = env.slots
+    
     eval_seeds = cfg['solver']['rl'].get('eval_seed_set', [42, 123, 456, 789, 999])
     total_returns = []
     edu_returns = []
     ind_returns = []
+    council_returns = []
     
     # 槽位选择历史记录
     slot_selection_history = {
@@ -115,7 +119,7 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
         # 重置环境
         state = env.reset(seed=seed)
         
-        episode_rewards = {'EDU': 0.0, 'IND': 0.0}
+        episode_rewards = {'EDU': 0.0, 'IND': 0.0, 'Council': 0.0}
         steps = 0
         
         # 记录当前Episode的槽位选择历史
@@ -141,8 +145,32 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
             actions, action_feats, mask = env.get_action_pool(current_agent)
             
             if not actions:
-                # 没有可用动作，结束回合
-                break
+                # 当没有可用动作时，连续推进月份直到找到有动作的智能体或达到最大月份
+                max_advance_attempts = 10  # 防止无限循环
+                advance_count = 0
+                while advance_count < max_advance_attempts:
+                    if not env.advance_to_next_month():
+                        # 如果无法推进到下一月（达到最大月份），则结束episode
+                        print(f"    No available actions and reached max month, ending episode")
+                        break
+                    advance_count += 1
+                    # 检查新月份是否有可用动作
+                    new_actions, _, _ = env.get_action_pool(env.current_agent)
+                    if new_actions:
+                        # 找到有动作的月份，跳出循环继续处理
+                        actions = new_actions
+                        # 重新获取当前智能体（因为advance_to_next_month可能改变了智能体）
+                        current_agent = env.current_agent
+                        break
+                    print(f"    No actions in month {env.current_month}, advancing to next month")
+                else:
+                    # 连续推进多次仍无动作，结束episode
+                    print(f"    No available actions after {max_advance_attempts} month advances, ending episode")
+                    break
+                
+                if not actions:
+                    # 如果最终还是没有动作，结束episode
+                    break
             
             # 使用RL选择器选择动作序列
             all_buildings = env.buildings.get('public', []) + env.buildings.get('industrial', [])
@@ -152,12 +180,21 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
                 occupied=env._get_occupied_slots(),
                 lp_provider=env._create_lp_provider(),
                 agent_types=[current_agent],
-                sizes={current_agent: ['S', 'M', 'L']},
+                sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']},
                 buildings=all_buildings
             )
             
             if selected_sequence is None:
-                break
+                # 当没有选择序列时，推进到下一个月份而不是结束episode
+                if not env.advance_to_next_month():
+                    # 如果无法推进到下一月（达到最大月份），则结束episode
+                    print(f"    No sequence selected and cannot advance month, ending episode")
+                    break
+                # 成功推进到下一月，继续下一轮循环
+                print(f"    No sequence selected, advancing to next month")
+                # 重新获取当前智能体（因为advance_to_next_month可能改变了智能体）
+                current_agent = env.current_agent
+                continue
             
             # 应用环境约束过滤序列中的动作
             if selected_sequence and selected_sequence.actions:
@@ -166,9 +203,18 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
                     if env.action_allowed(action):
                         filtered_actions.append(action)
                 
-                # 如果过滤后为空，结束Episode（避免无限循环）
+                # 如果过滤后为空，推进到下一个月份而不是结束episode
                 if not filtered_actions:
-                    break
+                    # 当所有动作被过滤掉时，推进到下一个月份而不是结束episode
+                    if not env.advance_to_next_month():
+                        # 如果无法推进到下一月（达到最大月份），则结束episode
+                        print(f"    All actions filtered out and cannot advance month, ending episode")
+                        break
+                    # 成功推进到下一月，继续下一轮循环
+                    print(f"    All actions filtered out, advancing to next month")
+                    # 重新获取当前智能体（因为advance_to_next_month可能改变了智能体）
+                    current_agent = env.current_agent
+                    continue
                 
                 # 创建过滤后的序列
                 from logic.v4_enumeration import Sequence
@@ -249,10 +295,11 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
                 break
         
         # 记录本轮结果
-        total_return = episode_rewards['EDU'] + episode_rewards['IND']
+        total_return = episode_rewards['EDU'] + episode_rewards['IND'] + episode_rewards['Council']
         total_returns.append(total_return)
         edu_returns.append(episode_rewards['EDU'])
         ind_returns.append(episode_rewards['IND'])
+        council_returns.append(episode_rewards['Council'])
         
         # 更新Episode槽位选择历史
         episode_slot_history['episode_return'] = total_return
@@ -290,27 +337,31 @@ def evaluate_rl_model(selector: RLPolicySelector, cfg: Dict) -> Dict:
         slot_selection_history['episodes'].append(episode_slot_history)
         slot_selection_history['total_selections'] += episode_slot_history['summary']['total_selections']
         
-        print(f"  种子 {seed}: 总奖励={total_return:.3f}, EDU={episode_rewards['EDU']:.3f}, IND={episode_rewards['IND']:.3f}, 步数={steps}")
+        print(f"  种子 {seed}: 总奖励={total_return:.3f}, EDU={episode_rewards['EDU']:.3f}, IND={episode_rewards['IND']:.3f}, Council={episode_rewards['Council']:.3f}, 步数={steps}")
     
     # 计算平均结果
     avg_total_return = np.mean(total_returns) if total_returns else 0.0
     avg_edu_return = np.mean(edu_returns) if edu_returns else 0.0
     avg_ind_return = np.mean(ind_returns) if ind_returns else 0.0
+    avg_council_return = np.mean(council_returns) if council_returns else 0.0
     
     results = {
         'mode': 'rl_eval',
         'total_return': avg_total_return,
         'edu_return': avg_edu_return,
         'ind_return': avg_ind_return,
+        'council_return': avg_council_return,
         'steps_per_second': 0.0,  # TODO: 计算速度
         'final_layout': {},
         'metrics': {
             'total_returns': total_returns,
             'edu_returns': edu_returns,
             'ind_returns': ind_returns,
+            'council_returns': council_returns,
             'std_total': np.std(total_returns) if total_returns else 0.0,
             'std_edu': np.std(edu_returns) if edu_returns else 0.0,
             'std_ind': np.std(ind_returns) if ind_returns else 0.0,
+            'std_council': np.std(council_returns) if council_returns else 0.0,
         },
         'eval_seeds': eval_seeds
     }
@@ -376,7 +427,7 @@ def run_single_episode(env, selector, seed: Optional[int] = None) -> Tuple[List[
     state = env.reset(seed=seed)
     
     experiences = []
-    episode_rewards = {'EDU': 0.0, 'IND': 0.0}
+    episode_rewards = {'EDU': 0.0, 'IND': 0.0, 'Council': 0.0}
     steps = 0
     
     while True:
@@ -390,9 +441,32 @@ def run_single_episode(env, selector, seed: Optional[int] = None) -> Tuple[List[
         actions, action_feats, mask = env.get_action_pool(current_agent)
         
         if not actions:
-            # 没有可用动作，结束回合
-            print(f"    No available actions, ending episode")
-            break
+            # 当没有可用动作时，连续推进月份直到找到有动作的智能体或达到最大月份
+            max_advance_attempts = 10  # 防止无限循环
+            advance_count = 0
+            while advance_count < max_advance_attempts:
+                if not env.advance_to_next_month():
+                    # 如果无法推进到下一月（达到最大月份），则结束episode
+                    print(f"    No available actions and reached max month, ending episode")
+                    break
+                advance_count += 1
+                # 检查新月份是否有可用动作
+                new_actions, _, _ = env.get_action_pool(env.current_agent)
+                if new_actions:
+                    # 找到有动作的月份，跳出循环继续处理
+                    actions = new_actions
+                    # 重新获取当前智能体（因为advance_to_next_month可能改变了智能体）
+                    current_agent = env.current_agent
+                    break
+                print(f"    No actions in month {env.current_month}, advancing to next month")
+            else:
+                # 连续推进多次仍无动作，结束episode
+                print(f"    No available actions after {max_advance_attempts} month advances, ending episode")
+                break
+            
+            if not actions:
+                # 如果最终还是没有动作，结束episode
+                break
         
         # 使用RL选择器选择动作序列
         all_buildings = env.buildings.get('public', []) + env.buildings.get('industrial', [])
@@ -403,12 +477,20 @@ def run_single_episode(env, selector, seed: Optional[int] = None) -> Tuple[List[
             buildings=all_buildings,
             lp_provider=env._create_lp_provider(),
             agent_types=[current_agent],
-            sizes={current_agent: ['S', 'M', 'L']}
+            sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']}
         )
         
         if selected_sequence is None:
-            print(f"    No sequence selected, ending episode")
-            break
+            # 当没有选择序列时，推进到下一个月份而不是结束episode
+            if not env.advance_to_next_month():
+                # 如果无法推进到下一月（达到最大月份），则结束episode
+                print(f"    No sequence selected and cannot advance month, ending episode")
+                break
+            # 成功推进到下一月，继续下一轮循环
+            print(f"    No sequence selected, advancing to next month")
+            # 重新获取当前智能体（因为advance_to_next_month可能改变了智能体）
+            current_agent = env.current_agent
+            continue
         
         # 应用环境约束过滤序列中的动作
         if selected_sequence and selected_sequence.actions:
@@ -417,10 +499,18 @@ def run_single_episode(env, selector, seed: Optional[int] = None) -> Tuple[List[
                 if env.action_allowed(action):
                     filtered_actions.append(action)
             
-            # 如果过滤后为空，结束Episode（避免无限循环）
+            # 如果过滤后为空，推进到下一个月份而不是结束episode
             if not filtered_actions:
-                print(f"    All actions filtered out, ending episode")
-                break
+                # 当所有动作被过滤掉时，推进到下一个月份而不是结束episode
+                if not env.advance_to_next_month():
+                    # 如果无法推进到下一月（达到最大月份），则结束episode
+                    print(f"    All actions filtered out and cannot advance month, ending episode")
+                    break
+                # 成功推进到下一月，继续下一轮循环
+                print(f"    All actions filtered out, advancing to next month")
+                # 重新获取当前智能体（因为advance_to_next_month可能改变了智能体）
+                current_agent = env.current_agent
+                continue
             
             # 创建过滤后的序列
             from logic.v4_enumeration import Sequence
@@ -518,6 +608,16 @@ def run_single_episode(env, selector, seed: Optional[int] = None) -> Tuple[List[
         experiences.append(experience)
         episode_rewards[current_agent] += reward
         
+        # 【交替模式】检查是否需要在同一月内切换到Council
+        if (current_agent == 'EDU' and 
+            current_month % 2 == 0 and 
+            env._council_execution_phase == 'EDU'):
+            # 在同一月内从EDU切换到Council
+            if env.switch_to_council_in_same_month():
+                print(f"  Month {current_month}: Switching from EDU to Council")
+                # 继续下一轮循环，让Council执行
+                continue
+        
         # 更新状态
         state = next_state
         
@@ -528,7 +628,7 @@ def run_single_episode(env, selector, seed: Optional[int] = None) -> Tuple[List[
         
         steps += 1
     
-    total_return = episode_rewards['EDU'] + episode_rewards['IND']
+    total_return = episode_rewards['EDU'] + episode_rewards['IND'] + episode_rewards['Council']
     return experiences, total_return
 
 
