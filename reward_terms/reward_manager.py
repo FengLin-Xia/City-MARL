@@ -20,6 +20,7 @@ from .zone_multipliers import ZoneMultipliersTerm
 from .land_price_sensitivity import LandPriceSensitivityTerm
 from .building_size_bonus import BuildingSizeBonusTerm
 from .industrial_cluster_reward import IndustrialClusterRewardTerm
+from .action_diversity_reward import ActionDiversityRewardTerm
 
 
 class RewardManager:
@@ -41,7 +42,8 @@ class RewardManager:
             "zone_multipliers": ZoneMultipliersTerm(config),
             "land_price_sensitivity": LandPriceSensitivityTerm(config),
             "building_size_bonus": BuildingSizeBonusTerm(config),
-            "industrial_cluster": IndustrialClusterRewardTerm(config)
+            "industrial_cluster": IndustrialClusterRewardTerm(config),
+            "action_diversity": ActionDiversityRewardTerm(config)
         }
     
     def compute_total_reward(self, prev_state: EnvironmentState, state: EnvironmentState, action_id: int) -> float:
@@ -63,10 +65,6 @@ class RewardManager:
             if term.enabled:
                 reward = term.compute(prev_state, state, action_id)
                 total_reward += reward
-                
-                # 调试信息
-                if abs(reward) > 0.01:  # 只记录有意义的奖励
-                    print(f"[Reward Debug] {term_name}: {reward:.3f}")
         
         return total_reward
     

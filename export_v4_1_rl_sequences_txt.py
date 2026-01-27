@@ -26,7 +26,7 @@ from typing import Dict, Tuple, List, Optional
 AGENT_SIZE_CODE: Dict[Tuple[str, str], int] = {
     ('EDU', 'S'): 0, ('EDU', 'M'): 1, ('EDU', 'L'): 2,
     ('IND', 'S'): 3, ('IND', 'M'): 4, ('IND', 'L'): 5,
-    ('EDU', 'A'): 6, ('EDU', 'B'): 7, ('EDU', 'C'): 8,
+    ('Council', 'A'): 6, ('Council', 'B'): 7, ('Council', 'C'): 8,  # Council智能体的A/B/C尺寸
 }
 
 
@@ -78,7 +78,10 @@ def load_slots_info(slotpoints_path: str, map_size: List[int] = [200, 200]) -> D
 
 def fmt_entry(agent: str, size: str, x: float, y: float, angle_deg: float) -> str:
     """格式化单个动作条目"""
-    code = AGENT_SIZE_CODE.get((agent, size), 0)
+    code = AGENT_SIZE_CODE.get((agent, size))
+    if code is None:
+        print(f"警告：未找到智能体 {agent} 尺寸 {size} 的映射，跳过此动作")
+        return None
     return f"{code}({x:.3f}, {y:.3f}, 0){angle_deg:.2f}"
 
 
@@ -87,8 +90,8 @@ def export_sequence_txt(actions: List[Dict], sid2info: Dict[str, Tuple[float, fl
     parts: List[str] = []
     
     for action in actions:
-        agent = str(action.get('agent', 'EDU')).upper()
-        size = str(action.get('size', 'S')).upper()
+        agent = str(action.get('agent', 'EDU'))
+        size = str(action.get('size', 'S'))
         slot_id = action.get('slot_id', '')
         
         # 获取槽位信息
@@ -110,12 +113,16 @@ def export_sequence_txt(actions: List[Dict], sid2info: Dict[str, Tuple[float, fl
                     sx, sy, sangle = sid2info[slot_id]
                 else:
                     sx, sy, sangle = x, y, angle  # 回退到主槽位信息
-                sub_parts.append(fmt_entry(agent, size, sx, sy, sangle))
+                entry = fmt_entry(agent, size, sx, sy, sangle)
+                if entry is not None:
+                    sub_parts.append(entry)
             if sub_parts:
                 parts.append('{' + ', '.join(sub_parts) + '}')
         else:
             # 单槽位格式
-            parts.append(fmt_entry(agent, size, x, y, angle))
+            entry = fmt_entry(agent, size, x, y, angle)
+            if entry is not None:
+                parts.append(entry)
     
     return ', '.join(parts)
 

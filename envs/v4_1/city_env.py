@@ -41,8 +41,24 @@ class CityEnvironment:
         # Budget系统配置
         self.budget_cfg = cfg.get('budget_system', {'enabled': False})
         if self.budget_cfg.get('enabled', False):
-            self.budgets = dict(self.budget_cfg.get('initial_budgets', {'IND': 5000, 'EDU': 4000}))
+            initial_budgets = self.budget_cfg.get('initial_budgets', {'IND': 5000, 'EDU': 4000})
+            
+            # 【共享预算机制】Council和EDU共享预算
+            self.budgets = dict(initial_budgets)
+            
+            # 如果存在Council，将其预算合并到EDU
+            if 'Council' in self.budgets and 'EDU' in self.budgets:
+                council_budget = self.budgets.pop('Council', 0)
+                self.budgets['EDU'] += council_budget
+                print(f"[Budget] Council和EDU共享预算 - 总预算: {self.budgets['EDU']}")
+            
+            # 为所有智能体创建预算历史
             self.budget_history = {agent: [] for agent in self.rl_cfg['agents']}
+            
+            # 为Council创建虚拟预算（用于记录，实际使用EDU预算）
+            if 'Council' in self.rl_cfg['agents']:
+                self.budget_history['Council'] = []
+            
             print(f"[Budget] 系统已启用 - IND: {self.budgets.get('IND', 0)}, EDU: {self.budgets.get('EDU', 0)}")
         else:
             self.budgets = None
@@ -63,6 +79,7 @@ class CityEnvironment:
         self.current_month = 0
         self.current_agent = self.rl_cfg['agents'][0]  # 当前决策智能体
         self.agent_turn = 0  # 智能体轮次
+        self._council_execution_phase = None  # Council执行阶段标记
         
         # 状态缓存
         self.state_cache = {}
@@ -215,7 +232,19 @@ class CityEnvironment:
                 # 【月度收益机制】更新budget：扣除建造成本
                 if self.budgets is not None:
                     build_cost = float(action.cost) if action.cost is not None else 0.0
-                    self.budgets[agent] -= build_cost
+                    
+                    # 【共享预算机制】Council使用EDU的预算
+                    if agent == 'Council':
+                        self.budgets['EDU'] -= build_cost
+                        # 同时更新Council的预算历史（用于记录）
+                        if 'Council' in self.budget_history:
+                            self.budget_history['Council'].append({
+                                'month': self.current_month,
+                                'cost': -build_cost,
+                                'remaining': self.budgets['EDU']
+                            })
+                    else:
+                        self.budgets[agent] -= build_cost
                 
                 # 计算单个动作奖励（已包含monthly_income）
                 action_reward = self._calculate_reward(agent, action)
@@ -238,6 +267,32 @@ class CityEnvironment:
         next_state, done, info = self._advance_turn()
         
         return next_state, total_reward, done, info
+    
+    def _advance_turn(self):
+        """推进到下一个回合 - 交替模式：奇数月IND，偶数月EDU+Council"""
+        # 推进到下一个月份
+        self.current_month += 1
+        
+        # 检查是否达到最大月份
+        if self.current_month >= self.total_months:
+            return self._get_current_state(), True, {'reason': 'max_months_reached'}
+        
+        # 【交替模式】根据月份决定智能体
+        if self.current_month % 2 == 1:  # 奇数月：IND
+            self.current_agent = 'IND'
+            self.agent_turn = 0
+            self._council_execution_phase = None
+        else:  # 偶数月：EDU和Council
+            # 偶数月开始时，先切换到EDU
+            self.current_agent = 'EDU'
+            self.agent_turn = 1
+            self._council_execution_phase = 'EDU'
+        
+        # 更新地价系统
+        if hasattr(self.land_price_system, 'update_month'):
+            self.land_price_system.update_month(self.current_month)
+        
+        return self._get_current_state(), False, {'month': self.current_month, 'agent': self.current_agent}
     
     def _get_current_state(self) -> Dict[str, Any]:
         """获取当前环境状态"""
@@ -285,6 +340,12 @@ class CityEnvironment:
                 if sid is not None:
                     occupied.add(sid)
         
+        # 【新增】检查槽位的occupied_by属性
+        for sid, slot in self.slots.items():
+            if hasattr(slot, 'occupied_by') and slot.occupied_by:
+                occupied.add(sid)
+                print(f"[DEBUG] 槽位{sid}被{slot.occupied_by}占用")
+        
         return occupied
     
     def _get_candidate_slots(self) -> Set[str]:
@@ -297,21 +358,100 @@ class CityEnvironment:
             self.v4_cfg.get('hubs', {}), 
             tol=1.0
         )
+        # print(f"    [Debug] ring_candidates返回: {len(all_candidates)}个槽位")
+        
+        # 【新增】为EDU agent添加对岸槽位（用于A/B/C动作）
+        if self.current_agent == 'EDU':
+            other_side_slots = self._get_other_side_slots()
+            
+            # 【修复】只添加距离hub合理的对岸槽位
+            valid_other_side_slots = self._filter_other_side_slots_by_distance(other_side_slots, all_candidates)
+            
+            all_candidates = all_candidates | set(valid_other_side_slots)
         
         # 【修正顺序】先应用河流连通域过滤，再应用邻近性约束
         # 根据当前智能体过滤到对应连通域
         if hasattr(self, 'hub_components') and len(self.hub_components) >= 2:
             agent_idx = self.rl_cfg['agents'].index(self.current_agent)
-            expected_comp = self.hub_components[agent_idx]
             
-            # 检查是否为A/B/C类型，如果是则不受河流限制
-            if (self.current_agent == 'IND' and 
-                hasattr(self, 'current_size') and 
-                self.current_size in ['A', 'B', 'C']):
-                print(f"    [River Filter] {self.current_agent} {self.current_size} 类型不受河流限制，返回所有候选槽位: {len(all_candidates)}")
-                # A/B/C类型不受河流限制，保持所有候选槽位
+            # Council智能体特殊处理：使用EDU的连通域（因为Council负责A/B/C教育建筑）
+            if self.current_agent == 'Council':
+                # Council使用EDU的连通域（索引1）
+                expected_comp = self.hub_components[1] if len(self.hub_components) > 1 else self.hub_components[0]
             else:
-                # S/M/L类型仍受河流限制
+                expected_comp = self.hub_components[agent_idx]
+            
+            # 河流连通域过滤：EDU的A/B/C绕过，Council完全绕过，其他都受限制
+            if self.current_agent == 'Council':
+                # Council智能体：检查是否达到启动月份
+                council_cfg = self.v4_cfg.get('evaluation', {}).get('council', {})
+                start_after_month = council_cfg.get('start_after_month', 0)
+                
+                if self.current_month < start_after_month:
+                    print(f"    [Council Filter] Council智能体延迟启动: 当前月份{self.current_month} < 启动月份{start_after_month}，跳过")
+                    all_candidates = set()  # 返回空候选集，跳过本次执行
+                else:
+                    # Council智能体：完全绕过河流过滤，可以跨河放置A/B/C
+                    print(f"    [River Filter] Council agent: 完全绕过河流过滤，保留所有槽位")
+                    # all_candidates 已经包含所有槽位，不进行任何过滤
+                    
+                    # Council特殊过滤：只保留building_level=3的槽位
+                    # 原因：building_level=3只能建S尺寸，IND不会在这些槽位放M/L，避免抢占
+                    level_3_candidates = set()
+                    for slot_id in all_candidates:
+                        slot = self.slots.get(slot_id)
+                        if slot and getattr(slot, 'building_level', 3) == 3:
+                            level_3_candidates.add(slot_id)
+                    
+                    print(f"    [Council Filter] building_level=3过滤: {len(all_candidates)} -> {len(level_3_candidates)}个槽位")
+                    all_candidates = level_3_candidates
+            elif self.current_agent == 'EDU':
+                # EDU agent：A/B/C绕过河流过滤，S/M/L仍受限制
+                # 由于在槽位候选阶段无法区分具体尺寸，我们采用以下策略：
+                # 1. 先获取同侧槽位（S/M/L用）
+                # 2. 再添加对岸槽位（A/B/C用）
+                same_side_candidates = set()
+                other_side_candidates = set()
+                
+                # 获取河流信息用于对岸判断
+                rivers = self.v4_cfg.get('terrain_features', {}).get('rivers', [])
+                coords = rivers[0].get('coordinates', []) if rivers else []
+                center_y = None
+                edu_hub_y = None
+                
+                if coords:
+                    y_coords = [point[1] for point in coords]
+                    center_y = sum(y_coords) / len(y_coords)
+                    hubs = self.v4_cfg.get('city', {}).get('transport_hubs', [[125, 75], [112, 121]])
+                    edu_hub_y = hubs[1][1] if len(hubs) > 1 else hubs[0][1]
+                
+                for slot_id in all_candidates:
+                    slot = self.slots.get(slot_id)
+                    if slot is None:
+                        continue
+                        
+                    x = float(getattr(slot, 'fx', slot.x))
+                    y = float(getattr(slot, 'fy', slot.y))
+                    slot_comp = self._get_component_of_xy(x, y)
+                    
+                    # 先检查是否在对岸（不依赖于连通域）
+                    if center_y is not None and edu_hub_y is not None:
+                        is_other_side = (y > center_y) != (edu_hub_y > center_y)
+                        if is_other_side:
+                            other_side_candidates.add(slot_id)
+                        elif slot_comp == expected_comp:
+                            same_side_candidates.add(slot_id)
+                    else:
+                        # 如果没有河流信息，按连通域判断
+                        if slot_comp == expected_comp:
+                            same_side_candidates.add(slot_id)
+                
+                # 【关键修复】EDU agent保留所有槽位（同侧+对岸），不进行河流过滤
+                # 因为A/B/C需要绕过河流过滤，S/M/L的过滤在动作枚举阶段处理
+                print(f"    [River Filter] EDU agent: 保留所有槽位，不进行河流过滤")
+                # all_candidates 已经包含同侧和对岸槽位，直接使用，不进行任何过滤
+            else:
+                # IND agent：所有尺寸都受河流过滤限制
                 filtered_candidates = set()
                 for slot_id in all_candidates:
                     slot = self.slots.get(slot_id)
@@ -337,13 +477,32 @@ class CityEnvironment:
             # 只使用当前agent类型的建筑作为参考（避免跨连通域）
             agent_type = 'industrial' if self.current_agent == 'IND' else 'public'
             agent_buildings = self.buildings.get(agent_type, [])
-            all_candidates = filter_near_buildings(
-                all_candidates,
-                self.slots,
-                agent_buildings,
-                max_distance=float(proximity_cfg.get('max_distance', 10.0)),
-                min_candidates=int(proximity_cfg.get('min_candidates', 5))
-            )
+            # 放宽/跳过 A/B/C 的邻近性阈值（仅 EDU 生效）
+            max_dist = float(proximity_cfg.get('max_distance', 10.0))
+            skip_abcs = bool(proximity_cfg.get('edu_abcs_skip', False))
+            if self.current_agent == 'EDU' and skip_abcs:
+                # A/B/C 跳过邻近性；S/M/L 仍应用
+                # 将候选拆为 A/B/C 与其他，再只对其他应用邻近性过滤
+                from logic.v4_enumeration import ActionEnumerator
+                # 此处仅按槽ID无法区分尺寸，保守做法：跳过邻近性（只对 EDU 生效）
+                pass
+            else:
+                if self.current_agent == 'EDU' and proximity_cfg.get('edu_abcs_relax', False):
+                    max_dist = float(proximity_cfg.get('edu_abcs_max_distance', max_dist))
+                all_candidates = filter_near_buildings(
+                    all_candidates,
+                    self.slots,
+                    agent_buildings,
+                    max_distance=max_dist,
+                    min_candidates=int(proximity_cfg.get('min_candidates', 5))
+                )
+        
+        # 【新增】过滤已占用的槽位
+        occupied_slots = self._get_occupied_slots()
+        if occupied_slots:
+            # print(f"    [Debug] 过滤已占用槽位: {len(occupied_slots)}个")
+            all_candidates = all_candidates - occupied_slots
+            # print(f"    [Debug] 过滤后候选槽位: {len(all_candidates)}个")
         
         return all_candidates
     
@@ -408,7 +567,11 @@ class CityEnvironment:
             budget_penalty = 0.0
             if self.budgets is not None:
                 # 预估建造后的budget
-                budget_after = self.budgets[agent] - build_cost
+                if agent == 'Council':
+                    # Council使用EDU的预算
+                    budget_after = self.budgets['EDU'] - build_cost
+                else:
+                    budget_after = self.budgets[agent] - build_cost
                 
                 # 负债惩罚
                 if budget_after < 0:
@@ -441,7 +604,8 @@ class CityEnvironment:
         
         # 调试信息
         if abs(scaled_reward) > 1:
-            print(f"    [Reward Debug] {agent}: npv={npv if build_cost > 0 else 0:.1f}, progress={progress_reward if build_cost > 0 else 0:.1f}, total={total_reward:.1f}, scaled={scaled_reward:.3f}")
+            # print(f"    [Reward Debug] {agent}: npv={npv if build_cost > 0 else 0:.1f}, progress={progress_reward if build_cost > 0 else 0:.1f}, total={total_reward:.1f}, scaled={scaled_reward:.3f}")
+            pass
         
         return scaled_reward
     
@@ -491,6 +655,12 @@ class CityEnvironment:
         total_income = sum([asset['monthly_income'] for asset in self.active_assets[agent]])
         return float(total_income)
     
+    def _calculate_building_monthly_income(self, agent: str, action: Action) -> float:
+        """计算单个建筑的月度收入（使用动作枚举阶段计算的reward值）"""
+        # 使用动作枚举阶段已经计算好的reward值作为月度收入
+        # 这个值已经考虑了建筑类型、大小、位置、地价等因素
+        return float(action.reward) if action.reward is not None else 0.0
+    
     def _place_building(self, agent: str, action: Action):
         """放置建筑"""
         # 根据智能体类型和动作确定建筑类型
@@ -498,6 +668,9 @@ class CityEnvironment:
             building_type = 'public'
         elif agent == 'IND':
             building_type = 'industrial'
+        elif agent == 'Council':
+            # Council智能体放置A/B/C尺寸的教育建筑（与EDU相同类型但不同尺寸）
+            building_type = 'public'
         else:
             raise ValueError(f"未知的智能体类型: {agent}")
         
@@ -524,9 +697,11 @@ class CityEnvironment:
         self.buildings[building_type].append(building)
         
         # 【月度收益机制】记录为在营资产
+        # 使用正确的月度收入计算
+        monthly_income = self._calculate_building_monthly_income(agent, action)
         asset = {
             'size': action.size,
-            'monthly_income': float(action.reward) if action.reward is not None else 0.0,
+            'monthly_income': monthly_income,
             'cost': float(action.cost) if action.cost is not None else 0.0,
             'built_month': self.current_month,
             'building_id': len(self.active_assets[agent])  # 唯一ID
@@ -539,16 +714,57 @@ class CityEnvironment:
         if self.budgets is not None:
             for ag in self.rl_cfg['agents']:
                 monthly_income = self._calculate_monthly_income(ag)
-                self.budgets[ag] += monthly_income
+                
+                # 【共享预算机制】Council的收益也加到EDU预算中
+                if ag == 'Council':
+                    self.budgets['EDU'] += monthly_income
+                    # 同时更新Council的预算历史（用于记录）
+                    if 'Council' in self.budget_history:
+                        self.budget_history['Council'].append({
+                            'month': self.current_month,
+                            'income': monthly_income,
+                            'remaining': self.budgets['EDU']
+                        })
+                else:
+                    self.budgets[ag] += monthly_income
                 
                 # 记录月度收益历史
                 self.monthly_income_history[ag].append(monthly_income)
         
         # 检查是否启用turn-based模式
         turn_based = self.v4_cfg.get('enumeration', {}).get('turn_based', False)
+        custom_order = self.v4_cfg.get('enumeration', {}).get('custom_execution_order', {})
         
-        if turn_based:
-            # Turn-Based模式：每月一个agent，轮流行动
+        if turn_based and custom_order.get('enabled', False):
+            # 自定义执行顺序模式：IND单月，EDU+Council双月
+            pattern = custom_order.get('pattern', 'IND_single_EDU_Council_pair')
+            
+            if pattern == 'IND_single_EDU_Council_pair':
+                # 模式：IND单月，EDU+Council双月
+                if self.current_agent == 'IND':
+                    # IND执行后，进入下个月，切换到EDU
+                    self.current_month += 1
+                    self.current_agent = 'EDU'
+                    self.agent_turn = 1  # EDU的索引
+                    self._council_execution_phase = 'EDU'  # 标记当前是EDU阶段
+                elif self.current_agent == 'EDU':
+                    # EDU执行后，同月切换到Council
+                    self.current_agent = 'Council'
+                    self.agent_turn = 2  # Council的索引
+                    self._council_execution_phase = 'Council'  # 标记当前是Council阶段
+                elif self.current_agent == 'Council':
+                    # Council执行后，进入下个月，切换到IND
+                    self.current_month += 1
+                    self.current_agent = 'IND'
+                    self.agent_turn = 0  # IND的索引
+                    self._council_execution_phase = None  # 重置阶段标记
+            else:
+                # 默认turn-based模式
+                self.current_month += 1
+                self.agent_turn = (self.agent_turn + 1) % len(self.rl_cfg['agents'])
+                self.current_agent = self.rl_cfg['agents'][self.agent_turn]
+        elif turn_based:
+            # 标准Turn-Based模式：每月一个agent，轮流行动
             # 先进入下个月
             self.current_month += 1
             
@@ -587,24 +803,58 @@ class CityEnvironment:
     
     def get_action_pool(self, agent: str) -> Tuple[List[Action], torch.Tensor, torch.Tensor]:
         """获取动作池、掩码和特征"""
+        # 设置当前智能体（用于对岸槽位添加逻辑）
+        self.current_agent = agent
+        print(f"[DEBUG] 为{agent}智能体生成动作池...")
         # 获取候选槽位
         candidates = self._get_candidate_slots()
         occupied = self._get_occupied_slots()
+        print(f"[DEBUG] 候选槽位数量: {len(candidates)}, 已占用槽位数量: {len(occupied)}")
         
         # 创建动作枚举器
         from logic.v4_enumeration import ActionEnumerator
         enumerator = ActionEnumerator(self.slots)
         
-        # 枚举动作
-        actions = enumerator.enumerate_actions(
-            candidates=candidates,
-            occupied=occupied,
-            agent_types=[agent],
-            sizes={'EDU': ['S', 'M', 'L', 'A', 'B', 'C'], 'IND': ['S', 'M', 'L']},
-            lp_provider=self._create_lp_provider(),
-            adjacency='4-neighbor',
-            caps=self.v4_cfg.get('enumeration', {}).get('caps', {})
-        )
+        # 枚举动作 - 支持Council智能体
+        if agent == 'Council':
+            # Council智能体：只负责A/B/C
+            actions = enumerator.enumerate_actions(
+                candidates=candidates,
+                occupied=occupied,
+                agent_types=[agent],
+                sizes={'Council': ['A', 'B', 'C']},
+                lp_provider=self._create_lp_provider(),
+                adjacency='4-neighbor',
+                caps=self.v4_cfg.get('enumeration', {}).get('caps', {})
+            )
+        else:
+            # EDU/IND智能体：保持原有逻辑
+            if agent == 'EDU':
+                # EDU只负责S/M/L，不再负责A/B/C
+                sizes = {'EDU': ['S', 'M', 'L']}
+            else:
+                # IND保持原有逻辑
+                sizes = {'IND': ['S', 'M', 'L']}
+            
+            actions = enumerator.enumerate_actions(
+                candidates=candidates,
+                occupied=occupied,
+                agent_types=[agent],
+                sizes=sizes,
+                lp_provider=self._create_lp_provider(),
+                adjacency='4-neighbor',
+                caps=self.v4_cfg.get('enumeration', {}).get('caps', {})
+            )
+        
+        # 设置当前动作池，用于河流过滤判断
+        self.current_actions = actions
+        
+        # 统计A/B/C动作数量
+        abc_actions = [a for a in actions if a.size in ['A', 'B', 'C']]
+        print(f"[DEBUG] 动作池生成完成: 总动作数={len(actions)}, A/B/C动作数={len(abc_actions)}")
+        if abc_actions:
+            abc_examples = [f"{a.size}({a.footprint_slots[0] if a.footprint_slots else 'N/A'})" for a in abc_actions[:5]]
+            print(f"[DEBUG] A/B/C动作示例: {abc_examples}")
         
         if not actions:
             return [], torch.tensor([]), torch.tensor([])
@@ -624,6 +874,104 @@ class CityEnvironment:
             return max(0.0, min(1.0, float(price)))
         
         return lp_provider
+    
+    def _get_other_side_slots(self) -> List[str]:
+        """获取对岸槽位"""
+        other_side_slots = []
+        try:
+            # print(f"    [Debug] 开始获取对岸槽位...")
+            # 获取河流信息
+            rivers = self.v4_cfg.get('terrain_features', {}).get('rivers', [])
+            coords = rivers[0].get('coordinates', []) if rivers else []
+            if not coords:
+                # print(f"    [Debug] 没有河流坐标数据，尝试从文件加载...")
+                # 尝试从文件加载河流坐标
+                try:
+                    from envs.v4_1.city_env import load_river_coords
+                    coords = load_river_coords(self.v4_cfg)
+                    # print(f"    [Debug] 从文件加载河流坐标: {len(coords)}个点")
+                except Exception as e:
+                    # print(f"    [Debug] 从文件加载河流坐标失败: {e}")
+                    return other_side_slots
+            
+            if not coords:
+                # print(f"    [Debug] 仍然没有河流坐标数据")
+                return other_side_slots
+            
+            # 计算河流中心线
+            y_coords = [point[1] for point in coords]
+            center_y = sum(y_coords) / len(y_coords)
+            
+            # 获取EDU hub位置
+            hubs = self.v4_cfg.get('city', {}).get('transport_hubs', [[125, 75], [112, 121]])
+            edu_hub_y = hubs[1][1] if len(hubs) > 1 else hubs[0][1]
+            
+            # 检查所有槽位是否在对岸
+            # print(f"    [Debug] 河流中心线: {center_y}, EDU hub: {edu_hub_y}")
+            for slot_id, slot in self.slots.items():
+                y = float(getattr(slot, 'fy', getattr(slot, 'y', 0.0)))
+                # 对岸判断：EDU hub在河流下方，对岸槽位在河流上方
+                is_other_side = (y > center_y) != (edu_hub_y > center_y)
+                if is_other_side:
+                    other_side_slots.append(slot_id)
+                    # if len(other_side_slots) <= 5:  # 只打印前5个
+                    #     print(f"    [Debug] 对岸槽位: {slot_id}, y={y:.1f}")
+            
+            # print(f"    [Debug] 总槽位数: {len(self.slots)}, 对岸槽位数: {len(other_side_slots)}")
+        except Exception as e:
+            print(f"获取对岸槽位失败: {e}")
+            import traceback
+            traceback.print_exc()
+        
+        return other_side_slots
+    
+    def _filter_other_side_slots_by_distance(self, other_side_slots: List[str], base_candidates: Set[str]) -> List[str]:
+        """筛选距离hub合理的对岸槽位"""
+        valid_slots = []
+        
+        try:
+            # 获取当前月份的距离约束
+            from enhanced_city_simulation_v4_0 import compute_R
+            R_prev, R_curr = compute_R(self.current_month, self.v4_cfg.get('hubs', {}), True)
+            # print(f"    [Debug] 当前月份{self.current_month}的距离约束: R_curr={R_curr:.1f}")
+            
+            # 获取EDU hub位置
+            hubs = self.v4_cfg.get('city', {}).get('transport_hubs', [[125, 75], [112, 121]])
+            edu_hub = hubs[1] if len(hubs) > 1 else hubs[0]  # EDU hub
+            
+            for slot_id in other_side_slots:
+                slot = self.slots.get(slot_id)
+                if slot is None:
+                    continue
+                
+                # 计算到EDU hub的距离
+                x = float(getattr(slot, 'fx', getattr(slot, 'x', 0.0)))
+                y = float(getattr(slot, 'fy', getattr(slot, 'y', 0.0)))
+                
+                from enhanced_city_simulation_v4_0 import min_dist_to_hubs
+                distance = min_dist_to_hubs(x, y, [edu_hub])
+                
+                # 检查距离是否合理（使用与ring_candidates相同的约束）
+                if distance <= (R_curr + 1.0):  # 使用相同的tol=1.0
+                    valid_slots.append(slot_id)
+                    # if len(valid_slots) <= 3:  # 只打印前3个
+                    #     print(f"    [Debug] 有效对岸槽位: {slot_id}, 距离={distance:.1f}")
+                else:
+                    # if len(valid_slots) <= 3:  # 只打印前3个被过滤的
+                    #     print(f"    [Debug] 距离过远的对岸槽位: {slot_id}, 距离={distance:.1f} > {R_curr:.1f}")
+                    pass
+            
+            # print(f"    [Debug] 对岸槽位距离筛选: {len(other_side_slots)} -> {len(valid_slots)}")
+            pass
+            
+        except Exception as e:
+            print(f"对岸槽位距离筛选失败: {e}")
+            import traceback
+            traceback.print_exc()
+            # 如果筛选失败，返回空列表，避免添加不合理的槽位
+            return []
+        
+        return valid_slots
     
     def _extract_action_features(self, actions: List[Action]) -> Tuple[torch.Tensor, torch.Tensor]:
         """提取动作特征"""
@@ -685,6 +1033,40 @@ class CityEnvironment:
         """渲染环境（可选）"""
         # 这里可以实现可视化逻辑
         pass
+    
+    def advance_to_next_month(self):
+        """推进到下一个月份 - 交替模式：奇数月IND，偶数月EDU+Council"""
+        self.current_month += 1
+        
+        # 检查是否超过总月份数
+        if self.current_month >= self.total_months:
+            return False  # 表示episode应该结束
+        
+        # 【交替模式】根据月份决定智能体
+        if self.current_month % 2 == 1:  # 奇数月：IND
+            self.current_agent = 'IND'
+            self.agent_turn = 0
+            self._council_execution_phase = None
+        else:  # 偶数月：EDU和Council
+            # 偶数月开始时，先切换到EDU
+            self.current_agent = 'EDU'
+            self.agent_turn = 1
+            self._council_execution_phase = 'EDU'
+        
+        # 更新地价系统
+        if hasattr(self.land_price_system, 'update_month'):
+            self.land_price_system.update_month(self.current_month)
+        
+        return True  # 表示成功推进到下一月
+    
+    def switch_to_council_in_same_month(self):
+        """在同一个月内从EDU切换到Council（仅偶数月使用）"""
+        if self.current_month % 2 == 0 and self._council_execution_phase == 'EDU':
+            self.current_agent = 'Council'
+            self.agent_turn = 2
+            self._council_execution_phase = 'Council'
+            return True
+        return False
     
     def close(self):
         """关闭环境"""

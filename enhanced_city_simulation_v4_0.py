@@ -575,7 +575,7 @@ def main():
                 active_agent = 'EDU' if (m % 2 == 0) else 'IND'
             else:
                 active_agent = 'IND' if (m % 2 == 0) else 'EDU'
-            active_sizes = {active_agent: ['S', 'M', 'L']}
+            active_sizes = {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']}
             all_buildings = buildings.get('public', []) + buildings.get('industrial', [])
             actions, best_seq = planner.plan(
                 slots=slots,
@@ -596,7 +596,7 @@ def main():
                 lp_provider=lp_provider,
                 river_distance_provider=river_distance_provider,
                 agent_types=['EDU', 'IND'],
-                sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L']},
+                sizes={'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']},
                 buildings=all_buildings,
             )
 

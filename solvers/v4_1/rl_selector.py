@@ -110,7 +110,7 @@ class RLPolicySelector:
         self.state_dim = 512  # 简化状态维度
         self.max_actions = 50  # 最大动作数量
         
-        agents = self.rl_cfg.get('agents', ['IND', 'EDU'])
+        agents = self.rl_cfg.get('agents', ['IND', 'EDU', 'Council'])
         
         # 独立的Actor网络（每个agent一个）
         self.actors = {}
@@ -160,10 +160,16 @@ class RLPolicySelector:
         self.optimizer = self.actor_optimizer
         
         # 探索参数 - 激进配置快速见效
-        self.epsilon = 0.8  # ε-贪婪探索 (激进提升到0.8)
+        self.epsilon = 0.9  # ε-贪婪探索 (进一步提升到0.9确保触发)
         self.epsilon_decay = 0.99  # 探索衰减率（快速衰减）
         self.min_epsilon = 0.3  # 最小探索率（保持高探索率）
         self.high_level_epsilon = 0.9  # 高等级槽位的额外探索率
+        
+        # 对岸探索参数 - 课程学习
+        self.other_side_force_rate = 0.8  # 对岸强制探索率（大幅提升）
+        self.other_side_force_decay_steps = 50000  # 衰减步数
+        self.other_side_force_final_rate = 0.0  # 最终强制率
+        self.training_step = 0  # 训练步数计数器
         
         # 保留枚举器和打分器用于生成动作池和特征
         self.enumerator = None
@@ -182,10 +188,18 @@ class RLPolicySelector:
         }
         normalize = str(obj.get('normalize', 'per-month-pool-minmax'))
         eval_params = self.cfg.get('growth_v4_1', {}).get('evaluation', {})
+        # 注入全局配置以支持打分器的对岸奖励等逻辑（需要地形与城市信息）
+        try:
+            scorer_params = dict(eval_params) if isinstance(eval_params, dict) else {}
+            # 传入地形与城市配置，供 ActionScorer 计算河流中心线与hub侧
+            scorer_params['terrain_features'] = self.cfg.get('terrain_features', {})
+            scorer_params['city'] = self.cfg.get('city', {})
+        except Exception:
+            scorer_params = eval_params
         
         try:
             from logic.v4_enumeration import ActionScorer
-            self.scorer = ActionScorer(objective, normalize, eval_params=eval_params, slots=None)
+            self.scorer = ActionScorer(objective, normalize, eval_params=scorer_params, slots=None)
             print("ActionScorer已在__init__中初始化")
         except Exception as e:
             print(f"ActionScorer初始化失败: {e}")
@@ -246,10 +260,10 @@ class RLPolicySelector:
         if self.enumerator is None:
             self.enumerator = ActionEnumerator(slots)
         
-        actual_sizes = sizes or {'EDU': ['S', 'M', 'L', 'A', 'B', 'C'], 'IND': ['S', 'M', 'L']}
+        actual_sizes = sizes or {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']}
         actual_agent_types = agent_types or self.rl_cfg['agents']
-        print(f"[DEBUG] Actual sizes parameter: {actual_sizes}")
-        print(f"[DEBUG] Actual agent_types parameter: {actual_agent_types}")
+        # print(f"[DEBUG] Actual sizes parameter: {actual_sizes}")
+        # print(f"[DEBUG] Actual agent_types parameter: {actual_agent_types}")
         actions = self.enumerator.enumerate_actions(
             candidates=candidates,
             occupied=occupied,
@@ -265,21 +279,21 @@ class RLPolicySelector:
         
         # 调试：记录过滤前的A/B/C动作数量
         abc_before = [a for a in actions if a.size in ['A', 'B', 'C']]
-        print(f"[DEBUG] Before filtering: A/B/C actions = {len(abc_before)}")
+        # print(f"[DEBUG] Before filtering: A/B/C actions = {len(abc_before)}")
         
         # 1.5. 激进限制S型建筑数量以强制平衡动作池
         actions = self._limit_s_size_actions(actions, max_s_ratio=0.3)  # 从0.5降到0.3
         
         # 调试：记录S型建筑限制后的A/B/C动作数量
         abc_after_s_limit = [a for a in actions if a.size in ['A', 'B', 'C']]
-        print(f"[DEBUG] After S limit: A/B/C actions = {len(abc_after_s_limit)}")
+        # print(f"[DEBUG] After S limit: A/B/C actions = {len(abc_after_s_limit)}")
         
         # 1.6. 高等级槽位优先选择M/L型建筑
         actions = self._prioritize_high_level_slots(actions)
         
         # 调试：记录高等级槽位优先后的A/B/C动作数量
         abc_after_prioritize = [a for a in actions if a.size in ['A', 'B', 'C']]
-        print(f"[DEBUG] After prioritize: A/B/C actions = {len(abc_after_prioritize)}")
+        # print(f"[DEBUG] After prioritize: A/B/C actions = {len(abc_after_prioritize)}")
         
         # 2. 计算动作得分（ActionScorer已在__init__中初始化）
         if self.scorer is None:
@@ -291,26 +305,87 @@ class RLPolicySelector:
         
         # 调试：记录ActionScorer后的A/B/C动作数量
         abc_after_scorer = [a for a in actions if a.size in ['A', 'B', 'C']]
-        print(f"[DEBUG] After scorer: A/B/C actions = {len(abc_after_scorer)}")
+        # print(f"[DEBUG] After scorer: A/B/C actions = {len(abc_after_scorer)}")
         
         # 2.5. 给M/L型建筑添加探索奖励
         actions = self._add_exploration_bonus(actions)
+
+        # 2.6. EDU专属：对L型建筑设置比例上限，防止L完全主导动作池
+        actions = self._limit_edu_l_actions(actions, max_l_ratio=0.20)
+        # 仅对EDU按得分重排，避免影响IND分布
+        if actions and actions[0].agent == 'EDU':
+            actions.sort(key=lambda a: getattr(a, 'score', 0.0), reverse=True)
+            # EDU软配额：确保M/A/B/C各保底若干个进入前列
+            # 增加底部曝光：提高 A/B/C 的保底数量，相对 M 更高
+            actions = self._apply_edu_soft_quota(actions, keep_counts={
+                'M': 7,
+                'A': 11,
+                'B': 9,
+                'C': 11,
+            })
+            # 额外：A/B/C 对岸软配额（基于y与河中心线相对 EDU hub 侧）
+            try:
+                from enhanced_city_simulation_v4_0 import river_center_y_from_coords, load_river_coords
+                cfg = self.cfg
+                rivers = cfg.get('terrain_features', {}).get('rivers', [])
+                coords = rivers[0].get('coordinates', []) if rivers else []
+                # 若配置未内嵌坐标，退回从文件加载
+                if not coords:
+                    try:
+                        coords = load_river_coords(cfg)
+                    except Exception:
+                        coords = []
+                center_y = river_center_y_from_coords({'coordinates': coords}) if coords else None
+                hubs = cfg.get('city', {}).get('transport_hubs', [[125, 75], [112, 121]])
+                edu_idx = self.rl_cfg.get('agents', ['IND','EDU']).index('EDU') if 'EDU' in self.rl_cfg.get('agents', []) else 0
+                edu_hub_y = hubs[edu_idx][1] if edu_idx < len(hubs) else hubs[0][1]
+                if center_y is not None:
+                    def is_other_side_y(y):
+                        return (y > center_y) != (edu_hub_y > center_y)
+                    other_side_abc = []
+                    for a in actions:
+                        if a.agent != 'EDU' or a.size not in ['A','B','C'] or not a.footprint_slots:
+                            continue
+                        sid = a.footprint_slots[0]
+                        slot = self.slots.get(sid)
+                        if slot is None:
+                            continue
+                        y = float(getattr(slot, 'fy', getattr(slot, 'y', 0.0)))
+                        if is_other_side_y(y):
+                            other_side_abc.append(a)
+                    # 统计并打印对岸A/B/C候选数量与前置数量
+                    # print(f"[DEBUG] other-side A/B/C candidates: {len(other_side_abc)}")
+                    # 保底将若干对岸 A/B/C 前置
+                    # 提高 B/C 对岸软配额
+                    quota = 18
+                    # 先挑 C 和 B，再考虑 A
+                    bc_other = [a for a in other_side_abc if a.size in ['C','B']]
+                    a_other = [a for a in other_side_abc if a.size == 'A']
+                    bc_other.sort(key=lambda x: getattr(x, 'score', 0.0), reverse=True)
+                    a_other.sort(key=lambda x: getattr(x, 'score', 0.0), reverse=True)
+                    ordered = (bc_other[:quota] + a_other[:max(0, quota - len(bc_other))])
+                    front = ordered
+                    remaining = [a for a in actions if a not in front]
+                    # print(f"[DEBUG] other-side front kept: {len(front)} (B/C prioritized)")
+                    actions = front + remaining
+            except Exception:
+                pass
         
         # 调试：记录动作池分布
         size_counts = {'S': 0, 'M': 0, 'L': 0, 'A': 0, 'B': 0, 'C': 0}
         for action in actions:
             if action.size in size_counts:
                 size_counts[action.size] += 1
-        print(f"Action pool distribution: S={size_counts['S']}, M={size_counts['M']}, L={size_counts['L']}, A={size_counts['A']}, B={size_counts['B']}, C={size_counts['C']}, Total={len(actions)}")
+        # print(f"Action pool distribution: S={size_counts['S']}, M={size_counts['M']}, L={size_counts['L']}, A={size_counts['A']}, B={size_counts['B']}, C={size_counts['C']}, Total={len(actions)}")
         
         # 调试：记录A/B/C动作的得分情况
         abc_actions = [a for a in actions if a.size in ['A', 'B', 'C']]
-        if abc_actions:
-            print(f"A/B/C actions count: {len(abc_actions)}")
-            for action in abc_actions[:3]:  # 显示前3个A/B/C动作
-                print(f"  {action.agent}_{action.size}: score={action.score:.3f}, cost={action.cost:.1f}, reward={action.reward:.1f}")
-        else:
-            print("WARNING: No A/B/C actions found!")
+        # if abc_actions:
+        #     print(f"A/B/C actions count: {len(abc_actions)}")
+        #     for action in abc_actions[:3]:  # 显示前3个A/B/C动作
+        #         print(f"  {action.agent}_{action.size}: score={action.score:.3f}, cost={action.cost:.1f}, reward={action.reward:.1f}")
+        # else:
+        #     print("WARNING: No A/B/C actions found!")
         
         # 3. 初始化序列选择器
         if self.sequence_selector is None:
@@ -326,6 +401,37 @@ class RLPolicySelector:
         
         # 5. 使用RL策略选择序列
         best_sequence, action_idx = self._rl_choose_sequence(actions)
+
+        # 打印本次选择的 EDU 序列中 A/B/C 是否来自对岸（若可计算）
+        if best_sequence and actions and actions[0].agent == 'EDU':
+            try:
+                from enhanced_city_simulation_v4_0 import river_center_y_from_coords, load_river_coords
+                cfg = self.cfg
+                rivers = cfg.get('terrain_features', {}).get('rivers', [])
+                coords = rivers[0].get('coordinates', []) if rivers else []
+                if not coords:
+                    coords = load_river_coords(cfg)
+                center_y = river_center_y_from_coords({'coordinates': coords}) if coords else None
+                hubs = cfg.get('city', {}).get('transport_hubs', [[125, 75], [112, 121]])
+                edu_idx = self.rl_cfg.get('agents', ['IND','EDU']).index('EDU') if 'EDU' in self.rl_cfg.get('agents', []) else 0
+                edu_hub_y = hubs[edu_idx][1] if edu_idx < len(hubs) else hubs[0][1]
+                if center_y is not None:
+                    def is_other_side_y(y):
+                        return (y > center_y) != (edu_hub_y > center_y)
+                    chosen_other_abc = 0
+                    total_abc = 0
+                    for a in getattr(best_sequence, 'actions', []) or []:
+                        if a.size in ['A','B','C'] and a.footprint_slots:
+                            total_abc += 1
+                            sid = a.footprint_slots[0]
+                            slot = self.slots.get(sid)
+                            if slot is not None:
+                                y = float(getattr(slot, 'fy', getattr(slot, 'y', 0.0)))
+                                if is_other_side_y(y):
+                                    chosen_other_abc += 1
+                    # print(f"[DEBUG] chosen EDU A/B/C other-side count: {chosen_other_abc}/{total_abc}")
+            except Exception:
+                pass
         
         return actions, best_sequence
     
@@ -353,10 +459,41 @@ class RLPolicySelector:
         cached_state_embed = None
         
         # ε-贪婪探索
-        if np.random.random() < self.epsilon:
-            # 探索：随机选择一个动作作为锚点
-            selected_idx = np.random.randint(0, num_actions)
-            selected_action = action_subset[selected_idx]
+        epsilon_roll = np.random.random()
+        # print(f"[DEBUG] ε-贪婪探索: 随机数={epsilon_roll:.3f}, ε={self.epsilon:.3f}, 是否探索={epsilon_roll < self.epsilon}")
+        
+        if epsilon_roll < self.epsilon:
+            # print(f"[DEBUG] 进入探索模式，当前智能体: {current_agent}")
+            # 对岸强制探索（仅对EDU agent的A/B/C动作）
+            if current_agent == 'EDU':
+                force_roll = np.random.random()
+                # print(f"[DEBUG] EDU智能体，强制探索随机数={force_roll:.3f}, 强制率={self.other_side_force_rate:.3f}, 是否强制={force_roll < self.other_side_force_rate}")
+                
+                if force_roll < self.other_side_force_rate:
+                    # print(f"[DEBUG] 开始寻找对岸A/B/C动作...")
+                    other_side_abc = self._find_other_side_abc_actions(action_subset)
+                    # print(f"[DEBUG] 找到对岸A/B/C动作数量: {len(other_side_abc)}")
+                    
+                    if other_side_abc:
+                        selected_action = self._force_select_other_side_abc(other_side_abc)
+                        selected_idx = action_subset.index(selected_action) if selected_action in action_subset else 0
+                        # print(f"[强制对岸探索] 强制选择对岸{selected_action.size}型建筑")
+                    else:
+                        # print(f"[DEBUG] 没有对岸A/B/C动作，回退到随机选择")
+                        # 没有对岸A/B/C，回退到随机选择
+                        selected_idx = np.random.randint(0, num_actions)
+                        selected_action = action_subset[selected_idx]
+                else:
+                    # print(f"[DEBUG] 未触发强制探索，正常随机选择")
+                    # 正常随机探索
+                    selected_idx = np.random.randint(0, num_actions)
+                    selected_action = action_subset[selected_idx]
+            else:
+                # print(f"[DEBUG] 非EDU智能体，正常随机选择")
+                # 正常随机探索
+                selected_idx = np.random.randint(0, num_actions)
+                selected_action = action_subset[selected_idx]
+            
             # 探索时不需要log_prob，设为0
             old_log_prob = torch.tensor(0.0, device=self.device)
             # 探索时也设置基本的局部分布语境
@@ -736,7 +873,7 @@ class RLPolicySelector:
     def load_model(self, path: str):
         """加载模型权重（MAPPO：加载所有agent的网络）"""
         if os.path.exists(path):
-            model_data = torch.load(path, map_location=self.device)
+            model_data = torch.load(path, map_location=self.device, weights_only=False)
             
             model_version = model_data.get('model_version', 'unknown')
             
@@ -905,11 +1042,94 @@ class RLPolicySelector:
             # 按得分排序，保留最好的S型建筑
             s_actions.sort(key=lambda x: getattr(x, 'score', 0.0), reverse=True)
             s_actions = s_actions[:max_s_count]
-            print(f"限制S型建筑数量: {len(s_actions)}/{total_actions} (比例: {len(s_actions)/total_actions:.2f})")
+            # print(f"限制S型建筑数量: {len(s_actions)}/{total_actions} (比例: {len(s_actions)/total_actions:.2f})")
         
         # 重新组合动作列表
         balanced_actions = s_actions + m_actions + l_actions + a_actions + b_actions + c_actions
         return balanced_actions
+
+    def _limit_edu_l_actions(self, actions: List[Action], max_l_ratio: float = 0.5) -> List[Action]:
+        """对EDU动作池限制L型建筑比例，避免L完全主导，给S/M/A/B/C留出机会"""
+        if not actions:
+            return actions
+
+        # 当前调用是单agent（choose_action_sequence按agent调用）
+        current_agent = actions[0].agent if actions else 'EDU'
+        if current_agent != 'EDU':
+            return actions
+
+        # 按尺寸分组
+        s_actions = [a for a in actions if a.size == 'S']
+        m_actions = [a for a in actions if a.size == 'M']
+        l_actions = [a for a in actions if a.size == 'L']
+        a_actions = [a for a in actions if a.size == 'A']
+        b_actions = [a for a in actions if a.size == 'B']
+        c_actions = [a for a in actions if a.size == 'C']
+
+        total_actions = len(actions)
+        max_l_count = int(total_actions * max_l_ratio)
+
+        if len(l_actions) > max_l_count:
+            # 保留得分最高的前K个L，其余L丢弃
+            l_actions.sort(key=lambda x: getattr(x, 'score', 0.0), reverse=True)
+            kept = len(l_actions[:max_l_count])
+            l_actions = l_actions[:max_l_count]
+            # print(f"[EDU L Cap] 限制L型建筑数量: {kept}/{total_actions} (比例: {kept/total_actions:.2f})")
+
+        # 重新组合（保留同等顺序语义：按尺寸桶拼接）
+        balanced_actions = s_actions + m_actions + a_actions + b_actions + c_actions + l_actions
+        return balanced_actions
+
+    def _apply_edu_soft_quota(self, actions: List[Action], keep_counts: Optional[Dict[str, int]] = None) -> List[Action]:
+        """EDU软配额：保证指定尺寸(M/A/B/C)各自至少若干个动作进入前列，提升被RL看到的概率。
+        - 不改变IND
+        - 从各尺寸中挑选当前得分最高的若干个，放到前面；其余动作保序拼接
+        """
+        if not actions:
+            return actions
+        current_agent = actions[0].agent if actions else 'EDU'
+        if current_agent != 'EDU':
+            return actions
+
+        keep_counts = keep_counts or {'M': 2, 'A': 2, 'B': 2, 'C': 2}
+        target_sizes = [s for s in ['M', 'A', 'B', 'C'] if keep_counts.get(s, 0) > 0]
+        if not target_sizes:
+            return actions
+
+        # 分桶并各自按得分排序
+        size_to_actions: Dict[str, List[Action]] = {sz: [] for sz in target_sizes}
+        for a in actions:
+            if a.size in size_to_actions:
+                size_to_actions[a.size].append(a)
+
+        for sz in target_sizes:
+            size_to_actions[sz].sort(key=lambda x: getattr(x, 'score', 0.0), reverse=True)
+
+        # 选取各尺寸前K
+        kept: List[Action] = []
+        kept_set = set()
+        for sz in target_sizes:
+            k = keep_counts.get(sz, 0)
+            if k <= 0:
+                continue
+            topk = size_to_actions[sz][:k]
+            for a in topk:
+                if id(a) not in kept_set:
+                    kept.append(a)
+                    kept_set.add(id(a))
+
+        if not kept:
+            return actions
+
+        # 将未保留的动作按原有顺序追加在后
+        tail: List[Action] = []
+        for a in actions:
+            if id(a) not in kept_set:
+                tail.append(a)
+
+        combined = kept + tail
+        # print(f"[EDU SoftQuota] 前置保底: M/A/B/C kept={[len([a for a in kept if a.size==sz]) for sz in ['M','A','B','C']]} / total={len(actions)}")
+        return combined
     
     def _add_exploration_bonus(self, actions: List[Action]) -> List[Action]:
         """给M/L型建筑添加探索奖励，特别强化高等级槽位上的M/L建筑"""
@@ -929,7 +1149,7 @@ class RLPolicySelector:
                     level_bonus = base_bonus * 5.0  # 激进：高等级槽位奖励5倍
                     action.score += level_bonus
                     action.reward += level_bonus * 0.5
-                    print(f"高等级槽位M型建筑奖励: slot_level={slot_level}, bonus={level_bonus:.3f}")
+                    # print(f"高等级槽位M型建筑奖励: slot_level={slot_level}, bonus={level_bonus:.3f}")
                 else:
                     action.score += base_bonus
                     action.reward += base_bonus * 0.1
@@ -943,15 +1163,28 @@ class RLPolicySelector:
                     level_bonus = base_bonus * 10.0  # 激进：Level 5槽位奖励10倍
                     action.score += level_bonus
                     action.reward += level_bonus * 1.0
-                    print(f"Level 5槽位L型建筑奖励: slot_level={slot_level}, bonus={level_bonus:.3f}")
+                    # print(f"Level 5槽位L型建筑奖励: slot_level={slot_level}, bonus={level_bonus:.3f}")
                 elif slot_level >= 4:
                     level_bonus = base_bonus * 7.0  # 激进：Level 4槽位奖励7倍
                     action.score += level_bonus
                     action.reward += level_bonus * 0.7
-                    print(f"Level 4槽位L型建筑奖励: slot_level={slot_level}, bonus={level_bonus:.3f}")
+                    # print(f"Level 4槽位L型建筑奖励: slot_level={slot_level}, bonus={level_bonus:.3f}")
                 else:
                     action.score += base_bonus
                     action.reward += base_bonus * 0.1
+            
+            # 新增：A/B/C对岸探索奖励
+            elif (action.agent == 'EDU' and 
+                  action.size in ['A', 'B', 'C'] and 
+                  self._is_other_side_action(action)):
+                # 对岸A/B/C探索奖励 - 大幅增强
+                size_multiplier = {'A': 2.0, 'B': 3.0, 'C': 4.0}  # 增加尺寸倍数
+                base_bonus = 50.0  # 基础奖励
+                epsilon_bonus = self.epsilon * 1.0 * size_multiplier.get(action.size, 1.0)  # 探索奖励
+                other_side_bonus = base_bonus + epsilon_bonus
+                action.score += other_side_bonus
+                action.reward += other_side_bonus * 0.8  # 增加奖励传递比例
+                # print(f"[对岸探索奖励] {action.size}型建筑对岸奖励: {other_side_bonus:.3f} (基础:{base_bonus:.1f} + 探索:{epsilon_bonus:.3f})")
         
         return actions
     
@@ -983,7 +1216,125 @@ class RLPolicySelector:
         high_level_m_l = sum(1 for a in prioritized_actions[:20] 
                            if self._get_slot_level(a.footprint_slots[0]) >= 4 and a.size in ['M', 'L'])
         if high_level_m_l > 0:
-            print(f"高等级槽位M/L型建筑优先排序: 前20个动作中有{high_level_m_l}个高等级M/L建筑")
+            # print(f"高等级槽位M/L型建筑优先排序: 前20个动作中有{high_level_m_l}个高等级M/L建筑")
+            pass
         
         return prioritized_actions
+    
+    def _is_other_side_action(self, action: Action) -> bool:
+        """检测动作是否在对岸"""
+        if not action.footprint_slots:
+            # print(f"[DEBUG] 动作没有footprint_slots")
+            return False
+        
+        try:
+            from envs.v4_1.city_env import load_river_coords
+            cfg = self.cfg
+            if cfg is None:
+                print(f"[DEBUG] self.cfg为None，无法进行对岸检测")
+                return False
+            
+            print(f"[DEBUG] 开始对岸检测: {action.size}型动作 {action.footprint_slots[0] if action.footprint_slots else 'N/A'}")
+            
+            # 获取河流坐标（与_get_other_side_slots方法保持一致）
+            rivers = cfg.get('terrain_features', {}).get('rivers', [])
+            print(f"[DEBUG] 河流配置数量: {len(rivers)}")
+            coords = rivers[0].get('coordinates', []) if rivers else []
+            print(f"[DEBUG] 第一个河流坐标数量: {len(coords)}")
+            
+            if not coords:
+                print(f"[DEBUG] 从文件加载河流坐标...")
+                # 从文件加载河流坐标
+                try:
+                    coords = load_river_coords(cfg)
+                    print(f"[DEBUG] 从文件加载的坐标数量: {len(coords)}")
+                except Exception as e:
+                    print(f"[DEBUG] 从文件加载河流坐标失败: {e}")
+                    return False
+            
+            if not coords:
+                print(f"[DEBUG] 无法获取河流坐标")
+                return False
+            
+            # 计算河流中心线
+            y_coords = [point[1] for point in coords]
+            center_y = sum(y_coords) / len(y_coords)
+            print(f"[DEBUG] 河流中心线: {center_y:.1f}")
+            
+            # 获取EDU hub位置
+            hubs = cfg.get('city', {}).get('transport_hubs', [[125, 75], [112, 121]])
+            print(f"[DEBUG] 交通枢纽: {hubs}")
+            # 修复rl_cfg为None的问题
+            if self.rl_cfg is not None:
+                agents = self.rl_cfg.get('agents', ['IND','EDU','Council'])
+                edu_idx = agents.index('EDU') if 'EDU' in agents else 0
+            else:
+                edu_idx = 1  # 默认EDU是第二个智能体
+            edu_hub_y = hubs[edu_idx][1] if edu_idx < len(hubs) else hubs[0][1]
+            print(f"[DEBUG] EDU hub位置: {edu_hub_y}")
+            
+            # 对岸判断
+            sid = action.footprint_slots[0]
+            if self.slots is None:
+                print(f"[DEBUG] self.slots为None，无法进行对岸检测")
+                return False
+            slot = self.slots.get(sid)
+            if slot is not None:
+                y = float(getattr(slot, 'fy', getattr(slot, 'y', 0.0)))
+                is_other_side = (y > center_y) != (edu_hub_y > center_y)
+                print(f"[对岸检测] {action.size}型动作 {sid}: y={y:.1f}, 河流中心={center_y:.1f}, EDU hub={edu_hub_y}, 对岸={is_other_side}")
+                return is_other_side
+            else:
+                print(f"[DEBUG] 无法找到槽位 {sid}")
+                return False
+        except Exception as e:
+            print(f"[DEBUG] 对岸检测异常: {e}")
+            import traceback
+            traceback.print_exc()
+            pass
+        return False
+    
+    def _find_other_side_abc_actions(self, actions: List[Action]) -> List[Action]:
+        """找到对岸的A/B/C动作"""
+        other_side_abc = []
+        edu_abc_count = 0
+        other_side_count = 0
+        
+        print(f"[DEBUG] 开始检查{len(actions)}个动作中的对岸A/B/C...")
+        
+        for action in actions:
+            if action.agent == 'EDU' and action.size in ['A', 'B', 'C']:
+                edu_abc_count += 1
+                is_other_side = self._is_other_side_action(action)
+                if is_other_side:
+                    other_side_count += 1
+                    other_side_abc.append(action)
+                    print(f"[DEBUG] 找到对岸{action.size}型动作: {action.footprint_slots[0] if action.footprint_slots else 'N/A'}")
+        
+        print(f"[DEBUG] EDU A/B/C动作总数: {edu_abc_count}, 对岸A/B/C动作数: {other_side_count}")
+        return other_side_abc
+    
+    def _force_select_other_side_abc(self, other_side_abc: List[Action]) -> Action:
+        """强制选择对岸A/B/C动作，优先级：C > B > A"""
+        if not other_side_abc:
+            return None
+        
+        # 按优先级排序：C > B > A
+        priority_order = {'C': 3, 'B': 2, 'A': 1}
+        other_side_abc.sort(key=lambda x: (priority_order.get(x.size, 0), getattr(x, 'score', 0)), reverse=True)
+        
+        return other_side_abc[0]
+    
+    def _update_other_side_exploration(self, training_step: int):
+        """课程学习：更新对岸探索率"""
+        self.training_step = training_step
+        
+        if training_step < self.other_side_force_decay_steps:
+            # 线性衰减
+            progress = training_step / self.other_side_force_decay_steps
+            self.other_side_force_rate = 0.8 * (1 - progress) + self.other_side_force_final_rate * progress
+        else:
+            self.other_side_force_rate = self.other_side_force_final_rate
+        
+        print(f"[课程学习] 训练步数: {training_step}, 对岸强制率: {self.other_side_force_rate:.3f}")
     

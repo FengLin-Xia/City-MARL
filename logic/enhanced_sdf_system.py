@@ -312,14 +312,49 @@ class GaussianLandPriceSystem:
             else:
                 return hub_final_peak
         
-        # Hub3组件强度（保持现有状态）
+        # Hub3组件强度（支持延迟激活）
         elif component_type == 'hub3':
-            hub3_keep_existing = evolution_config.get('hub3_keep_existing', True)
-            if hub3_keep_existing:
-                return self.hub_peak_value if current_month >= 0 else 0.0
+            # 检查是否有hub3特定的激活时间配置
+            hub3_activation_month = evolution_config.get('hub3_activation_month', None)
+            if hub3_activation_month is not None:
+                # 使用hub3特定的激活时间
+                if current_month < hub3_activation_month:
+                    return 0.0
+                else:
+                    # 使用与Hub1/Hub2相同的增长逻辑
+                    hub_growth_duration = evolution_config.get('hub_growth_duration_months', 6)
+                    hub_initial_peak = evolution_config.get('hub_initial_peak', 0.7)
+                    hub_final_peak = evolution_config.get('hub_final_peak', 1.0)
+                    growth_curve_type = evolution_config.get('growth_curve_type', 'smooth')
+                    
+                    if current_month < hub3_activation_month + hub_growth_duration:
+                        # 计算增长进度
+                        progress = (current_month - hub3_activation_month) / hub_growth_duration
+                        progress = max(0.0, min(1.0, progress))  # 限制在[0,1]范围内
+                        
+                        # 应用增长曲线
+                        if growth_curve_type == 'linear':
+                            curve_progress = progress
+                        elif growth_curve_type == 'smooth':
+                            # S型增长曲线
+                            steepness = evolution_config.get('smooth_curve_steepness', 10.0)
+                            curve_progress = 1 / (1 + math.exp(-steepness * (progress - 0.5)))
+                        elif growth_curve_type == 'exponential':
+                            curve_progress = progress ** 2
+                        else:
+                            curve_progress = progress
+                        
+                        return hub_initial_peak + (hub_final_peak - hub_initial_peak) * curve_progress
+                    else:
+                        return hub_final_peak
             else:
-                # 如果Hub3也参与演化，使用与Hub1/Hub2相同的逻辑
-                return self._get_component_strength('hub1', current_month)
+                # 如果没有hub3特定配置，使用默认逻辑
+                hub3_keep_existing = evolution_config.get('hub3_keep_existing', True)
+                if hub3_keep_existing:
+                    return self.hub_peak_value if current_month >= 0 else 0.0
+                else:
+                    # 如果Hub3也参与演化，使用与Hub1/Hub2相同的逻辑
+                    return self._get_component_strength('hub1', current_month)
         
         return 0.0
 

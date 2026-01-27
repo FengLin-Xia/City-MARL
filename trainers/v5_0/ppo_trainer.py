@@ -55,6 +55,8 @@ class V5PPOTrainer:
         self.value_loss_coef = self.ppo_config.get("value_coef", 0.5)
         self.entropy_coef = self.ppo_config.get("entropy_coef", 0.01)
         self.max_grad_norm = self.ppo_config.get("max_grad_norm", 0.5)
+        self.target_kl = self.ppo_config.get("target_kl", None)
+        self.kl_tolerance = self.ppo_config.get("target_kl_tolerance", 1.5)
         
         # Reward归一化配置（从 constraints.reward_scaling 读取）
         reward_scaling = self.config.get("constraints", {}).get("reward_scaling", {})
@@ -121,6 +123,12 @@ class V5PPOTrainer:
         if "multi_action" in self.config:
             self.config["multi_action"]["temperature"] = self.current_temperature
         self.config["mappo"]["exploration"]["temperature"] = self.current_temperature
+        if topic_enabled("training_step") or topic_enabled("ppo_debug"):
+            progress = min(1.0, self.total_steps / max(1.0, float(self.anneal_steps)))
+            self.logger.info(
+                f"[TEMP_UPDATE] steps={self.total_steps} progress={progress:.4f} "
+                f"temperature={self.current_temperature:.4f}"
+            )
     
     def _setup_optimizers(self):
         """设置优化器"""
@@ -139,6 +147,62 @@ class V5PPOTrainer:
                 'actor': optim.Adam(actor_params, lr=self.lr),
                 'critic': optim.Adam(self.selector.critic_networks[agent].parameters(), lr=self.lr)
             }
+    
+    def _record_ratio_stats(
+        self,
+        agent: str,
+        update: int,
+        epoch: int,
+        ratio_tensor: Optional[torch.Tensor],
+        advantage_tensor: Optional[torch.Tensor],
+        prefix: str
+    ) -> Dict[str, float]:
+        """统计ratio/advantage信息，必要时输出调试日志"""
+        stats: Dict[str, float] = {}
+        if ratio_tensor is None or ratio_tensor.numel() == 0:
+            return stats
+        
+        ratio_cpu = ratio_tensor.detach().cpu()
+        stats["ratio_mean"] = ratio_cpu.mean().item()
+        stats["ratio_std"] = ratio_cpu.std(unbiased=False).item() if ratio_cpu.numel() > 1 else 0.0
+        stats["ratio_min"] = ratio_cpu.min().item()
+        stats["ratio_max"] = ratio_cpu.max().item()
+        
+        clip_upper_mask = ratio_cpu > (1.0 + self.clip_eps)
+        clip_lower_mask = ratio_cpu < (1.0 - self.clip_eps)
+        clip_mask = clip_upper_mask | clip_lower_mask
+        stats["clip_fraction"] = clip_mask.float().mean().item()
+        stats["clip_upper"] = clip_upper_mask.float().mean().item()
+        stats["clip_lower"] = clip_lower_mask.float().mean().item()
+        
+        if advantage_tensor is not None and advantage_tensor.numel() > 0:
+            adv_cpu = advantage_tensor.detach().cpu()
+            stats["adv_mean"] = adv_cpu.mean().item()
+            stats["adv_std"] = adv_cpu.std(unbiased=False).item() if adv_cpu.numel() > 1 else 0.0
+            stats["adv_min"] = adv_cpu.min().item()
+            stats["adv_max"] = adv_cpu.max().item()
+        else:
+            stats["adv_mean"] = 0.0
+            stats["adv_std"] = 0.0
+            stats["adv_min"] = 0.0
+            stats["adv_max"] = 0.0
+        
+        should_log = (
+            stats["clip_fraction"] > 0.2
+            or update < 5
+            or topic_enabled("ppo_debug")
+        )
+        if should_log and (topic_enabled("training_step") or topic_enabled("ppo_debug")):
+            self.logger.warning(
+                f"[{prefix}] agent={agent} update={update} epoch={epoch} "
+                f"ratio_mean={stats['ratio_mean']:.3f} ratio_std={stats['ratio_std']:.3f} "
+                f"ratio_min={stats['ratio_min']:.3f} ratio_max={stats['ratio_max']:.3f} "
+                f"clip_frac={stats['clip_fraction']:.3f} "
+                f"clip_upper={stats['clip_upper']:.3f} clip_lower={stats['clip_lower']:.3f} "
+                f"adv_mean={stats['adv_mean']:.3f} adv_std={stats['adv_std']:.3f} "
+                f"adv_min={stats['adv_min']:.3f} adv_max={stats['adv_max']:.3f}"
+            )
+        return stats
     
     def collect_experience(self, num_steps: int) -> List[Dict]:
         """
@@ -342,6 +406,7 @@ class V5PPOTrainer:
                                 'actions_detail': actions_detail,  # 详细动作列表
                                 'num_actions': len(actions_detail),
                                 'logprob': sel['logprob'],  # 保留：用于GAE
+                                'action_logprobs': sel.get('action_logprobs', []),  # 新增：每个动作的旧logprob
                                 'value': sel['value'] if sel else 0.0,
                                 'reward': phase_rewards.get(agent, 0.0),
                                 'next_obs': next_obs_vec,
@@ -607,6 +672,8 @@ class V5PPOTrainer:
         agent_clip_fractions = []
         agent_entropy_values = []
         agent_ratio_values = []
+        early_stop_triggered = False
+        early_stop_epoch = None
         
         total_actor_loss = 0.0
         total_critic_loss = 0.0
@@ -707,16 +774,20 @@ class V5PPOTrainer:
                 # KL散度计算
                 kl_div = ((ratio - 1.0) - torch.log(ratio + 1e-8)).mean()
                 agent_kl_divergences.append(kl_div.item())
-                
-                # 裁剪比例
-                clip_fraction = ((ratio - 1.0).abs() > self.clip_eps).float().mean()
-                agent_clip_fractions.append(clip_fraction.item())
-                
+
+                ratio_stats = self._record_ratio_stats(
+                    agent=agent,
+                    update=self.current_update,
+                    epoch=epoch,
+                    ratio_tensor=ratio,
+                    advantage_tensor=batch_adv,
+                    prefix="PPO_RATIO_SINGLE"
+                )
+                agent_clip_fractions.append(ratio_stats.get("clip_fraction", 0.0))
+                agent_ratio_values.append(ratio_stats.get("ratio_mean", ratio.mean().item()))
+
                 # 熵值
                 agent_entropy_values.append(entropy.item())
-                
-                # 比率统计
-                agent_ratio_values.append(ratio.mean().item())
         
         # 记录智能体级别的训练指标
         if topic_enabled("training_step"):
@@ -1035,8 +1106,8 @@ class V5PPOTrainer:
                         )
                 
                 # 计算该样本的总logprob（重建决策过程）
-                # 修复：初始化为tensor而不是float，确保在计算图中
-                sample_logprob = torch.tensor(0.0, device=self.device, requires_grad=True)
+                # 修改：不再累加sample_logprob，而是保存每个动作的logprob
+                action_logprobs_new = []  # 新增：保存每个动作的新logprob
                 
                 # 获取样本定位信息（优先从experience中读取trace_id）
                 # 🔍 修复：使用batch_idx获取正确的experience索引
@@ -1218,78 +1289,195 @@ class V5PPOTrainer:
                             f"shape={type_logits_masked.shape}"
                         )
                     
-                    # 累计
-                    sample_logprob = sample_logprob + point_logprob + type_logprob
+                    # 保存该动作的logprob（点位头 + 类型头）
+                    action_logprob = point_logprob + type_logprob
+                    action_logprobs_new.append(action_logprob)  # 新增：保存到列表
                     
                     # 🔍 调试日志：记录每个动作的logprob重建（前20个动作，前50次更新或每10次更新）
                     if j < 20 and (self.current_update < 50 or self.current_update % 10 == 0):
+                        # 计算累积logprob用于日志
+                        accumulated_logprob = sum([lp.item() if hasattr(lp, 'item') else lp for lp in action_logprobs_new])
                         self.logger.warning(
                             f"[LOGPROB_REBUILD] agent={agent} trace_id={trace_id} step={step_num} "
                             f"sample={i} action_idx={j} "
                             f"p_idx={point_idx} p_logprob={point_logprob.item():.6f} "
                             f"t_idx={type_idx} t_logprob={type_logprob.item():.6f} "
-                            f"accumulated_sample_logprob={sample_logprob.item():.6f} "
+                            f"action_logprob={action_logprob.item():.6f} "
+                            f"accumulated_logprob={accumulated_logprob:.6f} "
                             f"available_types_count={available_types_count}"
                         )
                 
-                # 与old_logprob比较（累积值）
-                # 修复：直接使用tensor计算ratio，确保有grad
-                old_logp_tensor = batch_old_logp[i] if isinstance(batch_old_logp[i], torch.Tensor) else torch.tensor(batch_old_logp[i], device=self.device)
-                logprob_diff = sample_logprob - old_logp_tensor
-                ratio = torch.exp(logprob_diff)
+                # 新代码：逐动作计算PPO surrogate并平均
+                old_action_logprobs = exp.get('action_logprobs', [])
+                advantage = batch_adv[i]  # 整个序列的advantage（从GAE计算）
                 
-                # 先计算ratio_val用于条件判断
-                old_logp_val = batch_old_logp[i].item() if hasattr(batch_old_logp[i], 'item') else batch_old_logp[i]
-                sample_logp_val = sample_logprob.item()
-                diff_val = logprob_diff.item()
-                ratio_val = ratio.item()
+                # 准备调试信息
+                point_info = []
+                type_info = []
+                for j, atomic_action in enumerate(actions_detail):
+                    point_info.append(f"p{atomic_action['point_idx']}")
+                    type_info.append(f"t{atomic_action['type_idx']}({len(atomic_action.get('available_types', []))})")
+                
+                # 初始化变量（用于日志）
+                action_ratios = None
+                method = None
+                
+                # 检查是否有逐动作logprob数据，并验证顺序一致性
+                if (old_action_logprobs 
+                    and len(old_action_logprobs) == len(action_logprobs_new)
+                    and len(action_logprobs_new) == len(actions_detail)):
+                    # 方案B：逐动作计算PPO surrogate，然后平均
+                    action_surrogates = []
+                    action_ratios = []  # 同时保存ratio用于统计
+                    
+                    for j, (action_logprob_new, action_logprob_old) in enumerate(
+                        zip(action_logprobs_new, old_action_logprobs)
+                    ):
+                        # 转换为tensor（如果需要）
+                        if not isinstance(action_logprob_new, torch.Tensor):
+                            action_logprob_new = torch.tensor(action_logprob_new, device=self.device, requires_grad=True)
+                        if not isinstance(action_logprob_old, (torch.Tensor, float)):
+                            action_logprob_old = float(action_logprob_old)
+                        
+                        # 数值稳定性检查：避免 -inf/NaN
+                        if torch.isinf(action_logprob_new) or torch.isnan(action_logprob_new):
+                            self.logger.warning(
+                                f"[NUMERIC_WARNING] agent={agent} update={self.current_update} sample={i} action={j} "
+                                f"action_logprob_new contains inf/nan, skipping this action"
+                            )
+                            continue  # 跳过该动作
+                        
+                        action_logprob_old_tensor = torch.tensor(action_logprob_old, device=self.device)
+                        if torch.isinf(action_logprob_old_tensor) or torch.isnan(action_logprob_old_tensor):
+                            self.logger.warning(
+                                f"[NUMERIC_WARNING] agent={agent} update={self.current_update} sample={i} action={j} "
+                                f"action_logprob_old contains inf/nan, skipping this action"
+                            )
+                            continue  # 跳过该动作
+                        
+                        # 计算该动作的ratio
+                        action_ratio = torch.exp(action_logprob_new - action_logprob_old_tensor)
+                        
+                        # 检查ratio是否异常
+                        if torch.isinf(action_ratio) or torch.isnan(action_ratio):
+                            self.logger.warning(
+                                f"[NUMERIC_WARNING] agent={agent} update={self.current_update} sample={i} action={j} "
+                                f"action_ratio contains inf/nan, using clipped value"
+                            )
+                            action_ratio = torch.clamp(action_ratio, 1e-6, 1e6)  # 限制范围
+                        
+                        action_ratios.append(action_ratio)  # 保存用于统计
+                        
+                        # 对该动作计算完整的PPO surrogate（每个动作独立clip）
+                        # surr_i = min(ratio_i * A, clamp(ratio_i) * A)
+                        action_surr1 = action_ratio * advantage
+                        action_ratio_clipped = torch.clamp(
+                            action_ratio, 
+                            1.0 - self.clip_eps, 
+                            1.0 + self.clip_eps
+                        )
+                        action_surr2 = action_ratio_clipped * advantage
+                        action_surrogate = torch.min(action_surr1, action_surr2)
+                        action_surrogates.append(action_surrogate)
+                    
+                    # 平均所有动作的surrogate（使用有效动作数，支持可变长度序列）
+                    if action_surrogates:
+                        num_valid_actions = len(action_surrogates)  # 有效动作数（可能小于原始长度）
+                        actor_loss = -torch.stack(action_surrogates).sum() / num_valid_actions  # 使用有效动作数做平均
+                        # 计算平均ratio（仅用于统计和日志）
+                        if action_ratios:
+                            ratio = torch.stack(action_ratios).mean()
+                            ratio_val = ratio.item()
+                        else:
+                            ratio = torch.tensor(1.0, device=self.device)  # 降级值
+                            ratio_val = 1.0
+                        method = "per_action_clipped_avg"
+                    else:
+                        # 所有动作都被跳过，使用降级方法
+                        sample_logprob = sum(action_logprobs_new)
+                        old_logp_tensor = batch_old_logp[i] if isinstance(batch_old_logp[i], torch.Tensor) else torch.tensor(batch_old_logp[i], device=self.device)
+                        ratio = torch.exp(sample_logprob - old_logp_tensor)
+                        surr1 = ratio * advantage
+                        surr2 = torch.clamp(ratio, 1.0 - self.clip_eps, 1.0 + self.clip_eps) * advantage
+                        actor_loss = -torch.min(surr1, surr2)
+                        ratio_val = ratio.item()
+                        method = "per_action_all_skipped_fallback"
+                elif old_action_logprobs:
+                    # 长度不匹配，记录错误并降级
+                    self.logger.error(
+                        f"[ACTION_LOGPROB_MISMATCH] agent={agent} update={self.current_update} sample={i} "
+                        f"trace_id={trace_id} "
+                        f"len(action_logprobs_new)={len(action_logprobs_new)} "
+                        f"len(old_action_logprobs)={len(old_action_logprobs)} "
+                        f"len(actions_detail)={len(actions_detail)} "
+                        f"使用总logprob方法（降级）"
+                    )
+                    # 降级：使用原来的方法
+                    sample_logprob = sum(action_logprobs_new)
+                    old_logp_tensor = batch_old_logp[i] if isinstance(batch_old_logp[i], torch.Tensor) else torch.tensor(batch_old_logp[i], device=self.device)
+                    ratio = torch.exp(sample_logprob - old_logp_tensor)
+                    surr1 = ratio * advantage
+                    surr2 = torch.clamp(ratio, 1.0 - self.clip_eps, 1.0 + self.clip_eps) * advantage
+                    actor_loss = -torch.min(surr1, surr2)
+                    ratio_val = ratio.item()
+                    method = "total_logprob_length_mismatch_fallback"
+                else:
+                    # 降级：如果没有逐动作logprob数据，使用原来的总logprob方法
+                    sample_logprob = sum(action_logprobs_new)
+                    old_logp_tensor = batch_old_logp[i] if isinstance(batch_old_logp[i], torch.Tensor) else torch.tensor(batch_old_logp[i], device=self.device)
+                    ratio = torch.exp(sample_logprob - old_logp_tensor)
+                    surr1 = ratio * advantage
+                    surr2 = torch.clamp(ratio, 1.0 - self.clip_eps, 1.0 + self.clip_eps) * advantage
+                    actor_loss = -torch.min(surr1, surr2)
+                    ratio_val = ratio.item()
+                    method = "total_logprob_fallback"
+                    
+                    # 记录降级警告
+                    if self.current_update < 10:
+                        self.logger.warning(
+                            f"[RATIO_FALLBACK] agent={agent} update={self.current_update} sample={i} "
+                            f"trace_id={trace_id} 使用总logprob方法（action_logprobs缺失或不匹配）"
+                        )
                 
                 # 🔍 调试日志：详细的ratio对比（前20个样本，前50次更新或每10次更新或ratio异常时）
                 if i < 20 and (self.current_update < 50 or self.current_update % 10 == 0 or ratio_val < 0.1 or ratio_val > 10.0):
-                    # 输出更详细的信息
-                    point_info = []
-                    type_info = []
-                    for j, atomic_action in enumerate(actions_detail):
-                        point_info.append(f"p{atomic_action['point_idx']}")
-                        type_info.append(f"t{atomic_action['type_idx']}({len(atomic_action.get('available_types', []))})")
-                    
-                    # 🔍 验证：检查actions_detail的数量是否合理
-                    if len(actions_detail) != len(point_info):
-                        self.logger.error(
-                            f"[ACTIONS_DETAIL_MISMATCH] agent={agent} sample={i} "
-                            f"len(actions_detail)={len(actions_detail)} len(point_info)={len(point_info)}"
+                    if method == "per_action_clipped_avg" and action_ratios is not None and len(action_ratios) > 0:
+                        action_ratio_values = [r.item() if hasattr(r, 'item') else r for r in action_ratios]
+                        log_msg = (
+                            f"[RATIO_DEBUG] agent={agent} update={self.current_update} sample={i} "
+                            f"method={method} "
+                            f"ratio_mean={ratio_val:.6f} "
+                            f"num_actions={len(actions_detail)} "
+                            f"action_ratios={[f'{r:.3f}' for r in action_ratio_values]} "
+                            f"actions={'+'.join(point_info)}+{'+'.join(type_info)} "
+                            f"trace_id={trace_id} step={step_num}"
+                        )
+                    else:
+                        sample_logp_val = sum([lp.item() if hasattr(lp, 'item') else lp for lp in action_logprobs_new])
+                        old_logp_val = batch_old_logp[i].item() if hasattr(batch_old_logp[i], 'item') else batch_old_logp[i]
+                        diff_val = sample_logp_val - old_logp_val
+                        log_msg = (
+                            f"[RATIO_DEBUG] agent={agent} update={self.current_update} sample={i} "
+                            f"method={method} "
+                            f"sample_logprob={sample_logp_val:.6f} old_logprob={old_logp_val:.6f} "
+                            f"diff={diff_val:.6f} ratio={ratio_val:.6f} "
+                            f"num_actions={len(actions_detail)} "
+                            f"actions={'+'.join(point_info)}+{'+'.join(type_info)} "
+                            f"trace_id={trace_id} step={step_num}"
                         )
                     
-                    # 检查差异是否异常
-                    diff_abs = abs(diff_val)
                     ratio_abnormal = ratio_val < 0.1 or ratio_val > 10.0
-                    
-                    log_level = "error" if ratio_abnormal or diff_abs > 5.0 else "warning"
-                    log_msg = (
-                        f"[RATIO_DEBUG] agent={agent} update={self.current_update} sample={i} "
-                        f"sample_logprob={sample_logp_val:.6f} old_logprob={old_logp_val:.6f} "
-                        f"diff={diff_val:.6f} ratio={ratio_val:.6f} "
-                        f"num_actions={len(actions_detail)} "
-                        f"actions={'+'.join(point_info)}+{'+'.join(type_info)} "
-                        f"trace_id={trace_id} step={step_num}"
-                    )
-                    
                     if ratio_abnormal:
                         log_msg += f" ⚠️ RATIO_ABNORMAL: ratio={ratio_val:.2f} out of range [0.1, 10.0]"
-                    if diff_abs > 5.0:
-                        log_msg += f" ⚠️ DIFF_LARGE: diff={diff_val:.2f} > 5.0"
                     
+                    log_level = "error" if ratio_abnormal else "warning"
                     if log_level == "error":
                         self.logger.error(log_msg)
                     else:
                         self.logger.warning(log_msg)
                 
-                surr1 = ratio * batch_adv[i]
-                surr2 = torch.clamp(ratio, 1.0 - self.clip_eps, 1.0 + self.clip_eps) * batch_adv[i]
-                actor_loss = -torch.min(surr1, surr2)
-                
                 actor_losses.append(actor_loss)
-                ratios.append(ratio.item())
+                ratios.append(ratio_val)
                 
                 # 计算entropy（简化：只计算最后一个动作的entropy）
                 with torch.no_grad():
@@ -1314,11 +1502,49 @@ class V5PPOTrainer:
             # 总loss
             total_loss_batch = total_actor_loss_batch + self.value_loss_coef * critic_loss - self.entropy_coef * total_entropy_batch
             
+            # 计算当前批次的ratio统计与KL
+            ratio_tensor = torch.tensor(ratios, dtype=torch.float32, device=self.device) if ratios else None
+            log_update_index = self.current_update + 1
+            kl_div_value = None
+            if ratio_tensor is not None:
+                kl_div_value = ((ratio_tensor - 1.0) - torch.log(ratio_tensor + 1e-8)).mean().item()
+                ratio_stats = self._record_ratio_stats(
+                    agent=agent,
+                    update=log_update_index,
+                    epoch=epoch,
+                    ratio_tensor=ratio_tensor,
+                    advantage_tensor=batch_adv,
+                    prefix="PPO_RATIO_MULTI"
+                )
+                agent_clip_fractions.append(ratio_stats.get("clip_fraction", 0.0))
+                agent_ratio_values.append(ratio_stats.get("ratio_mean", ratio_tensor.mean().item()))
+                agent_kl_divergences.append(kl_div_value)
+            elif self.target_kl:
+                self.logger.warning(
+                    f"[KL_MONITOR] agent={agent} update={log_update_index} epoch={epoch} ratios为空，无法计算KL"
+                )
+            
+            # 触发KL早停
+            if (
+                self.target_kl
+                and kl_div_value is not None
+                and kl_div_value > self.target_kl * max(self.kl_tolerance, 1.0)
+            ):
+                early_stop_triggered = True
+                early_stop_epoch = epoch
+                if topic_enabled("training_step") or topic_enabled("ppo_debug"):
+                    self.logger.warning(
+                        f"[KL_EARLY_STOP] agent={agent} update={log_update_index} epoch={epoch} "
+                        f"kl_div={kl_div_value:.4f} target={self.target_kl:.4f} "
+                        f"tolerance={self.kl_tolerance:.2f}"
+                    )
+                break
+            
             # 🔍 检查3：反向传播前的loss是否异常
             if self.current_update < 2:
                 loss_value = total_loss_batch.item() if isinstance(total_loss_batch, torch.Tensor) else total_loss_batch
                 self.logger.warning(
-                    f"[LOSS_CHECK] agent={agent} update={self.current_update} "
+                    f"[LOSS_CHECK] agent={agent} update={log_update_index} "
                     f"total_loss_batch={loss_value:.6f}"
                 )
                 
@@ -1351,7 +1577,7 @@ class V5PPOTrainer:
                 critic_grad_norm = critic_grad_norm ** 0.5
                 
                 self.logger.warning(
-                    f"[GRAD_CHECK] agent={agent} update={self.current_update} "
+                    f"[GRAD_CHECK] agent={agent} update={log_update_index} "
                     f"actor_grad_norm={actor_grad_norm:.2f} critic_grad_norm={critic_grad_norm:.2f}"
                 )
                 
@@ -1378,20 +1604,7 @@ class V5PPOTrainer:
             total_actor_loss += total_actor_loss_batch.item()
             total_critic_loss += critic_loss.item()
             total_entropy_loss += total_entropy_batch
-            
-            # 记录指标
-            with torch.no_grad():
-                if ratios:
-                    ratio_tensor = torch.FloatTensor(ratios).to(self.device)
-                    kl_div = ((ratio_tensor - 1.0) - torch.log(ratio_tensor + 1e-8)).mean()
-                    agent_kl_divergences.append(kl_div.item())
-                    
-                    clip_fraction = ((ratio_tensor - 1.0).abs() > self.clip_eps).float().mean()
-                    agent_clip_fractions.append(clip_fraction.item())
-                    
-                    agent_ratio_values.append(ratio_tensor.mean().item())
-                
-                agent_entropy_values.append(total_entropy_batch)
+            agent_entropy_values.append(total_entropy_batch)
         
         # 记录智能体级别的训练指标
         if topic_enabled("training_step"):
@@ -1406,13 +1619,16 @@ class V5PPOTrainer:
                            f"entropy={avg_entropy:.4f}, "
                            f"kl_div={avg_kl:.4f}, "
                            f"clip_frac={avg_clip:.4f}, "
-                           f"ratio_mean={avg_ratio:.4f}")
+                           f"ratio_mean={avg_ratio:.4f}, "
+                           f"early_stop={early_stop_triggered}")
         
         return {
             'total_loss': total_loss,
             'actor_loss': total_actor_loss,
             'critic_loss': total_critic_loss,
-            'entropy_loss': total_entropy_loss
+            'entropy_loss': total_entropy_loss,
+            'early_stop': early_stop_triggered,
+            'early_stop_epoch': early_stop_epoch
         }
     
     # 旧的简化损失已删除，改用上方标准 PPO 计算

@@ -392,6 +392,56 @@ class ActionScorer:
             np_ = norm(a.prestige, p_min, p_max)
             nc = norm(a.cost, c_min, c_max)
             a.score = float(w.get('w_r', 0.5)) * nr + float(w.get('w_p', 0.3)) * np_ - float(w.get('w_c', 0.2)) * nc
+
+        # 4) 追加对岸奖励（仅 EDU 的 A/B/C）
+        try:
+            rivers = self.params.get('terrain_features', {}).get('rivers', [])
+            coords = rivers[0].get('coordinates', []) if rivers else []
+            center_y = None
+            if coords:
+                # 计算中心线 y（简单均值）
+                all_y = [pt[1] for pt in coords if isinstance(pt, list) and len(pt) >= 2]
+                if all_y:
+                    center_y = sum(all_y) / len(all_y)
+            hubs = self.params.get('city', {}).get('transport_hubs', [[125, 75], [112, 121]])
+            agents = self.objective.keys()
+            edu_hub_y = hubs[1][1] if len(hubs) > 1 else hubs[0][1]
+            edu_side_above = (edu_hub_y > center_y) if center_y is not None else None
+            # EDU智能体跨河奖励
+            bonus_map = self.params.get('other_side_bonus_EDU_by_size', {})
+            if center_y is not None and bonus_map:
+                for a in actions:
+                    if a.agent != 'EDU' or a.size not in ['A','B','C'] or not a.footprint_slots:
+                        continue
+                    sid = a.footprint_slots[0]
+                    slot = self.slots.get(sid) if hasattr(self, 'slots') and self.slots else None
+                    if slot is None:
+                        continue
+                    sy = float(getattr(slot, 'fy', getattr(slot, 'y', 0.0)))
+                    slot_above = (sy > center_y)
+                    if edu_side_above is not None and (slot_above != edu_side_above):
+                        pct = float(bonus_map.get(a.size, 0.0)) / 100.0
+                        a.score = a.score * (1.0 + pct)
+            
+            # Council智能体跨河奖励
+            council_bonus_map = self.params.get('other_side_bonus', {})
+            if center_y is not None and council_bonus_map:
+                for a in actions:
+                    if a.agent != 'Council' or a.size not in ['A','B','C'] or not a.footprint_slots:
+                        continue
+                    sid = a.footprint_slots[0]
+                    slot = self.slots.get(sid) if hasattr(self, 'slots') and self.slots else None
+                    if slot is None:
+                        continue
+                    sy = float(getattr(slot, 'fy', getattr(slot, 'y', 0.0)))
+                    slot_above = (sy > center_y)
+                    # Council智能体：如果在对岸，给予跨河奖励
+                    if slot_above != edu_side_above:
+                        bonus = float(council_bonus_map.get(a.size, 0.0))
+                        a.reward += bonus  # 直接增加奖励值
+                        print(f"[Council跨河奖励] {a.agent} {a.size} 跨河奖励: +{bonus}")
+        except Exception:
+            pass
         return actions
 
     def _calc_crp(self, a: Action, river_distance_provider=None, buildings=None) -> None:
@@ -561,19 +611,25 @@ class ActionScorer:
                         dist = math.hypot(sx - float(bxy[0]), sy - float(bxy[1]))
                         min_dist = min(min_dist, dist)
                     
-                    # 邻近奖励/距离惩罚
+                    # 邻近奖励/距离惩罚（支持按 EDU A/B/C 缩放）
                     proximity_threshold = float(P.get('proximity_threshold', 10.0))
                     proximity_reward_val = float(P.get('proximity_reward', 50.0))
                     distance_penalty_coef = float(P.get('distance_penalty_coef', 2.0))
+                    # 读取可选缩放系数（仅 EDU A/B/C）
+                    scale_map = P.get('proximity_scale_EDU_by_size', {})
+                    if agent == 'EDU' and size in ['A','B','C'] and isinstance(scale_map, dict):
+                        scale = float(scale_map.get(size, 1.0))
+                    else:
+                        scale = 1.0
                     
                     if min_dist <= proximity_threshold:
                         # 邻近奖励（距离越近，奖励越高）
                         proximity_bonus = proximity_reward_val * (1.0 - min_dist / proximity_threshold)
-                        reward = reward + proximity_bonus
+                        reward = reward + proximity_bonus * scale
                     else:
                         # 距离惩罚（距离越远，惩罚越大）
                         distance_penalty = (min_dist - proximity_threshold) * distance_penalty_coef
-                        reward = reward - distance_penalty
+                        reward = reward - distance_penalty * scale
         
         # --- Size Bonus（鼓励建造M/L型建筑）---
         size_bonus_cfg = P.get('size_bonus', {})
@@ -748,7 +804,7 @@ class V4Planner:
         buildings: Optional[List[Dict]] = None,
     ) -> Tuple[List[Action], Sequence]:
         agent_types = agent_types or ['EDU', 'IND']
-        sizes = sizes or {'EDU': ['S', 'M', 'L', 'A', 'B', 'C'], 'IND': ['S', 'M', 'L']}
+        sizes = sizes or {'EDU': ['S', 'M', 'L'], 'IND': ['S', 'M', 'L'], 'Council': ['A', 'B', 'C']}
 
         # 设置slots到scorer（用于邻近性奖励计算）
         if self.scorer.slots is None:

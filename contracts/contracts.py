@@ -40,6 +40,30 @@ class CandidateIndex:
         assert isinstance(self.point_to_slots, dict), "point_to_slots must be a dictionary"
 
 
+@dataclass
+class BuildingInfo:
+    """建筑信息"""
+    building_id: str
+    action_id: int
+    agent: str
+    month: int
+    position: tuple
+    cost: float
+    reward: float
+
+
+@dataclass
+class BuildingRegistry:
+    """建筑注册表 - 跟踪所有已建造建筑"""
+    buildings: Dict[str, BuildingInfo] = field(default_factory=dict)
+    action_counts: Dict[int, int] = field(default_factory=dict)  # 各动作建造数量
+    unlock_status: Dict[int, bool] = field(default_factory=dict)  # 解锁状态
+    
+    # 新增字段：支持持续奖励系统
+    buildings_by_agent: Dict[str, List[str]] = field(default_factory=dict)  # 按agent分组的建筑列表
+    buildings_by_action: Dict[int, List[str]] = field(default_factory=dict)  # 按动作类型分组的建筑列表
+
+
 @dataclass(frozen=True)
 class ActionCandidate:
     """统一候选动作的评分对象"""
@@ -139,6 +163,13 @@ class EnvironmentState:
     buildings: List[Dict[str, Any]]
     budgets: Dict[str, float]
     slots: List[Dict[str, Any]]
+    building_registry: Optional[BuildingRegistry] = None  # 建筑注册表
+    
+    # 新增字段：支持持续奖励系统
+    monthly_rewards: Dict[str, float] = field(default_factory=dict)  # 每个agent的月度总奖励
+    synergy_activations: Dict[str, bool] = field(default_factory=dict)  # 协同关系的激活状态
+    monthly_totals_history: Dict[str, List[float]] = field(default_factory=dict)  # 每个agent的月度总奖励历史
+    action_reward_rates: Dict[int, float] = field(default_factory=dict)  # 每个动作的当前持续奖励率（基础值）
     
     def validate(self) -> bool:
         """验证数据完整性"""

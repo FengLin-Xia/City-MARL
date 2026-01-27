@@ -143,8 +143,8 @@ def process_v4_0_output(output_dir='enhanced_simulation_v4_0_output', max_months
     table_dir = os.path.join(output_dir, 'action_tables')
     os.makedirs(table_dir, exist_ok=True)
     
-    # 模拟budget（未实现时）
-    budgets = {'IND': 5000, 'EDU': 4000}
+    # 模拟budget（未实现时）- 使用配置文件中的实际预算设置
+    budgets = {'IND': 15000, 'EDU': 10000}
     
     for month in range(max_months):
         fname = f'chosen_sequence_month_{month:02d}.json'
@@ -220,8 +220,8 @@ def process_v4_1_output(history_path='models/v4_1_rl/slot_selection_history.json
     table_dir = 'enhanced_simulation_v4_1_output/action_tables'
     os.makedirs(table_dir, exist_ok=True)
     
-    # 模拟budget
-    budgets = {'IND': 10000, 'EDU': 10000}
+    # 模拟budget - 使用配置文件中的实际预算设置
+    budgets = {'IND': 15000, 'EDU': 10000, 'Council': 0}  # Council与EDU共享预算，初始为0
     
     for step in steps:
         month = step.get('month', 0)
@@ -231,22 +231,32 @@ def process_v4_1_output(history_path='models/v4_1_rl/slot_selection_history.json
         if not detailed_actions:
             continue
         
-        initial_budget = budgets[agent]
-        
-        # 计算最终budget
-        for a in detailed_actions:
-            budgets[agent] -= int(a.get('cost', 0))
-            budgets[agent] += int(a.get('reward', 0))
-        
-        final_budget = budgets[agent]
+        # 处理Council智能体的预算（与EDU共享）
+        if agent == 'Council':
+            # Council使用EDU的预算
+            initial_budget = budgets['EDU']
+            # 计算最终budget
+            for a in detailed_actions:
+                budgets['EDU'] -= int(a.get('cost', 0))
+                budgets['EDU'] += int(a.get('reward', 0))
+            final_budget = budgets['EDU']
+        else:
+            initial_budget = budgets[agent]
+            # 计算最终budget
+            for a in detailed_actions:
+                budgets[agent] -= int(a.get('cost', 0))
+                budgets[agent] += int(a.get('reward', 0))
+            final_budget = budgets[agent]
         budget_info = {'initial': initial_budget, 'final': final_budget}
         
-        output_path = os.path.join(table_dir, f'month_{month:02d}_{agent}.png')
+        # 月份从0开始编号，与训练环境保持一致
+        month_index = month - 1 if month > 0 else 0
+        output_path = os.path.join(table_dir, f'month_{month_index:02d}_{agent}.png')
         create_action_table(month, agent, detailed_actions, output_path, budget_info)
     
     print(f"\nV4.1处理完成")
     print(f"输出目录: {table_dir}")
-    print(f"最终Budget - IND: {budgets['IND']}, EDU: {budgets['EDU']}")
+    print(f"最终Budget - IND: {budgets['IND']}, EDU: {budgets['EDU']}, Council: {budgets['Council']}")
 
 
 def main():
